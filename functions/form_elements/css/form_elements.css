@@ -1,0 +1,146 @@
+﻿/**
+ * FORM ELEMENTS
+ * Arquivo de styles gerais para form elements. Unificar aqui os styles de elements mais simples, para não seja necessário deixar o CSS em um arquivo separado.
+ * Colocar apenas o CSS relacionado aos elements, deixando o styles referentes à outros elementos como tabelas, botões e efeitos em admin.css
+ * 
+ */
+
+
+
+/**
+ * ATTACH SELECT
+ * 
+ */
+.attach_select_view {
+	overflow:hidden;
+}
+.attach_select_view img {
+	float:left;
+	margin:0 10px 10px 0;
+	max-height:60px;
+	max-width:100px;
+}
+
+
+
+/**
+ * RADIO|CHECKBOX
+ * 
+ */
+.item_radio, .item_checkbox {
+	display:inline-block;
+}
+.label_radio, .label_checkbox {
+	padding:3px;
+}
+.label_checkbox img,
+.label_radio img {
+	margin:2px 0;
+	vertical-align:middle;
+}
+input:checked + label  {
+	background:#F4F4F4;
+}
+.boros_element_radio.layout_block .non_click_label {
+	display:block;
+}
+
+
+
+/**
+ * SEPARADOR
+ * 
+ */
+.form-table td.boros_element_separator {
+	padding:0;
+}
+.boros_element_separator hr,
+.boros_element_html hr {
+	background:none;
+	border:none;
+	border-top:1px solid #DFDFDF;
+}
+hr {
+	background: #DFDFDF;
+	border: none;
+	height: 1px;
+	margin: 10px 0;
+	padding: 0;
+}
+
+
+/**
+ * TAXONOMY CHECKBOX
+ * 
+ */
+.taxonomy_checkbox_list li {
+	line-height:normal;
+	margin:0;
+	padding:0;
+}
+.taxonomy_checkbox_list li ul.children {
+	margin-left:18px;
+}
+.taxonomy_checkbox_list li label {
+	margin:0;
+	padding:0;
+}
+.boros_element_taxonomy_checkbox .force_compact {
+	max-height:300px;
+	overflow:auto;
+}
+
+
+/**
+ * TAXONOMY RADIO
+ * 
+ */
+.taxonomy_radio_list {
+	line-height:normal;
+	margin:0;
+}
+.taxonomy_radio_list li {
+	margin:0;
+	padding:2px 0;
+}
+.taxonomy_radio_list label {
+	display:inline;
+}
+
+
+/**
+ * TEXTAREA EDITOR
+ * 
+ */
+.form-table td.boros_element_textarea_editor,
+.form-table td.boros_element_textarea_editor td.mceIframeContainer {
+	padding:0;
+}
+
+
+/**
+ * WP_EDITOR
+ * 
+ */
+.form-table td.boros_element_wp_editor {
+	/* padding:0; */
+}
+.form-table.boros_meta_block td.boros_element_wp_editor {
+	padding:0;
+}
+.form-table.boros_options_block td.boros_element_wp_editor.layout_table {
+	padding:10px 0;
+}
+.form-table.boros_options_block td.boros_element_wp_editor.layout_block {
+	padding:10px 0;
+}
+#qt_admin_footer_dialog_toolbar {
+	display:none;
+}
+.boros_element_textarea_editor .wp_themeSkin table.mceLayout {
+	border:1px solid #E8E8E7;
+}
+.input_textarea_editor {
+	height:200px;
+	width:100%;
+}

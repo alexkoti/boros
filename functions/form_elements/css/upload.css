@@ -1,0 +1,121 @@
+
+/**
+ * Este position é necessário para que os campos de 'ano' e 'páginas' possam ser clicáveis
+ * 
+ */
+.plupload-upload-uic {
+	position:relative;
+	z-index:1;
+}
+
+.drop_area {
+	border:1px dashed #ccc;
+	margin:0 0 5px;
+	height:230px;
+	overflow:hidden;
+	padding:8px;
+	text-align:center;
+}
+.drop_area .button {
+	opacity:0.4;
+}
+.drop_area:hover .button {
+	opacity:1;
+}
+.drop_area .button_select_files {
+	margin:0 0 8px;
+}
+.filelist {
+	position:relative;
+}
+.filelist .file {
+	background:#ececec;
+	border:solid 1px #ccc;
+	color:#222;
+	padding:5px;
+}
+.filelist .fileprogress {
+	width:0%;
+	background:#21759b;
+	height:5px;
+}
+.plupload-thumbs {
+	height:200px;
+	overflow:hidden;
+	text-align:center;
+}
+/* dragover */
+.dragover {
+	background:rgba(0, 128, 0, 0.1);
+}
+.dragover .drop_area {
+	background:rgba(0, 128, 0, 0.1);
+	border:1px dashed green;
+}
+
+
+
+/**
+ * Imagem com botão de remoção
+ * 
+ */
+.drop_upload_image_view .drag-drop-info {
+	color:#aaa;
+	font-size:14px;
+	margin:0;
+	padding:0;
+}
+.drop_upload_image {
+	background:#E9E9E9;
+	display:block;
+	line-height:0;
+	margin:0 auto;
+	overflow:hidden;
+	position:relative;
+	width:140px;
+}
+.drop_upload_image .the_post_thumbnail {
+	display:block;
+	margin:0 auto;
+	max-height:190px;
+}
+.drop_upload_image_remove {
+	height:18px;
+	position:absolute;
+	right:5px;
+	top:5px;
+	vertical-align:text-bottom;
+	width:18px;
+}
+.drop_upload_image_remove .waiting {
+	display:none;
+	vertical-align:text-bottom;
+}
+.drop_upload_image_remove .btn {
+	background:#ffffff url(img/btn_cancel.png) no-repeat center center;
+	border:1px solid #DFDFDF;
+	border-radius: 12px;
+	display:block;
+	color:#BC0B0B;
+	cursor:pointer;
+	height:100%;
+	width:100%;
+	opacity:0.5;
+}
+.drop_upload_image_remove .btn:hover {
+	background-color:rgba(255, 255, 255, 0.8);
+	border-color:red;
+	color:#D54E21;
+}
+.drop_upload_image:hover .btn {
+	opacity:1;
+}
+.drop_upload_image_remove .loading,
+.drop_upload_image_remove .loading:hover {
+	border-color:#DFDFDF;
+	background:#fff url(img/btn_loading.gif) no-repeat center center;
+}
+
+
+
+

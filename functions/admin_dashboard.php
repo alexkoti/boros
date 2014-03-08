@@ -1,0 +1,112 @@
+<?php
+/**
+ * DASHBOARD
+ * 
+ * 
+ * 
+ */
+
+
+
+/**
+ * ==================================================
+ * AT A GLANCE ======================================
+ * ==================================================
+ * Substituto do 'Right Now' a partir da versão 3.8 do WordPress, mostrando todos os posts types e taxonomies
+ * 
+ * 
+ */
+add_filter( 'dashboard_glance_items', 'boros_dashboard_right_now' );
+function boros_dashboard_right_now( $elements ){
+	$args = array(
+		'public' => true ,
+		'_builtin' => false
+	);
+	$output = 'object';
+	$operator = 'and';
+	
+	$post_types = get_post_types( $args , $output , $operator );
+	
+	foreach( $post_types as $post_type ) {
+		$num_posts = wp_count_posts( $post_type->name );
+		$num = number_format_i18n( $num_posts->publish );
+		$text = _n( $post_type->labels->singular_name, $post_type->labels->name , intval( $num_posts->publish ) );
+		if ( current_user_can( 'edit_posts' ) ) {
+			$elements[] = "<a href='edit.php?post_type={$post_type->name}' class='ico-post-type-{$post_type->name} {$post_type->menu_icon}'>{$num} {$text}</a>";
+		}
+		else{
+			$elements[] = "<span class='ico-post-type-{$post_type->name} {$post_type->menu_icon}'>{$num} {$text}</span>";
+		}
+	}
+	
+	$taxonomies = get_taxonomies( $args , $output , $operator );
+	
+	foreach( $taxonomies as $taxonomy ) {
+		$num_terms  = wp_count_terms( $taxonomy->name );
+		$num = number_format_i18n( $num_terms );
+		$text = _n( $taxonomy->labels->singular_name, $taxonomy->labels->name , intval( $num_terms ) );
+		$class = issetor($taxonomy->menu_icon, '');
+		if ( current_user_can( 'manage_categories' ) ) {
+			$elements[] = "<a href='edit-tags.php?taxonomy={$taxonomy->name}&post_type={$taxonomy->object_type[0]}' class='ico-taxonomy-{$taxonomy->name} {$class}'>{$num} {$text}</a>";
+		}
+		else{
+			$elements[] = "<span class='ico-taxonomy-{$taxonomy->name} {$class}'>{$num} {$text}</span>";
+		}
+	}
+	//pre($elements);
+	
+	return $elements;
+}
+
+
+
+/**
+ * ==================================================
+ * RIGHT NOW :: DEPRECATED ==========================
+ * ==================================================
+ * 
+ * Adicionar os custom post_types ao dashboard widget 'Right Now'
+ * Esta action é fixa
+ * 
+ * @link http://new2wp.com/snippet/add-custom-post-types-to-the-right-now-dashboard-widget/
+ */
+add_action( 'right_now_content_table_end' , 'right_now_advanced' );
+function right_now_advanced() {
+	$args = array(
+		'public' => true ,
+		'_builtin' => false
+	);
+	$output = 'object';
+	$operator = 'and';
+	
+	$post_types = get_post_types( $args , $output , $operator );
+	
+	foreach( $post_types as $post_type ) {
+		$num_posts = wp_count_posts( $post_type->name );
+		$num = number_format_i18n( $num_posts->publish );
+		$text = _n( $post_type->labels->singular_name, $post_type->labels->name , intval( $num_posts->publish ) );
+		if ( current_user_can( 'edit_posts' ) ) {
+			$num = "<a href='edit.php?post_type={$post_type->name}'>{$num}</a>";
+			$text = "<a href='edit.php?post_type={$post_type->name}'>{$text}</a>";
+		}
+		echo "<tr><td class='first b b-{$post_type->name}'>{$num}</td>";
+		echo "<td class='t t-{$post_type->name}'>{$text}</td></tr>";
+	}
+	
+	$taxonomies = get_taxonomies( $args , $output , $operator );
+	
+	foreach( $taxonomies as $taxonomy ) {
+		$num_terms  = wp_count_terms( $taxonomy->name );
+		$num = number_format_i18n( $num_terms );
+		$text = _n( $taxonomy->labels->singular_name, $taxonomy->labels->name , intval( $num_terms ) );
+		if ( current_user_can( 'manage_categories' ) ) {
+			$num = "<a href='edit-tags.php?taxonomy={$taxonomy->name}'>{$num}</a>";
+			$text = "<a href='edit-tags.php?taxonomy={$taxonomy->name}'>{$text}</a>";
+		}
+		echo "<tr><td class='first b b-{$taxonomy->name}'>{$num}</td>";
+		echo "<td class='t t-{$taxonomy->name}'>{$text}</td></tr>";
+	}
+}
+
+
+

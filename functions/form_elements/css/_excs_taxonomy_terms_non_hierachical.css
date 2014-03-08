@@ -1,0 +1,63 @@
+﻿
+.excs_taxonomy_terms_non_hierachical {
+	overflow:hidden;
+}
+	.postbox .excs_taxonomy_terms_non_hierachical .inside {
+		padding:0;
+	}
+	/* inputs na tela de ADIÇÃO de termos */
+	.form-field .excs_tax_box_term_list .ipt_form_checkbox, 
+	.form-field .radio_terms_list li,
+	.form-field .excs_taxonomy_terms_non_hierachical .tagadd {
+		display:inline;
+		width:auto;
+	}
+.core_the_tags {
+	float:left;
+	overflow:hidden;
+	width:300px;
+}
+.excs_the_tags {
+	float:left;
+	font-size:11px;
+	overflow:hidden;
+	width:300px;
+}
+	.excs_the_tags p {
+		font-size:11px;
+	}
+	.excs_the_tags .excs_the_tags_favs {
+		margin:0 0 12px;
+	}
+	.excs_select_fav_terms_link {
+		background:url(img/btn_cog_mini.png) no-repeat center center;
+		display:inline-block;
+		font-size:0;
+		height:12px;
+		line-height:12px;
+		vertical-align:text-top;
+		width:12px;
+	}
+
+
+/**
+ * Formatações para o box de adição/edição rápida de histórias
+ * 
+ */
+#add_single_history_form .ajaxtag label,
+#add_single_history_form .howto,
+.tagsdiv .howto,
+#add_single_history_form .ajaxtag .taghint,
+#add_single_history_form #genero-adder  {
+	display:none;
+}
+#add_single_history_form .tagchecklist {
+	margin:5px 14px;
+}
+#add_single_history_form .inside .the-tagcloud {
+	margin:10px 0 0;
+}
+#add_single_history_form_submit {
+	text-align:right;
+}
+#add_single_history_form_submit input:focus {outline:1px solid #999;}

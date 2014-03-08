@@ -1,0 +1,174 @@
+﻿
+.btn_excs {
+	cursor:pointer;
+}
+.btn_add {
+    background:url(img/btn_add.gif) no-repeat 0 0;
+}
+.btn_fam {
+    cursor:pointer;
+    font-size:13px;
+    height:16px;
+    line-height:0;
+    margin:0 5px;
+    padding:0 16px 0 0;
+    width:16px;
+}
+
+.excs_search_inputs {
+	margin:0 0 10px;
+	position:relative;
+}
+.excs_search_inputs p {
+	position:relative;
+}
+.excs_search_inputs .ipt_text,
+.excs_search_inputs .button,
+.excs_search_inputs .waiting {
+	vertical-align:middle;
+}
+.excs_search_inputs .ipt_text {
+	width:200px;
+}
+.excs_search_inputs .waiting {
+	display:none;
+}
+.excs_search_inputs .excs_clear_search {
+	background:url(img/btn_cross.png) no-repeat 0 0;
+	cursor:pointer;
+	display:none;
+	height:16px;
+	left:182px;
+	position:absolute;
+	top:4px;
+	width:16px;
+}
+
+#poststuff .inside .excs_related_histories_list  {
+	
+}
+#poststuff .inside .excs_related_histories_list .results_h {
+	margin:0;
+}
+.excs_related_histories_list ul {
+	overflow:hidden;
+}
+.excs_related_histories_list ul .related_item {
+	background:#fff;
+	border:1px solid #DFDFDF;
+	border-top:none;
+	border-bottom-color:#EDEDED;
+	margin:0;
+	padding:10px;
+}
+.excs_related_histories_list ul .related_item:first-child {
+	border-top:1px solid #DFDFDF;
+	border-top-left-radius: 8px;
+	-moz-border-top-left-radius: 8px;
+	-webkit-border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	-moz-border-top-right-radius: 8px;
+	-webkit-border-top-right-radius: 8px;
+}
+.excs_related_histories_list ul .related_item:last-child {
+	border-bottom-left-radius: 8px;
+	-moz-border-bottom-left-radius: 8px;
+	-webkit-border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	-moz-border-bottom-right-radius: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+}
+.excs_related_histories_list ul .related_item:hover {
+	background:#fff url(img/duplicate.png) repeat-x left bottom;
+	border:1px solid #E0E0E0;
+	margin:-1px 0 0;
+}
+.excs_related_histories_list ul .related_item:first-child:hover {
+	margin:0;
+}
+.related_history .related_products {
+	float:left;
+	width:30%;
+}
+.related_history  {
+	overflow:hidden;
+}
+.related_history .related_products {
+	float:left;
+	width:30%;
+}
+.related_history table {
+	float:left;
+	font-size:11px;
+	width:70%;
+}
+.related_history table th {
+	font-weight:bold;
+}
+.boros_meta_block .related_history table th,
+.boros_meta_block .related_history table td {
+	font-size:11px;
+	padding:1px 3px;
+	width:50%;
+}
+#poststuff .inside .excs_related_histories_list .result_title,
+#poststuff .inside .excs_related_histories_list .result_actions {
+	margin:0;
+}
+
+.excs_related_histories_selected {
+	padding:0 0 10px;
+}
+.excs_related_histories_selected ul li {
+	cursor:n-resize;
+}
+.excs_related_histories_selected .result_select {
+	display:none;
+}
+.excs_related_histories_selected .ui-sortabled {
+	background:none;
+	border:1px dashed #DFDFDF;
+}
+
+.postbox .inside.excs_tags {
+	padding:10px;
+}
+.excs_tags p {
+	margin:0;
+}
+
+.excs_search_results .result_deselect {
+	display:none;
+}
+#add_new_history_control {
+	padding:0 0 0 10px;
+}
+#add_new_history_control a {
+	margin:0 0 0 10px;
+}
+
+/**
+ * Algumas formatações afetas os boxes de term-taxonomy. Ver arquivo 'excs_taxonomy_terms_non_hierachical.css'
+ * 
+ */
+#add_single_history_form {
+	padding:10px;
+}
+	#loading_overlay {
+		background:#fff url(img/loading-publish.gif) no-repeat center center;
+		display:none;
+		height:100%;
+		width:100%;
+		position:absolute;
+		top:0;
+		left:0;
+	}
+	body.loading #loading_overlay {
+		display:block;
+	}
+	body.loading #add_single_history_form {
+		display:none;
+	}
+
+
+

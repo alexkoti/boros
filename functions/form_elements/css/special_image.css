@@ -1,0 +1,161 @@
+﻿/**
+ * SPECIAL IMAGE
+ * 
+ */
+.boros_element_special_image {
+	
+}
+tr:last-child .boros_element_special_image {
+	border:none;
+}
+.special_image {
+	overflow:hidden;
+}
+
+/**
+ * Box da imagem
+ * 
+ */
+.special_image_layout_row .special_image_view {
+	float:left;
+}
+.special_image .special_image_view {
+	min-height:1px; /* Necessário para que o view não suma e o .special_image_actions flutue para esquerda */
+	overflow:hidden;
+}
+#side-sortables .special_image .special_image_view {
+	float:none;
+	margin:0 auto;
+}
+.special_image .special_image_img {
+	background:#fff;
+	border:1px solid #DFDFDF;
+	margin:0;
+	position:relative;
+}
+.special_image .special_image_img img {
+	display:block;
+}
+.special_img_remove {
+	height:18px;
+	position:absolute;
+	right:5px;
+	top:5px;
+	vertical-align:text-bottom;
+	width:18px;
+}
+.special_img_remove .waiting {
+	display:none;
+	vertical-align:text-bottom;
+}
+.special_img_remove .btn {
+	background:#ffffff url(img/btn_cancel.png) no-repeat center center;
+	border:1px solid #DFDFDF;
+	border-radius: 12px;
+	display:block;
+	color:#BC0B0B;
+	cursor:pointer;
+	height:100%;
+	width:100%;
+	opacity:0.5;
+}
+.special_img_remove .btn:hover {
+	background-color:rgba(255, 255, 255, 0.8);
+	border-color:red;
+	color:#D54E21;
+}
+.special_image .special_image_img:hover .btn {
+	opacity:1;
+}
+.special_img_remove .loading,
+.special_img_remove .loading:hover {
+	border-color:#DFDFDF;
+	background:#fff url(img/btn_loading.gif) no-repeat center center;
+}
+
+/**
+ * Botões de ação
+ * 
+ */
+.special_image_actions {
+	font-size:11px;
+	padding:5px 0 0;
+	text-align:left;
+}
+/* caso precise exibir uma mesnagem, por exemplo filetype não permitido ou imagem já escolhida */
+.special_image_message {
+	background-color: #FFFFE0;
+	border-color: #E6DB55;
+}
+.has_no_images .special_img_select {
+	display:none;
+}
+.special_image .special_image_upload_feedback {
+	background:#FFFFE0;
+	border:1px solid #E6DB55;
+	margin:10px 0 0;
+	padding:5px;
+	display:none;
+}
+.special_image_layout_row .special_image_actions {
+	float:left;
+	padding:0 0 0 10px;
+}
+.special_image_layout_row .special_image_actions .separator,
+.special_image_layout_compact .special_image_actions  .separator,
+#side-sortables .special_image_actions .separator {
+	display:block;
+	height:0;
+}
+#side-sortables .special_image .special_image_actions {
+	text-align:center;
+}
+
+
+/**
+ * Não mostrar o campo de imagem ao adicionar categorias/termos, mostrando apenas na edição da categoria
+ * 
+ */
+#addtag #category-imagem {
+	display:none;
+}
+
+
+/**
+ * Dialog Box (provavelmente será removido)
+ * 
+ */
+#ajax_upload_div form {
+	padding:0 10px 10px;
+	position:relative;
+}
+#ajax_upload_div #ajax_upload_div_loading {
+	background:#fff url(img/loading-publish.gif) no-repeat center center;
+	display:none;
+	height:100%;
+	width:100%;
+	position:absolute;
+	top:0;
+	left:0;
+}
+#ajax_select_image .image_attchs_itens {
+	border:1px solid #DFDFDF;
+	border-bottom:none;
+	margin:10px;
+}
+	#ajax_select_image .image_attchs_itens li {
+		border-bottom:1px solid #DFDFDF;
+		cursor:pointer;
+		margin:0;
+		overflow:hidden;
+		padding:5px;
+	}
+	#ajax_select_image .image_attchs_itens li img {
+		display:block;
+		float:left;
+		margin:0 10px 0 0;
+		max-width:80px;
+	}
+
+
+

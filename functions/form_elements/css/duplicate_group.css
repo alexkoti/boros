@@ -1,0 +1,320 @@
+﻿/**
+ * Dimunuir espaços das tabelas dentro do duplicate
+ * 
+ */
+.duplicate_element .form-table {
+	margin:0;
+	padding:0;
+}
+.duplicate_element .form-table > th,
+.duplicate_element .form-table > td {
+	padding:3px 5px;
+}
+.duplicate_element .form-table > th {
+	padding-right:0;
+	width:20%;
+}
+.duplicate_element .form-table th.mceIframeContainer,
+.duplicate_element .form-table td.mceIframeContainer {
+	padding:0;
+}
+
+/**
+ * Resetar mouseover nas TDs
+ * 
+ */
+.boros_form_block tr:hover .boros_element_duplicate_group th.boros_form_element,
+.boros_form_block tr:hover .boros_element_duplicate_group td.boros_form_element {
+	background:transparent;
+}
+
+/**
+ * Bloco principal
+ * 
+ */
+/* option page - table|block */
+.boros_options_block .layout_table .duplicate_box ,
+.boros_options_block .layout_block .duplicate_box {
+	border:1px solid #e8e8e7;
+}
+/* metabox - table */
+.boros_meta_block .layout_table .duplicate_box {
+	border:1px solid #e8e8e7;
+	border-right:none;
+}
+.boros_form_block:last-child .layout_table .duplicate_box {
+	border-top:none;
+	border-bottom:none;
+}
+/* metabox - block */
+.boros_meta_block .layout_block .duplicate_box {
+	border:1px solid #e8e8e7;
+	border-right:none;
+	border-left:none;
+}
+.boros_form_block:last-child .layout_block .duplicate_box {
+	border-bottom:none;
+}
+
+/**
+ * Header
+ * 
+ */
+.duplicate_group_header {
+	background:#f5f5f5;
+	background:none;
+	overflow:hidden;
+	padding:8px 10px;
+}
+.duplicate_group_label {
+	float:left;
+}
+.layout_table .duplicate_group_header {
+	background:none;
+	padding:5px 0;
+}
+.layout_table .duplicate_group_label {
+	padding:0 0 20px;
+}
+
+/**
+ * Duplicate elements
+ * 
+ * .duplicate_group = UL
+ * .duplicate_element = LI
+ */
+.duplicate_group {
+	border-bottom:1px solid #e8e8e7;
+}
+.duplicate_group .boros_options_block {
+	z-index:2;
+}
+/* Em options_page sempre tem bordas left-right em qualquer layout(os metaboxes já possuem bordas laterais) */
+.boros_options_block .duplicate_group {
+	/* border-top:1px solid #e8e8e7;
+	border-right:1px solid #e8e8e7;
+	border-left:1px solid #e8e8e7; */
+}
+/* metabox em layout table possui borda left */
+.layout_table .duplicate_group {
+	/* border-left:1px solid #e8e8e7; */
+}
+
+/**
+ * .boros_element_duplicate_group = controle completo
+ * 
+ */
+.boros_form_block td.boros_element_duplicate_group {
+	border-top:1px solid #e8e8e7;
+	border-bottom:1px solid #e8e8e7;
+	padding:0;
+}
+.boros_form_block tr:first-child td.boros_element_duplicate_group {border-top:none;}
+.boros_form_block tr:last-child td.boros_element_duplicate_group {border-bottom:none;}
+
+.duplicate_element {
+	background:#fff url(img/block_bottom.png) repeat-x left bottom;
+	/* border-top:1px solid #fff;
+	border-bottom:1px solid #e8e8e7; */
+	border-top:1px solid #e8e8e7;
+	border-right:1px solid #fff;
+	border-bottom:1px solid #fff;
+	margin:0;
+	min-height:50px;
+	overflow:visible;
+	padding:5px 80px 5px 20px;
+	position:relative;
+}
+.duplicate_element:hover {
+	/* background:#fff url(img/block_bottom_hover.png) repeat-x left bottom;
+	border-color:#999; */
+	-moz-box-shadow:    inset 0 0 50px rgba(153,153,153,0.2);
+	-webkit-box-shadow: inset 0 0 50px rgba(153,153,153,0.2);
+	box-shadow:         inset 0 0 50px rgba(153,153,153,0.2);
+}
+.duplicate_element:first-child {
+	border-top:none;
+}
+.duplicate_element label {
+	font-size:95%;
+}
+/* padding diferenciado para liberar mais espaço */
+.layout_table .duplicate_element {
+	padding:10px 80px 10px 10px;
+}
+/* Remover o min-height quanto está adicionando/removendo itens para evitar um engasgo na animação */
+.duplicate_box .duplicate_element.loading {
+	min-height:0;
+}
+
+/**
+ * Versão compacta para facilitar o sort
+ * Mostra apenas a primeira TR, esocndendo as demais.
+ */
+.duplicate_compact {
+	float:right;
+	font-size:11px;
+}
+.boros_form_block th .duplicate_compact label {
+	background:url(img/ico_compact.png) no-repeat left top;
+	padding:0 0 0 18px;
+}
+.boros_form_block th .duplicate_compact label.active {
+	background:url(img/ico_compact.png) no-repeat left -50px;
+}
+.layout_table .duplicate_compact {
+	float:left;
+}
+.duplicate_element_compact .boros_options_block tr td,
+.duplicate_element_compact .boros_options_block tr th{display:none;}
+.duplicate_element_compact .boros_options_block tr:first-child td,
+.duplicate_element_compact .boros_options_block tr:first-child th{display:table-cell;}
+
+/**
+ * Elemento fantasma que é exibido enquanto se arrasta um elemento na lista.
+ * Este elemento precisa ter a mesma formatação de bloco do .duplicate_element, para que não exista diferença de tamanho entre os dois no momento do sort
+ */
+.ui-sortabled {
+	/* background:#cecece; */
+	background:#e5e5e5 url(img/bg_placeholder.gif);
+	border-top:1px solid #fff;
+	border-bottom:1px solid #e8e8e7;
+	padding:5px 80px 5px 20px;
+	box-shadow: inset 0 -30px 30px -30px rgba(0, 0, 0, 0.3);
+}
+.ui-sortabled:first-child {
+	border-top:none;
+}
+
+/**
+ * Botão de adicionar novo element.
+ */
+.form-table td p.dup_btn {
+	background:#f5f5f5;
+	/* border:1px solid #e8e8e7; */
+	/* border-top:1px solid #e8e8e7;
+	border-left:1px solid #e8e8e7; */
+	margin:0;
+	padding:8px;
+}
+.boros_meta_block td.layout_table p.dup_btn {
+	border-right:none;
+	border-bottom:none;
+}
+.dup_btn span {
+	background:url(img/btn_add.gif) no-repeat left top;
+	cursor:pointer;
+	padding:1px 0 2px 18px;
+}
+.dup_btn span:hover {
+	background-position:left -50px;
+}
+.duplicate_box.loading .dup_btn span,
+.duplicate_box.loading .dup_btn span:hover {
+	background:url(img/btn_loading.gif) no-repeat left top;
+}
+
+/**
+ * Barra de mover
+ * Só aparece no mouseover do duplicate_element, e possui mudança de cor no mouseover da barra.
+ * Quando só existe um duplicate_element, não é exibida essa barra.
+ */
+.btn_move {
+	display:none;
+	position:absolute;
+	top:0;
+	right:0;
+	width:22px;
+	height:100%;
+	z-index:2;
+}
+.btn_move .grip {
+	background:url(img/btn_move_v.gif) no-repeat top left;
+	cursor:n-resize;
+	position:absolute;
+	top:3px;
+	right:3px;
+	bottom:3px;
+	left:3px;
+}
+.duplicate_element:hover .btn_move {display:block;}
+.duplicate_element .btn_move:hover .grip {background-position:top right;}
+.duplicate_element:only-of-type:hover .btn_move {display:none;}
+
+/**
+ * Botão de remover
+ * Quando só existe um duplicate_element, não é exibida esse botão.
+ */
+.btn_remove {
+	background:#fff;
+	/* visibility:hidden; */
+	opacity:0;
+	position:absolute;
+	top:50%;
+	left:0;
+	margin:-10px 0 0;
+	width:22px;
+	height:23px;
+	z-index:99;
+	border-bottom:1px solid #bbb;
+	border-right:1px solid #bbb;
+	
+	border-top-right-radius:12px;
+	border-bottom-right-radius:12px;
+	-webkit-transition: opacity 250ms linear;
+}
+.btn_remove .btn {
+	background:url(img/btn_remove.gif) no-repeat center center;
+	border:1px solid transparent;
+	cursor:pointer;
+	display:block;
+	height:18px;
+	margin:2px 1px;
+	width:18px;
+	border-radius:10px;
+}
+.duplicate_element:hover .btn_remove {
+	opacity:1;
+}
+.duplicate_element .btn_remove .btn:hover {border-color:red;}
+.duplicate_element:only-of-type .btn_remove {display:none;}
+.layout_table .duplicate_element .btn_remove {
+	width:28px;
+	height:28px;
+	left:-15px;
+	margin:-15px 0 0;
+	
+	border-radius:14px;
+	-moz-border-radius:14px;
+	-webkit-border-radius:14px;
+}
+.layout_table .duplicate_element .btn_remove .btn {
+	height:18px;
+	width:18px;
+	margin:4px;
+}
+.duplicate_box.loading .duplicate_element .btn_remove,
+.duplicate_box.loading .duplicate_element:hover .btn_remove {
+	display:none;
+}
+
+/**
+ * Indicador de índice, que aparece no fundo do box
+ * 
+ */
+.duplicate_index {
+	color:#F4F4F4;
+	cursor:default;
+	font:normal 50px arial, sans-serif;
+	line-height:45px;
+	text-align:right;
+	
+	width:60px;
+	position:absolute;
+	right:22px;
+	top:8px;
+	z-index:1;
+}
+.duplicate_element:hover .duplicate_index {
+	text-shadow:#C9C9C9 1px 1px 1px;
+}

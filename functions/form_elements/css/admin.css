@@ -1,0 +1,860 @@
+
+
+
+/**
+ * POST-TYPE AND TAXONOMY ICONS
+ * Dashborad Right Now(At a glance)
+ * 
+ */
+#dashboard_right_now .inside .main ul li a.dashicons-calendar:before				{content: "\f145";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-appearance:before		{content: "\f100";}
+#dashboard_right_now .inside .main ul li a.dashicons-menu:before					{content: "\f333";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-site:before				{content: "\f319";}
+#dashboard_right_now .inside .main ul li a.dashicons-dashboard:before				{content: "\f226";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-post:before				{content: "\f109";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-media:before				{content: "\f104";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-links:before				{content: "\f103";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-page:before				{content: "\f105";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-comments:before			{content: "\f101";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-appearance:before		{content: "\f100";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-plugins:before			{content: "\f106";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-users:before				{content: "\f110";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-tools:before				{content: "\f107";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-settings:before			{content: "\f108";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-network:before			{content: "\f112";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-home:before				{content: "\f102";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-generic:before			{content: "\f111";}
+#dashboard_right_now .inside .main ul li a.dashicons-admin-collapse:before			{content: "\f148";}
+#dashboard_right_now .inside .main ul li a.dashicons-welcome-write-blog:before		{content: "\f119";}
+#dashboard_right_now .inside .main ul li a.dashicons-welcome-add-page:before		{content: "\f133";}
+#dashboard_right_now .inside .main ul li a.dashicons-welcome-view-site:before		{content: "\f115";}
+#dashboard_right_now .inside .main ul li a.dashicons-welcome-widgets-menus:before	{content: "\f116";}
+#dashboard_right_now .inside .main ul li a.dashicons-welcome-comments:before		{content: "\f117";}
+#dashboard_right_now .inside .main ul li a.dashicons-welcome-learn-more:before		{content: "\f118";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-aside:before			{content: "\f123";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-image:before			{content: "\f128";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-gallery:before			{content: "\f161";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-video:before			{content: "\f126";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-status:before			{content: "\f130";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-quote:before			{content: "\f122";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-chat:before				{content: "\f125";}
+#dashboard_right_now .inside .main ul li a.dashicons-format-audio:before			{content: "\f127";}
+#dashboard_right_now .inside .main ul li a.dashicons-camera:before					{content: "\f306";}
+#dashboard_right_now .inside .main ul li a.dashicons-images-alt:before				{content: "\f232";}
+#dashboard_right_now .inside .main ul li a.dashicons-images-alt2:before				{content: "\f233";}
+#dashboard_right_now .inside .main ul li a.dashicons-video-alt:before				{content: "\f234";}
+#dashboard_right_now .inside .main ul li a.dashicons-video-alt2:before				{content: "\f235";}
+#dashboard_right_now .inside .main ul li a.dashicons-video-alt3:before				{content: "\f236";}
+#dashboard_right_now .inside .main ul li a.dashicons-image-crop:before				{content: "\f165";}
+#dashboard_right_now .inside .main ul li a.dashicons-image-rotate-left:before		{content: "\f166";}
+#dashboard_right_now .inside .main ul li a.dashicons-image-rotate-right:before		{content: "\f167";}
+#dashboard_right_now .inside .main ul li a.dashicons-image-flip-vertical:before		{content: "\f168";}
+#dashboard_right_now .inside .main ul li a.dashicons-image-flip-horizontal:before	{content: "\f169";}
+#dashboard_right_now .inside .main ul li a.dashicons-undo:before					{content: "\f171";}
+#dashboard_right_now .inside .main ul li a.dashicons-redo:before					{content: "\f172";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-bold:before				{content: "\f200";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-italic:before			{content: "\f201";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-ul:before				{content: "\f203";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-ol:before				{content: "\f204";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-quote:before			{content: "\f205";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-alignleft:before		{content: "\f206";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-aligncenter:before		{content: "\f207";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-alignright:before		{content: "\f208";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-insertmore:before		{content: "\f209";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-spellcheck:before		{content: "\f210";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-distractionfree:before	{content: "\f211";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-kitchensink:before		{content: "\f212";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-underline:before		{content: "\f213";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-justify:before			{content: "\f214";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-textcolor:before		{content: "\f215";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-paste-word:before		{content: "\f216";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-paste-text:before		{content: "\f217";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-removeformatting:before	{content: "\f218";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-video:before			{content: "\f219";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-customchar:before		{content: "\f220";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-outdent:before			{content: "\f221";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-indent:before			{content: "\f222";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-help:before				{content: "\f223";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-strikethrough:before	{content: "\f224";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-unlink:before			{content: "\f225";}
+#dashboard_right_now .inside .main ul li a.dashicons-editor-rtl:before				{content: "\f320";}
+#dashboard_right_now .inside .main ul li a.dashicons-align-left:before				{content: "\f135";}
+#dashboard_right_now .inside .main ul li a.dashicons-align-right:before				{content: "\f136";}
+#dashboard_right_now .inside .main ul li a.dashicons-align-center:before			{content: "\f134";}
+#dashboard_right_now .inside .main ul li a.dashicons-align-none:before				{content: "\f138";}
+#dashboard_right_now .inside .main ul li a.dashicons-lock:before					{content: "\f160";}
+#dashboard_right_now .inside .main ul li a.dashicons-calendar:before				{content: "\f145";}
+#dashboard_right_now .inside .main ul li a.dashicons-visibility:before				{content: "\f177";}
+#dashboard_right_now .inside .main ul li a.dashicons-post-status:before				{content: "\f173";}
+#dashboard_right_now .inside .main ul li a.dashicons-edit:before					{content: "\f464";}
+#dashboard_right_now .inside .main ul li a.dashicons-trash:before					{content: "\f182";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-up:before				{content: "\f142";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-down:before				{content: "\f140";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-right:before				{content: "\f139";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-left:before				{content: "\f141";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-up-alt:before			{content: "\f342";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-down-alt:before			{content: "\f346";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-right-alt:before			{content: "\f344";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-left-alt:before			{content: "\f340";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-up-alt2:before			{content: "\f343";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-down-alt2:before			{content: "\f347";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-right-alt2:before		{content: "\f345";}
+#dashboard_right_now .inside .main ul li a.dashicons-arrow-left-alt2:before			{content: "\f341";}
+#dashboard_right_now .inside .main ul li a.dashicons-sort:before					{content: "\f156";}
+#dashboard_right_now .inside .main ul li a.dashicons-leftright:before				{content: "\f229";}
+#dashboard_right_now .inside .main ul li a.dashicons-list-view:before				{content: "\f163";}
+#dashboard_right_now .inside .main ul li a.dashicons-exerpt-view:before				{content: "\f164";}
+#dashboard_right_now .inside .main ul li a.dashicons-share:before					{content: "\f237";}
+#dashboard_right_now .inside .main ul li a.dashicons-share-alt:before				{content: "\f240";}
+#dashboard_right_now .inside .main ul li a.dashicons-share-alt2:before				{content: "\f242";}
+#dashboard_right_now .inside .main ul li a.dashicons-twitter:before					{content: "\f301";}
+#dashboard_right_now .inside .main ul li a.dashicons-rss:before						{content: "\f303";}
+#dashboard_right_now .inside .main ul li a.dashicons-email:before					{content: "\f465";}
+#dashboard_right_now .inside .main ul li a.dashicons-email-alt:before				{content: "\f466";}
+#dashboard_right_now .inside .main ul li a.dashicons-facebook:before				{content: "\f304";}
+#dashboard_right_now .inside .main ul li a.dashicons-facebook-alt:before			{content: "\f305";}
+#dashboard_right_now .inside .main ul li a.dashicons-googleplus:before				{content: "\f462";}
+#dashboard_right_now .inside .main ul li a.dashicons-networking:before				{content: "\f325";}
+#dashboard_right_now .inside .main ul li a.dashicons-hammer:before					{content: "\f308";}
+#dashboard_right_now .inside .main ul li a.dashicons-art:before						{content: "\f309";}
+#dashboard_right_now .inside .main ul li a.dashicons-migrate:before					{content: "\f310";}
+#dashboard_right_now .inside .main ul li a.dashicons-performance:before				{content: "\f311";}
+#dashboard_right_now .inside .main ul li a.dashicons-wordpress:before				{content: "\f120";}
+#dashboard_right_now .inside .main ul li a.dashicons-wordpress-alt:before			{content: "\f324";}
+#dashboard_right_now .inside .main ul li a.dashicons-pressthis:before				{content: "\f157";}
+#dashboard_right_now .inside .main ul li a.dashicons-update:before					{content: "\f463";}
+#dashboard_right_now .inside .main ul li a.dashicons-screenoptions:before			{content: "\f180";}
+#dashboard_right_now .inside .main ul li a.dashicons-info:before					{content: "\f348";}
+#dashboard_right_now .inside .main ul li a.dashicons-cart:before					{content: "\f174";}
+#dashboard_right_now .inside .main ul li a.dashicons-feedback:before				{content: "\f175";}
+#dashboard_right_now .inside .main ul li a.dashicons-cloud:before					{content: "\f176";}
+#dashboard_right_now .inside .main ul li a.dashicons-translation:before				{content: "\f326";}
+#dashboard_right_now .inside .main ul li a.dashicons-tag:before						{content: "\f323";}
+#dashboard_right_now .inside .main ul li a.dashicons-category:before				{content: "\f318";}
+#dashboard_right_now .inside .main ul li a.dashicons-yes:before						{content: "\f147";}
+#dashboard_right_now .inside .main ul li a.dashicons-no:before						{content: "\f158";}
+#dashboard_right_now .inside .main ul li a.dashicons-no-alt:before					{content: "\f335";}
+#dashboard_right_now .inside .main ul li a.dashicons-plus:before					{content: "\f132";}
+#dashboard_right_now .inside .main ul li a.dashicons-minus:before					{content: "\f460";}
+#dashboard_right_now .inside .main ul li a.dashicons-dismiss:before					{content: "\f153";}
+#dashboard_right_now .inside .main ul li a.dashicons-marker:before					{content: "\f159";}
+#dashboard_right_now .inside .main ul li a.dashicons-star-filled:before				{content: "\f155";}
+#dashboard_right_now .inside .main ul li a.dashicons-star-half:before				{content: "\f459";}
+#dashboard_right_now .inside .main ul li a.dashicons-star-empty:before				{content: "\f154";}
+#dashboard_right_now .inside .main ul li a.dashicons-flag:before					{content: "\f227";}
+#dashboard_right_now .inside .main ul li a.dashicons-location:before				{content: "\f230";}
+#dashboard_right_now .inside .main ul li a.dashicons-location-alt:before			{content: "\f231";}
+#dashboard_right_now .inside .main ul li a.dashicons-vault:before					{content: "\f178";}
+#dashboard_right_now .inside .main ul li a.dashicons-shield:before					{content: "\f332";}
+#dashboard_right_now .inside .main ul li a.dashicons-shield-alt:before				{content: "\f334";}
+#dashboard_right_now .inside .main ul li a.dashicons-sos:before						{content: "\f468";}
+#dashboard_right_now .inside .main ul li a.dashicons-search:before					{content: "\f179";}
+#dashboard_right_now .inside .main ul li a.dashicons-slides:before					{content: "\f181";}
+#dashboard_right_now .inside .main ul li a.dashicons-analytics:before				{content: "\f183";}
+#dashboard_right_now .inside .main ul li a.dashicons-chart-pie:before				{content: "\f184";}
+#dashboard_right_now .inside .main ul li a.dashicons-chart-bar:before				{content: "\f185";}
+#dashboard_right_now .inside .main ul li a.dashicons-chart-line:before				{content: "\f238";}
+#dashboard_right_now .inside .main ul li a.dashicons-chart-area:before				{content: "\f239";}
+#dashboard_right_now .inside .main ul li a.dashicons-groups:before					{content: "\f307";}
+#dashboard_right_now .inside .main ul li a.dashicons-businessman:before				{content: "\f338";}
+#dashboard_right_now .inside .main ul li a.dashicons-id:before						{content: "\f336";}
+#dashboard_right_now .inside .main ul li a.dashicons-id-alt:before					{content: "\f337";}
+#dashboard_right_now .inside .main ul li a.dashicons-products:before				{content: "\f312";}
+#dashboard_right_now .inside .main ul li a.dashicons-awards:before					{content: "\f313";}
+#dashboard_right_now .inside .main ul li a.dashicons-forms:before					{content: "\f314";}
+#dashboard_right_now .inside .main ul li a.dashicons-testimonial:before				{content: "\f473";}
+#dashboard_right_now .inside .main ul li a.dashicons-portfolio:before				{content: "\f322";}
+#dashboard_right_now .inside .main ul li a.dashicons-book:before					{content: "\f330";}
+#dashboard_right_now .inside .main ul li a.dashicons-book-alt:before				{content: "\f331";}
+#dashboard_right_now .inside .main ul li a.dashicons-download:before				{content: "\f316";}
+#dashboard_right_now .inside .main ul li a.dashicons-upload:before					{content: "\f317";}
+#dashboard_right_now .inside .main ul li a.dashicons-backup:before					{content: "\f321";}
+#dashboard_right_now .inside .main ul li a.dashicons-clock:before					{content: "\f469";}
+#dashboard_right_now .inside .main ul li a.dashicons-lightbulb:before				{content: "\f339";}
+#dashboard_right_now .inside .main ul li a.dashicons-desktop:before					{content: "\f472";}
+#dashboard_right_now .inside .main ul li a.dashicons-tablet:before					{content: "\f471";}
+#dashboard_right_now .inside .main ul li a.dashicons-smartphone:before				{content: "\f470";}
+#dashboard_right_now .inside .main ul li a.dashicons-smiley:before					{content: "\f328";}
+
+
+
+/**
+ * CLASSES GLOBAIS
+ * 
+ */
+img.aligncenter			{display:block;margin:0 auto;}
+.txt_right 				{text-align:right;}
+.txt_left 				{text-align:left;}
+.txt_center				{text-align:center;}
+.fleft, .alignleft		{float:left;}
+.fright, .alignright	{float:right;}
+.aligncenter			{display:block;margin:0 auto;}
+.cleaner				{clear:both;}
+.small_text				{font-size:80%;}
+.hide					{display:none;}
+.text_error				{color:red;}
+.text_success			{color:green;}
+.text_alert				{color:orange;}
+.text_info				{color:cyan;}
+
+
+
+/**
+ * TAMANHOS: larguras
+ * 
+ */
+.input_textarea 	{height:150px;width:100%;}
+.iptw_tiny 		{width:10%;}
+.iptw_small 		{width:25%;}
+.iptw_medium 	{width:50%;}
+.iptw_large 		{width:75%;}
+.iptw_full 		{width:100%;}
+
+.iptw_30		{width:30px}
+.iptw_50		{width:50px}
+.iptw_75		{width:75px}
+.iptw_100		{width:100px}
+.iptw_150		{width:150px}
+.iptw_200		{width:200px}
+.iptw_250		{width:250px}
+.iptw_300		{width:300px}
+.iptw_350		{width:350px}
+.iptw_400		{width:400px}
+.iptw_450		{width:450px}
+.iptw_500		{width:500px}
+
+.inline_block		{display:inline-block;}
+.inline_block_25 	{width:25%}
+.inline_block_50 	{width:50%}
+.inline_block_75 	{width:75%}
+.inline_block_100 	{width:100%}
+
+.ipth_tiny 		{height:60px;}
+.ipth_small 		{height:100px;}
+.ipth_medium	{height:250px;}
+.ipth_tall		{height:400px;}
+
+input[disabled='disabled'],
+input[disabled='1']{
+	background:#ededed;
+	color:#666;
+}
+
+
+/**
+ * Botões
+ * 
+ */
+.btn_item_new {
+	background:url(img/btn_add.gif) no-repeat 0 0;
+	color:#21759B;
+	cursor:pointer;
+	padding:1px 0 1px 20px;
+}
+.btn_item_new:hover {
+	background-position:0 -50px;
+	color:#D54E21;
+}
+.btn_item_select {
+	background:url(img/btn_select_images.png) no-repeat 0 0;
+	color:#21759B;
+	cursor:pointer;
+	padding:0 0 0 20px;
+}
+.btn_item_select:hover {
+	background-position:0 -21px;
+	color:#D54E21;
+}
+.btn_help {
+	background:url(img/help.png) no-repeat center center;
+	cursor:help;
+	display:inline-block;
+	height:16px;
+	font-size:0;
+	line-height:0;
+	vertical-align:text-bottom;
+	width:16px;
+}
+
+
+
+/**
+ * Botão de action para aprovar/desaprovar usuários
+ * 
+ */
+.approve_user_actions {
+	padding:0 0 20px;
+	position:relative;
+}
+.approve_user_actions .user_status {
+	display:inline-block;
+	margin:0 0 10px 0;
+}
+.approve_user_actions.user_default .user_email_actions {
+	display:none;
+}
+.approve_user_actions .user_email_actions {
+	border-top:1px solid #dfdfdf;
+	margin:20px 0 0;
+	padding:20px 0 0;
+}
+.approve_user_actions .loading {
+	display:none;
+	background-color:#f9f9f9;
+	background-image: url(img/btn_loading.gif);
+	background-repeat:no-repeat;
+	background-position:center center;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+.alternate .approve_user_actions .loading {
+	background-color:#fcfcfc;
+}
+
+
+
+/**
+ * MENSAGENS DE ERRO
+ * 
+ * .alert_box - box com alerta com HTML, links, e formatações, usado para os avisos de arquivo ou function não encontrada e mensagens mais complexas.
+ * 
+ */
+#wpbody .alert_box {
+	margin:10px 0;
+	padding:5px;
+}
+#wpbody .alert_box p {
+	margin:0;
+}
+#wpbody .alert_box .error {
+	color:#FF0000;
+}
+#wpbody .alert_box ul,
+#wpbody .alert_box ol {
+	list-style:disc inside;
+	margin:0 0 0 20px;
+}
+/**
+ * Aviso inline para avisos simples.
+ */
+.message_type_error {
+	background-color:#FFEBE8;
+    border:1px solid #CC0000;
+}
+.message_type_alert {
+	background-color:#ffedcc;
+    border:1px solid #fea600;
+}
+.message_type_success{
+	background-color:#d2fad2;
+    border:1px solid green;
+}
+.form_element_error {
+	background-color:#FFEBE8;
+    border:1px solid #CC0000;
+	padding:4px;
+}
+.form_element_message {
+    border:1px solid transparent;
+	background-color:#fff;
+	font-size:10px;
+	line-height:16px;
+	margin:2px 0 0;
+	padding:2px 5px;
+}
+/**
+ * Modificar a mensagem do topo "#message.updated"
+ * 
+ */
+.updated p.updated_message_success {color:green;}
+.updated p.updated_message_alert {color:orange;}
+.updated p.updated_message_error {color:red;}
+
+
+/**
+ * COLUNAS DE EDIÇÃO
+ * Largura das colunas das listagens de conteúdos. os nomes das colunas seguem o padrão "column-{$name}", onde $name é chave do array de configuração
+ * no hook "manage_edit-{$post_type}_columns"
+ */
+.wp-list-table .column-id,
+.wp-list-table  .column-order,
+.wp-list-table  .column-ordem {width:7%;}
+
+
+/**
+ * HELP
+ * Bloco de ajuda que fica no rodapé de cada bloco de elementos. Em meta_box ele fica grudado nas bordas do meta_box.
+ */
+.form-table td.boros_form_extra_info {
+	padding:0;
+}
+.form-table td.boros_form_extra_info div {
+	background:#FCFCFC;
+	border:1px dotted #DFDFDF;
+	font-size:11px;
+	line-height:14px;
+	padding:8px 8px 6px;
+}
+.boros_meta_box .form-table td.boros_form_extra_info div {
+	border:none;
+	border-top:1px dashed #DFDFDF;
+}
+.form-table td.boros_form_extra_info .ico {
+	background:url(img/info.png) no-repeat center left;
+	padding:2px 0 2px 20px;
+}
+
+
+
+/** 
+ * ==================================================
+ * BLOCKS ===========================================
+ * ==================================================
+ * Blocos de controle que englobam os elementos. São separados pelo contexto: option, meta_box, taxonomy, user_meta, widget
+ * 
+ */
+
+/**
+ * FORM BLOCK
+ * É comum à todos os blocos(option, meta_box, user_meta, taxonomy, widget)
+ *
+ */
+.boros_form_block {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+.boros_form_block .boros_form_desc {
+	font-style:italic;
+}
+.boros_taxonomy_block .label_helper, 
+.boros_form_block .label_helper {
+	color:#666;
+	display:block;
+	font-size:11px;
+	font-weight:normal;
+	line-height:normal;
+}
+.boros_form_block ul {
+	margin:0;
+}
+.boros_form_block ul li {
+	margin:0;
+}
+.boros_form_block th label,
+.boros_form_block .non_click_label {
+	display:inline-block;
+	line-height:16px;
+	padding:5px 0 0;
+}
+.boros_element_wp_editor label,
+.boros_form_block .non_click_label {
+	cursor:text;
+}
+.boros_element_wp_editor label {
+	margin:20px 0 0;
+}
+.boros_form_block th .div_label {
+	display:block;
+	padding:5px 5px 0;
+}
+
+
+
+/**
+ * META_BOX
+ * Usado nas telas de postagem(post.php|post-new.php)
+ * 
+ */
+.boros_meta_block {
+	width:100%;
+}
+.boros_meta_block th {
+	font-weight:normal;
+	padding:5px 7px;
+	text-align:left;
+	vertical-align:top;
+	width:25%;
+	overflow:visible;
+}
+.boros_meta_block td {
+	padding:5px 7px;
+	overflow:visible;
+}
+
+/**
+ * Resetar margins e paddings dos meta_boxes para possibilitar controles que ocupem todo a área interna do meta_box, como wp_editor|tiny_mce e rodapé de help.
+ */
+.boros_meta_block td.mceIframeContainer, 
+#poststuff .boros_meta_box .inside,
+#poststuff .boros_meta_box .inside .form-table {
+	margin:0;
+	padding:0;
+}
+.boros_meta_block .label_radio,
+.boros_meta_block .label_checkbox,
+.label_radio, 
+.label_checkbox {
+	
+}
+
+
+
+/**
+ * OPTIONS PAGE
+ * 
+ */
+.boros_options_block {
+	margin:0 0 50px;
+}
+/* boros_section_desc - bloco de introdução à página/aba. Aceita qualquer HTML e deve descrever os controles da página toda. */
+.boros_section_desc {
+	padding:20px 0 0;
+}
+/**
+ * Mouseover em cada linha(row) com elementos, para facilitar a vizualização
+ */
+#your-profile .boros_options_block > tr > td, 
+#your-profile .boros_options_block > tr > th {
+	border-top:1px solid #DFDFDF;
+}
+
+
+
+/**
+ * TAXONOMY PAGE
+ * 
+ */
+.boros_taxonomy_block {
+	border-spacing:0;
+	margin:0 0 50px;
+}
+table.boros_taxonomy_block {
+	width:100%;
+}
+.boros_taxonomy_block tr th {
+	border-top:1px solid #DFDFDF;
+	padding:10px;
+	text-align:left;
+	width:200px;
+}
+#addtag .boros_taxonomy_block ,
+.boros_taxonomy_block tr td {
+	border-top:1px solid #DFDFDF;
+	margin:0;
+	padding:10px;
+}
+.boros_taxonomy_block input,
+.boros_taxonomy_block textarea {
+	width:auto;
+}
+#addtag .boros_taxonomy_block > br {
+	display:none;
+}
+
+/**
+ * Mouseover em cada linha(row) com elementos, para facilitar a vizualização
+ */
+#addtag .boros_taxonomy_block:hover, 
+.boros_taxonomy_block tr:hover > th,
+.boros_taxonomy_block tr:hover > td {
+	background:#fafafa;
+}
+.boros_taxonomy_block tr:hover td.boros_form_desc,
+.boros_taxonomy_block tr:hover td.boros_element_separator {
+	background:#fff;
+}
+
+
+
+/**
+ * DUPLICABLE INPUT
+ * 
+ */
+.duplicable_input_item {
+	border:1px solid transparent;
+	overflow:hidden;
+	padding:2px 0 2px 18px;
+	position:relative;
+}
+.duplicable_input_item .duplicable_move {
+	background:url(img/btn_move.gif) no-repeat left center;
+	cursor:n-resize;
+	position:absolute;
+	top:0;
+	left:0;
+	width:16px;
+	height:100%;
+}
+.duplicable_input_item .duplicable_move:hover {
+	background-position:right center;
+}
+.duplicable_input_item .duplicable_add {
+	background:url(img/btn_add.gif) no-repeat left -50px;
+	cursor:pointer;
+	display:inline-block;
+	height:16px;
+	margin:0 5px;
+	vertical-align:middle;
+	width:16px;
+}
+.duplicable_input_item .duplicable_remove {
+	background:url(img/btn_remove.gif) no-repeat left top;
+	cursor:pointer;
+	display:inline-block;
+	height:16px;
+	margin:0 5px 0 0;
+	vertical-align:middle;
+	width:16px;
+}
+.duplicable_input_item:only-of-type .duplicable_remove {
+	display:none;
+}
+.duplicable_input_item .duplicable_input {
+	float:left;
+}
+.duplicable_input_item.loading .duplicable_move, 
+.duplicable_input_item.loading .duplicable_add, 
+.duplicable_input_item.loading .duplicable_remove {
+	visibility:hidden;
+}
+.duplicable_input_item .duplicable_input .boros_form_input {
+	width:99% !important;
+}
+.duplicable_input_box .ui-sortabled {
+	border:1px dashed #DFDFDF;
+	padding:2px 0 2px 18px;
+}
+
+
+
+/**
+ * ==================================================
+ * ELEMENT ==========================================
+ * ==================================================
+ * Todos os elementos possuem essa class como holder
+ * 
+ * 
+ */
+.boros_form_block .boros_form_element {
+	position:relative;
+}
+.boros_form_block .boros_form_element.reloading {
+	
+}
+/**
+ * Blocos de HTML pre e pós label e input. São diferentes de dos helpers, pois podem conter blocos extensos de HTML complexo.
+ * 
+ */
+.boros_form_element .form_element_label_start,
+.boros_form_element .form_element_label_end,
+.boros_form_element .form_element_input_start,
+.boros_form_element .form_element_input_end {
+	line-height:normal;
+}
+/**
+ * Reloading direto de element( não é duplicate )
+ * Ao requisitar o reload de um determindo elemento(na prática, o TR parent completo), é aplicado a class reloading apenas à TD correspondente, já que o TH é
+ * opcional. É feito um append de uma div.reloading_layer que possui o gif animado e sobrepõe os controles. Como exista diferenças de bgs entre os tipos de 
+ * elementos e contextos, em vez de aplicar um 'background-color' ao .reloading_layer, é mantido transparent e aplicado 'visibility:hidden' a todos os
+ * childs do .boros_form_element, matendo assim o tamanho do box e sem a necessidade de setar uma cor de bg.
+ */
+.boros_form_element.reloading * {
+	visibility:hidden;
+}
+.boros_form_element.reloading .reloading_layer {
+	background:url(img/btn_loading.gif) no-repeat center center;
+	visibility:visible;
+	position:absolute;
+	width:100%;
+	height:100;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+}
+.locked .lock_layer {
+	visibility:visible;
+	position:absolute;
+	width:100%;
+	height:100;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index:4;
+}
+.locked .lock_layer .lock_layer_bg {
+	background:#fff;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	opacity:0.6;
+}
+.locked .lock_layer .lock_layer_text {
+	background:#fff;
+	color:red;
+	font-size:14px;
+	padding:10px;
+	border-radius:4px;
+	border:1px solid red;
+	position:absolute;
+	top:50%;
+	left:200px;
+	text-align:center;
+	width:400px;
+}
+
+/**
+ * Corrigir posicionamento do botão de redimensionamento do editor de texto
+ * 
+ */
+.wp_themeSkin .mceStatusbar {
+	position:relative;
+}
+.wp_themeSkin .mceStatusbar #content_resize, 
+#post #post-body .wp_themeSkin .mceStatusbar a.mceResize {
+	top:auto !important;
+}
+
+
+
+/**
+ * ==================================================
+ * PLUGIN NEWSLETTER ================================
+ * ==================================================
+ * 
+ * 
+ */
+#export_data {padding:0 0 20px;}
+.widefat .check-column {text-align:center;}
+.newsletter_remove_btn {
+	background:url(img/btn_remove.gif) no-repeat 0 0;
+	display:block;
+	margin:0 auto;
+	width:16px;
+	height:16px;
+	text-indent:-999999px;
+}
+
+
+
+/**
+.form_ipt_textarea {
+	margin:6px 6px 8px;
+}
+.wp_themeSkin {
+	display:block;
+	border: 1px solid #DFDFDF;
+	-moz-border-radius: 6px 6px 0 0;
+	-webkit-border-radius: 6px 6px 0 0;
+	border-radius: 6px 6px 0 0;
+}
+
+
+.form_text_editor {
+	width:99.5%;
+}
+.editor_type_simple {height:100px;}
+.editor_type_a {height:150px;}
+.editor_type_b {height:200px;}
+
+.ui_pages_list {width:100%;min-width:350px;min-height:300px;}
+.ui_pages_list li {background-color:#F1F1F1;cursor:pointer;margin:0;padding:5px;}
+.ui_pages_list li:hover {background-color:#E0E0E0;color:#000;}
+.ui_pages_list .level_0 {padding-left:10px;}
+.ui_pages_list .level_1 {background:#F1F1F1 url(img/sub_seta.gif) no-repeat 10px center;padding-left:25px;}
+.ui_pages_list .level_2 {background:#F1F1F1 url(img/sub_seta.gif) no-repeat 20px center;padding-left:35px;}
+.ui_pages_list .level_3 {background:#F1F1F1 url(img/sub_seta.gif) no-repeat 30px center;padding-left:45px;}
+.ui_pages_list .level_4 {background:#F1F1F1 url(img/sub_seta.gif) no-repeat 40px center;padding-left:55px;}
+.ui_pages_list .level_5 {background:#F1F1F1 url(img/sub_seta.gif) no-repeat 50px center;padding-left:65px;}
+.ui_pages_list .ui-selected {background-color:#7F7F7F;color:#FFF;}
+
+/* sortables */
+/**
+.sortable_box {
+	clear:both;
+	margin:0 0 20px;
+	position:relative;
+	overflow:hidden;
+}
+.box_order {width:70%;}
+.connected_box {float:left;width:50%;}
+.menu_source li {cursor:e-resize}
+.menu_build li {cursor:n-resize}
+.box_order .ui_pages_list {background:#F9F9F9;margin:0 10px 0 0;width:auto;min-width:0;overflow:auto;}
+.box_order .ui_pages_list li {border-top:1px solid #FFF;overflow:hidden;}
+.box_order .ui_pages_list li .item_thumb img {float:right;}
+.ui_pages_list li.ui-sortabled {background-color:#7F7F7F;}
+
+.box_order ul.menu_source.build_empty {
+	background-image:url(img/ico_contents_not_avaiable.png);
+	background-repeat:no-repeat;
+	background-position:center center;
+}
+.box_order ul.menu_build.build_empty {
+	background-image:url(img/ico_insert_elements.png);
+	background-repeat:no-repeat;
+	background-position:center center;
+}
+
+
+p.ico_move_right {
+	background:url(img/ico_move_right.png) no-repeat left top;
+	padding:0 0 0 20px;
+}
+p.ico_order {
+	background:url(img/ico_order.png) no-repeat left top;
+	padding:0 0 0 20px;
+}
+
+.ipt_text_readonly:hover {
+	background:#F8F7F7;
+	border:1px solid #E6DB55;
+}
+.ipt_text_readonly:active {
+	background:#FFFFE0;
+	border:1px solid #E6DB55;
+}
+*/
+
+
+
+/* ========================================================================== */
+/* CONNECTED CONTENTS ======================================================= */
+/* ========================================================================== */
+/**
+.box_connected_contents_list .item_thumb img {
+	height:auto;
+	max-width:40%;
+}
+.box_connected_contents_list .item_data {
+	float:left;
+	width:60%;
+}
+/**/
+
+
+
+/* ========================================================================== */
+/* TEXTAREA:EDITOR ========================================================== */
+/* ========================================================================== */
+/**
+.boros_element_textarea {
+	
+}
+#poststuff .meta_box_textarea .inside,
+#poststuff .meta_box_textarea .inside .boros_form_element {
+	margin:0;
+	padding:0;
+}
+.boros_element_textarea .mceEditor {
+	border-radius:0;
+}
+/**/
+
+

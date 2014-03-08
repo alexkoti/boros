@@ -1,0 +1,18 @@
+﻿
+.boros_element_content_order .content_order_list {
+	margin:0;
+}
+.boros_element_content_order .ui-sortable li {
+	background:url(img/drag_v.gif) no-repeat left center;
+	border:1px dotted transparent;
+	cursor:pointer;
+	margin:0;
+	padding:4px 2px 4px 20px;
+}
+.boros_element_content_order .ui-sortable li:hover {
+	border:1px dotted #DFDFDF;
+}
+.boros_element_content_order .ui-sortable li.ui-state-highlight {
+	background:#EFEFEF;
+	border:1px dotted #DFDFDF;
+}

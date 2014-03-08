@@ -1,0 +1,14 @@
+
+ - BFE_{type} extends BorosFormElement {}
+ - Método $this->input() é obrigatório, pois é a saída HTML do elemento
+ - Var $valid_attrs é obrigatório, pois define os atributos dos elementos
+ - Definir JS e CSS. Aceita string(para um arquivo) ou array(para múltiplos)
+	var $enqueues = array(
+		'js' => 'js_name',
+		'css' => 'css_name',
+	);
+ - Callbacks: array com os nomes das functions
+	static function set_callback_functions(){
+		return array('taxonomy_term_order');
+	}
+ - Método $this->set_label() para definir a saída HTML do label

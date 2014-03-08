@@ -1,0 +1,89 @@
+﻿/* ========================================================================== */
+/* CONNECTED CONTENTS LIST ================================================== */
+/* ========================================================================== */
+.menu_source .item_data .ipt_radio_group {
+	display:none;
+}
+.ipt_radio_group label {
+	vertical-align:middle;
+	display:inline-block;
+    height:30px;
+    margin:0 15px 0 0;
+}
+.ipt_radio_group label img {
+	float:none;
+	vertical-align:middle;
+}
+
+
+
+/* ========================================================================== */
+/* CONNECTED CONTENTS ======================================================= */
+/* ========================================================================== */
+p.ico_move_right {
+	background:url(img/ico_move_right.png) no-repeat left top;
+	padding:0 0 0 20px;
+}
+p.ico_order {
+	background:url(img/ico_order.png) no-repeat left top;
+	padding:0 0 0 20px;
+}
+.connected_box {float:left;width:50% !important;}
+.menu_source li {cursor:e-resize}
+.menu_build li {cursor:n-resize}
+.box_order .ui_pages_list {background:#F9F9F9;margin:0 10px 0 0;width:auto;min-width:0;overflow:auto;}
+.box_order .ui_pages_list li {
+	border-top:1px solid #FFF;
+	position:relative;
+	overflow:hidden;
+}
+.box_order .ui_pages_list li .item_thumb img {float:right;}
+/* elemento 'fantasma' que indica o lugar de retira e depósito do elemento. nome 'ui-sortabled' definido na função javascript 'order_lists', que controla o sortable */
+.ui_pages_list li.ui-sortabled {background-color:#7F7F7F;}
+
+.box_order ul.menu_source.build_empty {
+	background-image:url(img/ico_contents_not_avaiable.png);
+	background-repeat:no-repeat;
+	background-position:center center;
+}
+.box_order ul.menu_build.build_empty {
+	background-image:url(img/ico_insert_elements.png);
+	background-repeat:no-repeat;
+	background-position:center center;
+}
+.box_connected_contents_list ul li {
+	min-height:50px;
+	padding:10px;
+	position:relative;
+}
+.box_connected_contents_list .item_thumb img {
+	height:auto;
+	max-width:40%;
+}
+.box_connected_contents_list .item_data {
+	float:left;
+	width:60%;
+}
+.box_connected_contents_list .item_data p {
+	margin:0;
+}
+.box_connected_contents_list .remover_destaque {
+	bottom:10px;
+	font-size:10px !important;
+	left:5px;
+	position:absolute;
+}
+.box_connected_contents_list .remover_destaque .ajax-loading {
+	vertical-align:middle;
+}
+.menu_build .remover_destaque {
+	display:none;
+}
+.box_connected_contents_list .item_type_separador {
+	background:#444;
+	color:#fff;
+}
+.box_connected_contents_list .item_type_separador:hover {
+	background:#666;
+	color:#fff;
+}
