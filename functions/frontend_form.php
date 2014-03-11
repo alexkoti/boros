@@ -1287,6 +1287,7 @@ class BorosFrontendForm {
 		foreach( $callbacks as $callback ){
 			if( method_exists( $this, $callback['function'] ) ){
 				//pal("Método da class BorosFrontendForm: {$callback['function']}");
+				// não é necessário adicionar o <code>$callback['args']['object'] = $this;</code> porque o método já pode acessar as informações de valid_{meta|data}
 				call_user_func( array($this, $callback['function']), $callback['args'] );
 			}
 			elseif( function_exists( $callback['function'] ) ){
@@ -1297,6 +1298,8 @@ class BorosFrontendForm {
 	}
 	
 	function notify_by_email( $args ){
+		$object = $args['object'];
+		
 		$title =  $this->template_tags( $args['title'], $this->valid_data );
 		$title =  $this->template_tags( $title, $this->valid_meta );
 		
@@ -1312,9 +1315,6 @@ class BorosFrontendForm {
 		 * 
 		 */
 		$headers = array();
-		//$from_name = get_option('email_from_name');
-		//$from = get_option('email_from');
-		//$headers[] = "From: {$from_name} <{$from}>";
 		
 		// Adicionar CC
 		if( isset($args['cc']) and !empty($args['cc']) ){
@@ -1333,6 +1333,21 @@ class BorosFrontendForm {
 			}
 		}
 		
+		/**
+		 * Adicionar Reply-To
+		 * Em caso de formulários de contato, modificar o valor para o mesmo email da pessoa que enviou o forumlário, através do valor 'reply_back'
+		 * 
+		 */
+		if( isset($args['reply_to']) and !empty($args['reply_to']) ){
+			if( $args['reply_to'] == 'reply_back' ){
+				$email = $this->valid_meta['email'];
+			}
+			else{
+				$email = $args['reply_to'];
+			}
+			$headers[] = "Reply-To: {$email}";
+		}
+		
 		//pre($this->elements_plain, 'ELEMENTS');
 		//pre($this->valid_data, 'VALID DATA');
 		//pre($this->valid_meta, 'VALID META');
@@ -1342,7 +1357,7 @@ class BorosFrontendForm {
 		//pal('to: ' . $args['to']);
 		//pal('title: ' . $title);
 		//pal('message: ' . $message);
-		//exit();
+		//die('EMAIL TEST');
 		
 		$sent = wp_mail( $args['to'], $title, $message, $headers );
 	}
