@@ -62,6 +62,24 @@ function boros_dashboard_right_now( $elements ){
 
 /**
  * ==================================================
+ * DASHBOARD WIDGETS ================================
+ * ==================================================
+ * Remover os widgets padrão, deixando apenas o 'At a Glance'
+ * 
+ * @link http://codex.wordpress.org/Dashboard_Widgets_API
+ */
+add_action( 'wp_dashboard_setup', 'boros_remove_dashboard_widget', 1 );
+function boros_remove_dashboard_widget(){
+	global $wp_meta_boxes;
+ 	remove_meta_box( 'dashboard_activity', 'dashboard', 'normal' );
+ 	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
+ 	remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
+} 
+
+
+
+/**
+ * ==================================================
  * RIGHT NOW :: DEPRECATED ==========================
  * ==================================================
  * 
