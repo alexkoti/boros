@@ -55,6 +55,8 @@ print_r($const['user']);
  * Constante para versão de CSS/JS
  * A constante VERSION deverá indicar a versão desejada para o site final. Ao pedir a versão do script/css a ser utilizada, será retornado este valor, mas
  * caso o WP_DEBUG esteja habilitado, será retornado a versão temporária, que poderá ser valor hardcoded ou time(), que removerá o cache.
+ *
+ * @todo: rever este reço e passar para o plugin do job ou tema, para definir o cache de enqueue conforme a necessidade
  * 
  * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
  */
