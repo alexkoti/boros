@@ -10,6 +10,35 @@
  */
 
 
+
+/**
+ * ==================================================
+ * BOOTSTRAP COLUMN MENU ============================
+ * ==================================================
+ * Filtro para menu colunado
+ * 
+ */
+class _bootstrap_column_menu_walker extends Walker_Nav_Menu {
+	
+	function __construct(){
+		pal(1);
+	}
+	
+	function start_lvl( &$output, $depth = 0, $args = array() ){
+		
+		$output .= "\n" . $indent . '<ul class="' . $class_names . '">' . "\n";
+	}
+	
+	function start_el( &$output, $item, $depth = 0, $args = array(), $current_object_id = 0 ){
+		//pre($item, 'item');
+		//pre($args, 'args');
+		
+		$output .= apply_filters( 'walker_nav_menu_start_el', $output, $item, $depth, $args );
+	}
+}
+
+
+
 /**
  * ==================================================
  * FORM ELEMENT :: CONTENT ORDER :: TERMS ===========
