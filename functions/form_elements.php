@@ -749,7 +749,7 @@ class BorosFormElement {
 		}
 		
 		// input helper prepend
-		if( $this->input_helper_pre == '' ){
+		if( isset($this->data['input_helper_pre']) and $this->data['input_helper_pre'] != '' ){
 			$this->input_helper_pre = " <span class='description'>{$this->data['input_helper_pre']}</span>";
 		}
 	}
