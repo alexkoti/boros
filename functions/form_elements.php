@@ -464,6 +464,12 @@ class BorosFormElement {
 	var $input_helper = '';
 	
 	/**
+	 * String HTML auxiliar do input, será exibido antes do input.
+	 * 
+	 */
+	var $input_helper_pre = '';
+	
+	/**
 	 * String HTML auxiliar do label, pós-processado. Será exibido junto com o label.
 	 * 
 	 */
@@ -729,6 +735,8 @@ class BorosFormElement {
 	 * Possibilidade de modificar o valor via filter, com 'BFE_{TYPE}_input_helper' ou método de classe extendida.
 	 * 
 	 * Aplicar filtros mesmo que o input_helper esteja vazio, para que possa retornar valores de filtros
+	 * 
+	 * @todo estudar a necessidade de filtros, melhorar a parte do 'input_helper_pre'
 	 */
 	function set_input_helper(){
 		//if( !empty($this->data['input_helper']) ){
@@ -736,8 +744,14 @@ class BorosFormElement {
 			$this->input_helper = apply_filters( "BFE_{$this->data['name']}_input_helper", $this->input_helper, $this->data_value, $this->context );
 		//}
 		// resetar caso esteja vazio
-		if( $this->input_helper == " <span class='description'></span>" )
+		if( $this->input_helper == " <span class='description'></span>" ){
 			$this->input_helper = '';
+		}
+		
+		// input helper prepend
+		if( $this->input_helper_pre == '' ){
+			$this->input_helper_pre = " <span class='description'>{$this->data['input_helper_pre']}</span>";
+		}
 	}
 	
 	/**
@@ -778,7 +792,7 @@ class BorosFormElement {
 	}
 	
 	/**
-	 * Teoricamente este método é obrigatório nas classes estendidas, onde deeverá ser criado o input conforme a necessidade.
+	 * Teoricamente este método é obrigatório nas classes estendidas, onde deverá ser criado o input conforme a necessidade.
 	 * 
 	 * @todo verificar o uso de abstract
 	 */

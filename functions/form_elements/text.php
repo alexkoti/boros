@@ -75,7 +75,7 @@ class BFE_text extends BorosFormElement {
 		 * 
 		 */
 		else{
-			$input = "<input type='{$type}' value='{$value}'{$attrs} />{$this->input_helper}";
+			$input = "{$this->input_helper_pre}<input type='{$type}' value='{$value}'{$attrs} />{$this->input_helper}";
 		}
 		
 		return $input;
