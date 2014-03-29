@@ -245,6 +245,22 @@ function auto_http_prefix( $link ){
 
 /**
  * ==================================================
+ * UPPERCASE PORTUGUES ==============================
+ * ==================================================
+ * 
+ * @link http://dourado.net/2007/05/15/php-converter-string-para-maiuscula-ou-minuscula-com-acentos/
+ * 
+ */
+function uppercase_ptbr($term, $tp = 1) { 
+    if ($tp == "1") $palavra = strtr(strtoupper($term),"àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ","ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß"); 
+    elseif ($tp == "0") $palavra = strtr(strtolower($term),"ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß","àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ"); 
+    return $palavra; 
+}
+
+
+
+/**
+ * ==================================================
  * VERIFICAR SE URL EXISTE ==========================
  * ==================================================
  * Válido para arquivos de imagens, para verificar a existência antes do download
