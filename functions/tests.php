@@ -206,10 +206,12 @@ class RandCpfCnpj {
 	var $cnpj = '';
 	
 	function __construct( $type = 'cpf' ){
-		if( $type == 'cpf' )
+		if( $type == 'cpf' ){
 			$this->cpf = $this->cpf();
-		else
+		}
+		else{
 			$this->cnpj = $this->cnpj();
+		}
 	}
 	
 	function mod($dividendo,$divisor){
@@ -522,12 +524,20 @@ class ProfileGen {
 	 */
 	function profile( $user_login = 'full_name' ){
 		$profile = array();
-		$profile['first_name'] = $this->rand_number_name('first');
-		$profile['last_name']  = $this->rand_number_name('last');
-		$profile['name'] = $profile['full_name'] = "{$profile['first_name']} {$profile['last_name']}";
-		$profile['full_name']  = "{$profile['first_name']} {$profile['last_name']}";
-		$profile['username']   = sanitize_user($profile['full_name']);
-		$profile['pass'] = $profile['user_pass'] = $profile['user_pass_confirm'] = '321';
+		
+		/**
+		 * Dados básicos
+		 * 
+		 */
+		$profile['first_name']        = $this->rand_number_name('first');
+		$profile['last_name']         = $this->rand_number_name('last');
+		$profile['name']              = "{$profile['first_name']} {$profile['last_name']}";
+		$profile['full_name']         = $profile['name'];
+		$profile['username']          = sanitize_user($profile['full_name']);
+		$profile['user_nicename']     = sanitize_user($profile['full_name']);
+		$profile['pass']              = '321';
+		$profile['user_pass']         = '321';
+		$profile['user_pass_confirm'] = '321';
 		
 		// email
 		$email_args =  array(
@@ -566,9 +576,10 @@ class ProfileGen {
 		
 		// usermetas
 		$profile['email']           = $email;
+		$profile['user_email']      = $email;
 		$profile['rg']              = mt_rand( 111111111, 999999999 );
-		$cpf                        = new RandCpfCnpj();
-		$profile['cpf']             = $cpf->cpf();
+		$cpf_cnpj                   = new RandCpfCnpj();
+		$profile['cpf']             = $cpf_cnpj->cpf();
 		
 		$profile['sexo']            = array_rand( array('feminino' => 'feminino', 'masculino' => 'masculino') );
 		$profile['nascimento']      = _rand_birth_date();
@@ -598,6 +609,7 @@ class ProfileGen {
 		
 		$profile['profissao']       = _rand_profissao();
 		$profile['empresa']         = _rand_companies();
+		$profile['cnpj']            = $cpf_cnpj->cnpj();
 		return $profile;
 	}
 }

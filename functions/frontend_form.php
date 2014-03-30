@@ -605,20 +605,24 @@ class BorosFrontendForm {
 	 * @todo adicionar 'save_as_user_meta'
 	 */
 	function create_user(){
-		//pre($this->posted_data);
+		//pre($this->posted_data, 'posted_data');
 		$user_data = array();
 		foreach( $this->core_user_fields as $field => $default ){
-			if( isset($this->posted_data[$field]) )
+			if( isset($this->posted_data[$field]) ){
 				$user_data[$field] = $this->posted_data[$field];
-			else
+			}
+			else{
 				$user_data[$field] = $default;
+			}
 		}
 		$user_meta = array();
 		foreach( $this->config['accepted_metas'] as $field => $default ){
-			if( isset($this->posted_data[$field]) )
+			if( isset($this->posted_data[$field]) ){
 				$user_meta[$field] = $this->posted_data[$field];
-			else
+			}
+			else{
 				$user_meta[$field] = $default;
+			}
 		}
 		
 		$this->valid_data = $this->validate( $this->context, $user_data );
@@ -650,13 +654,6 @@ class BorosFrontendForm {
 			}
 		}
 		
-		//pre( $user_data, 'USER_DATA' );
-		//pre( $user_meta, 'USER_META' );
-		//pre( $this->valid_data, 'VALID DATA' );
-		//pre( $this->valid_meta, 'VALID META' );
-		//pre( $this->validation->data_errors, 'VALID ERRORS' );
-		//return;
-		
 		/**
 		 * Verificar password
 		 * Existem dois cenários: com ou sem o campo de confirmação de senha
@@ -673,6 +670,29 @@ class BorosFrontendForm {
 			);
 			$this->validation->data_errors['user_pass_confirm']['password_match'] = $error;
 		}
+		/**
+		 * Verificar senha vazia
+		 * 
+		 */
+		if( empty($this->valid_data['user_pass']) ){
+			$this->errors[] = new WP_Error( 'password_empty', "Você não pode deixar a senha vazia \n" );
+			$error = array(
+				'name' => 'user_pass_empty',
+				'message' => 'Você não pode deixar a senha vazia',
+				'type' => 'error'
+			);
+			$this->validation->data_errors['user_pass']['password_empty'] = $error;
+		}
+		
+		
+		/**
+		pre( $user_data, 'USER_DATA' );
+		pre( $user_meta, 'USER_META' );
+		pre( $this->valid_data, 'VALID DATA' );
+		pre( $this->valid_meta, 'VALID META' );
+		pre( $this->validation->data_errors, 'VALID ERRORS' );
+		die('teste de criação de usuário');
+		/**/
 		
 		// verificar se existe algum erro de validação ou erros gerais(WP_Error, password_not_match)
 		if( empty( $this->validation->data_errors ) and empty( $this->errors ) ){
@@ -1455,10 +1475,12 @@ class BorosFrontendForm {
 			 */
 			$class = isset($this->config['class']) ? "boros_frontend_form {$this->config['class']}" : 'boros_frontend_form';
 			
-			if( !empty( $this->errors ) )
+			if( !empty( $this->errors ) ){
 				$class .= ' form_error';
-			if( isset($this->messages['success']))
+			}
+			if( isset($this->messages['success'])){
 				$class .= ' form_success';
+			}
 			?>
 			<div class="<?php echo $class; ?>" id="<?php echo $form_name; ?>_box">
 				<?php $this->show_messages(); ?>
@@ -1691,7 +1713,7 @@ class BorosFrontendForm {
 				if( !empty( $this->errors ) ){
 					echo '<div class="alert alert-error alert-danger">Ocorreram alguns erros, por favor verifique:</div>';
 					if( $this->config['debug'] == true ){
-						//pre($this->errors, 'bootstrap_output errors');
+						pre($this->errors, 'bootstrap3_output errors');
 					}
 				}
 				?>
@@ -1713,7 +1735,7 @@ class BorosFrontendForm {
 					
 						// descrição
 						if( isset($box['title']) ){
-							if( isset($box['title']) and !empty($box['title']) ) echo "<legend>{$box['desc']}</legend>";
+							if( isset($box['title']) and !empty($box['title']) ) echo "<legend>{$box['title']}</legend>";
 							if( isset($box['desc']) and !empty($box['desc']) ) echo "{$box['desc']} <hr />";
 						}
 						
@@ -1740,7 +1762,7 @@ class BorosFrontendForm {
 						
 						// info help de rodapé
 						if( isset($box['help']) and !empty($box['help']) ){
-							echo $box['help'];
+							echo "<div class='col-md-12'>{$box['help']}</div>";
 						}
 						
 					echo '</fieldset>';
