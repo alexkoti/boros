@@ -201,26 +201,12 @@ class BorosFrontendForm {
 			return;
 		}
 		
-		// caso não seja o forumlário pedido, não processar nada
-		if( isset($_POST['form_name']) and $_POST['form_name'] != $config['form_name'] ){
-			//pal($config['form_name']);
-			return;
-		}
-		
 		$this->self_url = self_url();
 		$this->config = boros_parse_args( $this->config, $config );
 		$this->context = boros_parse_args( $this->context, $context );
 		$this->elements = $elements;
 		$this->elements_plain();
 		$this->form_name = $this->context['form_name'] = $this->config['form_name'];
-		
-		$this->pre_process();
-		
-		$this->validation = new BorosValidation( $context );
-		
-		// verificar requireds e adicionar errors
-		$this->required( $this->posted_data );
-		//pre($this->posted_data, '$this->posted_data');
 		
 		// buscar dados pre-existentes no caso de determinados tipos de form
 		// post/page/post_type
@@ -238,7 +224,20 @@ class BorosFrontendForm {
 			}
 		}
 		
-		$this->process_data();
+		// processar os dados de formulário apenas se for postado o form certo, mas ainda assim garantindo o output do form a ser preenchido
+		if( isset($_POST['form_name']) and $_POST['form_name'] == $config['form_name'] ){
+			// definir o $this->posted_data
+			$this->pre_process();
+			
+			// iniciar validador
+			$this->validation = new BorosValidation( $context );
+			
+			// verificar requireds e adicionar errors
+			$this->required( $this->posted_data ); //pre($this->posted_data, '$this->posted_data');
+			
+			// processar os dados do formulário conforme o contexto
+			$this->process_data();
+		}
 		
 		// permitir escolher vários tipos de output
 		switch( $this->config['output_function'] ){
@@ -260,7 +259,7 @@ class BorosFrontendForm {
 				break;
 		}
 		
-		// permitir o acesso dos dados ao frontend
+		// permitir o acesso dos dados ao frontend, através de filter
 		add_filter( 'boros_frontend_form_data', array($this, 'data') );
 	}
 	
