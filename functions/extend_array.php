@@ -285,16 +285,23 @@ class array_non_empty_items {
  * ==================================================
  * Inserir item(s) em qualquer posição do array
  * 
- * @param	array	$array		array a modificar
- * @param	string	$insert		item para incluir
- * @param	int		$position	posição do elemento
- * @link http://www.mrleong.net/143/php-array-union/
+ * 
+ * @param    array         $array       array a modificar
+ * @param    string        $insert      item para incluir
+ * @param    int/string    $position    posição do elemento, integer para indexed e string para associative
+ * @link http://www.mrleong.net/143/php-array-union/ indexed
+ * @link http://stackoverflow.com/a/1783125 associative
  */
 function array_insert( $array, $insert, $position ){
-	$first = array_slice( $array, 0, $position );
-	$second = array_slice( $array, $position );
-	
-	return array_unique( array_merge($first, $insert, $second) );
+	if( is_assoc_array($array) ){
+		$index = array_search($position, array_keys($array)) + 1;
+		return array_slice($array, 0, $index, true) + $insert + array_slice($array, $index, NULL, true);
+	}
+	else{
+		$first = array_slice( $array, 0, $position );
+		$second = array_slice( $array, $position );
+		return array_unique( array_merge($first, $insert, $second) );
+	}
 }
 
 /**
