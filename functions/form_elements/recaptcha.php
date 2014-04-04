@@ -6,6 +6,12 @@
  * 
  * @todo mudar para usar apenas o recaptcha em ajax
  * 
+ * 
+ * MULTIPLOS RECAPTCHAS NA PÁGINA:
+ * Obrigatório adicionar a opção 'ajax_recaptcha' => true, e adicionar a class 'ajax_recaptcha_show' ao botão de troca de formulários
+ * 
+ * 
+ * 
  */
 
 class BFE_recaptcha extends BorosFormElement {

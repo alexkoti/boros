@@ -35,7 +35,7 @@
  );
  </code>
  *  - GRANDE MUDANÇA: modificar o processamento da maioria dos métodos para o action 'boros_frontend_form_output', quando realmente será utilizado. Dessa forma no __construct será apenas registrado de forma mais simples os diversos forms, sem grandes adições na memória.
- * 
+ * - modificar a aplicação do 'action_append' para utilizar o add_query_arg() nativo do wordpress, deixando a string simples como opção
  * 
  * 
  * @BUGS
@@ -76,6 +76,7 @@ class BorosFrontendForm {
 		'form_name'             => 'test',      // identificador para o hook
 		'output_function'       => 'output',    // function de output
 		'enctype'               => '',          // permitir uploads com <code>enctype="multipart/form-data"</code>
+		'action_append'         => '',          // adicionar argumentos ao action
 		
 		// post/page/post_type
 		'core_post_fields'      => array(),     // defaults apenas para o form corrente
@@ -1443,6 +1444,20 @@ class BorosFrontendForm {
 		return $users_table[0]->Auto_increment;
 	}
 	
+	function create_form_action(){
+		if( isset($this->config['action_append']) ){
+			if( is_array($this->config['action_append']) ){
+				echo add_query_arg( $this->config['action_append'], self_url() );
+			}
+			else{
+				echo self_url() . $this->config['action_append'];
+			}
+		}
+		else{
+			echo self_url();
+		}
+	}
+	
 	/**
 	 * @todo verificar o $this->create_numeric_username() nesta function
 	 * 
@@ -1486,7 +1501,7 @@ class BorosFrontendForm {
 				<?php echo $this->show_errors(); ?>
 				<div class="user_info"><?php $this->user_info(); ?></div>
 				
-				<form action="<?php echo self_url( array('form_name' => $this->form_name) ); if(isset($this->config['action_append'])) echo $this->config['action_append'] ?>" method="post" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
+				<form action="<?php $this->create_form_action(); ?>" method="post" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
 					<input type="hidden" name="form_name" value="<?php echo $this->config['form_name']; ?>" />
 					<?php
 					/**
@@ -1590,7 +1605,7 @@ class BorosFrontendForm {
 			 * 
 			 */
 			?>
-			<form action="<?php echo self_url( array('form_name' => $this->form_name) ); if(isset($this->config['action_append'])) echo $this->config['action_append'] ?>" method="post" class="<?php echo $class; ?>" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
+			<form action="<?php $this->create_form_action(); ?>" method="post" class="<?php echo $class; ?>" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
 				<?php $this->show_messages(); ?>
 				<?php
 				/**
@@ -1702,7 +1717,7 @@ class BorosFrontendForm {
 			 * 
 			 */
 			?>
-			<form action="<?php echo self_url( array('form_name' => $this->form_name) ); if(isset($this->config['action_append'])) echo $this->config['action_append'] ?>" method="post" class="<?php echo $class; ?>" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
+			<form action="<?php $this->create_form_action(); ?>" method="post" class="<?php echo $class; ?>" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
 				<?php $this->show_messages(); ?>
 				<?php
 				/**
