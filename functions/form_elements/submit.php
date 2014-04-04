@@ -25,7 +25,7 @@ class BFE_submit extends BorosFormElement {
 	 */
 	function set_input( $value = null ){
 		$attrs = make_attributes($this->data['attr']);
-		$input = "<input type='submit' value='{$value}'{$attrs} />{$this->input_helper}";
+		$input = "{$this->input_helper_pre}<input type='submit' value='{$value}'{$attrs} />{$this->input_helper}";
 		return $input;
 	}
 }

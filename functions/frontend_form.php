@@ -684,7 +684,6 @@ class BorosFrontendForm {
 			$this->validation->data_errors['user_pass']['password_empty'] = $error;
 		}
 		
-		
 		/**
 		pre( $user_data, 'USER_DATA' );
 		pre( $user_meta, 'USER_META' );
@@ -693,6 +692,19 @@ class BorosFrontendForm {
 		pre( $this->validation->data_errors, 'VALID ERRORS' );
 		die('teste de criação de usuário');
 		/**/
+		
+		/**
+		 * Filtro de pós-processamento
+		 * Permitir a análise dos dados do formulário antes do envio para a ação do formulário, possibilitando adicionar 
+		 * ou remover erros conforme a necessidade. Algumas ações só são possíveis após ter todos os dados do form devidamente
+		 * processados.
+		 * 
+		 * Exemplo de uso: um formulário não exige por padrão o telefone ou celular, porém é necessário que pelo menos um deles
+		 * seja preenchido, nesse momento será possível através do filtro verificar a presença deles e adicionar erros personalizados.
+		 * 
+		 */
+		$this->validation->data_errors = apply_filters('boros_frontend_form_validation_erros', $this->validation->data_errors, $this->form_name, $this->valid_data, $this->valid_meta, $this->elements, $this->context);
+		$this->errors = apply_filters('boros_frontend_form_erros', $this->errors, $this->form_name, $this->valid_data, $this->valid_meta, $this->elements, $this->context);
 		
 		// verificar se existe algum erro de validação ou erros gerais(WP_Error, password_not_match)
 		if( empty( $this->validation->data_errors ) and empty( $this->errors ) ){
