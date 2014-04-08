@@ -115,6 +115,18 @@ function custom_oembed( $post_id = false, $post_meta = false ){
 
 
 /**
+ * VIDEO RESPONSIVO
+ * Filtrar o auto oembed do the_content, adicionando o html responsivo
+ * 
+ */
+add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
+function tdd_oembed_filter($html, $url, $attr, $post_ID) {
+    return '<div class="videoWrapper">' . $html. ' </div>';
+}
+
+
+
+/**
  * ATRIBUTOS DO LINK DE ATTACHMENT
  * 
  * @todo adicionar novos parâmetros
