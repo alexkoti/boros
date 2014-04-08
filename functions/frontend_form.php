@@ -1087,13 +1087,18 @@ class BorosFrontendForm {
 					
 					// Salvar upload. Mesmo que esteja configurado para 'skip_save', o arquivo será enviado para o Mídia do WordPress, e o ID do attachment será salvo como post_meta
 					if( $config['type'] == 'file' ){
-						$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config );
+						$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');
 						// não salvar post_meta em caso de erro no upload e registrar o erro
 						if( is_wp_error($attachment_id) ){
 							$this->errors[] = $attachment_id;
 							continue;
 						}
 						else{
+							/**
+							 * Atualizar também o valid_meta para o ID do anexo, pois inicialmente ele possui apenas os dados puros de upload (name, type, tmp_name, size), e irá permitir o uso pelos callbacks
+							 * 
+							 */
+							$this->valid_meta[$meta_key] = $attachment_id;
 							$meta_value = $attachment_id;
 						}
 					}
@@ -1336,10 +1341,16 @@ class BorosFrontendForm {
 		$title =  $this->template_tags( $title, $this->valid_meta );
 		
 		$message = $args['message'];
+		//pre($message, 'PRE_MESSAGE');
 		$message = $this->template_tags( $args['message'], $this->valid_data );
 		$message = $this->template_tags( $message, $this->valid_meta );
 		$message = nl2br( $message );
 		$message = apply_filters( 'boros_notify_by_email_message', $message, $args, $this->valid_data, $this->valid_meta );
+		
+		//pre($args, 'ARGS');
+		//pre($message, 'POS_MESSAGE');
+		//pre($this->valid_data, 'VALID_DATA');
+		//pre($this->valid_meta, 'VALID_META');
 		
 		/**
 		 * Montar os $headers conforme os destinatários adicionais
@@ -1406,6 +1417,9 @@ class BorosFrontendForm {
 					if( isset($this->elements_plain[$name]) ){
 						if( $this->elements_plain[$name]['type'] == 'textarea' ){
 							$value = apply_filters( 'the_content', $value );
+						}
+						elseif( $this->elements_plain[$name]['type'] == 'file' ){
+							$value = wp_get_attachment_url($value);
 						}
 						elseif( $this->elements_plain[$name]['type'] == 'checkbox' and $value == true ){
 							$value = 'sim';
