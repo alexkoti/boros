@@ -454,17 +454,42 @@ class BorosMetaBoxes {
 	 * 3 - 
 	 */
 	function load_element_config( &$config, $context ){
-		if( $context['type'] != 'post_meta' )
+		//pal('load_element_config');
+		//pre($context, 'context');
+		//pre($config, '&config');
+		//sep();
+		
+		if( $context['type'] != 'post_meta' ){
 			return $config;
+		}
+		
+		/**
+		 * HERE BE DRAGONS!!!
+		 * Bug não identificado:
+		 * Caso: site Multitude, duplicate elements, qualquer um.
+		 * Descrição: Ao requisitar a duplicação do elemento, o presente método é rodado duas vezes, resultando em erro, onde não é encontrado o index $group em $config.
+		 * Não importa quantos elements o grupo possui.
+		 * Abordagens: Verificar se no add_filters se existe alguma duplicação nesse momento.
+		 * Correção(temporária): verificar se o array $confi já está populado, e devolver em caso positivo. Isso impede o erro.
+		 * 
+		 */
+		if( count($config) > 1 ){
+			return $config;
+		}
 		
 		$config = $this->meta_boxes;
+		
+		//pre($_POST, 'POST');
+		//pre($context, 'context');
 		//pre($config);
-		//pre($context);
-		//pre($_POST);
+		//pre($config[$context['group']], 'group');
+		
 		if( isset($context['in_duplicate_group']) and $context['in_duplicate_group'] == true ){
+			//pal(1);
 			$element_config = $config[$context['group']]['itens'][$context['parent']]['group_itens'][$context['name']];
 		}
 		else{
+			//pal(2);
 			$element_config = $config[$context['group']]['itens'][$context['name']];
 		}
 		return $element_config;
