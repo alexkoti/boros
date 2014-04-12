@@ -28,7 +28,7 @@ tr:last-child .boros_element_special_image {
 	margin:0 auto;
 }
 .special_image .special_image_img {
-	background:#fff;
+	background:rgba(223, 223, 223, 0.6);
 	border:1px solid #DFDFDF;
 	margin:0;
 	position:relative;
