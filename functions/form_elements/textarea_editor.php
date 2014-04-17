@@ -105,8 +105,9 @@ class BFE_textarea_editor extends BorosFormElement {
 				 */
 				mode: "specific_textareas",
 				editor_selector : 'editor_type_<?php echo $editor_attr['editor_type']; ?>',
-				skin: 'wp_theme',
-				theme: 'advanced',
+				menubar : false,
+				//skin: 'wp_theme',
+				//theme: 'advanced',
 				theme_advanced_buttons1: '<?php echo $editor_attr['buttons']; ?>',
 				theme_advanced_buttons2: '<?php echo $editor_attr['buttons2']; ?>', // (*1)
 				theme_advanced_buttons3: '<?php echo $editor_attr['buttons3']; ?>', // (*1)
@@ -134,7 +135,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				apply_source_formatting: false, 				// indentar o código
 				remove_linebreaks: false, 						// remover <br>s
 				remove_script_host: false, 
-				gecko_spellcheck: true,
+				gecko_spellcheck: false,
 				entities: '38,amp,60,lt,62,gt', 
 				//accessibility_focus: true, 
 				//tabfocus_elements: 'major-publishing-actions', 
@@ -145,7 +146,8 @@ class BFE_textarea_editor extends BorosFormElement {
 				paste_text_use_dialog: true, 					// limpar código ao colar
 				wpeditimage_disable_captions: false, 
 				theme_advanced_blockformats: 'p,blockquote,h1,h2,h3,h4,h5,h6',
-				plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
+				//plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs', <<< verificar se ainda será preciso o 'inlinepopups' e encontrar um substituto
+				plugins: 'paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
 				formats:{
 					alignleft : [
 						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},

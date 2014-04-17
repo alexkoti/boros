@@ -724,6 +724,21 @@ table.boros_taxonomy_block {
 
 
 /**
+ * Corrigir barra de busca dentro do popup TB_iframe
+ * 
+ */
+#media-upload p.search-box {
+	background:#fff;
+	margin:0;
+	padding:10px 5px 0;
+	position:fixed;
+	left:0;
+	z-index:999;
+}
+
+
+
+/**
  * ==================================================
  * PLUGIN NEWSLETTER ================================
  * ==================================================

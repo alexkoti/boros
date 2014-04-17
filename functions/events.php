@@ -117,12 +117,17 @@ function bev_slots_message( $post_id ){
  */
 add_action( 'save_post', 'bev_status', 999 );
 function bev_status( $post_id = null ){
-	if( $post_id == null )
-		return;
+	if( (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || (defined('DOING_AJAX') && DOING_AJAX) ){
+		return $post_id;
+	}
+	
+	if( $post_id == null ){
+		return $post_id;
+	}
 	
 	$p = get_post($post_id);
-	if( $p->post_status == 'auto-draft' ){
-		return;
+	if( $p->post_status == 'auto-draft' or $p->post_type == 'revision' ){
+		return $post_id;
 	}
 	
 	$bev_status = get_post_meta($post_id, 'bev_status', true);
@@ -1275,6 +1280,10 @@ function reload_box_bev_slots(){
 class BFE_bev_alerts extends BorosFormElement {
 	function set_attributes(){} // resetar esse método
 	
+	function add_defaults(){
+		$this->defaults['options']['show_shorcode'] = true;
+	}
+	
 	function set_input( $value = null ){
 		global $post;
 		ob_start();
@@ -1282,7 +1291,10 @@ class BFE_bev_alerts extends BorosFormElement {
 		$bev_status = bev_status( $post->ID );
 		
 		$msgs = array();
-		$msgs[] = "<li class='ok'>shortcode para inserir o botão do evento na agenda: <input type='text' value='[evento id={$post->ID}]' size='14' readonly='readonly' onclick='this.select()' /></li>";
+		
+		if( $this->data['options']['show_shortcode'] == true ){
+			$msgs[] = "<li class='ok'>shortcode para inserir o botão do evento na nos conteúdos: <input type='text' value='[evento id={$post->ID}]' size='14' readonly='readonly' onclick='this.select()' /></li>";
+		}
 		
 		/**
 		 * Mensagens gravadas
@@ -1593,7 +1605,9 @@ function bev_users_inside( $post_id, $display_loading = false ){
 				window.lock_bev_extra_info_box = {$lock_bev_extra_info_box};
 				jQuery(document).ready(function($){
 					// travar perguntas
-					$('#bev_extra_info_box').lock_extra_info();
+					if( $('#bev_extra_info_box').lenght > 0 ){
+						$('#bev_extra_info_box').lock_extra_info();
+					}
 				});
 			</script>";
 	
@@ -1641,6 +1655,90 @@ class BFE_bev_users_extra_info_log extends BorosFormElement {
 		return $input;
 	}
 }
+
+class BFE_bev_date_limit extends BorosFormElement {
+	/**
+	 * Lista de atributos aceitos pelo elemento, e seus respectivos valores padrão.
+	 * Caso seja definido qualquer outro atributo no array de configuração ele será ignorado.
+	 * Definir qualquer valor padrão ou string vazia(''), irá obrigatoriamente renderizar o atributo, independente do valor. Valor padrão 'false' só irá renderizar o atributo caso ele
+	 * seja definido no array de configuração.
+	 * 
+	 * Atenção: NÃO INCLUIR dataset - este atributo será adicionado em set_elements(), que irá separar os diversos datasets necessários
+	 */
+	var $valid_attrs = array(
+		'name' => '',
+		'value' => '',
+		'id' => '',
+		'class' => '',
+		'rel' => '',
+		'size' => false,
+		'disabled' => false,
+		'readonly' => false,
+		'maxlength' => false,
+	);
+	
+	/**
+	 * Saída final do input
+	 * 
+	 */
+	function set_input( $value = null ){
+		$defaults = array(
+			'day' => '',
+			'month' => '',
+			'year' => '',
+			'hour' => '00',
+			'minute' => '00',
+		);
+		$value = boros_parse_args( $defaults, $value );
+		ob_start();
+		?>
+		<p>Limite: 
+			<input type="text" class="iptw_30 txt_center" value="<?php echo $value['day']; ?>" name="<?php echo $this->data['name']; ?>[day]" /> /
+			<input type="text" class="iptw_30 txt_center" value="<?php echo $value['month']; ?>" name="<?php echo $this->data['name']; ?>[month]" /> /
+			<input type="text" class="iptw_50 txt_center" value="<?php echo $value['year']; ?>" name="<?php echo $this->data['name']; ?>[year]" />, às 
+			<input type="text" class="iptw_30 txt_center" value="<?php echo $value['hour']; ?>" name="<?php echo $this->data['name']; ?>[hour]" /> : 
+			<input type="text" class="iptw_30 txt_center" value="<?php echo $value['minute']; ?>" name="<?php echo $this->data['name']; ?>[minute]" /> minutos <br />
+			<?php echo $this->input_helper; ?>
+		</p>
+		<?php
+		$input = ob_get_contents();
+		ob_end_clean();
+		return $input;
+	}
+}
+
+
+
+/**
+ * ==================================================
+ * COLUNAS DO POST TYPE =============================
+ * ==================================================
+ * 
+ * 
+ */
+	function bev_column_slots_total( $post_type, $post ){
+		echo get_post_meta( $post->ID, 'bev_slots', true );
+	}
+
+	function bev_column_slots_available( $post_type, $post ){
+		echo bev_slots_available($post->ID);
+	}
+
+	function bev_column_status( $post_type, $post ){
+		$bev_status = bev_status($post->ID);
+		switch( $bev_status ){
+			case 'closed':
+				echo 'fechado';
+				break;
+			case 'archived':
+				echo 'encerrado/arquivado';
+				break;
+			case 'open':
+				echo 'aberto';
+				break;
+		}
+	}
+
 
 
 /**

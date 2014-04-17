@@ -116,6 +116,9 @@ hr {
 .form-table td.boros_element_textarea_editor td.mceIframeContainer {
 	padding:0;
 }
+div.mce-tinymce.mce-panel {
+	border:1px solid #ddd;
+}
 
 
 /**

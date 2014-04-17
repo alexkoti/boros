@@ -153,7 +153,7 @@ jQuery(document).ready(function($){
 		//console.log(id);
 		var textarea = $('#'+id).find('.form_textarea_editor');
 		//console.log(textarea);
-		tinyMCE.execCommand('mceAddControl', false, textarea.attr('id'));
+		tinyMCE.execCommand('mceAddEditor', false, textarea.attr('id'));
 	});
 	
 	$('.duplicate_group').bind( "sortstart", function(event, ui){
@@ -162,7 +162,7 @@ jQuery(document).ready(function($){
 		if(textarea.length){
 			//console.log(ui);
 			//console.log(ui_id);
-			tinyMCE.execCommand('mceRemoveControl', false, textarea.attr('id'));
+			tinyMCE.execCommand('mceRemoveEditor', false, textarea.attr('id'));
 		}
 	});
 	$('.duplicate_group').bind( "sortstop", function(event, ui){
@@ -171,7 +171,7 @@ jQuery(document).ready(function($){
 		if(textarea.length){
 			//console.log(ui);
 			//console.log(ui_id);
-			tinyMCE.execCommand('mceAddControl', false, textarea.attr('id'));
+			tinyMCE.execCommand('mceAddEditor', false, textarea.attr('id'));
 		}
 	});
 	

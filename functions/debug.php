@@ -19,19 +19,24 @@ if( !function_exists('pre') ){
  */
 //add_action( 'admin_footer', 'boros_current_screen_info' );
 function boros_current_screen_info() {
-	global $plugin_page, $page_hook, $admin_page_hooks, $hook_suffix, $pagenow, $typenow, $current_screen;
-	$vars = array(
-		'plugin_page'      => $plugin_page,
-		'page_hook'        => $page_hook,
-		'hook_suffix'      => $hook_suffix,
-		'pagenow'          => $pagenow,
-		'typenow'          => $typenow,
-		'admin_page_hooks' => $admin_page_hooks,
-		'current_screen'   => $current_screen,
-	);
-	echo '<div id="debug_admin_vars">';
-	pre( $vars, 'debug: variáveis de admin', $opened = false );
-	echo '</div>';
+	global $current_user;
+	get_currentuserinfo();
+	$show_debug = get_user_meta($current_user->ID, 'show_debug', true);
+	if(!empty($show_debug)){
+		global $plugin_page, $page_hook, $admin_page_hooks, $hook_suffix, $pagenow, $typenow, $current_screen;
+		$vars = array(
+			'plugin_page'      => $plugin_page,
+			'page_hook'        => $page_hook,
+			'hook_suffix'      => $hook_suffix,
+			'pagenow'          => $pagenow,
+			'typenow'          => $typenow,
+			'admin_page_hooks' => $admin_page_hooks,
+			'current_screen'   => $current_screen,
+		);
+		echo '<div id="debug_admin_vars">';
+		pre( $vars, 'debug: variáveis de admin', $opened = false );
+		echo '</div>';
+	}
 }
 
 function current_screen_info(){
