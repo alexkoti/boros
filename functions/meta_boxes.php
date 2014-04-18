@@ -79,7 +79,7 @@ class BorosMetaBoxes {
 		$parent 	= $box['args']['id'];
 		$meta_itens = $box['args']['itens'];
 		
-		echo "<table class='form-table boros_form_block boros_meta_block' id='{$parent}'>";
+		echo "<table class='form-table boros_form_block boros_meta_block' id='{$parent}_inner'>";
 		
 		// descrição
 		if( isset($box['args']['desc']) and !empty($box['args']['desc']) ){

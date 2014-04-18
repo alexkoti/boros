@@ -12,7 +12,7 @@
  * GENERAL CONFIG ===================================
  * ==================================================
  * 
- * @todo remover ou reformular estas functions, pois só estão sendo usadas para a geração do shortcode
+ * @todo reformular esta function, para incorporar mais opçoes globais de cada job. Atualmente está com o registro do post_type, se é preciso verificar dados extras e a página padrão de inscrição(opcional)
  * 
  */
 function bev_events_config(){
@@ -20,6 +20,7 @@ function bev_events_config(){
 	
 	$defaults = array(
 		'post_type' => 'post',
+		'verify_missing_data' => true,
 		'form_signin_page' => 'inscricao-evento',
 	);
 	
@@ -749,7 +750,7 @@ function bev_signin( $args ){
 	//global $current_user;
 	//get_currentuserinfo();
 	
-	$add = new BevDriveAddOrRemoveUser( $args['bev_id'], $args['user_id'], $args['verify_missing_data'] );
+	$add = new BevDriveAddOrRemoveUser( $args['bev_id'], $args['user_id'] );
 	$add->queue_user();
 	
 	pre( $add->messages );
@@ -763,6 +764,7 @@ function bev_signin( $args ){
  * @TODO >>>>>>>>>>>>> REMOVER USUÁRIO DA LISTA DE APROVADOS CASO TENHA SIDO REMOVIDAS INFOS NECESSÁRIAS
  */
 class BevDriveAddOrRemoveUser {
+	var $config;
 	var $bev_id;
 	var $bev;
 	var $user_id;
@@ -773,7 +775,9 @@ class BevDriveAddOrRemoveUser {
 	var $bev_users_accepted;
 	var $messages;
 	
-	function __construct( $bev_id, $user_id, $verify_missing_data = true ){
+	function __construct( $bev_id, $user_id ){
+		$this->config = bev_events_config();
+		
 		$this->bev_id = $bev_id;
 		$this->bev = get_post($this->bev_id);
 		$this->user_id = $user_id;
@@ -784,7 +788,7 @@ class BevDriveAddOrRemoveUser {
 		$bev_users_accepted = get_post_meta( $bev_id, 'bev_users_accepted', true );
 		$this->bev_users_accepted = empty($bev_users_accepted) ? array() : $bev_users_accepted;
 		
-		if( $verify_missing_data == true ){
+		if( $this->config['verify_missing_data'] == true ){
 			$this->verify_user_profile();
 		}
 		$this->verify_blocked_users();

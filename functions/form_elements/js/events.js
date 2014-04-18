@@ -48,7 +48,7 @@ jQuery(document).ready(function($){
 		'width'         : 600,
 		'closeOnEscape' : true,
 	});
-	$('#bev_users_box').delegate('.bev_user_info_lightbox', 'click', function(event){
+	$('#box_bev_users').delegate('.bev_user_info_lightbox', 'click', function(event){
 		event.preventDefault();
 		$('#bev_lightbox_content').html('');
 		$user_info.dialog('open');
@@ -67,7 +67,7 @@ jQuery(document).ready(function($){
 	 * Mover usuário entre filas
 	 * 
 	 */
-	$('#bev_users_box').delegate('.bev_user_action', 'click', function(event){
+	$('#box_bev_users').delegate('.bev_user_action', 'click', function(event){
 		$btn = $(this);
 		event.preventDefault();
 		$('#bev_users_loading').fadeIn('medium', function(){
@@ -77,7 +77,7 @@ jQuery(document).ready(function($){
 				user_id : $btn.dataset('user_id')
 			};
 			$.post(ajaxurl, data, function(response){
-				$('#bev_users').html(response);
+				$('#box_bev_users').html(response);
 				$('#bev_users_loading').fadeOut();
 				
 				$('#bev_slots').boros_reload_element();
