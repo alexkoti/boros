@@ -1281,7 +1281,7 @@ class BFE_bev_alerts extends BorosFormElement {
 	function set_attributes(){} // resetar esse método
 	
 	function add_defaults(){
-		$this->defaults['options']['show_shorcode'] = true;
+		$this->defaults['options']['show_shortcode'] = true;
 	}
 	
 	function set_input( $value = null ){
