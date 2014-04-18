@@ -1,0 +1,70 @@
+﻿
+/**
+ * EVENTOS
+ * 
+ */
+ol.bev_messages {
+	
+}
+	.bev_messages_captions span.error,
+	.bev_messages li.error {
+		color:red;
+	}
+	.bev_messages_captions span.alert,
+	.bev_messages li.alert {
+		color:#ff6600;
+	}
+	.bev_messages_captions span.ok,
+	.bev_messages li.ok {
+		color:green;
+	}
+#bev_users_loading {
+	display:none;
+	background:#fff url(img/btn_loading.gif) no-repeat center center;
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+}
+.bev_user_table {
+	border-collapse:collapse;
+	width:100%;
+}
+	.bev_user_table tr:hover td {
+		background:#fafafa;
+	}
+.bev_users_box {
+	border:1px solid #DFDFDF;
+	margin:5px 0;
+	padding:10px;
+	border-radius:5px;
+}
+	.bev_users_box p {
+		margin:0;
+	}
+	.bev_users_success {
+		background-color:#E4FFE0;
+		border-color:green;
+		color:green;
+	}
+	.bev_users_error {
+		background-color:#FFEBE8;
+		border-color:#C00;
+		color:#C00;
+	}
+.wp-core-ui .button-erase:hover, 
+.wp-core-ui .button-erase {
+	background:red;
+	color:#fff;
+	text-shadow:none;
+}
+.ui-dialog.wp-dialog .ui-dialog-content {
+	padding:0 10px;
+}
+.boros_element_fjsp_date_limit p {
+	margin:0;
+}
+.post-type-evento .trash {
+	display:none;
+}

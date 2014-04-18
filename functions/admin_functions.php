@@ -36,6 +36,7 @@ function admin_styles(){
 	wp_enqueue_style( 'wp-jquery-ui-dialog' );
 	//CUSTOM STYLES
 	wp_enqueue_style( 'custom_admin_css', BOROS_CSS . 'admin.css' , false, '1.0', 'screen' );
+	wp_enqueue_style( 'events', BOROS_CSS . 'events.css' , false, '1.0', 'screen' );
 	wp_enqueue_style( 'form_elements', BOROS_CSS . 'form_elements.css' , false, '1.0', 'screen' );
 }
 
