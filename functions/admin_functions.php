@@ -79,6 +79,7 @@ function add_custom_admin_scripts(){
 		'admin_scripts',
 		'form_elements',
 		'plugins',
+		'events',
 		//'current_work',
 	);
 	

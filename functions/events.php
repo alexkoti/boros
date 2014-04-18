@@ -12,6 +12,7 @@
  * GENERAL CONFIG ===================================
  * ==================================================
  * 
+ * @todo remover ou reformular estas functions, pois só estão sendo usadas para a geração do shortcode
  * 
  */
 function bev_events_config(){
@@ -745,13 +746,13 @@ function bev_user_info_lightbox(){
  * 
  */
 function bev_signin( $args ){
-	global $current_user;
-	get_currentuserinfo();
+	//global $current_user;
+	//get_currentuserinfo();
 	
-	$add = new BevDriveAddOrRemoveUser( $args['bev_id'], $current_user->ID );
+	$add = new BevDriveAddOrRemoveUser( $args['bev_id'], $args['user_id'], $args['verify_missing_data'] );
 	$add->queue_user();
 	
-	//pre( $add->messages );
+	pre( $add->messages );
 }
 
 /**
@@ -765,14 +766,14 @@ class BevDriveAddOrRemoveUser {
 	var $bev_id;
 	var $bev;
 	var $user_id;
-	var $user_profile_complete;
+	var $user_profile_complete = true;
 	var $user_status;
 	var $bev_slots_available;
 	var $bev_users_queue;
 	var $bev_users_accepted;
 	var $messages;
 	
-	function __construct( $bev_id, $user_id ){
+	function __construct( $bev_id, $user_id, $verify_missing_data = true ){
 		$this->bev_id = $bev_id;
 		$this->bev = get_post($this->bev_id);
 		$this->user_id = $user_id;
@@ -783,7 +784,9 @@ class BevDriveAddOrRemoveUser {
 		$bev_users_accepted = get_post_meta( $bev_id, 'bev_users_accepted', true );
 		$this->bev_users_accepted = empty($bev_users_accepted) ? array() : $bev_users_accepted;
 		
-		$this->verify_user_profile();
+		if( $verify_missing_data == true ){
+			$this->verify_user_profile();
+		}
 		$this->verify_blocked_users();
 		
 		//add_action( 'show_bev_user_messages', array($this, 'show_messages' ) );
