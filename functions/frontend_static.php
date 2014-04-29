@@ -23,7 +23,7 @@ function boros_frontend_ajaxurl() {
 <script type="text/javascript">
 var ajaxurl   = '<?php echo admin_url('admin-ajax.php'); ?>';
 var home_url  = '<?php echo home_url('/'); ?>';
-var theme_url = '<?php echo THEME; ?>/';
+var theme_url = '<?php if( defined('THEME') ){ echo THEME; } else { echo get_template_directory_uri(); } ?>/';
 </script>
 <?php
 }
