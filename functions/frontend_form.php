@@ -737,6 +737,15 @@ class BorosFrontendForm {
 					foreach( $this->valid_meta as $meta => $value ){
 						update_user_meta( $user_id, $meta, $value );
 					}
+					
+					// atualizar o display_name na tabela de users
+					if( isset($this->valid_meta['first_name']) and isset($this->valid_meta['last_name']) ){
+						wp_update_user( array ('ID' => $user_id, 'display_name' => "{$this->valid_meta['first_name']} {$this->valid_meta['last_name']}") );
+					}
+					elseif( isset($this->valid_meta['full_name']) ){
+						wp_update_user( array ('ID' => $user_id, 'display_name' => $this->valid_meta['full_name']) );
+					}
+					
 					$this->messages['success'] = 'Usuário criado com sucesso!';
 					$persistent_messages[$this->form_name]['create_user'] = 'Usuário criado com sucesso!';
 					
@@ -747,8 +756,9 @@ class BorosFrontendForm {
 					 * CUIDADO!!! Caso o callback necessite do usuário logado, o callback não funcionará corretamente!!!
 					 * 
 					 */
-					$this->form_callback( $this->config['callbacks']['sucess'] );
-						
+					$this->form_callback( $this->config['callbacks']['sucess'] ); // @todo remover após certificar que não existem jobs que utilizem esse callback escrito errado
+					$this->form_callback( $this->config['callbacks']['success'] );
+					
 					/**
 					 * Autologin no novo usuário
 					 * No autologin o redirect é necessário pois nesse momento os cookies e validações já ocorreram, e é preciso acessar uma 
@@ -771,14 +781,6 @@ class BorosFrontendForm {
 							$this->errors[] = $user;
 						}
 						else{
-							// atualizar o display_name na tabela de users
-							if( isset($this->valid_meta['first_name']) and isset($this->valid_meta['last_name']) ){
-								wp_update_user( array ('ID' => $user->ID, 'display_name' => "{$this->valid_meta['first_name']} {$this->valid_meta['last_name']}") );
-							}
-							elseif( isset($this->valid_meta['full_name']) ){
-								wp_update_user( array ('ID' => $user->ID, 'display_name' => $this->valid_meta['full_name']) );
-							}
-							
 							wp_redirect( $this->get_redirect_url('success') );
 							exit();
 						}
