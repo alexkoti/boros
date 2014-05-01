@@ -279,7 +279,18 @@ class BorosFrontendForm {
 	 */
 	function data( $form_name ){
 		if( $form_name == $this->form_name ){
-			$errors = $this->errors + $this->validation->data_errors;
+			/**
+			 * @todo A linha abaixo gera um erro no form de login do quotidiem, o $this->validation->data_errors é null.
+			 * Como esta function é requisitada via add_filter, talvez essas variáveis não estejam disponíveis. Modificar a classe para
+			 * deixá-las criadas
+			 * 
+			 */
+			if( isset($this->validation->data_errors) ){
+				$errors = $this->errors + $this->validation->data_errors;
+			}
+			else{
+				$errors = $this->errors;
+			}
 			$data = array(
 				'form_name' 		=> $this->form_name,
 				'config' 			=> $this->config,
