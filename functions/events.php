@@ -950,6 +950,10 @@ function bev_verify_cancel(){
  * FUNCTION GLOBAL PARA MOVER USUÁRIOS ENTRE AS LISTAS
  * Considera-se que nesse ponto o usuário já foi verificado em relação às condições de aprovação
  * 
+ * @param int $bev_id ID do evento para qual o usuário deverá ser associado
+ * @param int $user_id ID do usuário
+ * @param string $to - fila para qual o usuário deve ir ( 'accepted', 'remove', 'queue', 'cancel' )
+ * 
  */
 function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 	$bev = get_post($bev_id);
