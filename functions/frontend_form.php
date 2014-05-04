@@ -513,15 +513,7 @@ class BorosFrontendForm {
 				$msg = $message[0];
 				//pre($msg, 'erro original');
 				
-				// custom errors
-				$custom_messages = array(
-					'login_message_user_login_empty' => get_option('login_message_user_login_empty'),
-					'login_message_user_pass_empty' => get_option('login_message_user_pass_empty'),
-					'login_message_invalid_user' => get_option('login_message_invalid_user'),
-					'login_message_invalid_pass' => get_option('login_message_invalid_pass'),
-					'login_message_user_default' => get_option('login_message_user_default'),
-					'login_message_user_disapproved' => get_option('login_message_user_disapproved'),
-				);
+				// mensagens padrão do WordPress
 				$default_messages = array(
 					'login_message_user_login_empty' => '<strong>ERRO</strong>: O campo do nome de usuário está vazio.',
 					'login_message_user_pass_empty' => '<strong>ERRO</strong>: O campo da senha está vazio.',
@@ -530,6 +522,29 @@ class BorosFrontendForm {
 					'login_message_user_default' => '<strong>ERRO</strong>: Sua conta precisa ser aprovada antes poder fazer o login no site',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
+				
+				/**
+				 * Monstar as mensagens customizadas. Caso não tenham sido definidas via admin, utilizar
+				 * a lista padrão definida no código.
+				 * 
+				 */
+				$custom_messages = array(
+					'login_message_user_login_empty' => get_option('login_message_user_login_empty'),
+					'login_message_user_pass_empty' => get_option('login_message_user_pass_empty'),
+					'login_message_invalid_user' => get_option('login_message_invalid_user'),
+					'login_message_invalid_pass' => get_option('login_message_invalid_pass'),
+					'login_message_user_default' => get_option('login_message_user_default'),
+					'login_message_user_disapproved' => get_option('login_message_user_disapproved'),
+				);
+				$custom_default_messages = array(
+					'login_message_user_login_empty' => '<strong>ERRO</strong>: Email vazio!',
+					'login_message_user_pass_empty' => '<strong>ERRO</strong>: Senha vazia!',
+					'login_message_invalid_user' => '<strong>ERRO</strong>: Não existe uma conta com este email',
+					'login_message_invalid_pass' => '<strong>ERRO</strong>: A senha para este email está errada.',
+					'login_message_user_default' => '<strong>ERRO</strong>: Seu registro foi recebido e seu cadastro está em aprovação.',
+					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
+				);
+				$custom_messages = boros_parse_args($custom_messages, $custom_default_messages);
 				
 				// filtrar as mensagens de erro padrão do wp pelos customizados
 				foreach( $default_messages as $msg_k => $msg_v ){
