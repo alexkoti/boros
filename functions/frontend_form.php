@@ -540,7 +540,7 @@ class BorosFrontendForm {
 					'login_message_user_login_empty' => '<strong>ERRO</strong>: Email vazio!',
 					'login_message_user_pass_empty' => '<strong>ERRO</strong>: Senha vazia!',
 					'login_message_invalid_user' => '<strong>ERRO</strong>: Não existe uma conta com este email',
-					'login_message_invalid_pass' => '<strong>ERRO</strong>: A senha para este email está errada.',
+					'login_message_invalid_pass' => '<strong>ERRO</strong>: A senha que você forneceu está incorreta.',
 					'login_message_user_default' => '<strong>ERRO</strong>: Seu registro foi recebido e seu cadastro está em aprovação.',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
