@@ -110,7 +110,7 @@ class BorosFrontendForm {
 			),
 		),
 		'callbacks' => array(
-			'sucess' => false,
+			'success' => false,
 			'error' => false,
 		),
 		'debug' => false,
@@ -362,7 +362,10 @@ class BorosFrontendForm {
 			$this->do_callbacks( $this->valid_meta );
 			
 			// acionar callbacks: form->config
-			$this->form_callback( $this->config['callbacks']['sucess'] );
+			$this->form_callback( $this->config['callbacks']['success'] );
+			if( isset($this->config['callbacks']['sucess']) ){
+				$this->form_callback( $this->config['callbacks']['sucess'] );
+			}
 			
 			// registrar mensagem de sucesso
 			$this->messages['success'] = $this->config['messages']['success'];
@@ -782,8 +785,11 @@ class BorosFrontendForm {
 					 * CUIDADO!!! Caso o callback necessite do usuário logado, o callback não funcionará corretamente!!!
 					 * 
 					 */
-					$this->form_callback( $this->config['callbacks']['sucess'] ); // @todo remover após certificar que não existem jobs que utilizem esse callback escrito errado
+					 // @todo remover após certificar que não existem jobs que utilizem esse callback escrito errado
 					$this->form_callback( $this->config['callbacks']['success'] );
+					if( isset($this->config['callbacks']['sucess']) ){
+						$this->form_callback( $this->config['callbacks']['sucess'] );
+					}
 					
 					/**
 					 * Autologin no novo usuário
@@ -938,14 +944,20 @@ class BorosFrontendForm {
 					//pre($this->valid_data);
 					//pre($this->valid_meta);
 					//pre( $this->errors, 'ERRORS' );
-					$this->form_callback( $this->config['callbacks']['sucess'] );
+					$this->form_callback( $this->config['callbacks']['success'] );
+					if( isset($this->config['callbacks']['sucess']) ){
+						$this->form_callback( $this->config['callbacks']['sucess'] );
+					}
 					if( empty( $this->validation->data_errors ) ){
 						// acionar callbacks: elements
 						$this->do_callbacks( $this->valid_data );
 						$this->do_callbacks( $this->valid_meta );
 						
 						// acionar callbacks: form->config
-						$this->form_callback( $this->config['callbacks']['sucess'] );
+						$this->form_callback( $this->config['callbacks']['success'] );
+						if( isset($this->config['callbacks']['sucess']) ){
+							$this->form_callback( $this->config['callbacks']['sucess'] );
+						}
 						
 						// registrar mensagem de sucesso
 						$this->messages['success'] = $this->config['messages']['success'];
@@ -1149,7 +1161,10 @@ class BorosFrontendForm {
 				$this->do_callbacks( $this->valid_data );
 				$this->do_callbacks( $this->valid_meta );
 				// acionar callbacks: form->config
-				$this->form_callback( $this->config['callbacks']['sucess'] );
+				$this->form_callback( $this->config['callbacks']['success'] );
+				if( isset($this->config['callbacks']['sucess']) ){
+					$this->form_callback( $this->config['callbacks']['sucess'] );
+				}
 				
 				// reset data
 				$this->valid_data = array();
@@ -1345,6 +1360,15 @@ class BorosFrontendForm {
 		}
 	}
 	
+	/**
+	 * Executar os callbacks do formulário.
+	 * Poderá executar em caso de sucesso ou erro, em quantidade ilimitada.
+	 * 
+	 * O $callback possui o nome da função em $callback['function'] e argumentos adicionais em $callback['args']
+	 * 'args' possuirá por padrão o 'object' BorosFrontendForm completo, além de argumentos adicionais declarados
+	 * no array de configuração.
+	 * 
+	 */
 	function form_callback( $callbacks = false ){
 		if( empty($callbacks) )
 			return;
