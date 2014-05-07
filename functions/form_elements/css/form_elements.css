@@ -11,14 +11,59 @@
  * ATTACH SELECT
  * 
  */
-.attach_select_view {
+.attach_select_view .inner {
+	background:rgba(223, 223, 223, 0.3);
+	border:1px solid #EBEBEB;
+	margin-bottom:10px;
 	overflow:hidden;
+	padding:4px;
+	position:relative;
 }
-.attach_select_view img {
+.attach_select_icon {
 	float:left;
-	margin:0 10px 10px 0;
+	margin:0 10px 0 0;
 	max-height:60px;
 	max-width:100px;
+	overflow:hidden;
+	position:relative;
+}
+.attach_select_view:hover .attach_select_icon img {
+	opacity:0.5;
+}
+.attach_select_view .attach_select_remove {
+	height:18px;
+	margin:-9px 0 0 -9px;
+	position:absolute;
+	left:50%;
+	top:50%;
+	width:18px;
+}
+.attach_select_view .attach_select_remove .waiting {
+	display:none;
+	vertical-align:text-bottom;
+}
+.attach_select_view .attach_select_remove .btn {
+	background:#ffffff url(img/btn_cancel.png) no-repeat center center;
+	border:1px solid #DFDFDF;
+	border-radius: 12px;
+	display:block;
+	color:#BC0B0B;
+	cursor:pointer;
+	height:100%;
+	width:100%;
+}
+.attach_select_view .attach_select_remove .btn:hover {
+	background-color:rgba(255, 255, 255, 0.8);
+	border-color:red;
+	color:#D54E21;
+}
+.attach_select_view .attach_select_remove .loading,
+.attach_select_view .attach_select_remove .loading:hover {
+	border-color:#DFDFDF;
+	background:#fff url(img/btn_loading.gif) no-repeat center center;
+}
+.attach_select_view_actions {
+	clear:both;
 }
 
 

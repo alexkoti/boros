@@ -150,11 +150,29 @@ function attach_select_load( $id ){
 		$thumb = wp_get_attachment_image_src( $id, 'thumbnail', true );
 		
 		$title = apply_filters( 'the_title', $attch->post_title );
-		echo "<p><img class='thumbnail' src='{$thumb[0]}' alt='' /><strong>Nome:</strong> {$title} <br />";
-		echo "<strong>Tipo do arquivo:</strong> {$attch->post_mime_type} <br />";
+		echo '<div class="inner">';
+		echo "<div class='attach_select_icon'><img class='thumbnail' src='{$thumb[0]}' alt='' /><div class='hide-if-no-js attach_select_remove'><span class='btn' title='Remover este arquivo'>&nbsp;</span></div></div>";
+		echo "<strong>Nome:</strong> {$title} <br /><strong>Tipo do arquivo:</strong> {$attch->post_mime_type} <br />";
 		echo $media_dims;
-		echo '</p>';
+		echo '</div>';
 	}
+}
+
+add_action('wp_ajax_attach_select_remove', 'attach_select_remove');
+function attach_select_remove(){
+	$context = $_POST['context'];
+	
+	// não salvar dados e interromper caso esteja dentro de um duplicate
+	if( $context['in_duplicate_group'] == true )
+		die();
+	
+	if( $context['type'] == 'option' ){
+		delete_option( $context['name'] );
+	}
+	elseif( $context['type'] == 'post_meta' ){
+		delete_post_meta( $context['post_id'], $context['name'] );
+	}
+	die();
 }
 
 

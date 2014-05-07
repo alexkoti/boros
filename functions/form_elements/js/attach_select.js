@@ -71,6 +71,52 @@ jQuery(document).ready(function($){
 		// remover o thickbox
 		tb_remove();
 	}
+	
+	
+	/**
+	 * REMOVER ANEXO
+	 * 
+	 */
+	$('.boros_form_block').delegate('.attach_select_remove .btn', 'click', function( event ){
+		var $button = $(this);
+		var $input = $button.closest('.attach_select').find('input.input_attach_select');
+		var $view =  $button.closest('.attach_select_view');
+		
+		/**
+		 * O ajax irá executar special_image_remove(), que irá apagar o option/post_meta/etc caso não esteja dentro
+		 */
+		var data = {};
+		data.action = 'attach_select_remove';
+		
+		/**
+		 * Context
+		 * 
+		 */
+		data.context = {
+			name : $input.dataset('name'),
+			type : $input.dataset('type'),
+			in_duplicate_group : $input.dataset('in_duplicate_group')
+		};
+		if( $input.dataset('post_id') != undefined )
+			data.context.post_id = $input.dataset('post_id');
+		
+		//mostrar loading
+		$button.addClass('loading');
+		
+		$.post(ajaxurl, data, function(response){
+			// remover imagem da página
+			$input.closest('.attach_select').find('.attach_select_view').slideUp(function(){
+				// o css() e o delay() é necessário para que o html seja atualizado dentra da view e possa ocorrer a animação com a altura correta
+				$(this).empty().html(response).delay(10).slideDown(500);
+				$input.val('');
+			});
+			
+			// esconder loading
+			$button.removeClass('.waiting');
+			$button.parent().hide();
+		});
+		return false;
+	});
 });
 
 
