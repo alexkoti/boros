@@ -66,7 +66,12 @@ class BFE_radio extends BorosFormElement {
 					$radios[] = "<span class='item_radio'><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='boros_form_input input_radio' /><label for='{$this->data['attr']['id']}_{$option_value}' class='label_radio iptw_{$this->data['size']}'>{$option_label}</label></span>";
 				}
 			}
+			
 			$input = implode( $separator, $radios ) . $this->input_helper;
+			if( $this->data['layout'] == 'bootstrap3' ){
+				$input = "<div class='radio-control'>{$input}</div>";
+			}
+			
 			return $input;
 		}
 		else{
