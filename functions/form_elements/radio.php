@@ -71,7 +71,6 @@ class BFE_radio extends BorosFormElement {
 			if( $this->data['layout'] == 'bootstrap3' ){
 				$input = "<div class='radio-control'>{$input}</div>";
 			}
-			
 			return $input;
 		}
 		else{

@@ -55,7 +55,7 @@ function activate_tiny_mces(){
 		 */
 		jQuery('#widgets-right .form_text_editor').each(function(){
 			//console.log( jQuery(this).attr('id') ); //IDs dox textareas slecionaos para aplicar o tinymce
-			tinyMCE.execCommand('mceAddControl', false, jQuery(this).attr('id'));
+			tinyMCE.execCommand('mceAddEditor', false, jQuery(this).attr('id'));
 			update_widget_tinymce_contents();
 		});
 		
@@ -85,14 +85,14 @@ function activate_tiny_mces(){
  * WIDGETS FUNCTIONS
  * Reload de tinymce em retornos de ajax
  * Ao salvar os dados de cada widget, o conteúdo DOM do box é recarregado, necessitando nova renderização do tiny_mce, porém, como o textarea antes do envio 
- * ajax já foi registrado no tinyMCE, é preciso remover o anterior <code>tinyMCE.execCommand('mceRemoveControl')</code> ao enviar os dados, e registrar 
- * novamente, usando <code>tinyMCE.execCommand('mceAddControl')</code> ao terminar de recarregar o box do widget.
+ * ajax já foi registrado no tinyMCE, é preciso remover o anterior <code>tinyMCE.execCommand('mceRemoveEditor')</code> ao enviar os dados, e registrar 
+ * novamente, usando <code>tinyMCE.execCommand('mceAddEditor')</code> ao terminar de recarregar o box do widget.
  * 
  * @link http://www.johngadbois.com/adding-your-own-callbacks-to-wordpress-ajax-requests/
  * @link http://blog.mirthlab.com/2008/11/13/dynamically-adding-and-removing-tinymce-instances-to-a-page/
  * @link http://hamisageek.blogspot.com/2007/11/multiple-tinymce-3-instances-on-one.html
  * 
- * @notes execCommand('mceAddControl|mceRemoveControl') precisam necessariamente de uma id, então não é possível remover diversos editors por class(verificar)
+ * @notes execCommand('mceAddEditor|mceRemoveEditor') precisam necessariamente de uma id, então não é possível remover diversos editors por class(verificar)
  * 
  * @uses getParameterByName() - plugin javascript neste arquivo
  */
@@ -113,7 +113,7 @@ function activate_tiny_mces(){
 					$('#widget-' + widget_id + '-html').next('.mceEditor').height()
 				);
 				//remover editor
-				tinyMCE.execCommand('mceRemoveControl', false, 'widget-' + widget_id + '-html');
+				tinyMCE.execCommand('mceRemoveEditor', false, 'widget-' + widget_id + '-html');
 			}
 		}
 	});
@@ -128,7 +128,7 @@ function activate_tiny_mces(){
 				//console.log('SUCESS');
 			if( $('#widget-' + widget_id + '-html').length && $('#widget-' + widget_id + '-html').is('.form_text_editor') ){
 				//renderizar editor
-				tinyMCE.execCommand('mceAddControl', false, 'widget-' + widget_id + '-html');
+				tinyMCE.execCommand('mceAddEditor', false, 'widget-' + widget_id + '-html');
 			}
 		}
 		
@@ -211,7 +211,7 @@ jQuery(document).ready(function($){
 		if( $('#'+ui_id+' .form_text_editor').length ){
 			var form_text_editor = $('#'+ui_id+' .form_text_editor').attr('id');
 			//remover editor
-			tinyMCE.execCommand('mceRemoveControl', false, form_text_editor);
+			tinyMCE.execCommand('mceRemoveEditor', false, form_text_editor);
 		}
 	});
 	$('div.widgets-sortables').bind( "sortstop", function(event, ui){
@@ -220,7 +220,7 @@ jQuery(document).ready(function($){
 		if( $('#'+ui_id+' .form_text_editor').length ){
 			var form_text_editor = $('#'+ui_id+' .form_text_editor').attr('id');
 			//renderizar editor
-			tinyMCE.execCommand('mceAddControl', false, form_text_editor);
+			tinyMCE.execCommand('mceAddEditor', false, form_text_editor);
 			//sincronizar editor e textarea
 			update_widget_tinymce_contents();
 		}

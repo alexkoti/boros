@@ -171,8 +171,9 @@ else{
 			 */
 			mode: 'exact',
 			elements: '<?php echo $textarea; ?>',
-			skin: 'wp_theme',
-			theme: 'advanced',
+			menubar : false,
+			//skin: 'wp_theme',
+			//theme: 'advanced',
 			theme_advanced_buttons1: '<?php echo $editor_attr['buttons']; ?>',
 			theme_advanced_buttons2: '<?php echo $editor_attr['buttons2']; ?>', // (*1)
 			theme_advanced_buttons3: '<?php echo $editor_attr['buttons3']; ?>', // (*1)
@@ -211,7 +212,7 @@ else{
 			paste_text_use_dialog: true, 					// limpar código ao colar
 			wpeditimage_disable_captions: false, 
 			theme_advanced_blockformats: 'p,blockquote,h1,h2,h3,h4,h5,h6',
-			plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
+			plugins: 'paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
 			formats:{
 				alignleft : [
 					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},

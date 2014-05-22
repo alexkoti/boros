@@ -112,8 +112,9 @@ class free_box extends WP_Widget {
 						 * Notas:
 						 * *1 - é preciso declarar os 'theme_advanced_buttons2' e 'theme_advanced_buttons3' para que sejam resetados
 						 */
-						skin: 'wp_theme',
-						theme: 'advanced',
+						//skin: 'wp_theme',
+						//theme: 'advanced',
+						menubar : false,
 						theme_advanced_buttons1: '<?php echo $editor_attr['buttons']; ?>',
 						theme_advanced_buttons2: '<?php echo $editor_attr['buttons2']; ?>', // (*1)
 						theme_advanced_buttons3: '<?php echo $editor_attr['buttons3']; ?>', // (*1)
@@ -152,7 +153,7 @@ class free_box extends WP_Widget {
 						paste_text_use_dialog: true, 					// limpar código ao colar
 						wpeditimage_disable_captions: false, 
 						theme_advanced_blockformats: 'p,blockquote,h1,h2,h3,h4,h5,h6',
-						plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
+						plugins: 'paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
 						formats:{
 							alignleft : [
 								{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},
@@ -172,7 +173,7 @@ class free_box extends WP_Widget {
 					
 					/**
 					 * ATENÇÃO >>> Configurando .mode = 'none', o tinymce não será renderizado onload, apenas as configs atribuidas para serem ativadas via
-					 * tinyMCE.execCommand('mceRemoveControl', false, id_do_elemento)
+					 * tinyMCE.execCommand('mceRemoveEditor', false, id_do_elemento)
 					 * 
 					 */
 					<?php
