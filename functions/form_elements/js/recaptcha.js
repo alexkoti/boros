@@ -1,3 +1,4 @@
+
 jQuery(document).ready(function($){
 	
 	function activate_recaptcha( obj ){

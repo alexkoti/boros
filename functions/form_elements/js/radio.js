@@ -1,5 +1,1 @@
-jQuery(document).ready(function($){
-	
-	/* form_element: radio */
-	
-});
+jQuery(document).ready(function($){		/* form_element: radio */	});

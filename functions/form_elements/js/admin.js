@@ -3,7 +3,6 @@
  * 
  * 
  * 
- * 
  */
 var send_to_input;
 jQuery(document).ready(function($){

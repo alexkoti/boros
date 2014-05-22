@@ -1,6 +1,5 @@
+
 jQuery(document).ready(function($){
-	
-	
 	
 	/**
 	 * BUSCA DE HISTÓRIAS RELACIONADAS

@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
 	
-	/* form_element: text */
+	// form element :: text
 	
 });

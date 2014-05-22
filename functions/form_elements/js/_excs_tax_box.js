@@ -1,3 +1,4 @@
+
 jQuery(document).ready(function($){
 	
 	// esconder por default a descrição do dano:

@@ -10,7 +10,6 @@
  * 		sortable_contents_list
  * 
  * 
- * 
  */
 
 jQuery(document).ready(function($){

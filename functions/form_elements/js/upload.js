@@ -1,5 +1,4 @@
 
-
 jQuery(document).ready(function($){
 	/**
 	 * .plupload-upload-uic = box de upload estáticos, nas páginas de listagens
