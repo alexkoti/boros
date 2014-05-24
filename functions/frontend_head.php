@@ -43,14 +43,16 @@ class BorosJs {
 		
 		$this->js_dir = get_bloginfo('template_url') . '/js/';
 		
-		wp_deregister_script( 'jquery' );
-		wp_enqueue_script(
-			$handle = 'jquery',
-			$src = $this->options['src'],
-			$deps = false,
-			$ver = $this->options['ver'],
-			$in_footer = $this->options['in_footer']
-		);
+		if( !in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) ){
+			wp_deregister_script( 'jquery' );
+			wp_enqueue_script(
+				$handle = 'jquery',
+				$src = $this->options['src'],
+				$deps = false,
+				$ver = $this->options['ver'],
+				$in_footer = $this->options['in_footer']
+			);
+		}
 		
 		/**
 		 * Adicionar variáveis dinâmicas
