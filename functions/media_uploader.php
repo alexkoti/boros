@@ -150,8 +150,7 @@ function boros_drop_upload_box( $post ){
 	$height = null; // If you want to automatically resize all uploaded images then provide height here (in pixels)
 	?>
 	<div class="plupload-upload-uic hide-if-no-js <?php if ($multiple): ?>plupload-upload-uic-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-upload-ui">
-		<input type="hidden" name="<?php echo $id; ?>" id="<?php echo $id; ?>" value="<?php echo $svalue; ?>" />
-		<input type="hidden" name="post_parent" value="<?php echo $post->ID; ?>" />
+		<input type="hidden" name="post_parent" value="<?php echo $post->ID; ?>" disabled="disabled" />
 		<?php if ($width && $height): ?>
 				<span class="plupload-resize"></span><span class="plupload-width" id="plupload-width<?php echo $width; ?>"></span>
 				<span class="plupload-height" id="plupload-height<?php echo $height; ?>"></span>

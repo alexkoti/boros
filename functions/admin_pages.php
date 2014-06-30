@@ -519,6 +519,13 @@ class BorosAdminPages {
 			<form action="options.php" method="post">
 				<?php
 				settings_fields( $this->settings_name );
+				$submit_block = array(
+					'type' => 'default',
+					'text' => 'Atualizar',
+					'class' => 'button-primary',
+					'parent_class' => 'page-form-submit',
+					'html' => false,
+				);
 				
 				/**
 				 * Verificar se os elementos estão corretos
@@ -533,16 +540,31 @@ class BorosAdminPages {
 					 * 
 					 */
 					foreach( $this->elements as $block ){
-						if( $block['block'] == 'header' )
+						if( $block['block'] == 'header' ){
 							$this->output_page_header( $block );
-						elseif( $block['block'] == 'section' )
+						}
+						elseif( $block['block'] == 'section' ){
 							$this->output_page_section( $block );
+						}
+						elseif( $block['block'] == 'submit' ){
+							$submit_block = array(
+								'type' => 'custom',
+								'text' => $block['options']['text'],
+								'class' => $block['options']['class'],
+								'parent_class' => $block['options']['parent_class'],
+								'html' => $block['options']['html'],
+							);
+							// exibir submit ou personalizado.
+							$this->output_page_submit( $submit_block );
+						}
 					}
 				}
+				
+				// submit padrão
+				if( $submit_block['type'] == 'default' ){
+					$this->output_page_submit( $submit_block );
+				}
 				?>
-				<p class="submit">
-					<input type="submit" name="Submit" value="Atualizar" class="button-primary" />
-				</p>
 			</form>
 		</div><!-- /wrap -->
 		<?php
@@ -623,6 +645,16 @@ class BorosAdminPages {
 			<?php } ?>
 		</table>
 		<?php
+	}
+	
+	function output_page_submit( $block ){
+		// separar se é submit configurado ou enviado como html puro
+		if( isset($block['html']) and $block['html'] != false ){
+			echo $block['html'];
+		}
+		else{
+			echo "<p class='{$block['parent_class']}'><input type='submit' value='{$block['text']}' class='{$block['class']}'></p>";
+		}
 	}
 	
 	/**
