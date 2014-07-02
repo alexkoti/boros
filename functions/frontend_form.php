@@ -1691,7 +1691,7 @@ class BorosFrontendForm {
 				 * 
 				 */
 				if( !empty( $this->errors ) ){
-					echo '<div class="alert alert-error alert-error">Ocorreram alguns erros, por favor verifique:</div>';
+					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
 					if( $this->config['debug'] == true ){
 						//pre($this->errors, 'bootstrap_output errors');
 					}
@@ -1803,7 +1803,7 @@ class BorosFrontendForm {
 				 * 
 				 */
 				if( !empty( $this->errors ) ){
-					echo '<div class="alert alert-error alert-danger">Ocorreram alguns erros, por favor verifique:</div>';
+					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
 					if( $this->config['debug'] == true ){
 						pre($this->errors, 'bootstrap3_output errors');
 					}
