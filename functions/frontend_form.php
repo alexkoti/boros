@@ -1387,8 +1387,6 @@ class BorosFrontendForm {
 	}
 	
 	function notify_by_email( $args ){
-		$object = $args['object'];
-		
 		$title =  $this->template_tags( $args['title'], $this->valid_data );
 		$title =  $this->template_tags( $title, $this->valid_meta );
 		
@@ -1397,7 +1395,7 @@ class BorosFrontendForm {
 		$message = $this->template_tags( $args['message'], $this->valid_data );
 		$message = $this->template_tags( $message, $this->valid_meta );
 		$message = nl2br( $message );
-		$message = apply_filters( 'boros_notify_by_email_message', $message, $args, $this->valid_data, $this->valid_meta );
+		$message = apply_filters( 'boros_notify_by_email_message', $message, $args, $this->valid_data, $this->valid_meta, $this->form_name );
 		
 		//pre($args, 'ARGS');
 		//pre($message, 'POS_MESSAGE');
@@ -1410,6 +1408,8 @@ class BorosFrontendForm {
 		 * 
 		 */
 		$headers = array();
+		
+		$to = apply_filters('boros_frontend_form_notify_by_email_to', $args['to'], $this->valid_data, $this->valid_meta);
 		
 		// Adicionar CC
 		if( isset($args['cc']) and !empty($args['cc']) ){
@@ -1454,7 +1454,7 @@ class BorosFrontendForm {
 		//pal('message: ' . $message);
 		//die('EMAIL TEST');
 		
-		$sent = wp_mail( $args['to'], $title, $message, $headers );
+		$sent = wp_mail( $to, $title, $message, $headers );
 	}
 	
 	/**
@@ -1487,7 +1487,7 @@ class BorosFrontendForm {
 				$text = str_replace( $tag, $value, $text );
 			}
 		}
-		return $text;
+		return apply_filters( 'boros_frontend_form_template_tags_text', $text, $tags );
 	}
 	
 	function save_as_user_meta( $args ){
@@ -1617,7 +1617,7 @@ class BorosFrontendForm {
 								// o parent é a ID do box
 								$this->context['group'] = $box['id'];
 								if( !isset($item['layout']) )
-									$item['layout'] = 'output';
+									$item['layout'] = 'frontend';
 								create_form_elements( $this->context, $item, $data_value, $this->context['group'] );
 							}
 							
