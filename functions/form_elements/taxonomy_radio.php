@@ -61,16 +61,14 @@ class BFE_taxonomy_radio extends BorosFormElement {
 		 * 
 		 */
 		$terms = get_terms( $this->data['options']['taxonomy'], 'hide_empty=0' );
-		if( empty($this->data['name']) ){
-			$selected_terms = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
-			if( !empty($selected_terms) )
-				$selected_term = $selected_terms[0]->term_id;
-			else
-				$selected_term = false;
+		$selected_terms = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
+		if( !empty($selected_terms) ){
+			$selected_term = $selected_terms[0]->term_id;
 		}
 		else{
-			$selected_term = $this->data_value;
+			$selected_term = false;
 		}
+		
 		if( !empty($terms) ){
 			$radios = array();
 			$valid_fields = array('term_id', 'name', 'slug');
