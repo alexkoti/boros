@@ -1326,8 +1326,9 @@ class BorosFrontendForm {
 	}
 	
 	/**
+	 * Callbacks de elementos
 	 * 
-	 * ATENÇÃO: possível bug caso existam elementos com names iguais em box
+	 * ATENÇÃO: possível bug caso existam elementos com names iguais em box diferentes
 	 */
 	function do_callbacks( $data ){
 		foreach( $data as $k => $v ){
