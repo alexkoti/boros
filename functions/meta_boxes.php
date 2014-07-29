@@ -100,6 +100,7 @@ class BorosMetaBoxes {
 		
 		foreach( $meta_itens as $meta_item ){
 			$data_value = null;
+			
 			/**
 			 * Alguns itens, como taxonomy_radio, que substituem names de inputs core do WordPress, não necessariamente declaram 'name', gerando erro no script.
 			 */
@@ -119,6 +120,16 @@ class BorosMetaBoxes {
 			}
 			
 			//pre($data_value);
+			// Aplicar filtro de exibição, 'pre_filter'
+			if( isset($meta_item['pre_filters']) ){
+				foreach( $meta_item['pre_filters'] as $pre_filter ){
+					if( function_exists($pre_filter) ){
+						$data_value = call_user_func( $pre_filter, $post, $meta_item, $data_value );
+					}
+				}
+			}
+			//pre($data_value);
+			
 			// o parent é a ID do box
 			$this->context['group'] = $box['id'];
 			create_form_elements( $this->context, $meta_item, $data_value, $this->context['group'] );
@@ -221,7 +232,9 @@ class BorosMetaBoxes {
 					}
 				}
 				
-				//pre($value, '1' . $element['name']);
+				//pal($value, '1' . $element['name']);
+				//pre($element, 'element ' . $element['name']);
+				
 				/**
 				 * Validate/Sanitize
 				 * Validação de type e custom, se houver
@@ -242,7 +255,7 @@ class BorosMetaBoxes {
 				if( isset( $element['callbacks']) ){
 					foreach( $element['callbacks'] as $callback ){
 						if( function_exists($callback) ){
-							$value = call_user_func( $element['callback'], $post, $element, $value );
+							$value = call_user_func( $callback, $post, $element, $value );
 						}
 					}
 				}
