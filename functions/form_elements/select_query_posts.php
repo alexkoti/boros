@@ -36,6 +36,10 @@ class BFE_select_query_posts extends BFE_select {
 		$this->defaults['options']['show_option_none'] = false;
 		$this->defaults['options']['option_none_value'] = 0;
 		$this->defaults['options']['prepend'] = array();
+		$this->defaults['options']['messages'] = array(
+			'no_results' => 'Nenhum resultado encontrado',
+			'no_query' => 'Erro: query de busca não definida',
+		);
 	}
 	
 	function set_input( $value = null ){
