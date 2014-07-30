@@ -320,7 +320,7 @@ class BorosPostTypeColumns {
 add_action('manage_posts_custom_column', 'render_columns');
 add_action('manage_pages_custom_column', 'render_columns');
 function render_columns( $column_name ){
-	global $post, $post_type;
+	global $post;
 	
 	/**
 	 * Lista de termos
@@ -332,7 +332,7 @@ function render_columns( $column_name ){
 		if( !is_wp_error( $terms ) and $terms !== false ){
 			$out = array();
 			foreach ( $terms as $c ){
-				$out[] = "<a href='edit.php?post_type={$post_type}&{$c->taxonomy}={$c->slug}'> " . esc_html(sanitize_term_field('name', $c->name, $c->term_id, $c->taxonomy, 'display')) . "</a>";
+				$out[] = "<a href='edit.php?post_type={$post->post_type}&{$c->taxonomy}={$c->slug}'> " . esc_html(sanitize_term_field('name', $c->name, $c->term_id, $c->taxonomy, 'display')) . "</a>";
 			}
 			echo join( ', ', $out );
 		}
@@ -344,13 +344,12 @@ function render_columns( $column_name ){
 	 * É útil para adicionar functions de renderização sem interferir no switch com as opções padrão.
 	 * 
 	 * Essa function irá receber os seguintes parâmetros:
-	 * @param $post_type
 	 * @param $post
 	 */
 	preg_match( '/^function_(.*)/', $column_name, $function );
 	if( isset($function[1]) ){
 		if( function_exists($function[1]) ){
-			call_user_func($function[1], $post_type, $post);
+			call_user_func($function[1], $post->post_type, $post);
 		}
 		else{
 			echo "<span class='form_element_error'>A function {$function[1]}() não existe.</span>";
@@ -412,7 +411,7 @@ function render_columns( $column_name ){
 			break;
 		
 		default:
-			do_action( 'boros_custom_column', $post_type, $post, $column_name );
+			do_action( 'boros_custom_column', $post->post_type, $post, $column_name );
 			break;
 	}
 }
