@@ -81,15 +81,27 @@ class BFE_textarea_editor extends BorosFormElement {
 		else{
 			$editor_attr = $editor_profiles[$this->data['options']['editor']];
 		}
+		
+		/**
+		 * Usar get_option('WPLANG'), pois em uma instalação multisite
+		 * 
+		 */
+		$site_lang_option = get_option('WPLANG');
+		if( empty($site_lang_option) ){
+			$textarea_lang = 'en';
+		}
+		else{
+			$lang_code = explode('_', $site_lang_option);
+			$textarea_lang = $lang_code[0];
+		}
+		
 		// começar a guardar o output do script js em buffer
 		ob_start();
 		?>
 		
 		<script type="text/javascript">
-			<?php 
 			// identificar idioma da instalação. Muito impotante, pois evita conflito que quebra a função do editor.
-			echo ( WPLANG == 'pt_BR' ) ? 'var wp_language = "pt"' : 'var wp_language = "en";' ;
-			?>
+			var wp_language = '<?php echo $textarea_lang; ?>';
 			
 			/**
 			 * A aplicação de cada 'profile' de editor e selecionado conforme a class do textarea original, definido no array de configuração dos metaboxes.
@@ -119,7 +131,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				 * Notas:
 				 * *a - desabilitado pois não funciona com páginas organizadas com urls amigáveis
 				 */
-				<?php if( WPLANG == 'pt_BR' ){echo 'language:"pt",';} // identificar idioma da instalação ?>
+				<?php if( $textarea_lang != 'en' ){echo "language:'{$textarea_lang}',";} // identificar idioma da instalação ?>
 				body_class : 'hentry',
 				body_id : '<?php echo $this->data['name']; ?>',
 				width: '100%', 									// largura
