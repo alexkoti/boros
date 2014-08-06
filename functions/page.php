@@ -109,8 +109,8 @@ function has_parent( $post, $parent_id ) {
  * @return 	string	url absoluta da página
  * @uses		get_page_ID_by_name()
  */
-function page_permalink_by_name( $page_name, $echo = true ){
-	$page_id = get_page_ID_by_name($page_name);
+function page_permalink_by_name( $page_name, $echo = true, $post_type = 'page' ){
+	$page_id = get_page_ID_by_name($page_name, $post_type);
 	if( $page_id == 'null' ){
 		$link = 'link inválido';
 	}
