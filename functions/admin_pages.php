@@ -587,10 +587,11 @@ class BorosAdminPages {
 			$first_tab = key( $this->tabs );
 			foreach( $this->tabs as $tab => $name ){
 				$class = ( $tab == $this->current_tab ) ? ' nav-tab-active' : '';
-				$url = add_query_arg( 'tab', false );
+				$url = add_query_arg( array( 'tab' => false, 'settings-updated' => false ) );
 				// apenas adicionar query_arg a partir da segunda aba
-				if( $tab != $first_tab )
-					$url = add_query_arg( 'tab', $tab );
+				if( $tab != $first_tab ){
+					$url = add_query_arg( array( 'tab' => $tab, 'settings-updated' => false ));
+				}
 				echo "<a class='nav-tab{$class}' href='{$url}'>{$name}</a>";
 			}
 			echo '</h2>';
