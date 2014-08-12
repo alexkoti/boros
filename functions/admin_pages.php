@@ -328,10 +328,16 @@ class BorosAdminPages {
 				if( $tab != key($tabs) ){
 					//pre($this->folder_base . "admin_pages/{$page_name}_{$tab}.php");
 					if( array_key_exists( $tab, $tabs ) ){
-						include_once( $this->folder_base . "admin_pages/{$page_name}_{$tab}.php" );
-						$config = $this->load_config( "{$page_name}_{$tab}" );
-						// registrar as opções na whitelist do wordpress
-						$this->register_settings( "{$page_name}_{$tab}", $config );
+						$filename = $this->folder_base . "admin_pages/{$page_name}_{$tab}.php";
+						if( file_exists( $filename ) ){
+							include_once( $filename );
+							$config = $this->load_config( "{$page_name}_{$tab}" );
+							// registrar as opções na whitelist do wordpress
+							$this->register_settings( "{$page_name}_{$tab}", $config );
+						}
+						else{
+							pre( "É necessário a criação de arquivo com o este nome e caminho: {$filename}", 'Arquivo da página de opções não encontrado!' );
+						}
 					}
 				}
 				else{
