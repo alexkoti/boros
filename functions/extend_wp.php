@@ -141,6 +141,8 @@ function opt_option( $option, $wrapper = '%s', $echo = true, $filters = false ){
  * ==================================================
  * Buscar uma option ou aplicar o valor alternativo
  * 
+ * @todo mudar essa function que faz o echo diretamente para opt_option_or() e deixar esta co get_option_or() com return
+ * 
  * @param	string	$option		nome do option
  * @param	string	$option		valor alternativo a ser aplicado caso não exista o option ou seja vazio
  * @param	string	$wrapper		modelo de retorno em formato printf
