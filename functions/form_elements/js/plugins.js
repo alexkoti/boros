@@ -3,9 +3,6 @@
 
 
 jQuery(document).ready(function($){
-	/*********************************************************
-	 ******************* PLUGINS JQUERY **********************
-	 *********************************************************/
 	/**
 	 * #POSITION_CENTER
 	 * Posicionar elemento no centro da janela, em relação ao viewport e não o documento todo.
@@ -55,49 +52,107 @@ jQuery(document).ready(function($){
 	}
 	})(jQuery);
 	
+	
 	/**
 	 * SERIALIZE FORM DATA
 	 * Utilizando array associativo, ex name="foo[bar]"
 	 * @link http://stackoverflow.com/a/19643311
 	 * 
-	 */
+	 *
 	$.fn.serializeObject = function() {
-	var data = { };
-	$.each( this.serializeArray(), function( key, obj ) {
-		var a = obj.name.match(/(.*?)\[(.*?)\]/);
-		if(a !== null)
-		{
-			var subName = new String(a[1]);
-			var subKey = new String(a[2]);
-			if( !data[subName] ) data[subName] = { };
-			if( data[subName][subKey] ) {
-				if( $.isArray( data[subName][subKey] ) ) {
-					data[subName][subKey].push( obj.value );
+		var data = { };
+		$.each( this.serializeArray(), function( key, obj ) {
+			var a = obj.name.match(/(.*?)\[(.*?)\]/);
+			if(a !== null)
+			{
+				var subName = new String(a[1]);
+				var subKey = new String(a[2]);
+				if( !data[subName] ) data[subName] = { };
+				if( data[subName][subKey] ) {
+					if( $.isArray( data[subName][subKey] ) ) {
+						data[subName][subKey].push( obj.value );
+					} else {
+						data[subName][subKey] = { };
+						data[subName][subKey].push( obj.value );
+					};
 				} else {
-					data[subName][subKey] = { };
-					data[subName][subKey].push( obj.value );
-				};
+					data[subName][subKey] = obj.value;
+				};  
 			} else {
-				data[subName][subKey] = obj.value;
-			};  
-		} else {
-			var keyName = new String(obj.name);
-			if( data[keyName] ) {
-				if( $.isArray( data[keyName] ) ) {
-					data[keyName].push( obj.value );
+				var keyName = new String(obj.name);
+				if( data[keyName] ) {
+					if( $.isArray( data[keyName] ) ) {
+						data[keyName].push( obj.value );
+					} else {
+						data[keyName] = { };
+						data[keyName].push( obj.value );
+					};
 				} else {
-					data[keyName] = { };
-					data[keyName].push( obj.value );
+					data[keyName] = obj.value;
 				};
-			} else {
-				data[keyName] = obj.value;
 			};
-		};
-	});
-	return data;
-};
-
+		});
+		return data;
+	};
+	/**/
+	
 });
+
+
+/**
+ * PARSE QUERY STRING
+ * Recupera o valor de 'name' dentro da string em formato query.
+ * Exemplo 
+	<code>
+	str = 'foo=bar&foz=bla';
+	getParameterByName( 'foz', str ); //result 'bla'
+	</code>
+ * 
+ */
+function getParameterByName( name, str ){name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");var regexS = "[\\?&]"+name+"=([^&#]*)";var regex = new RegExp( regexS );var results = regex.exec( str );if( results == null ){return "";}else{return decodeURIComponent(results[1].replace(/\+/g, " "));}}
+
+/**
+ * #URL_PARSER 2
+ * Retorna um objeto json, bem fácil de manipular, com possibilidade de usar jQuery.param() para devolver a url formatada novamente. Exemplo
+<code>
+	var urlvars = url_params( $(foo).attr('href') );
+	urlvars.serie = 123; // editar paramêtro 'serie'
+	
+	// voltar para url
+	var new_url = $(foo).attr('href').split('?')[0] + '?' + $.param(urlvars);
+	$(foo).attr('href', new_url);
+</code>
+ * 
+ * @link http://stackoverflow.com/questions/901115/get-query-string-values-in-javascript/2880929#2880929
+ */
+function url_params( url ){
+	var urlParams = {};
+	var e,
+	a = /\+/g,  // Regex for replacing addition symbol with a space
+	r = /([^&=]+)=?([^&]*)/g,
+	d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+	q = url.split('?')[1];
+	
+	while (e = r.exec(q))
+		urlParams[d(e[1])] = d(e[2]);
+	
+	return urlParams;
+}
+
+/**
+ * Retornar os valores em um form, mesmo que estejam em array associativo, por exemplo <code>name="year[1980][price]"</code>
+ * 
+ * Project: SerializeObject()
+ * URL: https://github.com/scottyc1000/serializeObject
+ * Author: Scott Carmichael
+ * Version: 1.3
+ * Requires: jQuery 1.3+
+ *
+ * Copyright (c) 2013 Scott Carmichael
+ * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+ * Copyright notice and license must remain intact for legal use
+ */
+;(function($, window, document){$.fn.serializeObject = function() {if(!Array.prototype.indexOf) {Array.prototype.indexOf = function(obj, start) {for (var i = (start || 0), j = this.length; i < j; i++) {if (this[i] === obj) { return i; }}return -1;}}var form_values = $(this).serializeArray(),form_final = {};$.each(form_values, function(){if(this.value == '') {form_final[this.name] = null;} else if(this.name.match(/\[(.+?)\]/g)){var arrayName = this.name.match(/\w+[^\[]/g)[0],propertyName = this.name.match(/\[(.+?)\]/g)[0];propertyName = propertyName.replace(/(\[|\])/g, "");if(!form_final.hasOwnProperty(arrayName)){form_final[arrayName] = new Object(); }form_final[arrayName][propertyName] = this.value;} else if(this.name.indexOf('[]') > 0){this.name = this.name.split("[]")[0];if(form_final.hasOwnProperty(this.name)){form_final[this.name].push(this.value);} else {form_final[this.name] = [this.value]}} else if(form_final.hasOwnProperty(this.name)) {if(typeof form_final[this.name] != 'object' ){  firstItem = form_final[this.name];form_final[this.name] = new Object();form_final[this.name][firstItem] = true;}form_final[this.name][this.value] = true;} else {form_final[this.name] = this.value;}});return form_final;}}(jQuery, window, document));
 
 /**
  * DATASET
