@@ -112,7 +112,10 @@ include_once( BOROS_FUNCTIONS . 'frontend_form.php');				// class de postagem no
 include_once( BOROS_FUNCTIONS . 'email.php');						// function para todos os emails - as configs deverão ser feitas no plgin do trabalho
 include_once( BOROS_FUNCTIONS . 'tests.php');						// function auxiliares para testes
 include_once( BOROS_FUNCTIONS . 'third_party_facebook.php');		// integração com facebook
-include_once( BOROS_FUNCTIONS . 'multisite.php');					// functions extras para multisite
+include_once( BOROS_FUNCTIONS . 'security.php' );					// configurações e filtros de segurança
+if( defined('MULTISITE') and MULTISITE == true ){
+	include_once( BOROS_FUNCTIONS . 'multisite.php');				// functions extras para multisite
+}
 
 /**
  * INCLUDES FUNCTIONS SOMENTE FRONTEND

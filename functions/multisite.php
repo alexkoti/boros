@@ -1,4 +1,11 @@
 <?php
+/**
+ * ==================================================
+ * MULTISITE ========================================
+ * ==================================================
+ * Functions extras para instalações multisite.
+ * 
+ */
 
 function _get_subsites_list(){
 	global $wpdb;
