@@ -44,6 +44,10 @@ function add_admin_footer_dialog(){
 function create_form_elements( $context, $data, $data_value ){
 	global $post;
 	
+	//pre( $context, 'context' );
+	//pre( $data, 'data' );
+	//pre( $data_value, 'data_value' );
+	
 	$classname = 'BFE_' . $data['type'];
 	if( class_exists($classname) and is_subclass_of($classname, 'BorosFormElement') ){
 		$element = new $classname( $context, $data, $data_value );
