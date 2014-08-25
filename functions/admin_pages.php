@@ -525,8 +525,14 @@ class BorosAdminPages {
 			<form action="options.php" method="post">
 				<?php
 				settings_fields( $this->settings_name );
+				
+				/**
+				 * Quando uma configuração de admin page não possui um bloco de submit, aplicar esse modelo padrão.
+				 * Configurações antigas não terão esse bloco e devem usar esse trecho.
+				 * 
+				 */
 				$submit_block = array(
-					'type' => 'default',
+					'submit_type' => 'default',
 					'text' => 'Atualizar',
 					'class' => 'button-primary',
 					'parent_class' => 'page-form-submit',
@@ -553,21 +559,28 @@ class BorosAdminPages {
 							$this->output_page_section( $block );
 						}
 						elseif( $block['block'] == 'submit' ){
-							$submit_block = array(
-								'type' => 'custom',
-								'text' => $block['options']['text'],
-								'class' => $block['options']['class'],
-								'parent_class' => $block['options']['parent_class'],
-								'html' => $block['options']['html'],
-							);
-							// exibir submit ou personalizado.
-							$this->output_page_submit( $submit_block );
+							// mostrar submit custom no meio do formulário, mesmo que não seja o último item
+							if( $block['submit_type'] == 'custom' ){
+								$submit_block = array(
+									'submit_type' => 'custom',
+									'text' => $block['options']['text'],
+									'class' => $block['options']['class'],
+									'parent_class' => $block['options']['parent_class'],
+									'html' => $block['options']['html'],
+								);
+								// exibir submit ou personalizado.
+								$this->output_page_submit( $submit_block );
+							}
+							elseif( $block['submit_type'] == 'none' ){
+								$submit_block['submit_type'] = 'none';
+								continue;
+							}
 						}
 					}
 				}
 				
 				// submit padrão
-				if( $submit_block['type'] == 'default' ){
+				if( $submit_block['submit_type'] == 'default' ){
 					$this->output_page_submit( $submit_block );
 				}
 				?>
