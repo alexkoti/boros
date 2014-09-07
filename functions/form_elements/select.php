@@ -3,6 +3,15 @@
  * SELECT
  * select simples baseado em valores passado no array de configuração
  * 
+ * Other field:
+<code>
+	'other_field' => array(
+		'attr' => array(
+			'placeholder' => 'Outras',
+			'class' => 'input-small',
+		),
+	),
+</code>
  * 
  */
 
