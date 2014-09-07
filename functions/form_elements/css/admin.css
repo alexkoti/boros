@@ -672,6 +672,13 @@ table.boros_taxonomy_block {
 .boros_form_block .boros_form_element.reloading {
 	
 }
+.boros_form_block .boros_form_element.boros_element_hidden {
+	height:0;
+	margin:0;
+	overflow:hidden;
+	padding:0;
+}
+
 /**
  * Blocos de HTML pre e pós label e input. São diferentes de dos helpers, pois podem conter blocos extensos de HTML complexo.
  * 
