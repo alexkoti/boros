@@ -757,7 +757,7 @@ function bev_signin( $args ){
 	$add = new BevDriveAddOrRemoveUser( $args['bev_id'], $args['user_id'] );
 	$add->queue_user();
 	
-	pre( $add->messages );
+	//pre( $add->messages );
 }
 
 /**
