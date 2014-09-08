@@ -138,21 +138,29 @@ function attach_select(){
 }
 
 function attach_select_load( $id ){
-	$attch = get_post( $id );
-	
 	if( !empty($id) ){
+		$attch = get_post( $id );
 		$media_dims = '';
 		$meta = wp_get_attachment_metadata( $id );
 		if ( is_array( $meta ) && array_key_exists( 'width', $meta ) && array_key_exists( 'height', $meta ) ){
 			$media_dims = "<strong>Dimensões:</strong> <span>{$meta['width']}&nbsp;&times;&nbsp;{$meta['height']}</span><br />";
 		}
-		
+		$file  = get_attached_file( $id );
+		$file_size = false;
+		if( isset( $meta['filesize'] ) ){
+			$file_size = $meta['filesize'];
+		}
+		elseif( file_exists( $file ) ){
+			$file_size = filesize( $file );
+		}
 		$thumb = wp_get_attachment_image_src( $id, 'thumbnail', true );
-		
 		$title = apply_filters( 'the_title', $attch->post_title );
 		echo '<div class="inner">';
 		echo "<div class='attach_select_icon'><img class='thumbnail' src='{$thumb[0]}' alt='' /><div class='hide-if-no-js attach_select_remove'><span class='btn' title='Remover este arquivo'>&nbsp;</span></div></div>";
 		echo "<strong>Nome:</strong> {$title} <br /><strong>Tipo do arquivo:</strong> {$attch->post_mime_type} <br />";
+		if( !empty( $file_size ) ){
+			echo '<strong>Tamanho:</strong> ' . size_format( $file_size );
+		}
 		echo $media_dims;
 		echo '</div>';
 	}
