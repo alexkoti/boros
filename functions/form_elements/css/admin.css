@@ -744,18 +744,6 @@ table.boros_taxonomy_block {
 	width:400px;
 }
 
-/**
- * Corrigir posicionamento do botão de redimensionamento do editor de texto
- * 
- */
-.wp_themeSkin .mceStatusbar {
-	position:relative;
-}
-.wp_themeSkin .mceStatusbar #content_resize, 
-#post #post-body .wp_themeSkin .mceStatusbar a.mceResize {
-	top:auto !important;
-}
-
 
 
 /**
