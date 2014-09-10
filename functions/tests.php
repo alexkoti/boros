@@ -575,41 +575,43 @@ class ProfileGen {
 		}
 		
 		// usermetas
-		$profile['email']           = $email;
-		$profile['user_email']      = $email;
-		$profile['rg']              = mt_rand( 111111111, 999999999 );
-		$cpf_cnpj                   = new RandCpfCnpj();
-		$profile['cpf']             = $cpf_cnpj->cpf();
+		$profile['email']             = $email;
+		$profile['user_email']        = $email;
+		$profile['rg']                = mt_rand( 111111111, 999999999 );
+		$cpf_cnpj                     = new RandCpfCnpj();
+		$profile['cpf']               = $cpf_cnpj->cpf();
+		$profile['estado_civil']      = array_rand( array('solteiro' => 'Solteiro', 'casado' => 'Casado', 'divorciado' => 'Divorciado', 'viuvo' => 'Viúvo') );
 		
-		$profile['sexo']            = array_rand( array('feminino' => 'feminino', 'masculino' => 'masculino') );
-		$profile['nascimento']      = _rand_birth_date();
-		$profile['data_nascimento'] = "{$profile['nascimento']['d']}/{$profile['nascimento']['m']}/{$profile['nascimento']['Y']}";
+		$profile['sexo']              = array_rand( array('feminino' => 'feminino', 'masculino' => 'masculino') );
+		$profile['nascimento']        = _rand_birth_date();
+		$profile['data_nascimento']   = "{$profile['nascimento']['d']}/{$profile['nascimento']['m']}/{$profile['nascimento']['Y']}";
 		
-		$profile['endereco']        = $this->rand_address();
-		$profile['complemento']     = $this->rand_complement();
-		$profile['numero']          = mt_rand(1, 2000);
-		$estado                     = _rand_estado('ambos');
-		$profile['estado']          = $estado[1];
-		$profile['uf']              = $estado[0];
-		$profile['cidade']          = _rand_cidade( $profile['uf'] );
-		$profile['bairro']          = $this->rand_number_name('last');
-		$profile['cep']             = _rand_cep();
+		$profile['endereco']          = $this->rand_address();
+		$profile['complemento']       = $this->rand_complement();
+		$profile['numero']            = mt_rand(1, 2000);
+		$profile['endereco_completo'] = "{$profile['endereco']} {$profile['complemento']} {$profile['numero']}";
+		$estado                       = _rand_estado('ambos');
+		$profile['estado']            = $estado[1];
+		$profile['uf']                = $estado[0];
+		$profile['cidade']            = _rand_cidade( $profile['uf'] );
+		$profile['bairro']            = $this->rand_number_name('last');
+		$profile['cep']               = _rand_cep();
 		
-		$profile['telefone']        = _rand_tel( $with_ddd = true, $with_symbols = false, $format = 'array' );
-		$profile['telefone_ddd']    = $profile['telefone'][0];
-		$profile['telefone_numero'] = $profile['telefone'][1];
-		$profile['telefone_format'] = "({$profile['telefone_ddd']}) {$profile['telefone_numero']}";
+		$profile['telefone']         = _rand_tel( $with_ddd = true, $with_symbols = false, $format = 'array' );
+		$profile['telefone_ddd']     = $profile['telefone'][0];
+		$profile['telefone_numero']  = $profile['telefone'][1];
+		$profile['telefone_format']  = "({$profile['telefone_ddd']}) {$profile['telefone_numero']}";
 		
-		$profile['celular']         = _rand_tel( $with_ddd = $profile['telefone_ddd'], $with_symbols = false, $format = 'array' );
-		$profile['celular_ddd']     = $profile['celular'][0];
-		$profile['celular_numero']  = $profile['celular'][1];
-		$profile['celular_format'] = "({$profile['celular_ddd']}) {$profile['celular_numero']}";
+		$profile['celular']          = _rand_tel( $with_ddd = $profile['telefone_ddd'], $with_symbols = false, $format = 'array' );
+		$profile['celular_ddd']      = $profile['celular'][0];
+		$profile['celular_numero']   = $profile['celular'][1];
+		$profile['celular_format']   = "({$profile['celular_ddd']}) {$profile['celular_numero']}";
 		
-		$profile['mensagem']        = rand_lipsum( mt_rand(80, 120), 'plain' );
+		$profile['mensagem']         = rand_lipsum( mt_rand(80, 120), 'plain' );
 		
-		$profile['profissao']       = _rand_profissao();
-		$profile['empresa']         = _rand_companies();
-		$profile['cnpj']            = $cpf_cnpj->cnpj();
+		$profile['profissao']        = _rand_profissao();
+		$profile['empresa']          = _rand_companies();
+		$profile['cnpj']             = $cpf_cnpj->cnpj();
 		return $profile;
 	}
 }
