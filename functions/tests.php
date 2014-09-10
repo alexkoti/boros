@@ -608,6 +608,9 @@ class ProfileGen {
 		$profile['celular_format']   = "({$profile['celular_ddd']}) {$profile['celular_numero']}";
 		
 		$profile['mensagem']         = rand_lipsum( mt_rand(80, 120), 'plain' );
+		$profile['mensagem_mini']    = rand_lipsum( mt_rand(5, 10), 'plain' );
+		$profile['mensagem_small']   = rand_lipsum( mt_rand(20, 50), 'plain' );
+		$profile['mensagem_large']   = rand_lipsum( mt_rand(200, 300), 'plain' );
 		
 		$profile['profissao']        = _rand_profissao();
 		$profile['empresa']          = _rand_companies();
