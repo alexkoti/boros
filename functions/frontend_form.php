@@ -645,6 +645,10 @@ class BorosFrontendForm {
 			}
 		}
 		$user_meta = array();
+		// alertar que o modelo de 'accepted_metas' está antigo
+		if( !is_assoc_array($this->config['accepted_metas']) ){
+			pal('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults');
+		}
 		foreach( $this->config['accepted_metas'] as $field => $default ){
 			if( isset($this->posted_data[$field]) ){
 				$user_meta[$field] = $this->posted_data[$field];
@@ -854,6 +858,10 @@ class BorosFrontendForm {
 				$user_data[$field] = $default;
 		}
 		$user_meta = array();
+		// alertar que o modelo de 'accepted_metas' está antigo
+		if( !is_assoc_array($this->config['accepted_metas']) ){
+			pal('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults');
+		}
 		foreach( $this->config['accepted_metas'] as $field => $default ){
 			if( isset($this->posted_data[$field]) )
 				$user_meta[$field] = $this->posted_data[$field];
@@ -1063,6 +1071,10 @@ class BorosFrontendForm {
 		}
 		
 		$post_meta = array();
+		// alertar que o modelo de 'accepted_metas' está antigo
+		if( !is_assoc_array($this->config['accepted_metas']) ){
+			pal('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults');
+		}
 		foreach( $this->config['accepted_metas'] as $field => $default ){
 			if( isset($this->posted_data[$field]) ){
 				$post_meta[$field] = $this->posted_data[$field];
