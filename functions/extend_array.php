@@ -120,6 +120,18 @@ function is_assoc_array( $array ){
 }
 
 /**
+ * Converter array numperico para associativo
+ * 
+ */
+function numeric_array_to_assoc( $array ){
+	$new = array();
+	foreach( $array as $k ){
+		$new[$k] = '';
+	}
+	return $new;
+}
+
+/**
  * ==================================================
  * TRIM ARRAY =======================================
  * ==================================================
