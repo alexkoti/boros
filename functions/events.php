@@ -722,6 +722,14 @@ function bev_user_info_lightbox(){
 		}
 	}
 	
+	// filtro para dados adicionais
+	$additional_info = apply_filters( 'bev_user_info_lightbox_data', array(), $user_id );
+	if( !empty($additional_info) ){
+		foreach($additional_info as $label => $answer){
+			$questions[$label] = $answer;
+		}
+	}
+	
 	echo "<h3><strong>{$basic_data['full_name']}</strong></h3><table>";
 	foreach( $questions as $label => $answer ){
 		echo "<tr><td width='250'>{$label}</td><td>{$answer}</td></tr>";
