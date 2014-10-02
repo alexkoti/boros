@@ -1104,6 +1104,11 @@ class BorosFrontendForm {
 		//pre($this->validation->data_errors, 'VALIDATION $this->validation->data_errors');
 		//return;
 		
+		// adicionar filtro para pós validação, por exemplo para verificar campos dependentes de respostas de outros campos
+		$this->valid_data = apply_filters( 'boros_frontend_form_pos_validation_data', $this->valid_data, $this->valid_meta, $this->validation->data_errors );
+		$this->valid_meta = apply_filters( 'boros_frontend_form_pos_validation_meta', $this->valid_meta, $this->valid_data, $this->validation->data_errors );
+		$this->validation->data_errors = apply_filters( 'boros_frontend_form_pos_validation_errors', $this->validation->data_errors, $this->valid_data, $this->valid_meta );
+		
 		//pre($this->validation->data_errors, 'ERRORS');
 		
 		// verificar errors, caso negativo, adicionar post
