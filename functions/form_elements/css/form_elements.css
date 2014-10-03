@@ -157,8 +157,8 @@ hr {
  * TEXTAREA EDITOR
  * 
  */
-.form-table td.boros_element_textarea_editor,
-.form-table td.boros_element_textarea_editor td.mceIframeContainer {
+.form-table.boros_meta_block td.boros_element_textarea_editor,
+.form-table.boros_meta_block td.boros_element_textarea_editor td.mceIframeContainer {
 	padding:0;
 }
 div.mce-tinymce.mce-panel {
@@ -173,14 +173,27 @@ div.mce-tinymce.mce-panel {
 .form-table td.boros_element_wp_editor {
 	/* padding:0; */
 }
-.form-table.boros_meta_block td.boros_element_wp_editor {
+.form-table.boros_meta_block td.boros_element_wp_editor.layout_block {
 	padding:0;
 }
+.form-table.boros_meta_block td.boros_element_wp_editor.layout_table {
+	padding:0 0 0 7px;
+}
 .form-table.boros_options_block td.boros_element_wp_editor.layout_table {
-	padding:10px 0;
+	/* padding:10px 0; */
 }
 .form-table.boros_options_block td.boros_element_wp_editor.layout_block {
 	padding:10px 0;
+}
+/* remover borda extra do editor de texto */
+.tmce-active .wp-editor-container {
+	border:none;
+}
+/* caso seja metabox block(cheio), remover as bordas laterais, pois já existem a do metabox */
+.boros_meta_block .layout_block .wp-editor-container, 
+.boros_meta_block .layout_block div.mce-tinymce.mce-panel {
+	border-right:none;
+	border-left:none;
 }
 #qt_admin_footer_dialog_toolbar {
 	display:none;
@@ -192,3 +205,13 @@ div.mce-tinymce.mce-panel {
 	height:200px;
 	width:100%;
 }
+/* esconder o path de HTML */
+.mce-container .mce-flow-layout {
+	background:#f5f5f5;
+}
+.mce-path * {
+    display: none !important;
+}
+
+
+
