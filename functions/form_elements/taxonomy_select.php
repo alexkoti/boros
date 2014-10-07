@@ -31,6 +31,17 @@ class BFE_taxonomy_select extends BorosFormElement {
 		if( isset($_GET['ajax_post_id']) )
 			$post = get_post( intval($_GET['ajax_post_id']) );
 		
+		// sempre esperar um array de termos
+		foreach( (array)$value as $v ){
+			$selected_terms = $v;
+		}
+		
+		
+		/**
+		 * Essa verificação que busca o valor gravado em banco em vez do reload enviado em $value, deverá ser usado na edição de post/term/user em frontend_forms
+		 * 
+		 */
+		/**
 		// termo selecionado - verifica se está buscando post_meta ou taxonomy_meta
 		$selected_terms = false;
 		if( isset($_GET['taxonomy']) ){
@@ -49,6 +60,7 @@ class BFE_taxonomy_select extends BorosFormElement {
 				}
 			}
 		}
+		/**/
 		
 		// caso esteja vazio e possua um default, aplicar
 		if( empty( $selected_terms ) and !empty( $this->data['std'] ) ){
