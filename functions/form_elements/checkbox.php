@@ -26,10 +26,11 @@ class BFE_checkbox extends BorosFormElement {
 		$name = $this->data['attr']['name'];
 		$attrs = make_attributes($this->data['attr']);
 		$input = '';
+		$for = $this->data['attr']['id'];
 		
 		// caso seja layout normal, usando label de texto + input helper ao lado do checkbox
 		if( !empty($this->data['input_helper']) ){
-			$input = "<span class='checkbox_single_item'><input type='checkbox' {$attrs} value='1'{$checked} /><label for='{$name}' class='label_checkbox iptw_{$this->data['size']}'>{$this->input_helper}</label></span>";
+			$input = "<span class='checkbox_single_item'><input type='checkbox' {$attrs} value='1'{$checked} /><label for='{$for}' class='label_checkbox iptw_{$this->data['size']}'>{$this->input_helper}</label></span>";
 		}
 		
 		// separar os layouts :: bootstrap
