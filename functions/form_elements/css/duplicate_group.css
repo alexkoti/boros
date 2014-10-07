@@ -6,8 +6,8 @@
 	margin:0;
 	padding:0;
 }
-.duplicate_element .form-table > th,
-.duplicate_element .form-table > td {
+.duplicate_element .form-table > tbody > tr > th,
+.duplicate_element .form-table > tbody > tr > td {
 	padding:3px 5px;
 }
 .duplicate_element .form-table > th {
