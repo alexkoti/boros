@@ -15,6 +15,36 @@ class BorosMetaBoxes {
 	
 	var $errors;
 	
+	var $core_post_fields = array(
+		'ID',
+		'post_author',
+		'post_date',
+		'post_date_gmt',
+		'post_content',
+		'post_title',
+		'post_excerpt',
+		'post_status',
+		'comment_status',
+		'ping_status',
+		'post_password',
+		'post_name',
+		'to_ping',
+		'pinged',
+		'post_modified',
+		'post_modified_gmt',
+		'post_content_filtered',
+		'post_parent',
+		'guid',
+		'menu_order',
+		'post_type',
+		'post_mime_type',
+		'comment_count',
+		'post_category',
+		'tags_input',
+		'tax_input',
+		'page_template',
+	);
+	
 	/**
 	 * Contexto
 	 * 
@@ -105,9 +135,16 @@ class BorosMetaBoxes {
 			 * Alguns itens, como taxonomy_radio, que substituem names de inputs core do WordPress, não necessariamente declaram 'name', gerando erro no script.
 			 */
 			if( isset( $meta_item['name'] ) ){
-				$data_value = get_post_meta( $post->ID, $meta_item['name'] ); // chamar o valor gravado para o input
-				if( count($data_value) == 1 )
-					$data_value = $data_value[0];
+				// separar entre os valores de coluna de wp_post e wp_postmeta
+				if( in_array($meta_item['name'], $this->core_post_fields) ){
+					$data_value = $post->$meta_item['name'];
+				}
+				else{
+					$data_value = get_post_meta( $post->ID, $meta_item['name'] ); // chamar o valor gravado para o input
+					if( count($data_value) == 1 ){
+						$data_value = $data_value[0];
+					}
+				}
 			}
 			//pre($data_value, $meta_item['name']);
 			

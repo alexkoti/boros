@@ -177,7 +177,7 @@ class BorosFrontendForm {
 		'post_mime_type' => '',
 		'comment_count' => 0,
 		'post_category' => '',
-		'tags_input'  => '',
+		'tags_input' => '',
 		'tax_input' => '',
 		'page_template' => '',
 	);
