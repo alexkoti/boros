@@ -81,8 +81,9 @@ class BorosFrontendForm {
 		// post/page/post_type
 		'core_post_fields'      => array(),     // defaults apenas para o form corrente
 		'post_type'             => false,       // post_type default false, pois pode ser 'user' ou 'taxonomy'
-		'taxonomies'            => false,       // array com os termos de taxonomia para aplicar
+		'taxonomies'            => false,       // array com os termos fixos de taxonomia para aplicar, sem interferência do usuário
 		'accepted_metas'        => array(),     // array de metas aceitos
+		'accepted_taxonomies'   => array(),     // array de taxonomias aceitas para o usuário escolher
 		
 		// user
 		'auto_login'            => false,       // logar automaticamente em caso de sucesso no registro de novo usuário
@@ -175,6 +176,10 @@ class BorosFrontendForm {
 		'post_type' => 'post',
 		'post_mime_type' => '',
 		'comment_count' => 0,
+		'post_category' => '',
+		'tags_input'  => '',
+		'tax_input' => '',
+		'page_template' => '',
 	);
 	var $core_user_fields = array(
 		'ID' => 0,
@@ -195,6 +200,9 @@ class BorosFrontendForm {
 	
 	// Metas válidos para gravação. Serão usados no reload dos campos.
 	var $valid_meta = array();
+	
+	// Taxonomy terms aceitos
+	var $valid_taxonomy_terms = array();
 	
 	function __construct( $config, $context, $elements ){
 		// caso seja admin ou ajax, interromper
@@ -338,15 +346,31 @@ class BorosFrontendForm {
 		}
 	}
 	
+	/**
+	 * Normalizar o array de elementos colocando index associativo
+	 * Adicionar atributos identificando o tipo de elemento(core_type), se é core(colunas de tabela de post, user, etc), meta(post_meta, user_meta, etc) ou taxonomia(categoria, tag, custom taxonomy)
+	 * 
+	 */
 	function elements_plain(){
-		foreach( $this->elements as $box ){
-			$itens = $box['itens'];
-			foreach( $itens as $item ){
+		foreach( $this->elements as $index => $box ){
+			$temp_itens = array();
+			foreach( $box['itens'] as $item ){
 				if( isset($item['name']) ){
 					$item['parent'] = $box['id'];
+					if( substr($item['name'], 0, 9) == 'tax_input' ){
+						$item['core_type'] = 'tax_input';
+					}
+					elseif( array_key_exists($item['name'], $this->config['accepted_metas']) ){
+						$item['core_type'] = 'meta';
+					}
+					else{
+						$item['core_type'] = 'core';
+					}
 					$this->elements_plain[$item['name']] = $item;
+					$temp_itens[] = $item;
 				}
 			}
+			$this->elements[$index]['itens'] = $temp_itens;
 		}
 	}
 	
@@ -1086,6 +1110,7 @@ class BorosFrontendForm {
 		//pre( $post_data, 'ACCEPTED POST_DATA' );
 		//pre( $post_meta, 'ACCEPTED POST_META' );
 		
+		
 		$this->valid_data = $this->validate( $this->context, $post_data );
 		$this->valid_meta = $this->validate( $this->context, $post_meta );
 		
@@ -1093,6 +1118,20 @@ class BorosFrontendForm {
 		$this->valid_data = boros_parse_args( $this->config['core_post_fields'], $this->valid_data );
 		// mesclar dados 'core_post_fields' da class
 		$this->valid_data = boros_parse_args( $this->core_post_fields, $this->valid_data );
+		
+		/**
+		 * Aplicar termos de taxonomia setados pelo usuário.
+		 * 
+		 * @todo Caso seja configurado um array de termos, apenas esses termos serão válidos para que o usuário aplique.
+		 */
+		if( !empty( $this->config['accepted_taxonomies'] ) ){
+			$this->validate_taxonomy_terms($post_data);
+		}
+		//pre($this->valid_taxonomy_terms, 'valid_taxonomy_terms');
+		if( !empty($this->valid_taxonomy_terms) ){
+			$this->valid_data['tax_input'] = $this->valid_taxonomy_terms;
+		}
+		
 		// remover os vazios de core_data, para que o próprio WordPress processe corretamente os valores.
 		$this->valid_data = array_non_empty_items( $this->valid_data );
 		
@@ -1144,19 +1183,25 @@ class BorosFrontendForm {
 					
 					// Salvar upload. Mesmo que esteja configurado para 'skip_save', o arquivo será enviado para o Mídia do WordPress, e o ID do attachment será salvo como post_meta
 					if( $config['type'] == 'file' ){
-						$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');
-						// não salvar post_meta em caso de erro no upload e registrar o erro
-						if( is_wp_error($attachment_id) ){
-							$this->errors[] = $attachment_id;
-							continue;
+						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
+						if( $meta_value['size'] > 0 ){
+							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');
+							// não salvar post_meta em caso de erro no upload e registrar o erro
+							if( is_wp_error($attachment_id) ){
+								$this->errors[] = $attachment_id;
+								continue;
+							}
+							else{
+								/**
+								 * Atualizar também o valid_meta para o ID do anexo, pois inicialmente ele possui apenas os dados puros de upload (name, type, tmp_name, size), e irá permitir o uso pelos callbacks
+								 * 
+								 */
+								$this->valid_meta[$meta_key] = $attachment_id;
+								$meta_value = $attachment_id;
+							}
 						}
 						else{
-							/**
-							 * Atualizar também o valid_meta para o ID do anexo, pois inicialmente ele possui apenas os dados puros de upload (name, type, tmp_name, size), e irá permitir o uso pelos callbacks
-							 * 
-							 */
-							$this->valid_meta[$meta_key] = $attachment_id;
-							$meta_value = $attachment_id;
+							continue;
 						}
 					}
 					
@@ -1197,6 +1242,82 @@ class BorosFrontendForm {
 		else{
 			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
 		}
+	}
+	
+	function validate_taxonomy_terms( $post_data ){
+		foreach( $this->elements_plain as $element ){
+			if( $element['core_type'] == 'tax_input' ){
+				$taxonomy = $element['options']['taxonomy'];
+				
+				// verificar required
+				if( !isset($post_data['tax_input'][$taxonomy]) and isset($element['validate']['required']) ){
+					$error = array(
+						'name' => 'required',
+						'message' => $element['validate']['required']['message'],
+						'type' => 'error'
+					);
+					$this->validation->data_errors[$element['name']]['required'] = $error;
+				}
+				else{
+					// verificar se a taxonomia é válida
+					if( isset($this->config['accepted_taxonomies'][$taxonomy]) ){
+						// verificar se existe limitação de termos
+						if( !empty($this->config['accepted_taxonomies'][$taxonomy]) ){
+							if( is_array($post_data['tax_input'][$taxonomy]) ){
+								pal(2);
+								$this->valid_taxonomy_terms[$taxonomy] = array_intersect($this->config['accepted_taxonomies'][$taxonomy], $terms);
+							}
+							elseif( in_array($post_data['tax_input'][$taxonomy], $this->config['accepted_taxonomies'][$taxonomy]) ){
+								$this->valid_taxonomy_terms[$taxonomy] = array($post_data['tax_input'][$taxonomy]);
+							}
+						}
+						// liberado todos os termos
+						else{
+							$this->valid_taxonomy_terms[$taxonomy] = $post_data['tax_input'][$taxonomy];
+						}
+					}
+				}
+			}
+		}
+		
+		/**
+		foreach( $this->elements as $box ){
+			foreach( $box['itens'] as $element ){
+				pre($element);
+				if( substr($element['name'], 0, 9) == 'tax_input' ){
+					$taxonomy = $element['options']['taxonomy'];
+					
+					// verificar required
+					if( !isset($post_data['tax_input'][$taxonomy]) and isset($element['validate']['required']) ){
+						$error = array(
+							'name' => 'required',
+							'message' => $element['validate']['required']['message'],
+							'type' => 'error'
+						);
+						$this->validation->data_errors[$element['name']]['required'] = $error;
+					}
+					else{
+						// verificar se a taxonomia é válida
+						if( isset($this->config['accepted_taxonomies'][$taxonomy]) ){
+							// verificar se existe limitação de termos
+							if( !empty($this->config['accepted_taxonomies'][$taxonomy]) ){
+								if( is_array($post_data['tax_input'][$taxonomy]) ){
+									$this->valid_taxonomy_terms[$taxonomy] = array_intersect($this->config['accepted_taxonomies'][$taxonomy], $terms);
+								}
+								else{
+									$this->valid_taxonomy_terms[$taxonomy] = array($post_data['tax_input'][$taxonomy]);
+								}
+							}
+							// liberado todos os termos
+							else{
+								$this->valid_taxonomy_terms[$taxonomy] = $post_data['tax_input'][$taxonomy];
+							}
+						}
+					}
+				}
+			}
+		}
+		/**/
 	}
 	
 	function save_file( $file_info, $parent_id, $elem_config ){
@@ -1327,6 +1448,16 @@ class BorosFrontendForm {
 		// recarregar valid_meta
 		elseif( isset($item['name']) and array_key_exists( $item['name'], $this->valid_meta ) ){
 			return $this->valid_meta[ $item['name'] ];
+		}
+		// recarregar valid_taxonomy_terms
+		elseif( isset($item['name']) and $item['core_type'] == 'tax_input' ){
+			//pal($item['options']['taxonomy']);
+			//pre($this->valid_taxonomy_terms);
+			//pre($this->valid_taxonomy_terms[$item['options']['taxonomy']]);
+			if( isset($this->valid_taxonomy_terms[$item['options']['taxonomy']]) ){
+				return $this->valid_taxonomy_terms[$item['options']['taxonomy']];
+			}
+			//return $this->valid_meta[ $item['name'] ];
 		}
 		// recarregar padrão, caso exista
 		elseif( isset( $item['std']) ){
