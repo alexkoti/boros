@@ -1095,13 +1095,14 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 		$full_name = "{$first_name} {$last_name}";
 		
+		$admin_email = get_bloginfo('admin_email');
 		$email = $user->data->user_email;
 		
 		$title = get_option( 'bev_email_signin_title' );
 		
 		$headers = array(
 			'from' => get_bloginfo('name'),
-			'from' => get_bloginfo('admin_email'),
+			'from' => $admin_email,
 		);
 		
 		$message = apply_filters( 'the_content', get_option( 'bev_email_signin_text' ) );
@@ -1113,6 +1114,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pal($full_name,'$full_name');
 		//pal('tentativa de envio de email');
 		wp_mail( $email, $title, $message, $headers );
+		wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
 	}
 	
 	/**
