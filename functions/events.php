@@ -1084,7 +1084,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pal($full_name,'$full_name');
 		//pal('tentativa de envio de email');
 		wp_mail( $email, $title, $message, $headers );
-		wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
+		wp_mail( $admin_email, "[Cópia] {$title} : {$full_name}", $message, $headers );
 	}
 	
 	/**
@@ -1116,7 +1116,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pal($full_name,'$full_name');
 		//pal('tentativa de envio de email');
 		wp_mail( $email, $title, $message, $headers );
-		wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
+		wp_mail( $admin_email, "[Cópia] {$title} : {$full_name}", $message, $headers );
 	}
 	
 	/**
@@ -1147,7 +1147,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pre($message, 'message');
 		//pal('tentativa de envio de email');
 		wp_mail( $user_email, $title, $message, $headers );
-		wp_mail( $admin_email, $title, $message, $headers );
+		wp_mail( $admin_email, "[Cópia] {$title} : {$full_name}", $message, $headers );
 	}
 	
 	/**
@@ -1180,7 +1180,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pal($full_name,'$full_name');
 		//pal('tentativa de envio de email');
 		wp_mail( $email, $title, $message, $headers );
-		wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
+		wp_mail( $admin_email, "[Cópia] {$title} : {$full_name}", $message, $headers );
 	}
 }
 
@@ -1676,7 +1676,7 @@ function bev_user_notification_email(){
 	$message = apply_filters( 'bev_email_base', $message, $bev_id, $user_id );
 	
 	$user_email_sent = wp_mail( $email, $title, $message, $headers );
-	$admin_email_sent = wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
+	$admin_email_sent = wp_mail( $admin_email, "[Cópia] {$title} : {$full_name}", $message, $headers );
 	
 	if( $user_email_sent == true ){
 		echo "Notificação enviada para o usuário \n";
