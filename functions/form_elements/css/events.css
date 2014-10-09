@@ -18,6 +18,11 @@ ol.bev_messages {
 	.bev_messages li.ok {
 		color:green;
 	}
+
+/**
+ * Loading do recarregamento das listas após mover usuário entre listas
+ * 
+ */
 #bev_users_loading {
 	display:none;
 	background:#fff url(img/btn_loading.gif) no-repeat center center;
@@ -27,6 +32,24 @@ ol.bev_messages {
 	bottom:0;
 	left:0;
 }
+
+/**
+ * Loading do envio de email
+ * 
+ */
+.bev_user_notification_email_box {
+	position:relative;
+}
+.bev_user_notification_email_box .loading {
+	display:none;
+	background:#fff url(img/btn_loading.gif) no-repeat center center;
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+}
+
 .bev_user_table {
 	border-collapse:collapse;
 	width:100%;

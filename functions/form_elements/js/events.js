@@ -87,6 +87,31 @@ jQuery(document).ready(function($){
 		});
 	});
 	
+	/**
+	 * Enviar/Reenviar manualmente o email de notificação para o usuário
+	 * 
+	 */
+	$('.bev_user_notification_email').click(function(){
+		var ok = confirm('Deseja enviar um email para o usuário?');
+		if( ok == true ){
+			var $btn = $(this);
+			var $parent = $btn.closest('.bev_user_notification_email_box');
+			var $loading = $parent.find('.loading');
+			
+			$loading.show();
+			var data = {
+				action: 'bev_user_notification_email',
+				bev_id: $btn.dataset('bev_id'),
+				user_id: $btn.dataset('user_id'),
+			}
+			$.post( ajaxurl, data, function( response ){
+				alert(response);
+				$loading.hide();
+			});
+		}
+		return false;
+	});
+	
 });
 
 

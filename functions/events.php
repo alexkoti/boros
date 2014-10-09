@@ -1064,6 +1064,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 		$full_name = "{$first_name} {$last_name}";
 		
+		$admin_email = get_bloginfo('admin_email');
 		$email = $user->data->user_email;
 		
 		//$title = get_option( 'bev_email_signin_title' );
@@ -1071,7 +1072,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		
 		$headers = array(
 			'from' => get_bloginfo('name'),
-			'from' => get_bloginfo('admin_email'),
+			'from' => $admin_email,
 		);
 		
 		$message = apply_filters( 'the_content', get_option( 'bev_signin_queue' ) );
@@ -1083,6 +1084,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pal($full_name,'$full_name');
 		//pal('tentativa de envio de email');
 		wp_mail( $email, $title, $message, $headers );
+		wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
 	}
 	
 	/**
@@ -1144,8 +1146,8 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pre($title, 'title');
 		//pre($message, 'message');
 		//pal('tentativa de envio de email');
-		wp_mail( $admin_email, $title, $message, $headers );
 		wp_mail( $user_email, $title, $message, $headers );
+		wp_mail( $admin_email, $title, $message, $headers );
 	}
 	
 	/**
@@ -1158,6 +1160,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 		$full_name = "{$first_name} {$last_name}";
 		
+		$admin_email = get_bloginfo('admin_email');
 		$email = $user->data->user_email;
 		
 		//$title = get_option( 'bev_email_signin_title' );
@@ -1165,7 +1168,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		
 		$headers = array(
 			'from' => get_bloginfo('name'),
-			'from' => get_bloginfo('admin_email'),
+			'from' => $admin_email,
 		);
 		
 		$message = apply_filters( 'the_content', get_option( 'bev_signin_not_approved' ) );
@@ -1177,6 +1180,7 @@ function bev_move_user( $bev_id, $user_id, $to = 'accepted' ){
 		//pal($full_name,'$full_name');
 		//pal('tentativa de envio de email');
 		wp_mail( $email, $title, $message, $headers );
+		wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
 	}
 }
 
@@ -1476,6 +1480,7 @@ function bev_users_inside( $post_id, $display_loading = false ){
 				$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
 				echo '<tr>';
 				echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
+				echo	"<td width='100' class='txt_center'><div class='bev_user_notification_email_box'><a href='#' class='bev_user_notification_email' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_notification_email'>enviar email de notificação</a><span class='loading'></span></div></td>";
 				echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
 				if( empty($bev_extra_user_data_deleted) ){
 					echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>desaprovar</a></td>";
@@ -1641,6 +1646,52 @@ function bev_users_inside( $post_id, $display_loading = false ){
 					});
 				</script>";
 	}
+}
+
+/**
+ * Enviar/Reenviar manualmente o email de notificação para o usuário
+ * 
+ */
+add_action( 'wp_ajax_bev_user_notification_email', 'bev_user_notification_email' );
+function bev_user_notification_email(){
+	$user_id = $_POST['user_id'];
+	$bev_id = $_POST['bev_id'];
+	$user = get_user_by( 'id', $user_id );
+	$first_name = get_user_meta( $user_id, 'first_name', true );
+	$last_name = get_user_meta( $user_id, 'last_name', true );
+	$full_name = "{$first_name} {$last_name}";
+	
+	$admin_email = get_bloginfo('admin_email');
+	$email = $user->data->user_email;
+	
+	$title = get_option( 'bev_email_signin_title' );
+	
+	$headers = array(
+		'from' => get_bloginfo('name'),
+		'from' => $admin_email,
+	);
+	
+	$message = apply_filters( 'the_content', get_option( 'bev_email_signin_text' ) );
+	$message = str_replace( '[NOME]', $full_name, $message );
+	$message = apply_filters( 'bev_email_base', $message, $bev_id, $user_id );
+	
+	$user_email_sent = wp_mail( $email, $title, $message, $headers );
+	$admin_email_sent = wp_mail( $admin_email, '[Cópia] ' . $title, $message, $headers );
+	
+	if( $user_email_sent == true ){
+		echo "Notificação enviada para o usuário \n";
+	}
+	else{
+		echo "Notificação para o usuário falhou \n";
+	}
+	if( $admin_email_sent == true ){
+		echo "Cópia da notificação enviada para o administrador \n";
+	}
+	else{
+		echo "Cópia da notificação falhou \n";
+	}
+	
+	die();
 }
 
 class BFE_bev_users_extra_info_log extends BorosFormElement {
