@@ -10,6 +10,7 @@
  * 
  * 
  * @link https://accounts.google.com/DisplayUnlockCaptcha - link de desbloqueio de SMTP
+ * @link https://www.google.com/settings/security/lesssecureapps - novo link de desbloqueio
  */
 
 
