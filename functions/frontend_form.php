@@ -671,7 +671,7 @@ class BorosFrontendForm {
 		$user_meta = array();
 		// alertar que o modelo de 'accepted_metas' está antigo
 		if( !is_assoc_array($this->config['accepted_metas']) ){
-			pal('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults');
+			wp_die('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults <strong>create_user()</strong>');
 		}
 		foreach( $this->config['accepted_metas'] as $field => $default ){
 			if( isset($this->posted_data[$field]) ){
@@ -885,7 +885,7 @@ class BorosFrontendForm {
 		$user_meta = array();
 		// alertar que o modelo de 'accepted_metas' está antigo
 		if( !is_assoc_array($this->config['accepted_metas']) ){
-			pal('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults');
+			wp_die('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults <strong>edit_user()</strong>');
 		}
 		foreach( $this->config['accepted_metas'] as $field => $default ){
 			if( isset($this->posted_data[$field]) )
@@ -1098,7 +1098,7 @@ class BorosFrontendForm {
 		$post_meta = array();
 		// alertar que o modelo de 'accepted_metas' está antigo
 		if( !is_assoc_array($this->config['accepted_metas']) ){
-			pal('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults');
+			wp_die('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults <strong>create_post()</strong>');
 		}
 		foreach( $this->config['accepted_metas'] as $field => $default ){
 			if( isset($this->posted_data[$field]) ){
