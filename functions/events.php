@@ -608,6 +608,10 @@ function bev_user_event_data( $user_id, $bev_id ){
 	$multi = array('radio', 'checkbox', 'checkbox_group');
 	$user_extra = array();
 	
+	//pal($user_id, '$user_id');
+	//pal($bev_id, '$bev_id');
+	//pre($bev_extra_info, '$bev_extra_info');
+	
 	if( !empty($bev_extra_info) ){
 		foreach( $bev_extra_info as $info ){
 			$name = sanitize_title( $info['bev_question_label'] );
@@ -618,19 +622,16 @@ function bev_user_event_data( $user_id, $bev_id ){
 					if( in_array( $info['bev_question_type'], $multi ) ){
 						$values = empty($info['bev_question_values']) ? false : explode( "\n", $info['bev_question_values'] );
 						$values = array_combine(range(1, count($values)), array_values($values));
-						//pre($values);
-						
 						$value = '';
 						if( $info['bev_question_type'] == 'checkbox' or $info['bev_question_type'] == 'checkbox_group' ){
 							$pre_value = array();
 							foreach( $meta as $v ){
-								//pre($values, 'aaa');
 								$pre_value[] = $values[$v];
 							}
 							$value = implode(', ', $pre_value);
 						}
 						else{
-							$value = $values[$meta[$name]];
+							$value = $values[$meta];
 						}
 					}
 					else{
@@ -643,8 +644,12 @@ function bev_user_event_data( $user_id, $bev_id ){
 					$user_extra[$info['bev_question_label']] = $meta;
 				}
 			}
+			else{
+				$user_extra[$info['bev_question_label']] = '';
+			}
 		}
 	}
+	//pre($user_extra, '$user_extra');
 	return $user_extra;
 }
 
@@ -684,23 +689,31 @@ function bev_user_info_lightbox(){
 	$basic_data = bev_user_basic_data($user_id);
 	foreach( $user_basic_labels as $name => $label ){
 		if( $name == 'data_nascimento' and !empty($basic_data[$name]) ){
-			$questions[$label] = "{$basic_data[$name]['dia']}/{$basic_data[$name]['mes']}/{$basic_data[$name]['ano']}";
+			if( is_array($basic_data[$name]) ){
+				$questions[$label] = "{$basic_data[$name]['dia']}/{$basic_data[$name]['mes']}/{$basic_data[$name]['ano']}";
+			}
+			else{
+				$questions[$label] = $basic_data[$name];
+			}
 		}
 		elseif( $name == 'telefone' and !empty($basic_data[$name]) ){
-			$questions[$label] = "({$basic_data[$name]['ddd']}) {$basic_data[$name]['telefone']}";
+			if( is_array($basic_data[$name]) ){
+				$questions[$label] = "({$basic_data[$name]['ddd']}) {$basic_data[$name]['telefone']}";
+			}
+			else{
+				$questions[$label] = $basic_data[$name];
+			}
 		}
 		elseif( !empty($basic_data[$name]) ){
 			$questions[$label] = $basic_data[$name];
 		}
 	}
 	
-	// dados extras
-	$extra_data = bev_user_event_data( $user_id, $bev_id );
-	//pre($extra_data, '$extra_data');
+	// dados extras configurados pelo montador de questões
 	$multi = array('radio', 'checkbox');
 	if( !empty($extra_data) ){
 		foreach( $extra_data as $label => $answer ){
-			//pre($questions);
+			//pre($answer, $label);
 			//if( in_array( $info['bev_question_type'], $multi ) ){
 			//	$values = empty($info['bev_question_values']) ? false : explode( "\n", $info['bev_question_values'] );
 			//	$values = array_combine(range(1, count($values)), array_values($values));
@@ -722,10 +735,13 @@ function bev_user_info_lightbox(){
 		}
 	}
 	
-	// filtro para dados adicionais
+	// filtro para dados adicionais, configurados pelo formulário fixo
 	$additional_info = apply_filters( 'bev_user_info_lightbox_data', array(), $user_id );
 	if( !empty($additional_info) ){
 		foreach($additional_info as $label => $answer){
+			if( is_array($answer) ){
+				$answer = implode(' ', $answer);
+			}
 			$questions[$label] = $answer;
 		}
 	}
@@ -1476,17 +1492,22 @@ function bev_users_inside( $post_id, $display_loading = false ){
 			echo '<table class="bev_user_table">';
 			foreach( $bev_users_accepted as $user_id ){
 				$user = get_user_by( 'id', $user_id );
-				$link = admin_url("user-edit.php?user_id={$user_id}");
-				$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
-				echo '<tr>';
-				echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
-				echo	"<td width='100' class='txt_center'><div class='bev_user_notification_email_box'><a href='#' class='bev_user_notification_email' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_notification_email'>enviar email de notificação</a><span class='loading'></span></div></td>";
-				echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
-				if( empty($bev_extra_user_data_deleted) ){
-					echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>desaprovar</a></td>";
-					echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_cancel' style='color:skyblue ;'>cancelar inscrição</a></td>";
+				if($user){
+					$link = admin_url("user-edit.php?user_id={$user_id}");
+					$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
+					echo '<tr>';
+					echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
+					echo	"<td width='100' class='txt_center'><div class='bev_user_notification_email_box'><a href='#' class='bev_user_notification_email' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_notification_email'>enviar email de notificação</a><span class='loading'></span></div></td>";
+					echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
+					if( empty($bev_extra_user_data_deleted) ){
+						echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>desaprovar</a></td>";
+						echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_cancel' style='color:skyblue ;'>cancelar inscrição</a></td>";
+					}
+					echo '</tr>';
 				}
-				echo '</tr>';
+				else{
+					echo "<tr><td>Este usuário não existe mais! ID:{$user_id}</td></tr>";
+				}
 			}
 			echo '</table>';
 		}
@@ -1507,17 +1528,22 @@ function bev_users_inside( $post_id, $display_loading = false ){
 			echo '<table class="bev_user_table">';
 			foreach( $bev_users_queue as $user_id ){
 				$user = get_user_by( 'id', $user_id );
-				$link = admin_url("user-edit.php?user_id={$user_id}");
-				$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
-				echo '<tr>';
-				echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
-				echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
-				if( empty($bev_extra_user_data_deleted) ){
-					echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_approve' style='color:green;'>aprovar</a></td>";
-					echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_remove' style='color:red;'>reprovar</a></td>";
-					echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_cancel' style='color:skyblue ;'>cancelar inscrição</a></td>";
+				if($user){
+					$link = admin_url("user-edit.php?user_id={$user_id}");
+					$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
+					echo '<tr>';
+					echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
+					echo 	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
+					if( empty($bev_extra_user_data_deleted) ){
+						echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_approve' style='color:green;'>aprovar</a></td>";
+						echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_remove' style='color:red;'>reprovar</a></td>";
+						echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_cancel' style='color:skyblue ;'>cancelar inscrição</a></td>";
+					}
+					echo '</tr>';
 				}
-				echo '</tr>';
+				else{
+					echo "<tr><td>Este usuário não existe mais! ID:{$user_id}</td></tr>";
+				}
 			}
 			echo '</table>';
 		}
@@ -1537,16 +1563,21 @@ function bev_users_inside( $post_id, $display_loading = false ){
 		echo '<table class="bev_user_table">';
 		foreach( $bev_users_removed as $user_id ){
 			$user = get_user_by( 'id', $user_id );
-			$link = admin_url("user-edit.php?user_id={$user_id}");
-			$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
-			echo '<tr>';
-			echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
-			echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
-			if( empty($bev_extra_user_data_deleted) ){
-				echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>colocar na fila</a></td>";
-				echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_cancel' style='color:skyblue ;'>cancelar inscrição</a></td>";
+			if($user){
+				$link = admin_url("user-edit.php?user_id={$user_id}");
+				$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
+				echo '<tr>';
+				echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
+				echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
+				if( empty($bev_extra_user_data_deleted) ){
+					echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>colocar na fila</a></td>";
+					echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_cancel' style='color:skyblue ;'>cancelar inscrição</a></td>";
+				}
+				echo '</tr>';
 			}
-			echo '</tr>';
+			else{
+				echo "<tr><td>Este usuário não existe mais! ID:{$user_id}</td></tr>";
+			}
 		}
 		echo '</table>';
 	}
@@ -1565,13 +1596,18 @@ function bev_users_inside( $post_id, $display_loading = false ){
 		echo '<table class="bev_user_table">';
 		foreach( $bev_users_canceled as $user_id ){
 			$user = get_user_by( 'id', $user_id );
-			$link = admin_url("user-edit.php?user_id={$user_id}");
-			$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
-			echo '<tr>';
-			echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
-			echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
-			if( empty($bev_extra_user_data_deleted) ){ echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>colocar na fila</a></td>"; }
-			echo '</tr>';
+			if($user){
+				$link = admin_url("user-edit.php?user_id={$user_id}");
+				$code = get_user_meta( $user_id, "bev_code_{$post_id}", true );
+				echo '<tr>';
+				echo	"<td width='*'><a href='{$link}' target='_blank'>{$user->data->display_name}</a> ({$code})</td>";
+				echo	"<td width='100' class='txt_center'><a href='#' class='bev_user_info_lightbox' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_info_lightbox'>ver dados</a></td>";
+				if( empty($bev_extra_user_data_deleted) ){ echo "<td width='100' class='txt_center'><a href='#' class='bev_user_action' data-bev_id='{$post_id}' data-user_id='{$user_id}' data-action='bev_user_queue' style='color:orange;'>colocar na fila</a></td>"; }
+				echo '</tr>';
+			}
+			else{
+				echo "<tr><td>Este usuário não existe mais! ID:{$user_id}</td></tr>";
+			}
 		}
 		echo '</table>';
 	}
@@ -1818,8 +1854,20 @@ class BFE_bev_date_limit extends BorosFormElement {
  */
 add_action( 'wp_ajax_bev_download_users_xls', 'bev_download_users_xls' );
 function bev_download_users_xls(){
+	bev_download_users('xls');
+}
+
+add_action( 'wp_ajax_bev_download_users_html', 'bev_download_users_html' );
+function bev_download_users_html(){
+	bev_download_users('html');
+}
+
+function bev_download_users( $download_type = 'xls' ){
+	require BOROS_LIBS . 'php-excel.class.php';
 	$bev_id = (int)$_GET['bev_id'];
 	$bev = get_post($bev_id);
+	
+	// array com todos os usuários, separados por grupo
 	$bev_all_users = array();
 	$bev_all_users['bev_users_queue']    = (array)get_post_meta( $bev_id, 'bev_users_queue', true );
 	$bev_all_users['bev_users_accepted'] = (array)get_post_meta( $bev_id, 'bev_users_accepted', true );
@@ -1832,115 +1880,19 @@ function bev_download_users_xls(){
 	//pre($bev_users_canceled, 'bev_users_canceled');
 	//pre($bev_all_users, 'bev_all_users');
 	
-	require BOROS_LIBS . 'php-excel.class.php';
-	
-	$data = array();
-	
-	$user_basic_info = array(
-		'first_name' => 'Nome',
-		'last_name' => 'Sobrenome',
-		'user_email' => 'Email',
-		'sexo' => 'Sexo',
-		'telefone' => 'Telefone',
-		'data_nascimento' => 'Data de nascimento',
-	);
-	$bev_extra_info = get_post_meta( $bev_id, 'bev_extra_info', true );
-	$user_extra_info = array();
-	if( !empty($bev_extra_info) ){
-		foreach( $bev_extra_info as $info ){
-			$user_extra_info[sanitize_title( $info['bev_question_label'] )] = $info['bev_question_label'];
-		}
-	}
-	$user_metas = array_merge($user_basic_info, $user_extra_info);
-	$user_metas[] = 'Status';
-	//pre($user_metas, 'user metas');
-	
 	// Headers do excel
 	$headers = array();
-	foreach( $user_metas as $meta_key => $meta_label ){
-		$headers[] = $meta_label;
-	}
-	$data[] = $headers;
+	// Linhas de dados do excel
+	$data = array();
+	$html_data = array();
 	
-	// pegar usuários
-	$multi = array('checkbox', 'radio');
-	$group_labels = array(
+	$group_status = array(
 		'bev_users_queue'    => 'fila',
 		'bev_users_accepted' => 'aprovado',
 		'bev_users_removed'  => 'reprovado',
 		'bev_users_canceled' => 'cancelado',
 		
 	);
-	foreach( $bev_all_users as $group => $users ){
-		if( !empty($users) ){
-			foreach( $users as $user_id ){
-				$pre_data = array();
-				$user = get_user_by('id', $user_id);
-				// dados básicos
-				foreach( $user_basic_info as $meta_key => $meta_label ){
-					if( $meta_key == 'user_email' ){
-						$pre_data[] = $user->data->user_email;
-					}
-					else{
-						$meta_value = get_user_meta( $user_id, $meta_key, true );
-						if( $meta_key == 'data_nascimento' ){
-							$pre_data[] = "{$meta_value['dia']}/{$meta_value['mes']}/{$meta_value['ano']}";
-						}
-						elseif( $meta_key == 'telefone' ){
-							$pre_data[] = "({$meta_value['ddd']}) {$meta_value['telefone']}";
-						}
-						else{
-							$pre_data[] = $meta_value;
-						}
-					}
-				}
-				// dados extras
-				$extra_data = bev_user_event_data( $user_id, $bev_id );
-				if( !empty($extra_data) ){
-					foreach( $bev_extra_info as $info ){
-						$pre_data[] = isset($extra_data[$info['bev_question_label']]) ? $extra_data[$info['bev_question_label']] : 'não respondido';
-					}
-				}
-				// status
-				$pre_data[] = $group_labels[$group];
-				$data[] = $pre_data;
-			}
-		}
-	}
-	
-	//pre($data, 'DADOS FINAIS PARA O EXCEL');
-	
-	$today = date('Y-m-d');
-	$xls = new Excel_XML('UTF-8', false, "Usuários {$bev->post_title} {$today}");
-	$xls->addArray($data);
-	$xls->generateXML("evento_{$bev->post_name}_{$today}_todos_usuarios");
-	die();
-}
-
-add_action( 'wp_ajax_bev_download_users_html', 'bev_download_users_html' );
-function bev_download_users_html(){
-	$bev_id = (int)$_GET['bev_id'];
-	$bev = get_post($bev_id);
-	$bev_all_users = array();
-	$bev_all_users['bev_users_queue']    = (array)get_post_meta( $bev_id, 'bev_users_queue', true );
-	$bev_all_users['bev_users_accepted'] = (array)get_post_meta( $bev_id, 'bev_users_accepted', true );
-	$bev_all_users['bev_users_removed']  = (array)get_post_meta( $bev_id, 'bev_users_removed', true );
-	$bev_all_users['bev_users_canceled'] = (array)get_post_meta( $bev_id, 'bev_users_canceled', true );
-	
-	//pre($bev_users_queue, 'bev_users_queue');
-	//pre($bev_users_accepted, 'bev_users_accepted');
-	//pre($bev_users_removed, 'bev_users_removed');
-	//pre($bev_users_canceled, 'bev_users_canceled');
-	//pre($bev_all_users, 'bev_all_users');
-	
-	$user_basic_labels = array(
-		'email' => 'Email',
-		'sexo' => 'Sexo',
-		'telefone' => 'Telefone',
-		'data_nascimento' => 'Data de nascimento',
-	);
-	
-	// pegar usuários
 	$group_labels = array(
 		'bev_users_queue'    => 'Usuários na fila de aprovação',
 		'bev_users_accepted' => 'Usuários aprovados',
@@ -1948,151 +1900,236 @@ function bev_download_users_html(){
 		'bev_users_canceled' => 'Usuários cancelados',
 		
 	);
-	$html_data = array();
+	
+	$user_basic_info_model = apply_filters( 'bev_download_basic_info', array(
+		'full_name' => 'Nome completo',
+		'user_email' => 'Email',
+		'sexo' => 'Sexo',
+		'telefone' => 'Telefone',
+		'data_nascimento' => 'Data de nascimento',
+	));
+	foreach( $user_basic_info_model as $key => $label ){
+		$headers[] = $label;
+	}
+	
+	/**
+	 * Informações extras criadas pelo montador de questões
+	 * 
+	 */
+	$bev_extra_info = get_post_meta( $bev_id, 'bev_extra_info', true );
+	$user_extra_info_model = array();
+	if( !empty($bev_extra_info) ){
+		foreach( $bev_extra_info as $info ){
+			$user_extra_info_model[sanitize_title( $info['bev_question_label'] )] = $info['bev_question_label'];
+			$headers[] = $info['bev_question_label'];
+		}
+	}
+	
+	/**
+	 * Filtro para dados adicionais do formulário fixo
+	 * 
+	 */
+	$additional_user_info_model = apply_filters( 'bev_download_additional_user_info_model', array() );
+	if( !empty($additional_user_info_model) ){
+		foreach( $additional_user_info_model as $key => $label ){
+			$headers[] = $label;
+		}
+	}
+	
+	// última coluna: status
+	$headers[] = 'Status';
+	$headers[] = 'Código de confirmação';
+	
+	// adicionar header aos dados finais
+	$data[] = $headers;
+	
+	// pegar usuários
 	foreach( $bev_all_users as $group => $users ){
 		if( !empty($users) ){
 			foreach( $users as $user_id ){
 				$pre_data = array();
-				
-				// código de confirmação
-				$code = get_user_meta( $user_id, "bev_code_{$bev_id}", true );
-				$pre_data['Código de confirmação'] = "<strong>{$code}</strong>";
-				
-				// dados básicos
-				$basic_data = bev_user_basic_data($user_id);
-				foreach( $user_basic_labels as $name => $label ){
-					if( $name == 'data_nascimento' and !empty($basic_data[$name]) ){
-						$pre_data[$label] = "{$basic_data[$name]['dia']}/{$basic_data[$name]['mes']}/{$basic_data[$name]['ano']}";
+				$user = get_user_by('id', $user_id);
+				if($user){
+					// dados básicos
+					foreach( $user_basic_info_model as $meta_key => $meta_label ){
+						if( $meta_key == 'user_email' ){
+							$pre_data[] = $user->data->user_email;
+						}
+						elseif( $meta_key == 'full_name' ){
+							$pre_data[] = $user->data->display_name;
+						}
+						else{
+							$meta_value = get_user_meta( $user_id, $meta_key, true );
+							if( !empty($meta_value) ){
+								if( $meta_key == 'data_nascimento' ){
+									if( is_array($meta_value) ){
+										$pre_data[] = "{$meta_value['dia']}/{$meta_value['mes']}/{$meta_value['ano']}";
+									}
+									else{
+										$pre_data[] = $meta_value;
+									}
+								}
+								elseif( $meta_key == 'telefone' ){
+									if( is_array($meta_value) ){
+										$pre_data[] = "({$meta_value['ddd']}) {$meta_value['telefone']}";
+									}
+									else{
+										$pre_data[] = $meta_value;
+									}
+								}
+								else{
+									$pre_data[] = $meta_value;
+								}
+							}
+							else{
+								$pre_data[] = '';
+							}
+						}
 					}
-					elseif( $name == 'telefone' and !empty($basic_data[$name]) ){
-						$pre_data[$label] = "({$basic_data[$name]['ddd']}) {$basic_data[$name]['telefone']}";
+					
+					// dados extras configurados pelo montador de questões
+					$extra_data = bev_user_event_data( $user_id, $bev_id );
+					if( !empty($extra_data) ){
+						foreach( $user_extra_info_model as $key => $label ){
+							$pre_data[] = issetor( $extra_data[$label], 'não respondido');
+						}
 					}
-					elseif( !empty($basic_data[$name]) ){
-						$pre_data[$label] = $basic_data[$name];
+					
+					// dados adicionais, configurados pelo formulário fixo
+					if( !empty($additional_user_info_model) ){
+						foreach( $additional_user_info_model as $key => $label ){
+							$answer = get_user_meta( $user_id, $key, true );
+							if( !empty($answer) ){
+								if( is_array($answer) ){
+									$answer = implode(' ', $answer);
+								}
+								$pre_data[] = $answer;
+							}
+							else{
+								$pre_data[] = '';
+							}
+						}
 					}
+					
+					// status
+					$pre_data[] = $group_status[$group];
+					
+					// código de cofirmação
+					$pre_data[] = get_user_meta( $user_id, "bev_code_{$bev_id}", true );
+					
+					// dados do XLS
+					$data[] = $pre_data;
+					// dados do HTML
+					$html_data[$group_labels[$group]][$pre_data[0]] = $pre_data;
 				}
-				
-				// dados extras
-				$extra_data = bev_user_event_data( $user_id, $bev_id );
-				if( !empty($extra_data) ){
-					foreach( $extra_data as $question => $answer ){
-						$pre_data[$question] = $answer;
-					}
-				}
-				// status
-				$html_data[$group_labels[$group]][$basic_data['display_name']] = $pre_data;
 			}
 		}
 	}
-	//pre($html_data);
 	
-	/**
-	 * OUTPUT DO HTML
-	 * 
-	 */
-	$today = date('Y-m-d');
-	$title = "Usuários {$bev->post_title} {$today}";
-	$filename = "evento_{$bev->post_name}_{$today}_todos_usuarios";
-	header("Pragma: public");
-	header("Expires: 0");
-	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	header("Cache-Control: private", false);
-	header("Content-type: application/force-download");
-	header("Content-Disposition: attachment; filename='{$filename}.html';" );
-	header("Content-Transfer-Encoding: binary");
-	?>
-	<!DOCTYPE HTML>
-	<html lang="pt-BR">
-	<head>
-		<meta charset="UTF-8">
-		<title><?php echo $title; ?></title>
-		<style type="text/css">
-			body {
-				font:12px arial, sans-serif;
-				margin:20px;
-				padding:0;
-			}
-			div {
-				border-bottom:1px dashed #444;
-				padding:10px 0;
-			}
-			h2 {
-				border-bottom:1px dashed #444;
-				font-size:20px;
-				margin:0 0 10px;
-				padding:10px 0;
-			}
-			h2.list_header {
-				margin:30px 0 0;
-			}
-			h3 {
-				font-size:14px;
-				margin:0;
-			}
-			table{
-				font-size:12px;
-				margin:0;
-				width:600px;
-			}
-			table td {
-				padding:0 10px 0 0;
-			}
-			@media print {
+	if( $download_type == 'xls' ){
+		$today = date('Y-m-d');
+		$xls = new Excel_XML('UTF-8', false, "Usuários {$bev->post_title} {$today}");
+		$xls->addArray($data);
+		$xls->generateXML("evento_{$bev->post_name}_{$today}_todos_usuarios");
+		die();
+	}
+	elseif( $download_type == 'html' ){
+		$labels = $data[0];
+		$today = date('Y-m-d');
+		$title = "Usuários {$bev->post_title} {$today}";
+		$filename = "evento_{$bev->post_name}_{$today}_todos_usuarios";
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+		header("Content-type: application/force-download");
+		header("Content-Disposition: attachment; filename='{$filename}.html';" );
+		header("Content-Transfer-Encoding: binary");
+		?>
+		<!DOCTYPE HTML>
+		<html lang="pt-BR">
+		<head>
+			<meta charset="UTF-8">
+			<title><?php echo $title; ?></title>
+			<style type="text/css">
+				body {
+					font:12px arial, sans-serif;
+					margin:20px;
+					padding:0;
+				}
+				div {
+					border-bottom:1px dashed #444;
+					padding:10px 0;
+				}
 				h2 {
+					border-bottom:1px dashed #444;
+					font-size:20px;
 					margin:0 0 10px;
+					padding:10px 0;
 				}
 				h2.list_header {
-					page-break-before: always;
+					margin:30px 0 0;
 				}
-				div{
-					page-break-inside: avoid;
+				h3 {
+					font-size:14px;
+					margin:0;
 				}
+				table{
+					font-size:12px;
+					margin:0;
+					width:600px;
+				}
+				table td {
+					padding:0 10px 0 0;
+				}
+				@media print {
+					h2 {
+						margin:0 0 10px;
+					}
+					h2.list_header {
+						page-break-before: always;
+					}
+					div{
+						page-break-inside: avoid;
+					}
+				}
+			</style>
+		</head>
+		<body>
+		<?php
+		$i = 1;
+		echo "<h2>{$title}</h2>";
+		foreach( $html_data as $group_label => $users ){
+			ksort($users);
+			echo "<h3>{$group_label}</h3>";
+			echo '<ol>';
+			foreach( $users as $user => $questions ){
+				echo "<li><a href='#{$i}'>{$user}</a></li>";
+				$i++;
 			}
-		</style>
-	</head>
-	<body>
-	<?php
-	$i = 1;
-	echo "<h2>{$title}</h2>";
-	foreach( $html_data as $group_label => $users ){
-		ksort($users);
-		echo "<h3>{$group_label}</h3>";
-		echo '<ol>';
-		foreach( $users as $user => $questions ){
-			echo "<li><a href='#{$i}'>{$user}</a></li>";
-			$i++;
+			echo '</ol>';
 		}
-		echo '</ol>';
-	}
-	
-	$i = 1;
-	foreach( $html_data as $group_label => $users ){
-		ksort($users);
-		echo "<h2 class='list_header'>{$group_label}</h2>";
-		foreach( $users as $user => $questions ){
-			//pre($answers, $user);
-			echo "<div id='{$i}'><h3><strong>{$user}</strong></h3><table>";
-			foreach( $questions as $label => $answer ){
-				echo "<tr><td width='250'>{$label}</td><td>{$answer}</td></tr>";
+		
+		$i = 1;
+		foreach( $html_data as $group_label => $users ){
+			ksort($users);
+			echo "<h2 class='list_header'>{$group_label}</h2>";
+			foreach( $users as $user => $questions ){
+				//pre($answers, $user);
+				echo "<div id='{$i}'><h3><strong>{$user}</strong></h3><table>";
+				foreach( $questions as $key => $answer ){
+					echo "<tr><td width='250'>{$labels[$key]}</td><td>{$answer}</td></tr>";
+				}
+				echo '</table></div>';
+				$i++;
 			}
-			echo '</table></div>';
-			$i++;
 		}
+		?>
+		</body>
+		</html>
+		<?php
+		die();
 	}
-	?>
-	</body>
-	</html>
-	<?php
-	die();
 }
 
 
-
-
-
-
-
-
-
-
- 
