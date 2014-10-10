@@ -798,6 +798,7 @@ class BorosFrontendForm {
 					// atualizar o display_name na tabela de users
 					if( isset($this->valid_meta['first_name']) and isset($this->valid_meta['last_name']) ){
 						wp_update_user( array ('ID' => $user_id, 'display_name' => "{$this->valid_meta['first_name']} {$this->valid_meta['last_name']}") );
+						update_user_meta( $user_id, 'full_name', "{$this->valid_meta['first_name']} {$this->valid_meta['last_name']}" );
 					}
 					elseif( isset($this->valid_meta['full_name']) ){
 						wp_update_user( array ('ID' => $user_id, 'display_name' => $this->valid_meta['full_name']) );
