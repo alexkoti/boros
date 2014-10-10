@@ -54,7 +54,7 @@ function _rand_tel( $with_ddd = true, $with_symbols = true, $format = 'string' )
 		return "{$ddd}{$number}";
 	}
 	else {
-		return array($dddn, $number);
+		return array(0 => $dddn, 1 => $number, 'ddd' => $dddn, 'telefone' => $number);
 	}
 	
 }
@@ -184,6 +184,9 @@ function _rand_birth_date( $start_date = '1940-01-01 00:00:00', $end_date = '199
 		'Y' => date('Y', $val),
 		'm' => date('m', $val),
 		'd' => date('d', $val),
+		'dia' => date('d', $val),
+		'mes' => date('m', $val),
+		'ano' => date('Y', $val),
 	);
 	return $birth_date;
 }
