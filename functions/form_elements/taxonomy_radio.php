@@ -61,24 +61,42 @@ class BFE_taxonomy_radio extends BorosFormElement {
 		 * 
 		 */
 		$terms = get_terms( $this->data['options']['taxonomy'], 'hide_empty=0' );
-		$selected_terms = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
-		if( !empty($selected_terms) ){
-			$selected_term = $selected_terms[0]->term_id;
-		}
-		else{
-			$selected_term = false;
+		$selected_term = false;
+		
+		/**
+		 * Separar os contextos:
+		 * - recuperar terms gravados
+		 * - definir o name do campo, em post_meta será o tax_input substituindo o metabox padrão
+		 * 
+		 * @todo verificar no contexto de frontend, como deverá ser quando se está editando ou adicionando um novo 'post'
+		 */
+		switch( $this->context['type'] ){
+			// recuperar o term_id gravado
+			case 'option':
+			case 'user_meta':
+			case 'termmeta':
+			case 'frontend':
+				$selected_term = $value;
+				$name = $this->data['name'];
+				break;
+			
+			// taxonomy terms associado ao post. Por ser um rádio, espera-se que possua apenas um term
+			case 'post_meta':
+				$selected_terms = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
+				if( !empty($selected_terms) ){
+					$selected_term = $selected_terms[0]->term_id;
+				}
+				else{
+					$selected_term = false;
+				}
+				$name = "tax_input[{$this->data['options']['taxonomy']}][]";
+				break;
 		}
 		
 		if( !empty($terms) ){
 			$radios = array();
 			$valid_fields = array('term_id', 'name', 'slug');
 			$option_none_checked = ( count($selected_term) == 0 or $selected_term == false ) ? ' checked="checked"' : '';
-			
-			// Definir 'name' correto conforme o tipo de requisição: post_meta ou category|term
-			if( empty($this->data['name']) )
-				$name = "tax_input[{$this->data['options']['taxonomy']}][]";
-			else
-				$name = $this->data['name'];
 			
 			if ( $this->data['options']['show_option_none'] == true )
 				$radios[] =  "<input type='radio' name='{$name}' value='{$this->data['options']['option_none_value']}'{$option_none_checked} id='{$this->data['options']['taxonomy']}_0' rel='{$this->data['options']['taxonomy']}_0' class='boros_form_input input_radio' /><label for='{$this->data['options']['taxonomy']}_0' class='label_radio iptw_{$this->data['size']}'>{$this->data['options']['show_option_none']}</label><br />";
