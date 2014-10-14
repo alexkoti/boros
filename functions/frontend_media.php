@@ -115,25 +115,29 @@ function custom_oembed( $post_id = false, $post_meta = false ){
 
 
 /**
- * VIDEO RESPONSIVO
- * Filtrar o auto oembed do the_content, adicionando o html responsivo
+ * EMBED RESPONSIVO
+ * Filtrar o auto oembed do the_content, adicionando o html responsivo.
+ * Válido para vários serviços, com output próprio:
+ * - Youtube, Vimeo
+ * - Issuu
+ * - Demais embeds
  * 
  */
 add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
 function tdd_oembed_filter($html, $url, $attr, $post_ID){
-	// class padrão
-	$class = 'responsiveWrapper';
-	
 	// Videos: youtube e vimeo. Adicionar mais serviços se necessário
 	if( strpos($html, 'youtube') !== false or strpos($html, 'vimeo') !== false ){
-		$class = 'videoWrapper';
+		return "<div class='cleaner'></div><div class='videoWrapper'>{$html}</div>";
 	}
 	
 	// Issuu
-	if( strpos($html, 'issuu') !== false ){
-		$class = 'issuuWrapper';
+	if( strpos($url, 'issuu') !== false ){
+		$url_parts = parse_url($url);
+		parse_str($url_parts['query'], $url_args);
+		return strip_tags("<div class='cleaner'></div><div class='issuuWrapper'><iframe width='100%' height='100%' src='//e.issuu.com/embed.html#{$url_args['e']}' frameborder='0' allowfullscreen></iframe></div>", '<iframe><div>');
 	}
-    return "<div class='cleaner'></div><div class='{$class}'>{$html}</div>";
+	
+    return "<div class='cleaner'></div><div class='responsiveWrapper'>{$html}</div>";
 }
 
 
