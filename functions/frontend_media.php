@@ -120,8 +120,20 @@ function custom_oembed( $post_id = false, $post_meta = false ){
  * 
  */
 add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
-function tdd_oembed_filter($html, $url, $attr, $post_ID) {
-    return "<div class='cleaner'></div><div class='videoWrapper'>{$html}</div>";
+function tdd_oembed_filter($html, $url, $attr, $post_ID){
+	// class padrão
+	$class = 'responsiveWrapper';
+	
+	// Videos: youtube e vimeo. Adicionar mais serviços se necessário
+	if( strpos($html, 'youtube') !== false or strpos($html, 'vimeo') !== false ){
+		$class = 'videoWrapper';
+	}
+	
+	// Issuu
+	if( strpos($html, 'issuu') !== false ){
+		$class = 'issuuWrapper';
+	}
+    return "<div class='cleaner'></div><div class='{$class}'>{$html}</div>";
 }
 
 
