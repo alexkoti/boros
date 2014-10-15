@@ -98,8 +98,13 @@ class BFE_taxonomy_radio extends BorosFormElement {
 			$valid_fields = array('term_id', 'name', 'slug');
 			$option_none_checked = ( count($selected_term) == 0 or $selected_term == false ) ? ' checked="checked"' : '';
 			
-			if ( $this->data['options']['show_option_none'] == true )
-				$radios[] =  "<input type='radio' name='{$name}' value='{$this->data['options']['option_none_value']}'{$option_none_checked} id='{$this->data['options']['taxonomy']}_0' rel='{$this->data['options']['taxonomy']}_0' class='boros_form_input input_radio' /><label for='{$this->data['options']['taxonomy']}_0' class='label_radio iptw_{$this->data['size']}'>{$this->data['options']['show_option_none']}</label><br />";
+			if( $this->data['options']['show_option_none'] == true ){
+				$option_none =  "<input type='radio' name='{$name}' value='{$this->data['options']['option_none_value']}'{$option_none_checked} id='{$this->data['options']['taxonomy']}_0' rel='{$this->data['options']['taxonomy']}_0' class='boros_form_input input_radio' /><label for='{$this->data['options']['taxonomy']}_0' class='label_radio iptw_{$this->data['size']}'>{$this->data['options']['show_option_none']}</label><br />";
+				if( $layout == 'list' ){
+					$option_none = sprintf( '<li>%s</li>', $option_none );
+				}
+				$radios[] = $option_none;
+			}
 			
 			$checked_ontop = '';
 			foreach( $terms as $term ){
