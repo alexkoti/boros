@@ -35,6 +35,7 @@ function init_metadata(){
 		$wpdb->query("ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'");
 	}
 }
+
 function create_metadata_table($table_name, $type){
 	global $wpdb;
 
@@ -70,7 +71,13 @@ function custom_terms_orderby( $orderby, $args ){
 }
 add_filter( 'get_terms_orderby', 'custom_terms_orderby', 10, 2 );
 
-
+/**
+ * ==================================================
+ * TERM META CLASS ==================================
+ * ==================================================
+ * Classe que controla todos os processos de adição/edição de term_metas
+ * 
+ */
 class BorosTermMeta {
 	var $config = array();
 	
@@ -156,8 +163,12 @@ class BorosTermMeta {
 		//pre($tt_id);
 		//pre($_POST);
 		
-		// interromper caso seja uma edição rápida do termo.
-		if( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ){
+		/**
+		 * Caso seja edição rápida ou adição de termo, a constante DOING_AJAX estará presente, portanto é ncessário diferenciar os dois casos.
+		 * Em caso de adição de termo, os term_metas estarão presentes, portanto deve-se salvar os campos adicionais.
+		 * 
+		 */
+		if( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) and isset($_POST['_inline_edit']) ){
 			return false;
 		}
 		
@@ -407,7 +418,13 @@ function post_type_content_order( $config, $value ){
 
 
 
-
+/**
+ * ==================================================
+ * DEPRECATED? ======================================
+ * ==================================================
+ * 
+ * 
+ */
 
 /**
  * Adicionar scripts à página de adição de categoria
