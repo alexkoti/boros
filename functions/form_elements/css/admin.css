@@ -458,12 +458,18 @@ input[disabled='1']{
 	font-style:italic;
 }
 .boros_taxonomy_block .label_helper, 
-.boros_form_block .label_helper {
+.boros_form_block .label_helper,
+.boros_form_block th label small,
+.boros_form_block .non_click_label small {
 	color:#666;
 	display:block;
 	font-size:11px;
 	font-weight:normal;
 	line-height:normal;
+}
+.boros_form_block th label small,
+.boros_form_block .non_click_label small {
+	display:inline;
 }
 .boros_form_block ul {
 	margin:0;

@@ -7,6 +7,10 @@
 	margin:0;
 	padding:0;
 }
+
+/* foi utilizado com e sem tbody por conta dos elementos dinamicamente adicionados, que ficam fora do tbody */
+.duplicate_element .form-table > tr > th,
+.duplicate_element .form-table > tr > td,
 .duplicate_element .form-table > tbody > tr > th,
 .duplicate_element .form-table > tbody > tr > td {
 	padding:3px 5px;
