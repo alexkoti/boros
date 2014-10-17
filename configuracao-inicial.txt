@@ -1,0 +1,15 @@
+/**
+ * Configurar directory symbolic link
+ * 
+ * @link http://technet.microsoft.com/en-gb/library/cc753194%28WS.10%29.aspx
+ * @link https://www.gpsoft.com.au/help/opus10/index.html#!Documents/Making_Links_and_Junctions.htm
+ * @link http://stackoverflow.com/questions/18220680/how-to-automatically-duplicate-copy-contents-of-one-folder-to-another-folder-on
+ * 
+ * Instruções:
+ * - abrir o prompt de comando como administrador e executar o mklink.
+ * - o padrão é <code>mklink /d 'destino' 'origem'</code>, a pasta de destino não pode existir ainda.
+ * 
+ */
+mklink /d "C:\Caminho\Da\Pasta\Do\Novo\Job" "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\boros"
+
+
