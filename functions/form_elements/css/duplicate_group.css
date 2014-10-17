@@ -151,7 +151,7 @@
 }
 /* padding diferenciado para liberar mais espaço */
 .layout_table .duplicate_element {
-	padding:10px 80px 10px 10px;
+	padding:5px 80px 5px 5px;
 }
 /* Remover o min-height quanto está adicionando/removendo itens para evitar um engasgo na animação */
 .duplicate_box .duplicate_element.loading {
