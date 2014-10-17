@@ -12,7 +12,10 @@
 .duplicate_element .form-table > tr > th,
 .duplicate_element .form-table > tr > td,
 .duplicate_element .form-table > tbody > tr > th,
-.duplicate_element .form-table > tbody > tr > td {
+.duplicate_element .form-table > tbody > tr > td,
+.duplicate_element .form-table td.boros_element_textarea_editor,
+.duplicate_element .form-table td.mceIframeContainer
+{
 	padding:3px 5px;
 }
 .duplicate_element .form-table > th {
