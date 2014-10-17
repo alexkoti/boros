@@ -49,10 +49,14 @@
 .boros_meta_block .layout_table .duplicate_box {
 	border:1px solid #e8e8e7;
 	border-right:none;
+	margin-left:7px;
 }
 .boros_form_block:last-child .layout_table .duplicate_box {
 	border-top:none;
 	border-bottom:none;
+}
+.boros_form_block:first-child .layout_table .duplicate_box {
+	border-top:1px solid #e8e8e7;
 }
 /* metabox - block */
 .boros_meta_block .layout_block .duplicate_box {
@@ -113,7 +117,6 @@
  * 
  */
 .boros_form_block td.boros_element_duplicate_group {
-	border-top:1px solid #e8e8e7;
 	border-bottom:1px solid #e8e8e7;
 	padding:0;
 }

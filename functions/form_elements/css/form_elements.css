@@ -189,12 +189,6 @@ div.mce-tinymce.mce-panel {
 .tmce-active .wp-editor-container {
 	border:none;
 }
-/* caso seja metabox block(cheio), remover as bordas laterais, pois já existem a do metabox */
-.boros_meta_block .layout_block .wp-editor-container, 
-.boros_meta_block .layout_block div.mce-tinymce.mce-panel {
-	border-right:none;
-	border-left:none;
-}
 #qt_admin_footer_dialog_toolbar {
 	display:none;
 }
