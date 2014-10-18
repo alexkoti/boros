@@ -28,7 +28,7 @@ class BFE_wp_editor extends BorosFormElement {
 	
 	function set_input( $value = null ){
 		ob_start();
-		wp_editor( $value, $this->data['name'], $this->data['options'] );
+		wp_editor( $value, $this->data['attr']['id'], $this->data['options'] );
 		echo "<div>{$this->input_helper}</div>";
 		$input = ob_get_contents();
 		ob_end_clean();
