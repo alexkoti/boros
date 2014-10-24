@@ -157,12 +157,39 @@ hr {
  * TEXTAREA EDITOR
  * 
  */
+/* remover espaçamento quando estiver em block */
 .form-table.boros_meta_block td.boros_element_textarea_editor,
 .form-table.boros_meta_block td.boros_element_textarea_editor td.mceIframeContainer {
 	padding:0;
 }
+/* correção de espaçamento do label quando for em block */
+.form-table.boros_meta_block td.boros_element_textarea_editor > label {
+	display:inline-block;
+	padding:5px;
+}
+/* correção de bordas */
+.form-table.boros_meta_block td.boros_element_textarea_editor div.mce-tinymce.mce-panel {
+	box-sizing: border-box;
+}
+/* correção de bordas em layout block */
+.form-table.boros_meta_block td.boros_element_textarea_editor.layout_block div.mce-tinymce.mce-panel {
+	border-left:none;
+	border-right:none;
+}
+/* correção de bordas em layout table */
+.form-table.boros_meta_block td.boros_element_textarea_editor.layout_table div.mce-tinymce.mce-panel {
+	border-right:none;
+}
+/* espaçamento alinhado com o inputs comuns quando estiver em table */
+.form-table.boros_meta_block td.boros_element_textarea_editor.layout_table {
+	padding-left:7px;
+}
 div.mce-tinymce.mce-panel {
-	border:1px solid #ddd;
+	border:1px solid #e5e5e5;
+}
+/* correção de borda apenas quando for o primeiro elemento do box, sem label */
+.form-table.boros_meta_block tbody tr:first-child td.boros_element_textarea_editor div.mce-tinymce.mce-panel:first-child  {
+	border-top:none;
 }
 
 

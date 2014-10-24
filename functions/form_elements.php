@@ -1086,9 +1086,9 @@ class BorosFormElement {
 						<?php echo $label_start; ?>
 						<?php echo (empty($this->label)) ? '' : $this->label; ?>
 						<?php echo $label_end; ?>
-						<?php echo $nonce; ?>
 						<?php echo $this->final_input; ?>
 						<?php echo $this->error_messages; ?>
+						<?php echo $nonce; ?>
 						<?php echo $input_end; ?>
 					</td>
 				</tr>
