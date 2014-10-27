@@ -907,12 +907,14 @@ class Boros_Pagination {
 	}
 	
 	function output( $echo = true ){
+		if( count($this->items) < 3 and $this->options['always_show'] == false ){
+			return '';
+		}
 		$li_class = empty($this->options['li_class']) ? " class='{$this->options['li_class']}'" : '';
 		echo "<ul class='pagenavi_list pagination {$this->options['ul_class']}'>\n";
 		foreach( $this->items as $item ){
 			if( $item['page'] > 0 ){
 				if( $item['type'] == 'page' ){
-					
 					echo "<li{$li_class}><a href='{$item['link']}' class='{$item['class']} {$this->options['link_class']}'>{$item['text']}</a></li>";
 				}
 				else{
