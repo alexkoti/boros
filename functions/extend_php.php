@@ -542,6 +542,9 @@ function boros_format_bytes($bytes, $precision = 2) {
  * 
  * The function is tested using PHP 5.1.4 in Windows XP 
  * and Apache WebServer. 
+ * 
+ * @link http://php.net/manual/en/function.money-format.php#89060
+ * 
  */
 if( !function_exists('money_format') ){
 function money_format($format, $number){
