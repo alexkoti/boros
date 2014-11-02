@@ -7,7 +7,11 @@
  */
 
 class BFE_html extends BorosFormElement {
-	function set_attributes(){} // resetar esse método
+	var $valid_attrs = array(
+		'id' => '',
+		'class' => 'ipt_textarea',
+		'rel' => '',
+	);
 	
 	function set_input( $value = null ){
 		return $this->data['html'];
