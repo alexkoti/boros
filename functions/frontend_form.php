@@ -1613,11 +1613,16 @@ class BorosFrontendForm {
 	 * @todo - verificar quando precisa aplicar o filtro 'the_content' para textareas e wp_editor
 	 */
 	function template_tags( $text, $tags ){
+		$the_content = array(
+			'textarea',
+			'textarea_editor',
+			'wp_editor',
+		);
 		foreach( $tags as $name => $value ){
 			if( !is_array($value) ){
 				if( !empty($value) ){
 					if( isset($this->elements_plain[$name]) ){
-						if( $this->elements_plain[$name]['type'] == 'textarea' ){
+						if( in_array($the_content, $this->elements_plain[$name]['type']) ){
 							$value = apply_filters( 'the_content', $value );
 						}
 						elseif( $this->elements_plain[$name]['type'] == 'file' ){
