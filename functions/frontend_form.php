@@ -1622,7 +1622,7 @@ class BorosFrontendForm {
 			if( !is_array($value) ){
 				if( !empty($value) ){
 					if( isset($this->elements_plain[$name]) ){
-						if( in_array($the_content, $this->elements_plain[$name]['type']) ){
+						if( in_array($this->elements_plain[$name]['type'], $the_content) ){
 							$value = apply_filters( 'the_content', $value );
 						}
 						elseif( $this->elements_plain[$name]['type'] == 'file' ){
