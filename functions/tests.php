@@ -538,6 +538,44 @@ class ProfileGen {
 	}
 	
 	/**
+	 * Retornar um ou mais valores de um array associativo.
+	 * Poderá ser usado para valores únicos, em radios, quando retornará o indíce, ou múltiplos valores, para checkbox_group, 
+	 * quando retornará um pedaço do array associativo
+	 * 
+	 * @param int $number quantidade de itens a retornar, caso seja 1 retornará apenas o índice, caso seja 0, retornará
+	 *                    uma quantidade randômica de itens, ou então retornará o número extao de itens definido.
+	 * 
+	 * 
+	 */
+	function rand_assoc_array( $array, $number = 1 ){
+		if( $number == 1 ){
+			// caso seja associativo, retornar apenas o índice
+			if( is_assoc_array($array) ){
+				return array_rand($array);
+			}
+			else{
+				$array_rand = array_rand($array);
+				return $array[$array_rand];
+			}
+		}
+		else{
+			// caso seja 0, retornar uma quantidade randômica de itens
+			$n = ( $number == 0 ) ? rand(1, count($array) - 1) : $number;
+			$array_rand = array_rand($array, $n);
+			$return = array();
+			if( is_array($array_rand) ){
+				foreach( $array_rand as $k ){
+					$return[] = $k;
+				}
+			}
+			else{
+				$return[] = $array_rand;
+			}
+			return $return;
+		}
+	}
+	
+	/**
 	 * Caso seja localhost, modificar todos os emails para enviar para a conta de testes do gmail
 	 * 
 	 * @TODO permitir configurar quais campos usar e qual function para criar os valores
