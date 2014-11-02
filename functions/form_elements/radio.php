@@ -59,7 +59,7 @@ class BFE_radio extends BorosFormElement {
 					$radios[] = "<label for='{$this->data['attr']['id']}_{$option_value}' class='radio'><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='input_radio' /> {$option_label}</label>";
 				}
 				elseif( $this->data['layout'] == 'bootstrap3' ){
-					$radios[] = "<span class='item_radio'><label for='{$this->data['attr']['id']}_{$option_value}' class='radio-inline'><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='radio-inline' /> {$option_label}</label></span>";
+					$radios[] = "<span class='item_radio radio-inline'><label for='{$this->data['attr']['id']}_{$option_value}' class=''><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='radio-inline' /> {$option_label}</label></span>";
 				}
 				// layout normal
 				else{
