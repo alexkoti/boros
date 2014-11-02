@@ -156,6 +156,24 @@ function _rand_cidade( $uf = 'AC' ){
 	}
 }
 
+function _rand_country( $return = 'name' ){
+	include_once('populate_countries.php');
+	$countries = load_countries();
+	$rand = array_rand($countries);
+	if( $return == 'name' ){
+		return $countries[$rand];
+	}
+	elseif( $return == 'code' ){
+		return $rand;
+	}
+	elseif( $return == 'both' ){
+		return array(
+			'code' => $rand,
+			'name' => $countries[$rand],
+		);
+	}
+}
+
 function _rand_profissao(){
 	include_once('populate_occupation.php');
 	return load_occupations( $format = 'unique' );
@@ -599,6 +617,9 @@ class ProfileGen {
 		$profile['cidade']            = _rand_cidade( $profile['uf'] );
 		$profile['bairro']            = $this->rand_number_name('last');
 		$profile['cep']               = _rand_cep();
+		$profile['pais']              = _rand_country('both');
+		$profile['pais_code']         = $profile['pais']['code'];
+		$profile['pais_name']         = $profile['pais']['name'];
 		
 		$profile['telefone']         = _rand_tel( $with_ddd = true, $with_symbols = false, $format = 'array' );
 		$profile['telefone_ddd']     = $profile['telefone'][0];
