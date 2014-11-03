@@ -1618,7 +1618,13 @@ class BorosFrontendForm {
 			'textarea_editor',
 			'wp_editor',
 		);
+		$multi = array(
+			'select',
+			'radio',
+			'checkbox_group',
+		);
 		foreach( $tags as $name => $value ){
+			$tag = '%%' . strtoupper($name) . '%%';
 			if( !is_array($value) ){
 				if( !empty($value) ){
 					if( isset($this->elements_plain[$name]) ){
@@ -1631,6 +1637,15 @@ class BorosFrontendForm {
 						elseif( $this->elements_plain[$name]['type'] == 'checkbox' and $value == true ){
 							$value = 'sim';
 						}
+						elseif( in_array($this->elements_plain[$name]['type'], $multi) ){
+							$v = array();
+							foreach( $this->elements_plain[$name]['options']['values'] as $key => $label ){
+								if( $value == $key ){
+									$v[] = $label;
+								}
+							}
+							$value = implode(', ', $v);
+						}
 					}
 				}
 				else{
@@ -1638,8 +1653,19 @@ class BorosFrontendForm {
 						$value = 'não';
 					}
 				}
-				$tag = '%%' . strtoupper($name) . '%%';
 				$text = str_replace( $tag, $value, $text );
+			}
+			else{
+				if( in_array($this->elements_plain[$name]['type'], $multi) ){
+					$v = array();
+					foreach( $this->elements_plain[$name]['options']['values'] as $key => $label ){
+						if( in_array($key, $value) ){
+							$v[] = trim( str_replace('&nbsp;', '', $label) );
+						}
+					}
+					$value = implode(', ', $v);
+					$text = str_replace( $tag, $value, $text );
+				}
 			}
 		}
 		return apply_filters( 'boros_frontend_form_template_tags_text', $text, $tags );
