@@ -18,29 +18,30 @@
  */
 add_filter( 'dashboard_glance_items', 'boros_dashboard_right_now' );
 function boros_dashboard_right_now( $elements ){
-	$args = array(
-		'public' => true ,
-		'_builtin' => false
-	);
-	$output = 'object';
-	$operator = 'and';
-	
-	$post_types = get_post_types( $args , $output , $operator );
-	
-	foreach( $post_types as $post_type ) {
-		$num_posts = wp_count_posts( $post_type->name );
-		$num = number_format_i18n( $num_posts->publish );
-		$text = _n( $post_type->labels->singular_name, $post_type->labels->name , intval( $num_posts->publish ) );
-		if ( current_user_can( 'edit_posts' ) ) {
-			$elements[] = "<a href='edit.php?post_type={$post_type->name}' class='ico-post-type-{$post_type->name} {$post_type->menu_icon}'>{$num} {$text}</a>";
-		}
-		else{
-			$elements[] = "<span class='ico-post-type-{$post_type->name} {$post_type->menu_icon}'>{$num} {$text}</span>";
+	// post types públicos e privados
+	$types = array(true, false);
+	foreach( $types as $t ){
+		$args = array(
+			'public' => $t ,
+			'_builtin' => false
+		);
+		$output = 'object';
+		$operator = 'and';
+		$post_types = get_post_types( $args , $output , $operator );
+		foreach( $post_types as $post_type ) {
+			$num_posts = wp_count_posts( $post_type->name );
+			$num = number_format_i18n( $num_posts->publish );
+			$text = _n( $post_type->labels->singular_name, $post_type->labels->name , intval( $num_posts->publish ) );
+			if ( current_user_can( 'edit_posts' ) ) {
+				$elements[] = "<a href='edit.php?post_type={$post_type->name}' class='ico-post-type-{$post_type->name} {$post_type->menu_icon}'>{$num} {$text}</a>";
+			}
+			else{
+				$elements[] = "<span class='ico-post-type-{$post_type->name} {$post_type->menu_icon}'>{$num} {$text}</span>";
+			}
 		}
 	}
 	
 	$taxonomies = get_taxonomies( $args , $output , $operator );
-	
 	foreach( $taxonomies as $taxonomy ) {
 		$num_terms  = wp_count_terms( $taxonomy->name );
 		$num = number_format_i18n( $num_terms );
