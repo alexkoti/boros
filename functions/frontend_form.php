@@ -1698,7 +1698,7 @@ class BorosFrontendForm {
 		return $last_user[0]->ID + 1;
 		/**/
 		
-		$query = "SHOW TABLE STATUS LIKE '{$wpdb->prefix}users'";
+		$query = "SHOW TABLE STATUS LIKE '{$wpdb->base_prefix}users'";
 		$users_table = $wpdb->get_results( $query );
 		return $users_table[0]->Auto_increment;
 	}
