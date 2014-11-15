@@ -185,7 +185,7 @@ else{
 			 * Notas:
 			 * *a - desabilitado pois não funciona com páginas organizadas com urls amigáveis
 			 */
-			<?php if( WPLANG == 'pt_BR' ){echo 'language:"pt",';} // identificar idioma da instalação ?>
+			<?php if( defined('WPLANG') and WPLANG == 'pt_BR' ){echo 'language:"pt",';} // identificar idioma da instalação ?>
 			body_class : 'hentry',
 			body_id : 'core_textarea',
 			width: '100%', 									// largura
