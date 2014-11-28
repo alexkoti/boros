@@ -231,6 +231,11 @@ img.aligncenter			{display:block;margin:0 auto;}
  * TAMANHOS: larguras
  * 
  */
+
+/* permitir as larguras dentro da edição de taxonomia */
+.boros_taxonomy_block input[type="text"] {
+	width:auto;
+}
 .input_textarea 	{height:150px;width:100%;}
 .iptw_tiny 		{width:10%;}
 .iptw_small 		{width:25%;}
