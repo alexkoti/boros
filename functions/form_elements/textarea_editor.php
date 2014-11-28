@@ -34,6 +34,7 @@ class BFE_textarea_editor extends BorosFormElement {
 		$editor_profiles = array(
 			'minimal' => array(
 				'editor_type' => 'minimal',
+				'toolbar' => 'bold italic undo redo code',
 				'buttons' => 'bold,italic,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
@@ -42,6 +43,7 @@ class BFE_textarea_editor extends BorosFormElement {
 			),
 			'simple' => array(
 				'editor_type' => 'simple',
+				'toolbar' => 'bold italic link bullist numlist undo redo code',
 				'buttons' => 'bold,italic,link,bullist,numlist,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
@@ -50,6 +52,7 @@ class BFE_textarea_editor extends BorosFormElement {
 			),
 			'full' => array(
 				'editor_type' => 'full',
+				'toolbar' => 'bold italic link bullist numlist alignleft aligncenter alignright undo redo image code',
 				'buttons' => 'bold,italic,link,bullist,numlist,image,|,justifyleft,justifycenter,justifyright,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
@@ -63,6 +66,7 @@ class BFE_textarea_editor extends BorosFormElement {
 			'buttons' => 'bold,italic,link,bullist,numlist,|,code',
 			'buttons2' => '',
 			'buttons3' => '',
+			'toolbar' => 'bold italic link bullist numlist code',
 			'height' => 150,
 			'css' => get_bloginfo('template_url') . '/css/editor.css',
 		);
@@ -71,11 +75,12 @@ class BFE_textarea_editor extends BorosFormElement {
 		 * $editor_attr['editor_type'] - define um profile pré-determinado. A menos que seja definido como 'custom', os demais valores enviados serão ignorados e
 		 * usados os valores defaults
 		 */
-		if( !isset($this->data['options']['editor']) )
+		if( !isset($this->data['options']['editor']) ){
 			$this->data['options']['editor'] = 'minimal';
+		}
 		
 		if( is_array($this->data['options']['editor']) ){
-			$this->data['options']['editor']['editor_type'] = $this->data['name'];
+			$this->data['options']['editor']['editor_type'] = str_replace(array('[', ']'), array('_', ''), $this->data['name']);
 			$editor_attr = wp_parse_args( $this->data['options']['editor'], $editor_defs );
 		}
 		else{
@@ -128,6 +133,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				menubar : false,
 				//skin: 'wp_theme',
 				//theme: 'advanced',
+				toolbar: '<?php echo $editor_attr['toolbar']; ?>',
 				theme_advanced_buttons1: '<?php echo $editor_attr['buttons']; ?>',
 				theme_advanced_buttons2: '<?php echo $editor_attr['buttons2']; ?>', // (*1)
 				theme_advanced_buttons3: '<?php echo $editor_attr['buttons3']; ?>', // (*1)
@@ -167,7 +173,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				wpeditimage_disable_captions: false, 
 				theme_advanced_blockformats: 'p,blockquote,h1,h2,h3,h4,h5,h6',
 				//plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs', <<< verificar se ainda será preciso o 'inlinepopups' e encontrar um substituto
-				plugins: 'paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs',
+				plugins: 'paste, wordpress, fullscreen, wpeditimage, wpgallery, tabfocus, wplink, wpdialogs, image, code',
 				formats:{
 					alignleft : [
 						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},
