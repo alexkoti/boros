@@ -370,28 +370,42 @@ class BorosValidation {
 	 */
 	function validate_image_file( $name, $value, $args, $message ){
 		//pre($name, 'name');
-		//pre($value, 'value');
+		//pre($value, "value {$name}");
 		//pre($args, 'args');
 		//pre($message, 'message');
+		
+		// não gerar erro caso esteja vazio
+		if( empty($value) ){
+			return $value;
+		}
 		
 		$error = array(
 			'name' => $name,
 			'message' => $message,
 			'type' => 'error'
 		);
-		
+		/**
+		 * Caso não tenha sido feito o upload, será gerado o valor 4 em 'error'
+		 * @http://php.net/manual/pt_BR/features.file-upload.errors.php
+		 * 
+		 */
 		if( is_array($value) ){
-			// Corrigir imagem caso ela esteja com extensão errada. Apenas para arquivos de imagem reais
-			$file_info = wp_check_filetype_and_ext( $value['tmp_name'], $value['name'] );
-			//pre($file_info, '$file_info');
-			$value = array_merge($value, $file_info);
-			
-			// Certificar que é um arquivo de imagem
-			$imgstats = @getimagesize( $value['tmp_name'] );
-			//pre($imgstats);
-			if( $imgstats === false ){
-				//pal('não é imagem!');
-				$this->data_errors[$name][$args['rule']] = $error;
+			if( isset($value['error']) and $value['error'] == 4 ){
+				return '';
+			}
+			else{
+				// Corrigir imagem caso ela esteja com extensão errada. Apenas para arquivos de imagem reais
+				$file_info = wp_check_filetype_and_ext( $value['tmp_name'], $value['name'] );
+				//pre($file_info, '$file_info');
+				$value = array_merge($value, $file_info);
+				
+				// Certificar que é um arquivo de imagem
+				$imgstats = @getimagesize( $value['tmp_name'] );
+				//pre($imgstats);
+				if( $imgstats === false ){
+					//pal('não é imagem!');
+					$this->data_errors[$name][$args['rule']] = $error;
+				}
 			}
 		}
 		else{

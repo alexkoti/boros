@@ -1185,7 +1185,7 @@ class BorosFrontendForm {
 					// Salvar upload. Mesmo que esteja configurado para 'skip_save', o arquivo será enviado para o Mídia do WordPress, e o ID do attachment será salvo como post_meta
 					if( $config['type'] == 'file' ){
 						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
-						if( $meta_value['size'] > 0 ){
+						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
 							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');
 							// não salvar post_meta em caso de erro no upload e registrar o erro
 							if( is_wp_error($attachment_id) ){
@@ -1265,7 +1265,7 @@ class BorosFrontendForm {
 						// verificar se existe limitação de termos
 						if( !empty($this->config['accepted_taxonomies'][$taxonomy]) ){
 							if( is_array($post_data['tax_input'][$taxonomy]) ){
-								pal(2);
+								//pal(2);
 								$this->valid_taxonomy_terms[$taxonomy] = array_intersect($this->config['accepted_taxonomies'][$taxonomy], $terms);
 							}
 							elseif( in_array($post_data['tax_input'][$taxonomy], $this->config['accepted_taxonomies'][$taxonomy]) ){
