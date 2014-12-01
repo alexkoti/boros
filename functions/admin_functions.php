@@ -68,6 +68,7 @@ function admin_scripts(){
 	//CUSTOM SCRIPTS
 	add_custom_admin_scripts();
 }
+
 function add_custom_admin_scripts(){
 	wp_enqueue_script( 'tiny_mce' );
 	$scripts = array(

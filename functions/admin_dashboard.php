@@ -10,6 +10,40 @@
 
 /**
  * ==================================================
+ * UPDATES CHECKS ===================================
+ * ==================================================
+ * Verificar itens que necessitam checagem manual em caso de atualizações.
+ * 
+ */
+add_action( 'admin_init', 'boros_update_checks' );
+function boros_update_checks(){
+	
+	/**
+	 * Verificar o plugin code do tinymce
+	 * 
+	 */
+	global $pagenow;
+	if( $pagenow == 'index.php' ){
+		$alerts = get_option('boros_dashboard_notifications');
+		if( !file_exists( ABSPATH . '/wp-includes/js/tinymce/plugins/code/plugin.min.js' ) ){
+			if( !isset($alerts['need_tinymce_code_plugin']) ){
+				$alerts['need_tinymce_code_plugin'] = 'É preciso atualizar os plugins do tinymce, adicionando o plugin "<code>code</code>"';
+				update_option('boros_dashboard_notifications', $alerts);
+			}
+		}
+		else{
+			if( isset($alerts['need_tinymce_code_plugin']) ){
+				unset($alerts['need_tinymce_code_plugin']);
+				update_option('boros_dashboard_notifications', $alerts);
+			}
+		}
+	}
+}
+
+
+
+/**
+ * ==================================================
  * AT A GLANCE ======================================
  * ==================================================
  * Substituto do 'Right Now' a partir da versão 3.8 do WordPress, mostrando todos os posts types e taxonomies
@@ -76,6 +110,38 @@ function boros_remove_dashboard_widget(){
  	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
  	remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
 } 
+
+
+
+/**
+ * ==================================================
+ * DASHBOARD NOTIFICATIONS ==========================
+ * ==================================================
+ * Mostrar mensagens importantes de aviso de desenvolvimento.
+ * 
+ */
+add_action( 'wp_dashboard_setup', 'boros_dashboard_notifications_widget' );
+function boros_dashboard_notifications_widget(){
+	wp_add_dashboard_widget(
+		'boros_dashboard_notifications_widget',       // Widget slug.
+		'Mensagens e alertas',                        // Title.
+		'boros_dashboard_notifications_widget_output' // Display function.
+	);
+}
+
+function boros_dashboard_notifications_widget_output(){
+	$alerts = get_option('boros_dashboard_notifications');
+	if( !empty($alerts) ){
+		echo '<ol>';
+		foreach( $alerts as $alert ){
+			echo "<li>{$alert}</li>";
+		}
+		echo '</ol>';
+	}
+	else{
+		echo 'Sem mensagens';
+	}
+}
 
 
 
