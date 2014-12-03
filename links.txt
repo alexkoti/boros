@@ -1,0 +1,48 @@
+=======================================================================================================
+LINKS ÚTEIS ===========================================================================================
+=======================================================================================================
+
+
+
+/**
+ * ==================================================
+ * TRADUÇÃO =========================================
+ * ==================================================
+ * 
+ * 
+ */
+Como criar arquivos PO para tradução:
+http://wordpress.stackexchange.com/a/169280
+
+Tags de tradução para scanear:
+__
+_e
+_n
+_x
+_ex
+_nx
+esc_attr__
+esc_attr_e
+esc_attr_x
+esc_html__
+esc_html_e
+esc_html_x
+_n_noop
+_nx_noop
+<translate_nooped_plural></translate_nooped_plural>
+
+
+/**
+ * ==================================================
+ * EMAILS ===========================================
+ * ==================================================
+ * 
+ * 
+ */
+Links para envio de emails pelo gmail
+https://accounts.google.com/DisplayUnlockCaptcha        - desbloqueio de SMTP antigo
+https://www.google.com/settings/security/lesssecureapps - desbloqueio para liberar "less secure apps"
+
+
+
+
