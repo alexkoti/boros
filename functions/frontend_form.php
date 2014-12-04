@@ -1251,7 +1251,7 @@ class BorosFrontendForm {
 				$taxonomy = $element['options']['taxonomy'];
 				
 				// verificar required
-				if( !isset($post_data['tax_input'][$taxonomy]) and isset($element['validate']['required']) ){
+				if( (!isset($post_data['tax_input'][$taxonomy]) or empty($post_data['tax_input'][$taxonomy]))and isset($element['validate']['required']) ){
 					$error = array(
 						'name' => 'required',
 						'message' => $element['validate']['required']['message'],
