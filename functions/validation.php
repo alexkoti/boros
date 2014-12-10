@@ -157,10 +157,12 @@ class BorosValidation {
 			//pre($this->validations, 'VALIDATIONS');
 			$this->current_element = $element;
 			foreach( $this->validations[$element['name']]['rules'] as $rule => $validation ){
-				if( !isset($validation['args']) )
+				if( !isset($validation['args']) ){
 					$validation['args'] = false;
-				if( !isset($validation['message']) )
+				}
+				if( !isset($validation['message']) ){
 					$validation['message'] = false;
+				}
 				
 				/**
 				 * Gambiarra para enviar argumentos sem interferir nos callbacks. Como as functions de verificação já possuem numero de argumentos fixos e estão sendo usados por 'option' e
@@ -193,10 +195,12 @@ class BorosValidation {
 		if( isset($this->validations[ $element['name'] ]) ){
 			$this->current_element = $element;
 			foreach( $this->validations[ $element['name'] ]['rules'] as $rule => $validation ){
-				if( !isset($validation['args']) )
+				if( !isset($validation['args']) ){
 					$validation['args'] = false;
-				if( !isset($validation['message']) )
+				}
+				if( !isset($validation['message']) ){
 					$validation['message'] = false;
+				}
 				
 				/**
 				 * Gambiarra para enviar argumentos sem interferir nos callbacks. Como as functions de verificação já possuem numero de argumentos fixos e estão sendo usados por 'option' e
