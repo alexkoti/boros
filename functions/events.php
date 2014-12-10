@@ -535,9 +535,14 @@ function bev_validate_email_blocked( $name, $value, $args, $message ){
 }
 
 function bev_validate_email_unique( $name, $value, $args, $message ){
+	//pre($name, 'name');
+	//pre($value, 'value');
+	//pre($args, 'args');
+	//pre($message, 'message');
 	$user_with_email = get_user_by('email', $value);
-	//pre($user_with_email);
-	if( $user_with_email != false ){
+	
+	// não bloquear a própria pessoa
+	if( ($user_with_email != false) AND ($user_with_email->ID != $args['user_id']) AND ($args['user_id'] != 0) ){
 		$validation = $args['object'];
 		if( $validation->context['type'] == 'frontend' ){
 			$error = array(
