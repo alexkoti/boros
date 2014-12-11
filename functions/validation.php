@@ -240,6 +240,7 @@ class BorosValidation {
 	/**
 	 * Caso seja split text, é preciso manter os valores em array
 	 * 
+	 * @todo: validar os valores do split
 	 */
 	function validate_text( $option, $value, $args, $message ){
 		//pal($option, '$option');
