@@ -115,6 +115,10 @@ class BorosValidation {
 		if( isset($this->validations[$option]['rules']) ){
 			$this->current_element = $option;
 			foreach( $this->validations[ $option ]['rules'] as $validation ){
+				if( !isset($validation['args']) ){
+					$validation['args'] = false;
+				}
+				$validation['args']['options'] = issetor($element['options'], false);
 				if( isset($this->validations[ $option ]['element']['duplicable']) and $this->validations[ $option ]['element']['duplicable'] == true and is_array($value) ){
 					$newval = array();
 					foreach( $value as $subval ){
@@ -163,6 +167,7 @@ class BorosValidation {
 				if( !isset($validation['message']) ){
 					$validation['message'] = false;
 				}
+				$validation['args']['options'] = issetor($element['options'], false);
 				
 				/**
 				 * Gambiarra para enviar argumentos sem interferir nos callbacks. Como as functions de verificação já possuem numero de argumentos fixos e estão sendo usados por 'option' e
@@ -175,6 +180,7 @@ class BorosValidation {
 				
 				if( method_exists( $this, $validation['rule'] ) ){
 					//pal("Método da class BorosValidation: {$validation['rule']}");
+					$validation['args']['object'] = $this;
 					$newval = call_user_func( array( $this, $validation['rule']), $element['name'], $newval, $validation['args'], $validation['message'] );
 				}
 				//testar user function. Aceita uma chamada de classe
@@ -201,6 +207,7 @@ class BorosValidation {
 				if( !isset($validation['message']) ){
 					$validation['message'] = false;
 				}
+				$validation['args']['options'] = issetor($element['options'], false);
 				
 				/**
 				 * Gambiarra para enviar argumentos sem interferir nos callbacks. Como as functions de verificação já possuem numero de argumentos fixos e estão sendo usados por 'option' e
@@ -214,6 +221,7 @@ class BorosValidation {
 				if( method_exists( $this, $validation['rule'] ) ){
 					//pal("Método da class BorosValidation: {$validation['rule']}");
 					//pre( $newval, "{$validation['rule']} PRE" );
+					$validation['args']['object'] = $this;
 					$newval = call_user_func( array( $this, $validation['rule']), $element['name'], $newval, $validation['args'], $validation['message'] );
 				}
 				//testar user function. Aceita uma chamada de classe
@@ -339,6 +347,10 @@ class BorosValidation {
 	 * 
 	 */
 	function validate_recaptcha( $name, $value, $args, $message ){
+		//pre( $name, 'name' );
+		//pre( $value, 'value' );
+		//pre( $args, 'args' );
+		//pre( $message, 'message' );
 		require_once( BOROS_LIBS . 'recaptcha/recaptchalib.php' );
 		$publickey = get_option('recaptcha_publickey');
 		$privatekey = get_option('recaptcha_privatekey');
@@ -347,11 +359,14 @@ class BorosValidation {
 		
 		if( isset($_POST["recaptcha_response_field"])){
 			$resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
-			if( $resp->is_valid ){}
+			$message = issetor($args['options']['error_message'], 'O captcha está incorreto');
+			if( $resp->is_valid ){
+				
+			}
 			else{
 				$error = array(
 					'name' => $name,
-					'message' => 'O captcha está incorreto',
+					'message' => $message,
 					'type' => 'error'
 				);
 				$this->data_errors[$name][$args['rule']] = $error;
