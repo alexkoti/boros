@@ -93,6 +93,8 @@ class BorosFrontendForm {
 		'page_name'             => 'any',       // apenas aceitar caso is_page('page_name')
 		'redirect_on_sucess'    => false,
 		'login_required'        => 'É preciso estar logado para usar este formulário',
+		'show_errors'           => true,
+		'show_errors_index'     => false,
 		'messages' => array(
 			'success' => array(
 				'message' => 'Post enviado com sucesso!',
@@ -1873,8 +1875,19 @@ class BorosFrontendForm {
 				 */
 				if( !empty( $this->errors ) ){
 					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
+					
+					if( $this->config['show_errors_index'] == true ){
+						echo '<div class="alert alert-error alert-danger">';
+						foreach( $this->errors as $input_name => $errors ){
+							foreach( $errors as $error ){
+								echo "<p><a href='#{$input_name}'>{$error['message']}</a></p>";
+							}
+						}
+						echo '</div>';
+					}
+					
 					if( $this->config['debug'] == true ){
-						//pre($this->errors, 'bootstrap_output errors');
+						pre($this->errors, 'bootstrap3_output errors');
 					}
 				}
 				?>
@@ -1906,7 +1919,7 @@ class BorosFrontendForm {
 							$data_value = null;
 							
 							// adicionar os erros guardados
-							if( isset($this->errors[$item['name']]) ){
+							if( isset($this->errors[$item['name']]) and $this->config['show_errors'] == true ){
 								$item['errors'] = $this->errors[$item['name']];
 							}
 							
@@ -1985,6 +1998,17 @@ class BorosFrontendForm {
 				 */
 				if( !empty( $this->errors ) ){
 					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
+					
+					if( $this->config['show_errors_index'] == true ){
+						echo '<div class="alert alert-error alert-danger">';
+						foreach( $this->errors as $input_name => $errors ){
+							foreach( $errors as $error ){
+								echo "<p><a href='#{$input_name}'>{$error['message']}</a></p>";
+							}
+						}
+						echo '</div>';
+					}
+					
 					if( $this->config['debug'] == true ){
 						pre($this->errors, 'bootstrap3_output errors');
 					}
@@ -2016,7 +2040,7 @@ class BorosFrontendForm {
 							$data_value = null;
 							
 							// adicionar os erros guardados
-							if( isset($this->errors[$item['name']]) ){
+							if( isset($this->errors[$item['name']]) and $this->config['show_errors'] == true ){
 								$item['errors'] = $this->errors[$item['name']];
 							}
 							
