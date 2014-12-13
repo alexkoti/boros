@@ -522,7 +522,7 @@ function bev_validate_email_blocked( $name, $value, $args, $message ){
 	//pre($bev_blocked);
 	//pre($bev_blocked_email);
 	
-	if( in_array( $value, $bev_blocked_email ) or in_array( $value, $bev_blocked ) ){
+	if( !empty($value) and (in_array( $value, $bev_blocked_email ) or in_array( $value, $bev_blocked )) ){
 		$validation = $args['object'];
 		$error = array(
 			'name' => $name,
