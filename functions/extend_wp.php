@@ -33,6 +33,14 @@ function boros_excerpt( $content, $excerpt_length = 55 ){
 	return wptexturize(implode(' ', $words));
 }
 
+function boros_excerpt_letters( $content, $excerpt_length = 55 ){
+	$text = strip_shortcodes( $content );
+	$text = str_replace(']]>', ']]&gt;', $text);
+	$text = strip_tags($text);
+	$letters = substr($text, 0, $excerpt_length);
+	return wptexturize($letters);
+}
+
 /**
  * ==================================================
  * GET POST META SINGLE =============================
