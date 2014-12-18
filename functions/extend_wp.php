@@ -181,6 +181,22 @@ function get_option_or( $option, $alt = '', $wrapper = '%s', $echo = true, $filt
 }
 
 /**
+ * 
+ * 
+ */
+function boros_formatted_now( $format = 'd\/m\/Y' ){
+	$timezone_string = get_option( 'timezone_string' );
+	if( $timezone_string ){
+		date_default_timezone_set($timezone_string);
+		$date_i18n = date_i18n( $format, time() );
+	}
+	else{
+		$date_i18n = date_i18n( $format, time() );
+	}
+	return $date_i18n;
+}
+
+/**
  * ==================================================
  * WP-OPTIONS =======================================
  * ==================================================
