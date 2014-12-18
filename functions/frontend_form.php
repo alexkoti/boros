@@ -389,6 +389,7 @@ class BorosFrontendForm {
 			
 			// acionar callbacks: form->config
 			$this->form_callback( $this->config['callbacks']['success'] );
+			// deprecated: typo error ('sucess')
 			if( isset($this->config['callbacks']['sucess']) ){
 				$this->form_callback( $this->config['callbacks']['sucess'] );
 			}
@@ -818,6 +819,7 @@ class BorosFrontendForm {
 					 */
 					 // @todo remover após certificar que não existem jobs que utilizem esse callback escrito errado
 					$this->form_callback( $this->config['callbacks']['success'] );
+					// deprecated: typo error ('sucess')
 					if( isset($this->config['callbacks']['sucess']) ){
 						$this->form_callback( $this->config['callbacks']['sucess'] );
 					}
@@ -979,7 +981,8 @@ class BorosFrontendForm {
 					//pre($this->valid_data);
 					//pre($this->valid_meta);
 					//pre( $this->errors, 'ERRORS' );
-					$this->form_callback( $this->config['callbacks']['success'] );
+					//$this->form_callback( $this->config['callbacks']['success'] );
+					// deprecated: typo error ('sucess')
 					if( isset($this->config['callbacks']['sucess']) ){
 						$this->form_callback( $this->config['callbacks']['sucess'] );
 					}
