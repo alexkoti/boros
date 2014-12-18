@@ -181,7 +181,11 @@ function get_option_or( $option, $alt = '', $wrapper = '%s', $echo = true, $filt
 }
 
 /**
- * 
+ * ==================================================
+ * FORMATTED NOW ====================================
+ * ==================================================
+ * Retornar a data atual, considerando o timezone definido no WordPress, e aplicando 
+ * traduções nas strings, caso necessário.
  * 
  */
 function boros_formatted_now( $format = 'd\/m\/Y' ){
