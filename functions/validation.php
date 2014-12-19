@@ -378,7 +378,9 @@ class BorosValidation {
 	/**
 	 * File
 	 * 
-	 * @ATENÇÃO : a presença desta function é obrigatória para não entrar em conflito com a function do core de mesmo nome!!!
+	 * @ATENÇÃO : A presença desta function é obrigatória para não entrar em conflito com a function do core de mesmo nome.
+	 *            É feita a tentativa de utilizar um metodo da classe BorosValidation, e caso contrário, tenta utilizar
+	 *            uma function de mesmo nome, que no caso já existe no core, mas não serve para esta validação.
 	 */
 	function validate_file( $name, $value, $args, $message ){
 		return $value;
