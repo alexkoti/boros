@@ -1195,6 +1195,7 @@ class BorosFrontendForm {
 							// não salvar post_meta em caso de erro no upload e registrar o erro
 							if( is_wp_error($attachment_id) ){
 								$this->errors[] = $attachment_id;
+								$meta_value = false;
 								continue;
 							}
 							else{
@@ -1637,7 +1638,12 @@ class BorosFrontendForm {
 							$value = apply_filters( 'the_content', $value );
 						}
 						elseif( $this->elements_plain[$name]['type'] == 'file' ){
-							$value = wp_get_attachment_url($value);
+							if( $value !== false ){
+								$value = wp_get_attachment_url($value);
+							}
+							else{
+								$value = 'Anexo não salvo';
+							}
 						}
 						elseif( $this->elements_plain[$name]['type'] == 'checkbox' and $value == true ){
 							$value = 'sim';
