@@ -94,6 +94,8 @@ function formatted_post_type_link( $args ){
 	return formatted_link( $link );
 }
 
+
+
 function active_post_type_class( $post_type, $detect = null, $append = '' ){
 	global $wp_query; //pre($wp_query);
 	// class mínima
@@ -151,6 +153,7 @@ function active_post_type_class( $post_type, $detect = null, $append = '' ){
 }
 
 
+
 function remove_all_post_type_supports( $post_type = 'post', $supports = null ){
 	$all = array(
 		'editor',
@@ -169,6 +172,33 @@ function remove_all_post_type_supports( $post_type = 'post', $supports = null ){
 		remove_post_type_support( $post_type, $support );
 	}
 }
+
+
+
+/**
+ * ==================================================
+ * ADMIN SUBMENU CUSTOM POST TYPE "ADD NEW" =========
+ * ==================================================
+ * Quando colocamos um post_type como submenu de outro local utilizando o argumento 'show_in_menu', é necessário corrigir
+ * adicionando uma nova admin page para o "add new item", caso contrário acontecerá um bloqueio de permissão.
+ * Function copiada do core wp-includes/post.php _add_post_type_submenus()
+ * 
+ * 
+ * @todo futura remoção desta action, caso o ticket https://core.trac.wordpress.org/ticket/16808 seja resolvido
+ * 
+ */
+add_action( 'admin_menu', '_boros_add_post_type_submenus', 99 );
+function _boros_add_post_type_submenus() {
+	foreach ( get_post_types( array( 'show_ui' => true ) ) as $ptype ) {
+		$ptype_obj = get_post_type_object( $ptype );
+		// Sub-menus only.
+		if ( ! $ptype_obj->show_in_menu || $ptype_obj->show_in_menu === true )
+			continue;
+		add_submenu_page( $ptype_obj->show_in_menu, $ptype_obj->labels->add_new, $ptype_obj->labels->add_new_item, $ptype_obj->cap->edit_posts, "post-new.php?post_type=$ptype" );
+	}
+}
+
+
 
 /**
  * ==================================================
