@@ -312,18 +312,22 @@ function opengraph_tags(){
 	}
 	
 	$defaults = array(
-		'title' 		=> get_bloginfo('name') . ' - ' . get_bloginfo('description'),
-		'image_url' 	=> $default_image,
-		'description' 	=> get_bloginfo('description'),
-		'og_type' 		=> 'blog',
-		'og_url' 		=> home_url( '/' ),
-		'separator' => '',
+		'sufix'       => get_bloginfo('name') . ' - ' . get_bloginfo('description'),
+		'wp_title'    => wp_title( ' : ', false, 'right' ),
+		'separator'   => ' : ',
+		'p'           => false,
+		'image_url'   => $default_image,
+		'description' => get_bloginfo('description'),
+		'og_type'     => 'blog',
+		'og_url'      => home_url( '/' ),
+		'separator'   => '',
 	);
 	extract( $defaults );
 	
 	if( is_singular() ){
 		global $post;
-		$title = get_bloginfo( 'name' );
+		$p = $post;
+		$sufix = get_bloginfo( 'name' );
 		
 		$separator = ' : ';
 		$og_type = 'article';
@@ -369,26 +373,38 @@ function opengraph_tags(){
 	if( !isset($post_type_obj->labels->name) ){
 		add_filter( 'post_type_archive_title', 'fix_title_tag', 1 );
 	};
+	
+	$og_items = apply_filters('opengraph_items', array(
+		'title'       => $wp_title . $sufix,
+		'wp_title'    => $wp_title,
+		'separator'   => $separator,
+		'post'        => $p,
+		'type'        => $og_type,
+		'url'         => $og_url,
+		'image'       => $image_url,
+		'site_name'   => get_bloginfo('name'),
+		'description' => $description,
+	));
 ?>
-<meta property="og:title"        content="<?php echo $title . $separator . wp_title( '', false, 'left' ); ?>"/>
-<meta property="og:type"         content="<?php echo $og_type; ?>"/>
-<meta property="og:url"          content="<?php echo $og_url; ?>"/>
-<meta property="og:image"        content="<?php echo $image_url; ?>"/>
-<meta property="og:site_name"    content="<?php bloginfo('name'); ?>"/>
-<meta property="og:description"  content="<?php echo $description; ?>"/>
+<meta property="og:title"        content="<?php echo $og_items['title']; ?>"/>
+<meta property="og:type"         content="<?php echo $og_items['type']; ?>"/>
+<meta property="og:url"          content="<?php echo $og_items['url']; ?>"/>
+<meta property="og:image"        content="<?php echo $og_items['image']; ?>"/>
+<meta property="og:site_name"    content="<?php echo $og_items['site_name']; ?>"/>
+<meta property="og:description"  content="<?php echo $og_items['description']; ?>"/>
 <?php
 }
 
 function gplus_tags(){
 	$default_image = wp_get_attachment_image_src( get_option('og_image'), 'full' );
 	$gplus = array(
-		'name' 			=> get_bloginfo('name') . ' - ' . get_bloginfo('description'),
+		'name' 			=> get_bloginfo('name') . ' : ' . get_bloginfo('description'),
 		'image' 		=> $default_image[0],
 		'description' 	=> get_bloginfo('description'),
 	);
 	if( is_singular() ){
 		global $post;
-		$gplus['name'] = get_the_title( $post->ID );
+		$gplus['name'] = get_the_title( $post->ID ) . ' : ' . get_bloginfo('name');
 		
 		//criar novo description. Fallback para o excerpt em caso de content vazio.
 		if( !empty($post->post_excerpt) ){
@@ -415,6 +431,8 @@ function gplus_tags(){
 			$gplus['image'] = $thumb['0'];
 		}
 	}
+	
+	$gplus = apply_filters('gplus_items', $gplus, get_the_title( $post->ID ));
 ?>
 <meta itemprop="name"            content="<?php echo $gplus['name']; ?>" />
 <meta itemprop="description"     content="<?php echo $gplus['description']; ?>" />
