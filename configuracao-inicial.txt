@@ -10,12 +10,41 @@
  * - o padrão é <code>mklink /d 'destino' 'origem'</code>, a pasta de destino não pode existir ainda.
  * 
  */
+
 mklink /d "C:\Caminho\Da\Pasta\Do\Novo\Job\boros" "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\boros"
 
 
 
+/**
+ * EXEMPLO DE SYMLINK PARA JOB
+ * 
+ */
+
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\boros" "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\boros"
 
 
 
-mklink /d "D:\PHP\xampp\htdocs\xampp\sites\artidea\paprika\wp-content\plugins\boros" "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\boros"
+/**
+ * JUNCTION LINKS PARA PLUGINS COMUNS
+ * Plugins que sempre serão usados em localhost
+ * 
+ */
+
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\force-regenerate-thumbnails" "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\force-regenerate-thumbnails"
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\wp-email-login"              "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\wp-email-login"
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\wp-quick-pages"              "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\wp-quick-pages"
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\better-lorem"                "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\better-lorem"
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\boros-newsletter-extended"   "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\boros-newsletter-extended"
+mklink /d "D:\PHP\xampp\htdocs\xampp\sites\boros\boros-demo\wp-content\plugins\user-role-editor"            "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\user-role-editor"
+
+
+
+/**
+ * REMOVER JUNCTION LINK
+ * 
+ */
+rmdir D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins\better-lorem
+
+
+
 
