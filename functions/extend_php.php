@@ -350,7 +350,7 @@ function formatted_link( $args ){
 	 */
 	$attrs = '';
 	if( $attr !== false and is_array($attr) ){
-		$attrs .= implode(' / ', array_map('boros_query_string', $attr, array_keys($attr)));
+		$attrs .= make_attributes($attr);
 	}
 	
 	/**
@@ -358,7 +358,7 @@ function formatted_link( $args ){
 	 * 
 	 */
 	// montar o link no formato desejado
-	$link = "<a{$href}{$id}{$class}{$title} {$attrs}>{$text}</a>";
+	$link = "<a{$href}{$id}{$class}{$title}{$attrs}>{$text}</a>";
 	$link_format = sprintf( $format, $link );
 	// retornar <a>
 	if( $list === false ){
