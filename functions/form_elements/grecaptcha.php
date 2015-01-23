@@ -1,29 +1,10 @@
 <?php
 /**
- * REACAPTCHA
- * ATENÇÃO:: em validation.php existe o método BorosValidation::validate_recaptcha(), que é o método automático de validação aplicado ao valor do input.
- * É ele quem adiciona a mensagem do recaptcha ao array de erros
- * 
- * @todo mudar para usar apenas o recaptcha em ajax
- * 
- * 
- * MULTIPLOS RECAPTCHAS NA PÁGINA:
- * Obrigatório adicionar a opção 'ajax_recaptcha' => true, e adicionar a class 'ajax_recaptcha_show' ao botão de troca de formulários
- * 
- * 
-
-$options = array(
-	'ajax_recaptcha' => true|false  // sinalizar se será usado o recaptcha dinânico, que é carregado por js
-	'theme' => array(
-		'theme' => 'white'
-		'lang' => 'pt'
-	)
-);
-
+ * GREACAPTCHA
  * 
  */
 
-class BFE_recaptcha extends BorosFormElement {
+class BFE_grecaptcha extends BorosFormElement {
 	var $valid_attrs = array(
 		'name' => '',
 		'value' => '',
