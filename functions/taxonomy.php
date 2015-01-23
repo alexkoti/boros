@@ -377,17 +377,18 @@ function formatted_term_link( $args ){
 	global $post, $wp_query;
 	//pre($wp_query);
 	$defaults = array(
-		'term_name'	=> null,
-		'taxonomy'	=> 'category',
-		'id' 		=> false,
-		'class' 	=> false,
-		'text' 		=> false,
-		'format' 	=> '%s',
-		'title' 	=> false,
-		'list' 		=> false,
-		'echo' 		=> true,
-		'append' 	=> null,
-		'detect' 	=> null,
+		'term_name' => null,
+		'taxonomy'  => 'category',
+		'id'        => false,
+		'class'     => false,
+		'text'      => false,
+		'format'    => '%s',
+		'title'     => false,
+		'list'      => false,
+		'echo'      => true,
+		'append'    => null,
+		'detect'    => null,
+		'attr'      => null,
 	);
 	
 	// se for string single, ou seja, foi pedido apenas o nome do termo sem definir taxonomia, e não é um string query
@@ -399,8 +400,8 @@ function formatted_term_link( $args ){
 	}
 	
 	// processar em array os dados enviados pela chamada da função em $args
-	$attr = wp_parse_args( $args, $defaults );
-	extract( $attr, EXTR_SKIP );
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args, EXTR_SKIP );
 	
 	if( empty($term_name) )
 		return 'termo não definido';
