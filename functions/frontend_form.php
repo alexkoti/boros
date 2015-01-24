@@ -1987,7 +1987,7 @@ class BorosFrontendForm {
 			if( $this->config['login_required'] == true and !is_user_logged_in() ){
 				?>
 				<div class="<?php echo $class; ?>" id="<?php echo $form_name; ?>">
-					<?php echo $this->config['login_required']; ?>
+					<?php echo $this->config['messages']['login_required']['message']; ?>
 				</div>
 				<?php
 				return;
