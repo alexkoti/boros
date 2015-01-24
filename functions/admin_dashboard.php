@@ -25,6 +25,8 @@ function boros_update_checks(){
 	global $pagenow;
 	if( $pagenow == 'index.php' ){
 		$alerts = get_option('boros_dashboard_notifications');
+		
+		// verificar plugin "CODE" de tinymce
 		if( !file_exists( ABSPATH . '/wp-includes/js/tinymce/plugins/code/plugin.min.js' ) ){
 			if( !isset($alerts['need_tinymce_code_plugin']) ){
 				$alerts['need_tinymce_code_plugin'] = 'É preciso atualizar os plugins do tinymce, adicionando o plugin "<code>code</code>"';
@@ -34,6 +36,20 @@ function boros_update_checks(){
 		else{
 			if( isset($alerts['need_tinymce_code_plugin']) ){
 				unset($alerts['need_tinymce_code_plugin']);
+				update_option('boros_dashboard_notifications', $alerts);
+			}
+		}
+		
+		// verificar se o plugin wp-email-login está ativo
+		if( function_exists('dr_email_login_authenticate') ){
+			if( !isset($alerts['plugin_wp_email_login_active']) ){
+				$alerts['plugin_wp_email_login_active'] = 'O plugin Wp Email Login está ativo, porém ele não é mais necessário, pois as funcionalidades deste foram incorporadas no plugin base."';
+				update_option('boros_dashboard_notifications', $alerts);
+			}
+		}
+		else{
+			if( isset($alerts['plugin_wp_email_login_active']) ){
+				unset($alerts['plugin_wp_email_login_active']);
 				update_option('boros_dashboard_notifications', $alerts);
 			}
 		}
