@@ -376,6 +376,35 @@ class BorosValidation {
 	}
 	
 	/**
+	 * G-Recaptcha
+	 * 
+	 */
+	function validate_grecaptcha( $name, $value, $args, $message ){
+		require_once( BOROS_LIBS . 'grecaptcha/recaptchalib.php' );
+		$publickey = get_option('recaptcha_publickey');
+		$privatekey = get_option('recaptcha_privatekey');
+		$resp = null;
+		$error = null;
+		
+		if ($_POST["g-recaptcha-response"]) {
+			$reCaptcha = new ReCaptcha($privatekey);
+			$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
+			$message = issetor($args['options']['error_message'], 'O captcha está incorreto');
+			if($resp != null && $resp->success){
+				
+			}
+			else{
+				$error = array(
+					'name' => $name,
+					'message' => $message,
+					'type' => 'error'
+				);
+				$this->data_errors[$name][$args['rule']] = $error;
+			}
+		}
+	}
+	
+	/**
 	 * File
 	 * 
 	 * @ATENÇÃO : A presença desta function é obrigatória para não entrar em conflito com a function do core de mesmo nome.
