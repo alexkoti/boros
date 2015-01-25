@@ -237,6 +237,8 @@ class BorosFrontendForm {
 		
 		// processar os dados de formulário apenas se for postado o form certo, mas ainda assim garantindo o output do form a ser preenchido
 		if( isset($_POST['form_name']) and $_POST['form_name'] == $config['form_name'] ){
+			//pre($_POST);
+			
 			// definir o $this->posted_data
 			$this->pre_process();
 			

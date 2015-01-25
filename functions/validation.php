@@ -386,20 +386,30 @@ class BorosValidation {
 		$resp = null;
 		$error = null;
 		
-		if ($_POST["g-recaptcha-response"]) {
-			$reCaptcha = new ReCaptcha($privatekey);
-			$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
-			$message = issetor($args['options']['error_message'], 'O captcha está incorreto');
-			if($resp != null && $resp->success){
-				
-			}
-			else{
+		if( isset($_POST["g-recaptcha-response"]) ){
+			if( empty($_POST["g-recaptcha-response"]) ){
 				$error = array(
 					'name' => $name,
-					'message' => $message,
+					'message' => 'É preciso preencher o reCAPTCHA',
 					'type' => 'error'
 				);
 				$this->data_errors[$name][$args['rule']] = $error;
+			}
+			else{
+				$reCaptcha = new ReCaptcha($privatekey);
+				$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
+				$message = issetor($args['options']['error_message'], 'O captcha está incorreto');
+				if($resp != null && $resp->success){
+					
+				}
+				else{
+					$error = array(
+						'name' => $name,
+						'message' => $message,
+						'type' => 'error'
+					);
+					$this->data_errors[$name][$args['rule']] = $error;
+				}
 			}
 		}
 	}

@@ -61,7 +61,6 @@ class BFE_grecaptcha extends BorosFormElement {
 	 */
 	function set_input( $value = null ){
 		$publickey = get_option('recaptcha_publickey');
-		$privatekey = get_option('recaptcha_privatekey');
 		
 		$id = self::$counter;
 		$input = "<div class='grecaptcha_render' id='grecaptcha-{$id}'></div>";
