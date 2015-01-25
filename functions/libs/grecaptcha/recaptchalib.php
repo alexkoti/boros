@@ -91,8 +91,8 @@ class ReCaptcha
     private function _submitHTTPGet($path, $data)
     {
         $req = $this->_encodeQS($data);
-        $response = file_get_contents($path . $req);
-        return $response;
+        $response = wp_remote_get($path . $req);
+        return wp_remote_retrieve_body($response);
     }
 
     /**
