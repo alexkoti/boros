@@ -538,6 +538,7 @@ class BorosFormElement {
 	 * 
 	 */
 	function __construct( $context, $data, $data_value ){
+		$this->init();
 		$this->includes();
 		$this->context = $context;
 		if( isset($context['parent']) ) $this->parent_elem = $context['parent'];
@@ -556,6 +557,12 @@ class BorosFormElement {
 		$this->final_input();
 		$this->input = apply_filters( "BFE_{$this->data['type']}_input", $this->input );
 	}
+	
+	/**
+	 * Utilizar nos elementos para realizar tarefas iniciais
+	 * 
+	 */
+	function init(){}
 	
 	/**
 	 * Includes adicionais, caso necessário
@@ -1144,7 +1151,7 @@ class BorosFormElement {
 			$files_array = is_array($files) ? $files : array($files);
 			$folder = isset($this->enqueues['folder']) ? $this->enqueues['folder'] . 'js/' : BOROS_JS;
 			foreach( $files_array as $js ){
-				// emqueue absoluto
+				// enqueue absoluto
 				if( is_array($js) ){
 					wp_enqueue_script( $js[0], $js[1], NULL, NULL );
 				}
