@@ -1231,8 +1231,13 @@ class BorosFrontendForm {
 				$this->do_callbacks( $this->valid_meta );
 				// acionar callbacks: form->config
 				$this->form_callback( $this->config['callbacks']['success'] );
+				// acionar callbacks escrito errado('sucess') e adicionar erro em 'boros_dashboard_notifications'
+				// @deprecated
 				if( isset($this->config['callbacks']['sucess']) ){
 					$this->form_callback( $this->config['callbacks']['sucess'] );
+					$alerts = get_option('boros_dashboard_notifications');
+					$alerts['callback_index_typo'] = 'Foi identificado o uso de um callback de formulário de frontend com index errado <strong>sucess</strong>';
+					update_option('boros_dashboard_notifications', $alerts);
 				}
 				
 				// reset data
@@ -1247,7 +1252,11 @@ class BorosFrontendForm {
 			}
 		}
 		else{
+			// registrar erros
 			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+			
+			// acionar callbacks de erro
+			$this->form_callback( $this->config['callbacks']['error'] );
 		}
 	}
 	
