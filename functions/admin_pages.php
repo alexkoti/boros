@@ -102,6 +102,8 @@ class BorosAdminPages {
 	 * o primeiro level do menu aponte para a option-page, caso contrário será apontado para o post_type
 	 */
 	function __construct( $config, $folder_base, $url_base ){
+		//if( isset($_POST) ){ pre($_POST); die(); }
+		
 		$this->pages = $config;
 		$this->set_pages_capabilities();
 		$this->folder_base = $folder_base;
