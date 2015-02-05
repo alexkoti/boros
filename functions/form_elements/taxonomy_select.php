@@ -16,6 +16,7 @@ class BFE_taxonomy_select extends BorosFormElement {
 	);
 	
 	function add_defaults(){
+		$this->defaults['options']['type'] = 'meta_box'; // post_meta, option, term_meta
 		$this->defaults['options']['taxonomy'] = 'category';
 		$this->defaults['options']['show_option_all'] = ' — ';
 		$this->defaults['options']['hide_empty'] = false;
@@ -69,22 +70,40 @@ class BFE_taxonomy_select extends BorosFormElement {
 		}
 		
 		$args = array(
-			'taxonomy' => $this->data['options']['taxonomy'],
-			'name' => "tax_input[{$this->data['options']['taxonomy']}]",
-			'selected' => $selected_terms, 
-			'class' => $this->data['attr']['class'] . "taxonomy_select taxonomy_{$this->data['options']['taxonomy']}",
+			'taxonomy'        => $this->data['options']['taxonomy'],
+			'selected'        => $selected_terms, 
+			'id'              => $this->data['attr']['id'],
+			'class'           => $this->data['attr']['class'] . "taxonomy_select taxonomy_{$this->data['options']['taxonomy']}",
 			'show_option_all' => $this->data['options']['show_option_all'],
-			'hide_empty' => $this->data['options']['hide_empty'],
+			'hide_empty'      => $this->data['options']['hide_empty'],
+			'echo'            => false,
 		);
 		
-		// começar a guardar o output do script js em buffer
-		ob_start();
+		// definir o name conforme o contexto
+		// @todo melhorar para tentar deixar essa parte automática, mas avaliar se existirão casos onde
+		//       um meta_box poderá precisar de um name diferente de tax_input[]
+		if( $this->defaults['options']['type'] == 'post_meta' ){
+			$args['name'] = "tax_input[{$this->data['options']['taxonomy']}]";
+		}
+		elseif( $this->defaults['options']['type'] == 'option' ){
+			$args['name'] = $this->data['name'];
+		}
+		elseif( $this->defaults['options']['type'] == 'term_meta' ){
+			$args['name'] = $this->data['name'];
+		}
 		
-		wp_dropdown_categories( $args );
+		// Remover os atributos que já definidos em args. Eles serão definidos em wp_dropdown_categories()
+		unset($this->data['attr']['name']);
+		unset($this->data['attr']['id']);
+		unset($this->data['attr']['class']);
+		// Criar os atributos auxiliares. Alguns como data-name são importantes para o controle duplicável
+		$attrs = make_attributes($this->data['attr']);
 		
-		// guardar o output em variável
-		$input = ob_get_contents();
-		ob_end_clean();
+		// Criar o dropdown
+		$tdp = wp_dropdown_categories( $args );
+		// adicionar os atributos auxiliares
+		$input = str_replace( '<select ', "<select {$attrs} ", $tdp );
+		
 		return $input;
 	}
 }
