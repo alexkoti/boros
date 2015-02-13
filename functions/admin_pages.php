@@ -168,7 +168,7 @@ class BorosAdminPages {
 					$page_title	= $attr['page_title'], 
 					$menu_title	= $attr['menu_title'], 
 					$capability	= isset($attr['capability']) ? $attr['capability'] : 'manage_options', 
-					$menu_slug	= $page_name, 
+					$menu_slug	= apply_filters('boros_menu_page_slug', $page_name, $attr), 
 					$function	= array( $this, 'output' ),
 					$icon_url	= isset($attr['icon_url']) ? $attr['icon_url'] : '',
 					$position	= isset($attr['position']) ? $attr['position'] : null
@@ -197,7 +197,7 @@ class BorosAdminPages {
 						$page_title		= $subattr['page_title'], 
 						$menu_title		= $subattr['menu_title'], 
 						$capability		= $capability, 
-						$menu_slug		= $subpage_name, 
+						$menu_slug		= apply_filters('boros_menu_page_slug', $subpage_name, $subattr), 
 						$function		= array( $this, 'output' )
 					);
 					
@@ -607,6 +607,7 @@ class BorosAdminPages {
 				if( $tab != $first_tab ){
 					$url = add_query_arg( array( 'tab' => $tab, 'settings-updated' => false ));
 				}
+				$url = apply_filters( 'boros_admin_page_tab_url', $url, $block, $tab, $name );
 				echo "<a class='nav-tab{$class}' href='{$url}'>{$name}</a>";
 			}
 			echo '</h2>';
