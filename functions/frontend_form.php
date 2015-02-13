@@ -791,6 +791,9 @@ class BorosFrontendForm {
 					// atualizar o user_id ao objeto, para que possa ser usado pelos callbacks
 					$this->user_id = $user_id;
 					
+					// carregar novo usuário
+					$this->new_user = get_user_by('id', $user_id);
+					
 					//pal('user_created');
 					//update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
 					if( $this->config['notification_email'] == true )
@@ -875,7 +878,7 @@ class BorosFrontendForm {
 	
 	function edit_user(){
 		// Não pode usar o current user, pois pode ser um admin editando um usuário comum
-		$user = get_user_by( 'id', $this->context['object_id'] );
+		$user = $this->editing_user = get_user_by( 'id', $this->context['object_id'] );
 		
 		/**
 		 * Separar apenas os dados do $_POST permitidos dentro do modelo configurado.
@@ -1177,6 +1180,9 @@ class BorosFrontendForm {
 			else{
 				// adicionar ID ao valid_data, para ser usado pelos callbacks
 				$this->valid_data['ID'] = $this->new_post_id;
+				
+				// carrega o novo post para o objeto
+				$this->post = get_post($this->new_post_id);
 				
 				// fixed taxonomy terms
 				if( !empty( $this->config['taxonomies'] ) ){
@@ -1576,8 +1582,6 @@ class BorosFrontendForm {
 		 */
 		$headers = array();
 		
-		$to = apply_filters('boros_frontend_form_notify_by_email_to', $args['to'], $this->valid_data, $this->valid_meta);
-		
 		// Adicionar CC
 		if( isset($args['cc']) and !empty($args['cc']) ){
 			$emails = (!is_array($args['cc'])) ? explode(',', $args['cc']) : $args['cc'];
@@ -1620,6 +1624,11 @@ class BorosFrontendForm {
 		//pal('title: ' . $title);
 		//pal('message: ' . $message);
 		//die('EMAIL TEST');
+		
+		$to      = apply_filters('boros_frontend_form_notify_by_email_to',      $args['to'], $this, $this->valid_data, $this->valid_meta);
+		$title   = apply_filters('boros_frontend_form_notify_by_email_title',   $title     , $this, $this->valid_data, $this->valid_meta);
+		$message = apply_filters('boros_frontend_form_notify_by_email_message', $message   , $this, $this->valid_data, $this->valid_meta);
+		$headers = apply_filters('boros_frontend_form_notify_by_email_headers', $headers   , $this, $this->valid_data, $this->valid_meta);
 		
 		$sent = wp_mail( $to, $title, $message, $headers );
 	}
