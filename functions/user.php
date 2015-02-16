@@ -69,50 +69,51 @@ function boros_verify_approved_user( $user_id ){
  */
 if( !function_exists('dr_email_login_authenticate') ){
 	remove_filter( 'authenticate', 'wp_authenticate_username_password', 20 );
+	add_filter('authenticate', 'boros_authenticate', 20, 3);
+}
+
+function boros_authenticate($user, $email, $password){
+	//Check for empty fields
+	if(empty($email) || empty ($password)){
+		//create new error object and add errors to it.
+		$error = new WP_Error();
+		
+		if(empty($email)){ //No email
+			$error->add('empty_username', '<strong>ERRO</strong>: O campo email está vazio.');
+		}
+		else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){ //Invalid Email
+			$error->add('invalid_username', __('<strong>ERRO</strong>: Este email é inválido.'));
+		}
+		
+		if(empty($password)){ //No password
+			$error->add('empty_password', __('<strong>ERRO</strong>: A senha está vazia.'));
+		}
+		
+		return $error;
+	}
 	
-	add_filter('authenticate', function($user, $email, $password){
-		//Check for empty fields
-		if(empty($email) || empty ($password)){
-			//create new error object and add errors to it.
-			$error = new WP_Error();
-			
-			if(empty($email)){ //No email
-				$error->add('empty_username', '<strong>ERRO</strong>: O campo email está vazio.');
-			}
-			else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){ //Invalid Email
-				$error->add('invalid_username', __('<strong>ERRO</strong>: Este email é inválido.'));
-			}
-			
-			if(empty($password)){ //No password
-				$error->add('empty_password', __('<strong>ERRO</strong>: A senha está vazia.'));
-			}
-			
-			return $error;
-		}
-		
-		// verificar por user_login
-		$user = get_user_by('login', $email);
-		// verificar por email
-		if( !$user ){
-			$user = get_user_by('email', $email);
-		}
-		
-		if(!$user){
+	// verificar por user_login
+	$user = get_user_by('login', $email);
+	// verificar por email
+	if( !$user ){
+		$user = get_user_by('email', $email);
+	}
+	
+	if(!$user){
+		$error = new WP_Error();
+		$error->add('invalid', __('<strong>ERRO</strong>: O email ou senha estão incorretos.'));
+		return $error;
+	}
+	else{ //check password
+		if(!wp_check_password($password, $user->user_pass, $user->ID)){ //bad password
 			$error = new WP_Error();
 			$error->add('invalid', __('<strong>ERRO</strong>: O email ou senha estão incorretos.'));
 			return $error;
 		}
-		else{ //check password
-			if(!wp_check_password($password, $user->user_pass, $user->ID)){ //bad password
-				$error = new WP_Error();
-				$error->add('invalid', __('<strong>ERRO</strong>: O email ou senha estão incorretos.'));
-				return $error;
-			}
-			else{
-				return $user; //passed
-			}
+		else{
+			return $user; //passed
 		}
-	}, 20, 3);
+	}
 }
 
 
