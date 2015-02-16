@@ -1,3 +1,9 @@
+
+# ignorar biblioteca do facebook
+functions/libs/facebook-php-sdk-v4/
+
+
+
 #################
 ## Eclipse
 #################
