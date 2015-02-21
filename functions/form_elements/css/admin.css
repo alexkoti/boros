@@ -211,6 +211,18 @@
  */
 .dashicons-admin-share:before {content: "\f237";}
 
+/**
+ * DASHBOARD NOTIFICATION WIDGET
+ * Widget de mensagens de alerta
+ * 
+ */
+#boros_dashboard_notifications_widget .inside ol li {
+	color:red;
+}
+#boros_dashboard_notifications_widget ol li .dashicons-dismiss {
+	cursor:pointer;
+}
+
 
 
 /**

@@ -56,6 +56,56 @@ function boros_update_checks(){
 	}
 }
 
+/**
+ * ==================================================
+ * DASHBOARD NOTIFICATIONS ==========================
+ * ==================================================
+ * Mostrar mensagens importantes de aviso de desenvolvimento.
+ * 
+ */
+add_action( 'wp_dashboard_setup', 'boros_dashboard_notifications_widget' );
+function boros_dashboard_notifications_widget(){
+	wp_add_dashboard_widget(
+		'boros_dashboard_notifications_widget',       // Widget slug.
+		'Mensagens e alertas',                        // Title.
+		'boros_dashboard_notifications_widget_output' // Display function.
+	);
+}
+
+function boros_dashboard_notifications_widget_output(){
+	$alerts = get_option('boros_dashboard_notifications');
+	if( !empty($alerts) ){
+		echo '<ol>';
+		foreach( $alerts as $name => $alert ){
+			$nonce = wp_create_nonce($name);
+			echo "<li data-alert-name='{$name}' data-alert-nonce='{$nonce}'>{$alert} <span class='dashicons dashicons-dismiss'></span></li>";
+		}
+		echo '</ol>';
+	}
+	else{
+		echo 'Sem mensagens';
+	}
+}
+
+add_action('admin_enqueue_scripts', 'boros_dashboard_admin_enqueue_scripts');
+function boros_dashboard_admin_enqueue_scripts( $hook ){
+	if( $hook == 'index.php' ){
+		wp_enqueue_script( 'boros-dashboard-script', BOROS_JS . 'boros-dashboard-script.js', 'jquery', null, true );
+	}
+}
+
+add_action('wp_ajax_boros_dashboard_notifications_widget_remove_item', 'boros_dashboard_notifications_widget_remove_item');
+function boros_dashboard_notifications_widget_remove_item(){
+	check_ajax_referer( $_POST['alert'], 'nonce', true );
+	if( current_user_can('activate_plugins') ){
+		$alerts = get_option('boros_dashboard_notifications');
+		unset($alerts[$_POST['alert']]);
+		update_option('boros_dashboard_notifications', $alerts);
+		die(1);
+	}
+	die();
+}
+
 
 
 /**
@@ -122,41 +172,9 @@ function boros_dashboard_right_now( $elements ){
 add_action( 'wp_dashboard_setup', 'boros_remove_dashboard_widget', 1 );
 function boros_remove_dashboard_widget(){
 	global $wp_meta_boxes;
- 	remove_meta_box( 'dashboard_activity', 'dashboard', 'normal' );
- 	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
- 	remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
-} 
-
-
-
-/**
- * ==================================================
- * DASHBOARD NOTIFICATIONS ==========================
- * ==================================================
- * Mostrar mensagens importantes de aviso de desenvolvimento.
- * 
- */
-add_action( 'wp_dashboard_setup', 'boros_dashboard_notifications_widget' );
-function boros_dashboard_notifications_widget(){
-	wp_add_dashboard_widget(
-		'boros_dashboard_notifications_widget',       // Widget slug.
-		'Mensagens e alertas',                        // Title.
-		'boros_dashboard_notifications_widget_output' // Display function.
-	);
-}
-
-function boros_dashboard_notifications_widget_output(){
-	$alerts = get_option('boros_dashboard_notifications');
-	if( !empty($alerts) ){
-		echo '<ol>';
-		foreach( $alerts as $alert ){
-			echo "<li>{$alert}</li>";
-		}
-		echo '</ol>';
-	}
-	else{
-		echo 'Sem mensagens';
-	}
+	remove_meta_box( 'dashboard_activity', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
+	remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
 }
 
 
