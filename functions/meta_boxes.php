@@ -193,14 +193,6 @@ class BorosMetaBoxes {
 		//pre($_POST, '$_POST');
 		//pal('DEBUG!!!');
 		
-		// Buscar o post_type object(informações completas do post_type, não só o slug)
-		$post_type = get_post_type_object( $post->post_type );
-		// Verificar se o usuário tem permissões para editar este post_type
-		if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ){
-			wp_die( 'Sem permissões para editar este conteúdo.' );
-			return $post_id;
-		}
-		
 		/*
 		 * Verificar se é a rotina de autosave ou quick edit. O autosave/quickedit ignora o conteúdo dos meta boxes e acaba 'resetando' os campos
 		 * Em caso de autosave/quick o função é interrompida, retorna o ID do post para o restante do processo de autosave.
@@ -219,6 +211,17 @@ class BorosMetaBoxes {
 			return $post_id;
 		}
 		if( $post->post_type == 'revision' ){
+			return $post_id;
+		}
+		
+		/**
+		 * Verificar permissões.
+		 * Deixado por último para que as verificações anteriores cuidem de pular revisões, ajax e autosave.
+		 * 
+		 */
+		$post_type = get_post_type_object( $post->post_type );
+		if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ){
+			wp_die( "Sem permissões para editar {$post_type->labels->name}." );
 			return $post_id;
 		}
 		
