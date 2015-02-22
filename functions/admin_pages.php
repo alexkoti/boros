@@ -67,7 +67,7 @@ class BorosAdminPages {
 	protected $not_founds = array();
 	
 	/**
-	 * Infomrações da página corrente.
+	 * Informações da página corrente.
 	 * 
 	 * Embora seja preciso registrar as opções para todas as páginas, ainda existe o contexto da página que está sendo exibida. Nesse contexto será executado o output dos elementos com 
 	 * base na config declarada, assim como os enqueues necessários.
@@ -82,6 +82,12 @@ class BorosAdminPages {
 	var $tabs = array();
 	var $current_tab;
 	var $elements;
+	
+	/**
+	 * Configurações carregadas pelos callbacks
+	 * 
+	 */
+	var $loaded_configs = array();
 	
 	/**
 	 * Contexto
@@ -291,11 +297,19 @@ class BorosAdminPages {
 	/**
 	 * Carrega um array de configuração executando uma chamada de função, retornando uma mensagem de erro caso essa função não exista.
 	 * 
+	 * 
 	 */
 	function load_config( $function_name ){
 		if( function_exists( $function_name ) ){
-			$config = call_user_func( $function_name );
-			return update_element_config( $config );
+			if( !array_key_exists($function_name, $this->loaded_configs) ){
+				$config = call_user_func( $function_name );
+				$updated_config = update_element_config( $config );
+				$this->loaded_configs[$function_name] = $updated_config;
+				return $updated_config;
+			}
+			else{
+				return $this->loaded_configs[$function_name];
+			}
 		}
 		else{
 			$error = new WP_Error();
@@ -642,7 +656,13 @@ class BorosAdminPages {
 				$data_value = null;
 				// chamar o valor gravado para o input, caso tenha sido definido um name
 				if( isset( $element['name']) ){
-					$data_value = get_option( $element['name'] );
+					// permitir que a configuração sobreponha o valor gravado no momento da exibição. É diferente de std, que é opcional para quando o valor for vazio.
+					if( isset($element['value']) ){
+						$data_value = $element['value'];
+					}
+					else{
+						$data_value = get_option( $element['name'] );
+					}
 				}
 				
 				// se estiver vazio, usar o valor padrão
