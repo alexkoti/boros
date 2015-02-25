@@ -556,6 +556,7 @@ class BorosFormElement {
 		$this->error_messages();
 		$this->final_input();
 		$this->input = apply_filters( "BFE_{$this->data['type']}_input", $this->input );
+		$this->localize_script();
 	}
 	
 	/**
@@ -856,6 +857,12 @@ class BorosFormElement {
 	}
 	
 	/**
+	 * Definir variáveis dinâmicas que serão usadas pelo javascript
+	 * 
+	 */
+	function localize_script(){}
+	
+	/**
 	 * Processa $this->data['attr'] e $this->attrs
 	 * 
 	 * @todo testar a o foreach $merge
@@ -898,7 +905,7 @@ class BorosFormElement {
 		 * usados em caso de valores não definidos, a string de $valid_attrs['class'] será adicionada. Considera-se que todos os elementos deverão habilitar o atributo 'class'.
 		 * 
 		 * IMPORTANTE: aqui é configurado apenas o array com os attrs pós processados, e cada element deverá manipular(se necessário) esse array fazer o output 
-		 * com make_attributes(), que é semelhante à function maek_dataset()
+		 * com make_attributes(), que é semelhante à function make_dataset()
 		 * 
 		 */
 		if( !empty($this->data['attr']['class']) )
