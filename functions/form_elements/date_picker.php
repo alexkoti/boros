@@ -126,20 +126,20 @@ class BFE_date_picker extends BorosFormElement {
 			$value = boros_parse_args(array(
 				'view' => '',
 				'iso' => '',
-				'hour' => '',
-				'minute' => '',
+				'hour' => '00',
+				'minute' => '00',
 			), $value);
 		}
 		else{
 			$value = boros_parse_args(array(
 				'start_view' => '',
 				'start_iso' => '',
-				'start_hour' => '',
-				'start_minute' => '',
+				'start_hour' => '00',
+				'start_minute' => '00',
 				'end_view' => '',
 				'end_iso' => '',
-				'end_hour' => '',
-				'end_minute' => '',
+				'end_hour' => '00',
+				'end_minute' => '00',
 			), $value);
 		}
 		
