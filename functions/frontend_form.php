@@ -2053,11 +2053,13 @@ class BorosFrontendForm {
 					echo "<input type='hidden' name='{$k}' value='{$v}' />\n";
 				}
 				
+				echo '<div class="row">';
 				foreach( $this->elements as $box ){
-					$parent 	= $box['id'];
-					$itens 		= $box['itens'];
+					$parent    = $box['id'];
+					$itens     = $box['itens'];
+					$box_class = isset($box['class']) ? "group_container {$box['class']}" : 'group_container';
 					
-					echo "<fieldset id='{$parent}' class='group_container row'>";
+					echo "<fieldset id='{$parent}' class='{$box_class}'>";
 					
 						// descrição
 						if( isset($box['title']) ){
@@ -2093,6 +2095,7 @@ class BorosFrontendForm {
 						
 					echo '</fieldset>';
 				}
+				echo '</div>';
 			?>
 			</form>
 			<?php
