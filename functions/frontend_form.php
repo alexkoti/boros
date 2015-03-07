@@ -1687,7 +1687,7 @@ class BorosFrontendForm {
 				$text = str_replace( $tag, $value, $text );
 			}
 			else{
-				if( in_array($this->elements_plain[$name]['type'], $multi) ){
+				if( isset($this->elements_plain[$name]) and in_array($this->elements_plain[$name]['type'], $multi) ){
 					$v = array();
 					foreach( $this->elements_plain[$name]['options']['values'] as $key => $label ){
 						if( in_array($key, $value) ){
@@ -1735,17 +1735,19 @@ class BorosFrontendForm {
 	}
 	
 	function create_form_action(){
+		$action = self_url();
 		if( isset($this->config['action_append']) ){
 			if( is_array($this->config['action_append']) ){
-				echo add_query_arg( $this->config['action_append'], self_url() );
+				$action = add_query_arg( $this->config['action_append'], $action );
 			}
 			else{
-				echo self_url() . $this->config['action_append'];
+				$action .= $this->config['action_append'];
 			}
 		}
-		else{
-			echo self_url();
+		if( isset($this->config['action_anchor']) ){
+			$action .= $this->config['action_anchor'];
 		}
+		echo $action;
 	}
 	
 	/**
