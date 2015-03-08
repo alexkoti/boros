@@ -102,7 +102,7 @@ jQuery(document).ready(function($){
 				var endconfig = jQuery.extend(true, {}, configs.dateconfig);
 				endconfig.altField = altEnd;
 				$.timepicker.dateRange(start_elem, end_elem, {
-					minInterval: (1000*60*30), // meia hora
+					minInterval: 0,
 					start: configs.dateconfig,
 					end:endconfig
 				});
@@ -111,7 +111,7 @@ jQuery(document).ready(function($){
 				var endconfig = jQuery.extend(true, {}, configs.timeconfig);
 				endconfig.altField = altEnd;
 				$.timepicker.timeRange(start_elem, end_elem, {
-					minInterval: (1000*60*30), // meia hora
+					minInterval: 0,
 					start: configs.timeconfig,
 					end:endconfig
 				});
@@ -120,7 +120,7 @@ jQuery(document).ready(function($){
 				var endconfig = jQuery.extend(true, {}, configs.datetimeconfig);
 				endconfig.altField = altEnd;
 				$.timepicker.datetimeRange(start_elem, end_elem, {
-					minInterval: (1000*60*30), // meia hora
+					minInterval: 0,
 					start: configs.datetimeconfig,
 					end:endconfig
 				});

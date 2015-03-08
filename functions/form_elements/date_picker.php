@@ -163,12 +163,12 @@ class BFE_date_picker extends BorosFormElement {
 			echo "<label for='{$this->data['attr']['id']}'>Início:</label> <input type='text' value='{$value['start_view']}' name='{$name}[start_view]' {$attrs} />";
 			echo "<input type='hidden' value='{$value['start_iso']}' name='{$name}[start_iso]' class='input_date_picker_iso' />";
 			if( $this->data['options']['split_time'] === true ){
-				echo "<input type='number' value='{$value['start_hour']}' name='{$name}[start_hour]' min='0' max='24' maxlength='2' class='iptw_50' /> : <input type='number' value='{$value['start_minute']}' name='{$name}[start_minute]' min='0' max='59' step='5' maxlength='2' class='iptw_50' />";
+				echo "<input type='number' value='{$value['start_hour']}' name='{$name}[start_hour]' min='0' max='24' maxlength='2' class='iptw_50' />:<input type='number' value='{$value['start_minute']}' name='{$name}[start_minute]' min='0' max='59' step='5' maxlength='2' class='iptw_50' />";
 			}
-			echo " &nbsp; <label for='{$this->data['attr']['id']}_end'>Fim:</label> <input type='text' value='{$value['end_view']}' name='{$name}[end_view]' id='{$this->data['attr']['id']}_end' class='input_date_picker_range_end' />";
+			echo "<br /><label for='{$this->data['attr']['id']}_end'>Fim: &nbsp;&nbsp; </label> <input type='text' value='{$value['end_view']}' name='{$name}[end_view]' id='{$this->data['attr']['id']}_end' class='input_date_picker_range_end' />";
 			echo "<input type='hidden' value='{$value['end_iso']}' name='{$name}[end_iso]' class='input_date_picker_iso_range_end' />";
 			if( $this->data['options']['split_time'] === true ){
-				echo "<input type='number' value='{$value['end_hour']}' name='{$name}[end_hour]' min='0' max='24' maxlength='2' class='iptw_50' /> : <input type='number' value='{$value['end_minute']}' name='{$name}[end_minute]' min='0' max='59' step='5' maxlength='2' class='iptw_50' />";
+				echo "<input type='number' value='{$value['end_hour']}' name='{$name}[end_hour]' min='0' max='24' maxlength='2' class='iptw_50' />:<input type='number' value='{$value['end_minute']}' name='{$name}[end_minute]' min='0' max='59' step='5' maxlength='2' class='iptw_50' />";
 			}
 		}
 		echo $this->input_helper;
