@@ -16,7 +16,7 @@ class BFE_taxonomy_select extends BorosFormElement {
 	);
 	
 	function add_defaults(){
-		$this->defaults['options']['type'] = 'meta_box'; // post_meta, option, term_meta
+		$this->defaults['options']['type'] = 'post_meta'; // post_meta, option, term_meta
 		$this->defaults['options']['taxonomy'] = 'category';
 		$this->defaults['options']['show_option_all'] = ' — ';
 		$this->defaults['options']['hide_empty'] = false;
