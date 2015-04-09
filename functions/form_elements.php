@@ -1143,6 +1143,19 @@ class BorosFormElement {
 	 * 
 	 */
 	function enqueues(){
+		if( isset( $this->enqueues['core'] ) ){
+			if( isset($this->enqueues['core']['js']) ){
+				foreach( $this->enqueues['core']['js'] as $js ){
+					wp_enqueue_script($js);
+				}
+			}
+			if( isset($this->enqueues['core']['css']) ){
+				foreach( $this->enqueues['core']['css'] as $css ){
+					wp_enqueue_style($css);
+				}
+			}
+		}
+		
 		if( isset( $this->enqueues['css'] ) ){
 			$files = $this->enqueues['css'];
 			$files_array = is_array($files) ? $files : array($files);
