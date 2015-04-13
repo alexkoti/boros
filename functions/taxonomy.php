@@ -346,34 +346,36 @@ function _get_term_parents( $term_id, $taxonomy, $link = false, $separator = ' &
  * ==================================================
  * Retornar um link html formatado do termo pedido pelo slug(preferido) ou título.
  * 
- * @param	string	$term_name 	slug termo desejado.
- * @param	string	$taxonomy 	Default 'category' - nome da taxonomia a qual pertence o termo.
- * @param	string	$id 			custom id para ser exibida no html
- * @param	string	$class 		custom class, será adicionada junto às classes criadas pela função.
- * @param	string	$text 		texto personalizado para exibir, pode ser usado sintaxe printf
- * @param	string	$title 		texto personalizado o atributo 'title' do link
- * @param	string	$list 		definir a saída em <a> ou <li>
- * @param	bool		$echo 		Default true - definir se é para exibir pu retornar o link
- * @param	array	$append		adicionar query string no href do link. Usar array associativo
- * @param	array	$detect 		array que define se é preciso tentar detectar outras condições além das normais para 'ativar' o link, 
- * 								o modelo é array('tipo-de-condicao' => 'valor-para-verificar'). Os tipos e valores são:
- * 								by_post_type	string		verifica o post_type do conteudo corrente
- * 								by_id		int|array	verifica o ID do conteúdo corrente
- * 								by_term		string		verifica o slug do termo corrent
- * 								conditional	mixed		verifica se a condição declarada é true, exemplo: is_category(), is_front_page(), '23 > 12', 'azul' == 'azul', etc
+ * @param    string    $term_name    slug termo desejado.
+ * @param    string    $taxonomy     Default 'category' - nome da taxonomia a qual pertence o termo.
+ * @param    string    $id           custom id para ser exibida no html
+ * @param    string    $class        custom class, será adicionada junto às classes criadas pela função.
+ * @param    string    $text         texto personalizado para exibir, pode ser usado sintaxe printf
+ * @param    string    $title        texto personalizado o atributo 'title' do link
+ * @param    string    $list         definir a saída em <a> ou <li>
+ * @param    bool      $echo         Default true - definir se é para exibir pu retornar o link
+ * @param    array     $append       adicionar query string no href do link. Usar array associativo
+ * @param    array     $detect       array que define se é preciso tentar detectar outras condições além das normais para 'ativar' o link, 
+ *                                   o modelo é array('tipo-de-condicao' => 'valor-para-verificar'). Os tipos e valores são:
+ *                                   by_post_type    string       verifica o post_type do conteudo corrente
+ *                                   by_id           int|array    verifica o ID do conteúdo corrente
+ *                                   by_term         string       verifica o slug do termo corrent
+ *                                   conditional     mixed        verifica se a condição declarada é true, exemplo: is_category(), is_front_page(), '23 > 12', 'azul' == 'azul', etc
+ * @param   object     $term         term object, caso já esteja definido, não será preciso realizar nova busca do termo dentro da função.
  * 
- * @uses		term_is_child_of()
- * @uses		term_is_ancestor_of()
- * @uses		post_is_in_descendant_term()
+ * @uses    term_is_child_of()
+ * @uses    term_is_ancestor_of()
+ * @uses    post_is_in_descendant_term()
  * 
- * @return	string	link html formatado da categoria|termo
+ * @return    string    link html formatado da categoria|termo
  * 
  * @todo resolver como fica a diferenciação de classes com list(<li>) e sem, já que na versão com lista as classes se repetem no <a>
  */
 function formatted_category_link( $args ){
 	return formatted_term_link( $args );
 }
-function formatted_term_link( $args ){
+
+function formatted_term_link( $args, $term = null ){
 	global $post, $wp_query;
 	//pre($wp_query);
 	$defaults = array(
@@ -403,6 +405,11 @@ function formatted_term_link( $args ){
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP );
 	
+	if( is_object($term) ){
+		$term_name = $term->slug;
+		$taxonomy = $term->taxonomy;
+	}
+	
 	if( empty($term_name) )
 		return 'termo não definido';
 	
@@ -410,15 +417,18 @@ function formatted_term_link( $args ){
 	 * Verificar se o term pedido é válido e/ou existe
 	 * Encerra a função caso não exista
 	 */
-	// tenta pegar pelo slug
-	$term = get_term_by('slug', $term_name, $taxonomy);
-	// se falhar tenta pelo name
-	if( $term == false ){
-		$term = get_term_by('name', $term_name, $taxonomy);
+	if( is_null($term) OR !is_object($term) ){
+		// tenta pegar pelo slug
+		$term = get_term_by('slug', $term_name, $taxonomy);
+		// se falhar tenta pelo name
+		if( $term == false ){
+			$term = get_term_by('name', $term_name, $taxonomy);
+		}
+		if( $term == false ){
+			return 'termo não encontrado';
+		}
 	}
-	if( $term == false ){
-		return 'termo não encontrado';
-	}
+	
 	$term_id = (int)$term->term_id;
 	if( empty($term_id) )
 		return 'termo não encontrado';
