@@ -98,6 +98,10 @@ class BorosMetaBoxes {
 		}
 	}
 	
+	/**
+	 * @todo não seria melhor usar $post_object? Fazer testes.
+	 * 
+	 */
 	function output( $post_object, $box ){
 		global $post;
 		//pre($post_object, '$post_object');
@@ -106,7 +110,7 @@ class BorosMetaBoxes {
 		// carregar as mensagens de erro, se houver
 		$errors = get_transient( "{$post->ID}_meta_errors" );
 		
-		$parent 	= $box['args']['id'];
+		$parent     = $box['args']['id'];
 		$meta_itens = $box['args']['itens'];
 		
 		echo "<table class='form-table boros_form_block boros_meta_block' id='{$parent}_inner'>";
