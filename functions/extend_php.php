@@ -193,6 +193,7 @@ function IMAGE( $args, $echo = true ){
  */
 function self_url( $args = array() ){
 	$url = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+	$url = add_query_arg( $args, $url );
 	$url = apply_filters( 'boros_self_url', $url, $args );
 	return $url;
 }
