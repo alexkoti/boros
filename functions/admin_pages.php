@@ -435,11 +435,13 @@ class BorosAdminPages {
 						$validation->add( $element );
 						
 						// as duas validações(fixa e config) irão rodar em sequência nesse filtro, mas apenas no contexto de options.php, com $_POST
+						// ATENÇÂO: sanitize_option_$option_name é um filtro padrão do WordPress
 						add_filter( "sanitize_option_{$element['name']}", array( $validation, 'verify_option' ), 10, 2 );
 						
 						/**
 						 * Adicionar callbacks de sanitize - prioridade tardia para rodar por último.
 						 * Caso não queira que o valor seja gravado, adicione return false no callback.
+						 * ATENÇÂO: sanitize_option_$option_name é um filtro padrão do WordPress
 						 */
 						add_filter( "sanitize_option_{$element['name']}", array( $this, 'callbacks' ), 999, 2 );
 					}
