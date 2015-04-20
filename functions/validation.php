@@ -43,6 +43,7 @@ class BorosValidation {
 	}
 	
 	function add( $element ){
+		$this->current_element = $element;
 		$vals = array();
 		// adicionar validação fixa do elemento
 		$vals[] = array(
@@ -67,7 +68,6 @@ class BorosValidation {
 		//pre($value, "input name:{$element['name']} PRE validation");
 		$newval = $value;
 		if( isset($element['name']) and isset($this->validations[ $element['name'] ]) ){
-			$this->current_element = $element;
 			foreach( $this->validations[ $element['name'] ]['rules'] as $validation ){
 				if( isset($element['duplicable']) and $element['duplicable'] == true and is_array($value) ){
 					//pal('duplicable input');
@@ -113,7 +113,6 @@ class BorosValidation {
 		//pre($this->validations[$option], "Validação para {$option}");
 		//pre($value, "input nam:{$option} PRE validation");
 		if( isset($this->validations[$option]['rules']) ){
-			$this->current_element = $option;
 			foreach( $this->validations[ $option ]['rules'] as $validation ){
 				if( !isset($validation['args']) ){
 					$validation['args'] = false;
