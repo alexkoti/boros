@@ -40,77 +40,83 @@ jQuery(document).ready(function($){
 	 * Lightboxes e downloads dos usuários dos eventos
 	 * 
 	 */
-	var $user_info = $('#bev_lightbox_content');
-	$user_info.dialog({                   
-		'dialogClass'   : 'wp-dialog',           
-		'modal'         : true,
-		'autoOpen'      : false, 
-		'height'        : 500,
-		'width'         : 600,
-		'closeOnEscape' : true,
-	});
-	$('#box_bev_users').delegate('.bev_user_info_lightbox', 'click', function(event){
-		event.preventDefault();
-		$('#bev_lightbox_content').html('');
-		$user_info.dialog('open');
-		
-		var data = {
-			action : $(this).dataset('action'),
-			bev_id : $(this).dataset('bev_id'),
-			user_id : $(this).dataset('user_id')
-		};
-		$.get(ajaxurl, data, function(response){
-			$("#bev_lightbox_content").html(response);
+	if( $('#bev_lightbox_content').length ){
+		var $user_info = $('#bev_lightbox_content');
+		$user_info.dialog({                   
+			'dialogClass'   : 'wp-dialog',           
+			'modal'         : true,
+			'autoOpen'      : false, 
+			'height'        : 500,
+			'width'         : 600,
+			'closeOnEscape' : true,
 		});
-	});
+		$('#box_bev_users').delegate('.bev_user_info_lightbox', 'click', function(event){
+			event.preventDefault();
+			$('#bev_lightbox_content').html('');
+			$user_info.dialog('open');
+			
+			var data = {
+				action : $(this).dataset('action'),
+				bev_id : $(this).dataset('bev_id'),
+				user_id : $(this).dataset('user_id')
+			};
+			$.get(ajaxurl, data, function(response){
+				$("#bev_lightbox_content").html(response);
+			});
+		});
+	}
 	
 	/**
 	 * Mover usuário entre filas
 	 * 
 	 */
-	$('#box_bev_users').delegate('.bev_user_action', 'click', function(event){
-		$btn = $(this);
-		event.preventDefault();
-		$('#bev_users_loading').fadeIn('medium', function(){
-			var data = {
-				action : $btn.dataset('action'),
-				bev_id : $btn.dataset('bev_id'),
-				user_id : $btn.dataset('user_id')
-			};
-			$.post(ajaxurl, data, function(response){
-				$('#box_bev_users').html(response);
-				$('#bev_users_loading').fadeOut();
-				
-				$('#bev_slots').boros_reload_element();
-				$('#bev_extra_info_box').lock_extra_info();
+	if( $('#box_bev_users').length ){
+		$('#box_bev_users').delegate('.bev_user_action', 'click', function(event){
+			$btn = $(this);
+			event.preventDefault();
+			$('#bev_users_loading').fadeIn('medium', function(){
+				var data = {
+					action : $btn.dataset('action'),
+					bev_id : $btn.dataset('bev_id'),
+					user_id : $btn.dataset('user_id')
+				};
+				$.post(ajaxurl, data, function(response){
+					$('#box_bev_users').html(response);
+					$('#bev_users_loading').fadeOut();
+					
+					$('#bev_slots').boros_reload_element();
+					$('#bev_extra_info_box').lock_extra_info();
+				});
 			});
 		});
-	});
+	}
 	
 	/**
 	 * Enviar/Reenviar manualmente o email de notificação para o usuário
 	 * 
 	 */
-	$('.bev_user_notification_email').click(function(){
-		var ok = confirm('Deseja enviar um email para o usuário?');
-		if( ok == true ){
-			var $btn = $(this);
-			var $parent = $btn.closest('.bev_user_notification_email_box');
-			var $loading = $parent.find('.loading');
-			
-			$loading.show();
-			var data = {
-				action: 'bev_user_notification_email',
-				bev_id: $btn.dataset('bev_id'),
-				user_id: $btn.dataset('user_id'),
+	if( $('.bev_user_notification_email').length ){
+		$('.bev_user_notification_email').click(function(){
+			var ok = confirm('Deseja enviar um email para o usuário?');
+			if( ok == true ){
+				var $btn = $(this);
+				var $parent = $btn.closest('.bev_user_notification_email_box');
+				var $loading = $parent.find('.loading');
+				
+				$loading.show();
+				var data = {
+					action: 'bev_user_notification_email',
+					bev_id: $btn.dataset('bev_id'),
+					user_id: $btn.dataset('user_id'),
+				}
+				$.post( ajaxurl, data, function( response ){
+					alert(response);
+					$loading.hide();
+				});
 			}
-			$.post( ajaxurl, data, function( response ){
-				alert(response);
-				$loading.hide();
-			});
-		}
-		return false;
-	});
+			return false;
+		});
+	}
 	
 });
 
