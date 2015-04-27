@@ -43,10 +43,10 @@ class BFE_special_image extends BorosFormElement {
 	 */
 	function add_defaults(){
 		$options = array(
-			'image_size' 	=> 'thumbnail',
-			'width' 	=> 100,
+			'image_size'    => 'thumbnail',
+			'width'         => 100,
+			'layout'        => 'row',
 			'default_image' => false,
-			'layout' 		=> 'row',
 		);
 		$this->defaults['options'] = $options;
 		//$this->defaults['attr']['dataset']['image_size'] = 'lala';
@@ -248,7 +248,8 @@ function special_image_load( $name, $attch_id, $opts ){
 		'layout' 		=> 'row',
 	);
 	$options = boros_parse_args( $defaults, $opts );
-	//pre($options);
+	//pre($opts, 'opts');
+	//pre($options, 'options');
 	
 	// existe uma imagem
 	if( !empty($attch_id) ){
@@ -304,15 +305,15 @@ function special_image_load( $name, $attch_id, $opts ){
 add_action('wp_ajax_special_image_swap', 'special_image_swap');
 function special_image_swap(){
 	//pal('special_image_swap');
-	$action 			= $_POST['action'];
-	$context 			= $_POST['context'];
-	$value 				= $_POST['value'];
+	$action  = $_POST['action'];
+	$context = $_POST['context'];
+	$value   = $_POST['value'];
 	
 	// carregar config do elemento
 	$elem = load_element_config( $context );
 	
 	// salvar caso não pertença a um duplicate
-	if( isset($elem->context['in_duplicate_group']) and $elem->context['in_duplicate_group'] == false ){
+	if( isset($context['in_duplicate_group']) and $context['in_duplicate_group'] == false ){
 		if( $context['type'] == 'option' ){
 			update_option( $context['name'], $value );
 		}
@@ -323,7 +324,7 @@ function special_image_swap(){
 			update_user_meta( $context['user_id'], $context['name'], $value );
 		}
 	}
-	$options = isset($elem->element['options']) ? $elem->element['options'] : false;
+	$options = isset($elem['options']) ? $elem['options'] : false;
 	special_image_load( $context['name'], $value, $options );
 	die();
 }
