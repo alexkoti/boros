@@ -146,7 +146,8 @@
 .duplicate_element:first-child {
 	border-top:none;
 }
-.duplicate_element label {
+.duplicate_element label, 
+.duplicate_element .non_click_label {
 	font-size:95%;
 }
 /* padding diferenciado para liberar mais espaço */
