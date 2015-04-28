@@ -794,9 +794,19 @@ class BorosFormElement {
 			$this->label = "<label for='{$for}'>{$this->data['label']}</label>{$this->label_helper}<br class='label_divider' />";
 		}
 		
-		// aplicar filtros
+		// @todo deprecated : aplicar filtros - formato antigo que envia apenas o $this->data
 		$this->label = apply_filters( "BFE_{$this->data['type']}_label", $this->label, $this->data );
 		$this->label = apply_filters( "BFE_{$this->data['name']}_label", $this->label, $this->data );
+		
+		// Novos filtros, que enviam todo o objeto, assim é possível utilizar o valor do campo, context e configuração inicial.
+		// nome comum quando o elemento está em um campo duplicável, esse filtro será aplicado em todas as cópias
+		$this->label = apply_filters( $elem_name, $this->label, $this );
+		
+		// filtro genérico para o tipo - será aplicado em todos elementos do tipo em qualquer contexto
+		$this->label = apply_filters( "boros_form_element_{$this->data['type']}_label", $this->label, $this );
+		
+		// filtro específico de id - será aplicado em um único elemento
+		$this->label = apply_filters( "boros_form_element_{$this->data['attr']['id']}_label", $this->label, $this );
 		
 		// remover caso o label resultante seja vazio
 		if( $this->label == "<label for='{$for}'></label><br class='label_divider' />" )
