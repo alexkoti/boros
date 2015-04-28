@@ -800,6 +800,7 @@ class BorosFormElement {
 		
 		// Novos filtros, que enviam todo o objeto, assim é possível utilizar o valor do campo, context e configuração inicial.
 		// nome comum quando o elemento está em um campo duplicável, esse filtro será aplicado em todas as cópias
+		$elem_name = isset($this->data['parent']) ? "boros_form_element_{$this->data['parent']}_{$this->data['attr']['name']}_label" : "boros_form_element_{$this->data['attr']['name']}_label";
 		$this->label = apply_filters( $elem_name, $this->label, $this );
 		
 		// filtro genérico para o tipo - será aplicado em todos elementos do tipo em qualquer contexto
