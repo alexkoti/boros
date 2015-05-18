@@ -73,7 +73,7 @@ function boros_dashboard_notifications_widget(){
 }
 
 function boros_dashboard_notifications_widget_output(){
-	$alerts = get_option('boros_dashboard_notifications');
+	$alerts = get_option('boros_dashboard_notifications'); //pre($alerts);
 	if( !empty($alerts) ){
 		echo '<ol>';
 		foreach( $alerts as $name => $alert ){
@@ -97,12 +97,10 @@ function boros_dashboard_admin_enqueue_scripts( $hook ){
 add_action('wp_ajax_boros_dashboard_notifications_widget_remove_item', 'boros_dashboard_notifications_widget_remove_item');
 function boros_dashboard_notifications_widget_remove_item(){
 	check_ajax_referer( $_POST['alert'], 'nonce', true );
-	if( current_user_can('activate_plugins') ){
-		$alerts = get_option('boros_dashboard_notifications');
-		unset($alerts[$_POST['alert']]);
-		update_option('boros_dashboard_notifications', $alerts);
-		die(1);
-	}
+	$alerts = get_option('boros_dashboard_notifications');
+	unset($alerts[$_POST['alert']]);
+	update_option('boros_dashboard_notifications', $alerts);
+	$alerts = get_option('boros_dashboard_notifications'); print_r($alerts); echo 'aaaa';
 	die();
 }
 
