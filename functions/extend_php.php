@@ -414,7 +414,7 @@ function decimal_options_list($start, $end, $value, $pad = 0){
  */
 function boros_print_css( $css, $style_tag = true ){
 	if( !empty( $css ) ){
-		echo '<style type="text/css">';
+		if( $style_tag == true ){ echo '<style type="text/css">'; }
 		foreach( $css as $seletor => $declaration ){
 			echo "\n{$seletor} {\n";
 			foreach( $declaration as $prop => $val ){
@@ -422,8 +422,18 @@ function boros_print_css( $css, $style_tag = true ){
 			}
 			echo "\n}\n";
 		}
-		echo '</style>';
+		if( $style_tag == true ){ echo '</style>'; }
 	}
+}
+
+/**
+ * Converter cor hex #ffffff para rgba.
+ * @link http://stackoverflow.com/a/15202130
+ * 
+ */
+function boros_color_hex_to_rgba( $color, $opacity = 1 ){
+	list($r, $g, $b) = sscanf($color, "#%02x%02x%02x");
+	return "rgba({$r}, {$g}, {$b}, {$opacity})";
 }
 
 /**
