@@ -51,7 +51,19 @@ function formatted_post_type_link( $args ){
 	
 	// url do link
 	$link = array();
-	$link['url'] = get_post_type_archive_link( $post_type );
+	// caso seja 'post', devolver a página definida para leitura de posts(home.php)
+	if( $post_type == 'post' ){
+		$blog_url = get_option('page_for_posts');
+		if( !empty($blog_url) ){
+			$link['url'] = get_permalink($blog_url);
+		}
+		else{
+			$link['url'] = home_url('/');
+		}
+	}
+	else{
+		$link['url'] = get_post_type_archive_link( $post_type );
+	}
 	$link['echo'] = $echo;
 	
 	/* 
