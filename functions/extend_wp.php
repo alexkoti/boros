@@ -877,7 +877,7 @@ class Boros_Pagination {
 			}
 			
 			if( $i == $this->current ){
-				$class[] = 'current';
+				$class[] = 'current active';
 				$this->pages[] = $this->items[] = $this->set_item( $i, 'span', $class, $this->options['current_text'], false, '%PAGE_NUMBER%' );
 				$timeline = 'larger';
 			}
@@ -938,15 +938,15 @@ class Boros_Pagination {
 		if( count($this->items) < 3 and $this->options['always_show'] == false ){
 			return '';
 		}
-		$li_class = empty($this->options['li_class']) ? " class='{$this->options['li_class']}'" : '';
+		$li_class = empty($this->options['li_class']) ? $this->options['li_class'] : '';
 		echo "<ul class='pagenavi_list pagination {$this->options['ul_class']}'>\n";
 		foreach( $this->items as $item ){
 			if( $item['page'] > 0 ){
 				if( $item['type'] == 'page' ){
-					echo "<li{$li_class}><a href='{$item['link']}' class='{$item['class']} {$this->options['link_class']}'>{$item['text']}</a></li>";
+					echo "<li class='{$li_class} {$item['class']}'><a href='{$item['link']}' class='{$item['class']} {$this->options['link_class']}'>{$item['text']}</a></li>";
 				}
 				else{
-					echo "<li{$li_class}><span class='{$item['class']}'>{$item['text']}</span></li>";
+					echo "<li class='{$li_class} {$item['class']}'><span class='{$item['class']}'>{$item['text']}</span></li>";
 				}
 			}
 		}
