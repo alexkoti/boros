@@ -10,7 +10,7 @@ mklink /d "%jobPath%\wp-content\languages" "D:\PHP\xampp\htdocs\xampp\sites\boro
 echo "%jobPath%\wp-content\languages" "D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\languages"
 
 :: apontar plugins
-set "list=boros force-regenerate-thumbnails wp-quick-pages better-lorem boros-newsletter-extended user-role-editor"
+set "list=boros force-regenerate-thumbnails wp-quick-pages fakerpress boros-newsletter-extended user-role-editor"
 set "pluginsFolder=D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins"
 for %%i in (%list%) do (
 	mklink /d "%jobPath%\wp-content\plugins\%%i" "%pluginsFolder%\%%i"
