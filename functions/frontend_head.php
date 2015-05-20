@@ -20,7 +20,7 @@ class BorosJs {
 	);
 	
 	/**
-	 * Jquery no footer
+	 * jQuery no footer
 	 * Ao instanciar o objeto, define o jquery do CDN Google com fallback para jquery local, via wp_localize_script
 	 * 
 	 */
@@ -28,12 +28,13 @@ class BorosJs {
 		add_action( 'wp_head', array($this, 'cond_head') );
 		add_action( 'wp_footer', array($this, 'cond_footer') );
 		
-		// definir o local do jquery
+		// definir o local do jquery - pode ser o jquery do wp-includes
 		if( defined('JQUERY_URL') ){
 			$jquery = JQUERY_URL;
 		}
 		else{
-			$jquery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js';
+			$jquery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+			define('JQUERY_URL', $jquery);
 		}
 		
 		$defaults = array(
