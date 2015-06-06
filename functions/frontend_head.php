@@ -317,7 +317,6 @@ function opengraph_tags( $args = false ){
 	}
 	
 	$defaults = array(
-		'sufix'       => get_bloginfo('name') . ' - ' . get_bloginfo('description'),
 		'wp_title'    => wp_title( ' : ', false, 'right' ),
 		'separator'   => ' : ',
 		'p'           => false,
@@ -327,12 +326,12 @@ function opengraph_tags( $args = false ){
 		'og_url'      => home_url( '/' ),
 		'separator'   => '',
 	);
+	boros_parse_args( $defaults, $args );
 	extract( $defaults );
 	
 	if( is_singular() ){
 		global $post;
 		$p = $post;
-		$sufix = get_bloginfo( 'name' );
 		
 		$separator = ' : ';
 		$og_type = 'article';
@@ -391,7 +390,7 @@ function opengraph_tags( $args = false ){
 	};
 	
 	$og_items = apply_filters('opengraph_items', array(
-		'title'       => $wp_title . $sufix,
+		'title'       => $wp_title,
 		'wp_title'    => $wp_title,
 		'separator'   => $separator,
 		'post'        => $p,
