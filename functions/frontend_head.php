@@ -301,8 +301,12 @@ class BorosCss {
 /**
  * As propriedades 'image_url', 'locality', 'region' e 'country_name' deverão ser adicionadas como options.
  * 
+ * 
+ * $args['thumbnail_meta_name'] - escolher outro post_meta para buscar a imagem
+ * 
  */
-function opengraph_tags(){
+function opengraph_tags( $args = false ){
+	
 	$og_image = get_option('og_image');
 	if( !empty($og_image) ){
 		$image = wp_get_attachment_image_src( get_option('og_image'), 'full' );
@@ -355,7 +359,18 @@ function opengraph_tags(){
 			}
 		}
 		//criar novo thumb
-		$thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'full' );
+		// custom meta name?
+		if( isset($args['thumbnail_meta_name']) ){
+			$thumb_id = get_post_meta($post->ID, $args['thumbnail_meta_name'], true);
+			// fallback de volta para o _thumbnail_id
+			if( empty($thumb_id) ){
+				$thumb_id = get_post_thumbnail_id($post->ID);
+			}
+		}
+		else{
+			$thumb_id = get_post_thumbnail_id($post->ID);
+		}
+		$thumb = wp_get_attachment_image_src( $thumb_id, 'full' );
 		if( $thumb ){
 			$image_url = $thumb['0'];
 		}
