@@ -60,13 +60,14 @@ print_r($const['user']);
  * 
  * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
  */
-define ('VERSION', '1.0');
 function version_id(){
 	if( WP_DEBUG ){
-		//return '1';
 		return time(); //para remover totalmente o cache;
 	}
-	return VERSION;
+	if( defined( 'BOROS_VERSION_ID' ) ){
+		return BOROS_VERSION_ID;
+	}
+	return apply_filters('boros_version_id', '1.0');
 }
 
 

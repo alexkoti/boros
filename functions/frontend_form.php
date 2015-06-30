@@ -523,7 +523,7 @@ class BorosFrontendForm {
 	 * O plugin wp-email-login interfere nesse método, pois em wp_signon() é afetado pelo filtro 'authenticate', portanto, caso o plugin esteja ativo, não é necessário 
 	 * realizar outras verificações aqui para permitir o login pelo email.
 	 * 
-	 * @todo melhorar a filtro das mensagens> Atualmente as strings se repetem nos arquivos boros/funcitons/user.php e página de opções section_users.php do plugin child
+	 * @todo melhorar a filtro das mensagens> Atualmente as strings se repetem nos arquivos boros/functions/user.php e página de opções section_users.php do plugin child
 	 */
 	function login(){
 		// é preciso para pode recarregar os inputs no reload

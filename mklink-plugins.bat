@@ -6,7 +6,8 @@
 set "jobPath="
 set /p jobPath="Digite o caminho da pasta de plugin do job:"
 set "pluginsFolder=D:\PHP\xampp\htdocs\xampp\sites\boros\boros\wp-content\plugins"
-set "list=force-regenerate-thumbnails wp-email-login wp-quick-pages better-lorem boros-newsletter-extended user-role-editor"
+set "list="
+set /p "list=Digite os slugs dos plugins que deseja adicionar, separados por espaço:"
 
 for %%i in (%list%) do (
 	mklink /d "%jobPath%\%%i" "%pluginsFolder%\%%i"
