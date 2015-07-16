@@ -140,6 +140,7 @@ class BorosMetaBoxes {
 			 */
 			if( isset( $meta_item['name'] ) ){
 				// separar entre os valores de coluna de wp_post e wp_postmeta
+				// post_content é renderizado no wp_editor com o name 'content' apenas, mas para o elemento customizado, deverá ser usado o 'post_content'
 				if( in_array($meta_item['name'], $this->core_post_fields) ){
 					$data_value = $post->$meta_item['name'];
 				}
@@ -194,7 +195,7 @@ class BorosMetaBoxes {
 	}
 	
 	function save( $post_id, $post ){
-		//pre($_POST, '$_POST');
+		//pre($_POST, '$_POST'); die();
 		//pal('DEBUG!!!');
 		
 		/*
