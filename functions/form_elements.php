@@ -572,11 +572,11 @@ class BorosFormElement {
 	function includes(){}
 	
 	/**
-	 * Para modificar os defaults, mudar a var $defaults na classe extendida(requer declarar os defaults completos). Para apenas adicionar, usar add_defaults(), que roda no início ou
-	 * filter_data(), que roda ao final
+	 * Para modificar os defaults, mudar a var $defaults na classe extendida(requer declarar os defaults completos).
+	 * Para apenas adicionar, usar add_defaults(), que roda no início ou filter_data(), que roda ao final
 	 * 
 	 */
-	function set_defaults(){
+	final function set_defaults(){
 		$this->add_defaults();
 		//$this->defaults['attr'] = $this->valid_attrs;
 		$this->data = boros_parse_args( $this->defaults, $this->data );
@@ -618,7 +618,7 @@ class BorosFormElement {
 	 * Filtrar $this->data
 	 * Necessário caso seja preciso pós-processar algum valor depois que recebe a configuração. Ex adicionar dataset em special_image
 	 *
-	 * ATENçÃO: é preciso editar $this->data e não $this->defaults
+	 * ATENÇÃO: é preciso editar $this->data e não $this->defaults
 	 */
 	function filter_data(){}
 	
@@ -645,7 +645,7 @@ class BorosFormElement {
 	
 	/**
 	 * @TODO
-	 * callbacks fixos do elemento
+	 * Define os callbacks fixos do elemento. Deve ser definido na classe extendida.
 	 */
 	static function set_callback_functions(){
 		return self::$callbacks;
@@ -688,6 +688,25 @@ class BorosFormElement {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Configurar corretamente o name do elemento
+	 * 
+	 * Caso seja um duplicable == true, adicionar os índices, ex. name="lorem[0]", name="lorem[1]"
+	 * Caso seja o input possuir array, ex. name="lorem[ipsum]"
+	 * Caso possua array e seja duplicable, será aplicado o modelo name="lorem[0][ipsum]", para que a array desja corretamente enviado no POST
+	 * 
+	 */
+	function set_name( $attrs ){
+		$name = $attrs['dataset']['name'];
+		if( isset($this->data['duplicable']) and $this->data['duplicable'] == true ){
+			$name = "{$attrs['dataset']['name']}[{$this->data['index']}]";
+		}
+		if( isset($attrs['dataset']['key']) ){
+			$name .= "[{$attrs['dataset']['key']}]";
+		}
+		return $name;
 	}
 	
 	/**
@@ -838,7 +857,7 @@ class BorosFormElement {
 		 */
 		if( isset($this->data['duplicable']) and $this->data['duplicable'] == true ){
 			$i = 0;
-			$name = $this->data['name'];
+			//$name = $this->data['name'];
 			
 			// caso possua apenas um valor, transformar em array
 			if( !is_array($this->data_value) ){
@@ -847,8 +866,9 @@ class BorosFormElement {
 			
 			$this->final_input .= '<ul class="duplicable_input_box">';
 			foreach($this->data_value as $data_value){
-				$this->data['attr']['id'] = "{$name}_{$i}";
-				$this->data['attr']['name'] = $name . '[]';
+				$this->data['attr']['id'] = "{$this->data['name']}_{$i}";
+				$this->data['index'] = $i;
+				//$this->data['attr']['name'] = $name . '[]';
 				//pal($this->data['attr']['id'], 'ID');
 				
 				$this->set_attributes();
@@ -895,7 +915,7 @@ class BorosFormElement {
 		//	$this->data['attr']['name'] .= '[]';
 		//}
 		
-		// 'id' - caso não tenha siso definido, usa o valor de 'name'. Em geral virá definido em duplicable
+		// 'id' - caso não tenha sido definido, usa o valor de 'name'. Já virá definido em duplicable
 		$this->data['attr']['id'] = empty($this->data['attr']['id']) ? $this->data['name'] : $this->data['attr']['id'];
 		
 		// 'rel' - caso não tenha sido definido, usa o valor de 'id'
@@ -905,6 +925,8 @@ class BorosFormElement {
 		$size = !empty($this->data['size']) ? "iptw_{$this->data['size']}" : '';
 		
 		/**
+		 * Definir as classes do elemento
+		 * 
 		 * Irá mesclar os seguintes dados:
 		 * 'boros_form_input' 	- em todos os elementos
 		 * 'input_{type}' 		- para cada tipo de elemento
@@ -913,16 +935,18 @@ class BorosFormElement {
 		 * $dependent 		- definição que possui um campo dependente
 		 * 
 		 * E por último irá adicionar a string definida no elemento em $valid_attrs['class']. Diferente dos atributos definidos em add_defaults(), que apenas definem valores a serem
-		 * usados em caso de valores não definidos, a string de $valid_attrs['class'] será adicionada. Considera-se que todos os elementos deverão habilitar o atributo 'class'.
+		 * usados em caso de valores não definidos, a string de $valid_attrs['class'] será adicionada. Considera-se que todos os elementos deverão usar o atributo 'class'.
 		 * 
 		 * IMPORTANTE: aqui é configurado apenas o array com os attrs pós processados, e cada element deverá manipular(se necessário) esse array fazer o output 
 		 * com make_attributes(), que é semelhante à function make_dataset()
 		 * 
 		 */
-		if( !empty($this->data['attr']['class']) )
+		if( !empty($this->data['attr']['class']) ){
 			$class = "{$this->data['attr']['class']} {$this->valid_attrs['class']}";
-		else
+		}
+		else{
 			$class = isset($this->valid_attrs['class']) ? $this->valid_attrs['class'] : '';
+		}
 		
 		$dependency = '';
 		if( isset($this->data['dependencies']) ){
@@ -1205,6 +1229,20 @@ class BorosFormElement {
 				}
 			}
 		}
+	}
+	
+	function make_attributes( $attrs = '', $prefix = '' ){
+		$attrs['name'] = $this->set_name($attrs);
+		$out = '';
+		foreach( $attrs as $k => $v ){
+			if( $v !== false and ($k != 'dataset' and $k != 'elem_class') ){
+				$out .= " {$prefix}{$k}='{$v}'";
+			}
+			elseif( $k == 'dataset' ){
+				$out .= make_attributes( $v, 'data-' );
+			}
+		}
+		return $out;
 	}
 }
 
