@@ -517,6 +517,27 @@ function sort_array_by_array( $array, $sortorder, $field = 'ID' ){
 
 
 
+/**
+ * ==================================================
+ * KSORT RECURSIVE ==================================
+ * ==================================================
+ * 
+ * ksort() recursive
+ * @link https://gist.github.com/cdzombak/601849
+ * 
+ */
+function ksortRecursive( &$array, $sort_flags = SORT_REGULAR ){
+	if(!is_array($array)){
+		return false;
+	}
+	ksort( $array, $sort_flags );
+	foreach( $array as &$arr ){
+		ksortRecursive( $arr, $sort_flags );
+	}
+	return true;
+}
+
+
 
 /**
  * ==================================================
