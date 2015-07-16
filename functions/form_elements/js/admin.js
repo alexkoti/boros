@@ -207,7 +207,7 @@ jQuery(document).ready(function($){
 			forcePlaceholderSize:true,
 			handle:'.duplicable_move',
 			opacity: 0.8,
-			//update: re_index_duplicates,
+			update: re_index_duplicables,
 			axis: 'y'
 		});
 	};
@@ -226,6 +226,7 @@ jQuery(document).ready(function($){
 		$element.clone().addClass('loading').hide().insertAfter($element).slideDown(400, function(){
 			$(this).removeClass('loading');
 			$box.removeClass('loading');
+			re_index_duplicables();
 		});
 	});
 	
@@ -240,8 +241,41 @@ jQuery(document).ready(function($){
 		$element.addClass('loading').slideUp(400, function(){
 			$(this).remove();
 			$box.removeClass('loading');
+			re_index_duplicables();
 		});
 	});
+	
+	function re_index_duplicables(){
+		$('.duplicable_input_box').each(function(){
+			var index = 0;
+			// O 'name' padrão, não indexado é armazenado em 'data-name'
+			$(this).find('.duplicable_input_item').each(function(){
+				index = $(this).index();
+				
+				$(this).find('.boros_form_input').each(function(){
+					var name = $(this).attr('data-name');
+					var key = $(this).attr('data-key');
+					if( typeof key == 'undefined' ){
+						var new_id = name + '_' + index;
+						var new_name = name + '[' + index + ']';
+					}
+					else{
+						var new_id = name + '_' + index + '_' + key;
+						var new_name = name + '[' + index + '][' + key + ']';
+					}
+					
+					// name
+					$(this).attr({
+						id: new_id,
+						name: new_name
+					});
+					
+					// data-input
+					$(this).closest('.boros_form_element').find('[data-input]').attr('data-input', new_name);
+				});
+			});
+		});
+	}
 	
 	
 	

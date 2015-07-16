@@ -11,6 +11,22 @@
 
 /**
  * ==================================================
+ * CLASS LOADER =====================================
+ * ==================================================
+ * Loader simples de classes
+ * 
+ * @todo: melhorar para um autolad PSR
+ * 
+ */
+function boros_calendar( $config ){
+	require_once('class-calendar.php');
+	return new Boros_Calendar( $config );
+}
+
+
+
+/**
+ * ==================================================
  * CUSTOM EXCERPT ===================================
  * ==================================================
  * Criar um excerpt com base em qualquer string. Baseado no código core do wp, removendo tags, shortcodes, porém mais simplificado, podendo ser aplicado em qulauer tipo de string.

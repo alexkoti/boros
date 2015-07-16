@@ -679,7 +679,7 @@ table.boros_taxonomy_block {
 	visibility:hidden;
 }
 .duplicable_input_item .duplicable_input .boros_form_input {
-	width:99% !important;
+	/* width:99% !important; */
 }
 .duplicable_input_box .ui-sortabled {
 	border:1px dashed #DFDFDF;
