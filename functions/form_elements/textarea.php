@@ -9,7 +9,7 @@
 
 class BFE_textarea extends BorosFormElement {
 	/**
-	 * ATENçÃO: foi removido o 'value' da lista, pois ele não possui esse atributo.
+	 * ATENÇÃO: foi removido o 'value' da lista, pois ele não possui esse atributo.
 	 * 
 	 */
 	var $valid_attrs = array(

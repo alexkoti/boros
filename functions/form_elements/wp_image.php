@@ -36,7 +36,6 @@ class BFE_wp_image extends BorosFormElement {
 			'layout'        => 'row',
 		);
 		$this->defaults['options'] = $options;
-		//$this->defaults['attr']['dataset']['image_size'] = 'lala';
 	}
 	
 	/**
