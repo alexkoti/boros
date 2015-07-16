@@ -11,8 +11,8 @@ class BFE_text extends BorosFormElement {
 	/**
 	 * Lista de atributos aceitos pelo elemento, e seus respectivos valores padrão.
 	 * Caso seja definido qualquer outro atributo no array de configuração ele será ignorado.
-	 * Definir qualquer valor padrão ou string vazia(''), irá obrigatoriamente renderizar o atributo, independente do valor. Valor padrão 'false' só irá renderizar o atributo caso ele
-	 * seja definido no array de configuração.
+	 * Definir qualquer valor padrão ou string vazia(''), irá obrigatoriamente renderizar o atributo, independente do valor. 
+	 * Valor padrão 'false' só irá renderizar o atributo caso ele seja definido no array de configuração.
 	 * 
 	 * Atenção: NÃO INCLUIR dataset - este atributo será adicionado em set_elements(), que irá separar os diversos datasets necessários
 	 */
@@ -34,7 +34,7 @@ class BFE_text extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		
 		/**
 		 * Possibilitar campos de texto com validação de navegador('date', 'email', 'range', etc)
@@ -58,13 +58,14 @@ class BFE_text extends BorosFormElement {
 			foreach( $this->data['options']['split'] as $name => $attr ){
 				$item_value = isset($value[$name]) ? $value[$name] : '';
 				$item_attr = boros_parse_args($this->data['attr'], $attr);
-				$item_attr['name']  = $this->data['name'] . "[{$name}]";
-				$item_attr['id']    = "{$this->data['name']}_{$name}";
-				$item_attr['class'] = "{$this->data['attr']['class']} {$item_attr['class']} splitted";
+				//$item_attr['dataset']['name'] = $this->data['attr']['name'];
+				$item_attr['dataset']['key']  = $name;
+				$item_attr['id']              = "{$this->data['name']}_{$name}";
+				$item_attr['class']           = "{$this->data['attr']['class']} {$item_attr['class']} splitted";
 				
 				$input_helper = isset($attr['input_helper']) ? "<span class='description'>{$attr['input_helper']}</span>" : '';
 				
-				$sattr = make_attributes($item_attr);
+				$sattr = $this->make_attributes($item_attr);
 				$input[] = "{$input_helper}<input type='text' value='{$item_value}' {$sattr} /> ";
 			}
 			$input = implode( $separator, $input );

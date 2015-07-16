@@ -33,12 +33,13 @@ class BFE_select extends BorosFormElement {
 	
 	function set_input( $value = null ){
 		if( isset($this->data['options']['values']) ){
+			
 			// verificar valor inicial, caso não haja nenhum valor gravado
-			if( empty($this->data_value) ){
+			if( empty($value) ){
 				$data_value = $this->data['std'];
 			}
 			else{
-				$data_value = $this->data_value;
+				$data_value = $value;
 			}
 			
 			/**
@@ -58,7 +59,7 @@ class BFE_select extends BorosFormElement {
 				$other_attr = make_attributes( boros_parse_args( $this->data['attr'], $custom_attr ) );
 				$input_other = " <input type='text'{$other_attr} />";
 			}
-			$attrs = make_attributes($this->data['attr']);
+			$attrs = $this->make_attributes($this->data['attr']);
 			$input = "<select {$attrs}>";
 			// adicionar o 'option_none', caso setado
 			if( isset($this->data['options']['option_none']) and $this->data['options']['option_none'] !== false ){
