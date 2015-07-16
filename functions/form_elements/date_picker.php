@@ -120,6 +120,7 @@ class BFE_date_picker extends BorosFormElement {
 		$this->data['attr']['dataset']['show_second']   = $this->data['options']['show_second'];
 		$this->data['attr']['dataset']['months_number'] = $this->data['options']['months_number'];
 		$this->data['attr']['dataset']['date_range']    = $this->data['options']['date_range'];
+		$this->data['attr']['class'] .= ' iptw_100';
 		//pre($this->data['attr']['dataset']);
 		
 		if( $this->data['options']['date_range'] === false ){
@@ -147,19 +148,30 @@ class BFE_date_picker extends BorosFormElement {
 		//pre($value);
 		//pre($this->data['options'], 'options');
 		//pre($this->data['attr'], 'attr');
-		$name = $this->data['attr']['name'];
-		unset($this->data['attr']['name']);
-		$attrs = make_attributes($this->data['attr']);
+		//$name = $this->set_name();
 		//pal($attrs);
+		
+		
+		
 		echo $this->input_helper_pre;
 		if( $this->data['options']['date_range'] === false ){
-			echo "<input type='text' value='{$value['view']}' name='{$name}[view]' {$attrs} />";
-			echo "<input type='hidden' value='{$value['iso']}' name='{$name}[iso]' class='input_date_picker_iso' />";
+			$name        = $this->data['attr']['name'];
+			$name_view   = $this->set_name('view');
+			$name_iso    = $this->set_name('iso');
+			$name_hour   = $this->set_name('hour');
+			$name_minute = $this->set_name('minute');
+			unset($this->data['attr']['name']); // não renderizar o name para este element
+			$attrs = make_attributes($this->data['attr']);
+			echo "<input type='text' value='{$value['view']}' name='{$name_view}' data-key='view' {$attrs} />";
+			echo "<input type='hidden' value='{$value['iso']}' name='{$name_iso}' data-name='{$name}' data-key='iso' class='boros_form_input input_date_picker_iso' />";
 			if( $this->data['options']['split_time'] === true ){
-				echo "<input type='number' value='{$value['hour']}' name='{$name}[hour]' min='0' max='24' maxlength='2' class='iptw_50' /> : <input type='number' value='{$value['minute']}' name='{$name}[minute]' min='0' max='59' maxlength='2' class='iptw_50' step='5' />";
+				echo "<input type='number' value='{$value['hour']}' name='{$name_hour}' data-name='{$name}' data-key='hour' min='0' max='24' maxlength='2' class='boros_form_input iptw_50' /> : <input type='number' value='{$value['minute']}' name='{$name_minute}' data-name='{$name}' data-key='minute' min='0' max='59' maxlength='2' class='boros_form_input iptw_50' step='5' />";
 			}
 		}
 		else{
+			die('É preciso criar os names dos subitens com $this->set_name()!!!');
+			unset($this->data['attr']['name']); // não renderizar o name para este element
+			$attrs = make_attributes($this->data['attr']);
 			echo "<label for='{$this->data['attr']['id']}'>Início:</label> <input type='text' value='{$value['start_view']}' name='{$name}[start_view]' {$attrs} />";
 			echo "<input type='hidden' value='{$value['start_iso']}' name='{$name}[start_iso]' class='input_date_picker_iso' />";
 			if( $this->data['options']['split_time'] === true ){
