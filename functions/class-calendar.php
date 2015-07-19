@@ -6,6 +6,83 @@
  * 1) devido ao limite de 64 caracteres no 'option_name' na tabela '_options', o total de caracteres usados no 'post_meta' 
  *    não poderá ultrapassar o limite de 30, segundo a seguinte fórmula: post_meta_length = (30 - post_type_length)
  * 
+ * 
+ * 
+ * Modelo de styles para exibição da tabela em xs:
+ 
+	table.calendar , 
+	table.calendar thead, 
+	table.calendar tbody, 
+	table.calendar th, 
+	table.calendar td, 
+	table.calendar tr {
+		display:block;
+	}
+	table.calendar .has-events {
+		display:block;
+	}
+	table.calendar td.cell-events {
+		height:auto;
+	}
+	table.calendar {
+		border:0;
+		border-bottom:1px solid #fdc222;
+	}
+	table.calendar th,
+	table.calendar td,
+	table.calendar td.cell-header,
+	table.calendar .event-btn-ovelay {
+		display:none;
+		border:none;
+	}
+	table.calendar tr{
+		border:none;
+	}
+	table.calendar td.cell-events {
+		border:1px solid #fdc222;
+		border-bottom:none;
+		padding:0;
+	}
+	table.calendar td.cell-events .performance-item  {
+		padding:0;
+	}
+	.performance-info-xs {
+		padding:10px 48px 10px 10px;
+		position:relative;
+	}
+	.performance-info-xs .event-day-number {
+		background-color:#fdc222;
+		border-top-left-radius:6px;
+		border-bottom-left-radius:6px;
+		display:block;
+		font-size:20px;
+		font-weight:bold;
+		margin:-20px 0 0;
+		padding:10px;
+		text-align:right;
+		width:45px;
+		position:absolute;
+		top:50%;
+		right:0;
+	}
+	.performance-info-xs h3 {
+		font-size:20px;
+		margin:0 0 10px;
+	}
+	.performance-info-xs li p:last-child {
+		margin:0;
+	}
+	.agenda-no-posts {
+		background-color: #fff4d4;
+		border: 2px solid #fff;
+		padding:10px;
+		text-align:center;
+	}
+	table.empty-calendar {
+		display:none;
+	}
+ * 
+ * 
  */
 
 
@@ -62,8 +139,18 @@ class Boros_Calendar {
 	
 	protected $taxonomies = array();
 	
-	protected $posts_table_query;
+	protected $posts_query;
 	
+	/**
+	 * Posts através de wp_query
+	 * 
+	 */
+	protected $posts = false;
+	
+	/**
+	 * Posts formatado no padrão month > week[header|events] > day > [day_number|day_events]
+	 * 
+	 */
 	protected $posts_table = false;
 	
 	protected $query_list_events;
@@ -191,12 +278,12 @@ class Boros_Calendar {
 	 * 
 	 * @ver 0.1.0
 	 */
-	function get_posts_table(){
+	function get_posts(){
 		if( $this->post_meta === false ){
-			$this->get_posts_table_by_date();
+			$this->get_posts_by_date();
 		}
 		else{
-			$this->get_posts_table_by_post_meta();
+			$this->get_posts_by_post_meta();
 		}
 	}
 	
@@ -261,10 +348,10 @@ class Boros_Calendar {
 	 * 
 	 * @ver 0.1.0
 	 */
-	function get_posts_table_by_date(){
+	function get_posts_by_date(){
 		$transient_name = "boros_cldr_{$this->post_type}_{$this->pmonth}";
-		if( false === ( $this->posts_table = get_transient($transient_name) ) ){
-			$query = apply_filters('boros_calendar_posts_table_by_date_query', array(
+		if( false === ( $this->posts = get_transient($transient_name) ) ){
+			$query = apply_filters('boros_calendar_posts_by_date_query', array(
 				'post_type' => $this->post_type,
 				'post_status' => $this->post_status,
 				'posts_per_page' => -1,
@@ -273,11 +360,11 @@ class Boros_Calendar {
 					'before' => $this->month_end,
 				),
 			));
-			$this->posts_table_query = new WP_Query();
-			$this->posts_table_query->query($query);
-			if( $this->posts_table_query->posts ){
-				//pre($this->posts_table_query->posts);
-				foreach( $this->posts_table_query->posts as $post ){
+			$this->posts_query = new WP_Query();
+			$this->posts_query->query($query);
+			if( $this->posts_query->posts ){
+				//pre($this->posts_query->posts);
+				foreach( $this->posts_query->posts as $post ){
 					setup_postdata($post);
 					
 					// Definir os metas
@@ -300,13 +387,15 @@ class Boros_Calendar {
 						}
 					}
 					
-					$this->posts_table[] = $post;
+					$this->posts[] = $post;
 				}
 			}
 			wp_reset_query();
-			set_transient( $transient_name, $this->posts_table, $this->transient_expiration );
+			set_transient( $transient_name, $this->posts, $this->transient_expiration );
 			//pal("set transient {$transient_name} POSTS BY DATE");
 		}
+		
+		$this->add_events_to_month();
 	}
 	
 	/**
@@ -314,10 +403,10 @@ class Boros_Calendar {
 	 * 
 	 * @ver 0.1.0
 	 */
-	function get_posts_table_by_post_meta(){
+	function get_posts_by_post_meta(){
 		$transient_name = "boros_cldr_{$this->post_type}_{$this->post_meta}_{$this->pmonth}";
-		if( false === ( $this->posts_table = get_transient($transient_name) ) ){
-			$query = apply_filters('boros_calendar_posts_table_by_post_meta_query', array(
+		if( false === ( $this->posts = get_transient($transient_name) ) ){
+			$query = apply_filters('boros_calendar_posts_by_post_meta_query', array(
 				'post_type' => $this->post_type,
 				'post_status' => $this->post_status,
 				'posts_per_page' => -1,
@@ -336,11 +425,11 @@ class Boros_Calendar {
 					),
 				),
 			));
-			$this->posts_table_query = new WP_Query();
-			$this->posts_table_query->query($query);
-			if( $this->posts_table_query->posts ){
-				//pre($this->posts_table_query->posts);
-				foreach( $this->posts_table_query->posts as $post ){
+			$this->posts_query = new WP_Query();
+			$this->posts_query->query($query);
+			if( $this->posts_query->posts ){
+				//pre($this->posts_query->posts);
+				foreach( $this->posts_query->posts as $post ){
 					setup_postdata($post);
 					
 					// Definir os metas
@@ -367,17 +456,19 @@ class Boros_Calendar {
 						}
 					}
 					
-					$this->posts_table[] = $post;
+					$this->posts[] = $post;
 				}
 			}
 			wp_reset_query();
-			set_transient( $transient_name, $this->posts_table, $this->transient_expiration );
+			set_transient( $transient_name, $this->posts, $this->transient_expiration );
 			//pal("set transient {$transient_name} POSTS BY META");
 		}
+		
+		$this->add_events_to_month();
 	}
 	
 	/**
-	 * Output da tabela do calendário
+	 * Adicionar os post_metas ao $post, filtrando por 'accepted_metas', caso definido
 	 * 
 	 * @ver 0.1.0
 	 */
@@ -418,11 +509,11 @@ class Boros_Calendar {
 	}
 	
 	/**
-	 * 
+	 * Criar array do calendário no formato month > week[header|events] > day > [day_number|day_events]
 	 * 
 	 * @ver 0.1.0
 	 */
-	function show_posts_table(){
+	function add_events_to_month(){
 		global $wp_locale; //pre($wp_locale);
 		
 		// dias do mês anterior
@@ -437,20 +528,15 @@ class Boros_Calendar {
 			default : $blank = 0;
 		}
 		
-		echo '<div id="calendar-table-box">';
-		
-		// nav head
-		$this->show_calendar_head();
-		
-		// criar array de mes > semanas > dias, para que possa ser duplicado, a primeira é para os cabeçalhos 
+		// criar array de mês > semanas > dias, para que possa ser duplicado, a primeira é para os cabeçalhos 
 		// com dia e o segundo para os posts do dia
 		$month_table = array();
 		$week_count = 1;
 		$month_table[$week_count] = array();
-
+		
 		// contador dia da semana
 		$day_count = 1;
-
+		
 		// espaço dos dias do mês anterior
 		while( $blank > 0 ){
 			//echo "\t\t<td class='blank-day'><div class='cell-header'></div></td>\n";
@@ -522,7 +608,7 @@ class Boros_Calendar {
 		}
 		
 		// associar eventos ao $month_table
-		$output_table = array();
+		$this->posts_table = array();
 		foreach( $month_table as $windex => $week ){
 			// primeiro loop, head de dias
 			$i = 1;
@@ -530,7 +616,7 @@ class Boros_Calendar {
 				$hday['class'] .= " mday-{$hday['mday']} wday-{$i} {$this->weedays[$i]} cell-header";
 				// verificar se este dia possui eventos
 				$hday = $this->add_events_to_day( $hday, false );
-				$output_table[$windex]['header'][] = $hday;
+				$this->posts_table[$windex]['header'][] = $hday;
 				
 				$i++;
 			}
@@ -541,56 +627,99 @@ class Boros_Calendar {
 				$cday['class'] .= " mday-{$cday['mday']} wday-{$i} {$this->weedays[$i]} cell-events";
 				// verificar se este dia possui eventos
 				$cday = $this->add_events_to_day( $cday, true );
-				$output_table[$windex]['events'][] = $cday;
+				$this->posts_table[$windex]['events'][] = $cday;
 				$i++;
 			}
 		}
-		//pre($output_table, 'output_table', false);
+		//pre($this->posts_table, 'output_table', false);
+	}
+	
+	/**
+	 * Verificar se determinado dia possui eventos e adicionar
+	 * 
+	 * @ver 0.1.0
+	 */
+	function add_events_to_day( $day, $full = true ){
+		$day['events'] = array();
+		
+		$d = sprintf('%02d', $day['day_num']);
+		$day_index = "{$this->year}-{$this->pmonth}-{$d} 00:00:00";
+		$blank_day = true;
+		
+		if( !empty($this->posts) ){
+			foreach( $this->posts as $evt ){
+				if( in_array($day_index, $evt->post_days) ){
+					if( $full == true ){
+						$day['events'][] = $evt;
+					} else {
+						$day['events'][] = $evt->ID;
+					}
+					$blank_day = false;
+				}
+			}
+		}
+		if( $blank_day == false ){
+			$day['class'] .= ' has-events';
+		}
+		
+		return $day;
+	}
+	
+	/**
+	 * Output da tabela do calendário
+	 * 
+	 * @todo - aplicar tags de tradução no <th>
+	 * @todo - criar row opcional de output completo com slideDown, semelhante ao http://bootstrap-calendar.azurewebsites.net/
+	 * 
+	 * @ver 0.1.0
+	 */
+	function show_calendar_table(){
+		if( $this->posts == false ){
+			do_action('boros_calendar_no_posts', get_object_vars($this));
+		}
+		
+		$table_class = 'calendar';
+		if( $this->posts == false ){
+			$table_class .= ' empty-calendar no-posts';
+		}
 		
 		// iniciar output tabela
-		echo "\n<table class='calendar' cellspacing='0' cellpadding='0'>\n";
+		echo "\n<table class='{$table_class}' cellspacing='0' cellpadding='0'>\n";
 		echo "\t<tr>\n\t\t<th>Domingo</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sábado</th>\n\t</tr>\n";
 		
 		// loop
-		foreach( $output_table as $windex => $week ){
+		foreach( $this->posts_table as $windex => $week ){
 			// primeiro loop, head de dias
-			echo "\t<tr class='week-{$windex}'>\n";
-			$i = 1;
+			echo "\t<tr class='week-{$windex} week-heads'>\n";
 			foreach( $week['header'] as $day ){
 				echo "\t\t<td class='{$day['class']}'><div class='day-number'>{$day['day_pad']}</div></td>\n";
-				$i++;
 			}
 			echo "\t</tr>\n";
 			
 			// segundo loop, posts
-			echo "\t<tr class='week-{$windex}'>\n";
-			$i = 1;
+			echo "\t<tr class='week-{$windex} week-events'>\n";
 			foreach( $week['events'] as $day ){
 				echo "\t\t<td class='cell-events {$day['class']}'>\n\t\t";
 				$this->show_day_posts($day);
 				echo "</td>\n";
-				$i++;
 			}
 			echo "\t</tr>\n";
+			
+			// @todo adicionar row opcional
 		}
 		
 		echo "\t</tr>\n</table>";
-		
-		// calendar footer
-		$this->show_calendar_footer();
-		
-		echo '</div>';
 	}
 	
 	function calendar_table_nav( $context = 'head' ){
 		$calendar_head = sprintf(
 			'<div class="calendar-nav row"><div class="col-md-4 col-sm-4">%s</div><div class="col-md-4 col-sm-4">%s</div><div class="col-md-4 col-sm-4">%s</div></div>', 
 			$this->prev_next_month_link('prev'), 
-			$this->posts_table_dropdown(), 
+			$this->posts_dropdown(), 
 			$this->prev_next_month_link()
 		);
 		// filtros: boros_calendar_header ou boros_calendar_footer
-		echo apply_filters( "boros_calendar_{$context}", $calendar_head, $this->prev_next_month_link('prev'), $this->prev_next_month_link(), $this->posts_table_dropdown() );
+		echo apply_filters( "boros_calendar_{$context}", $calendar_head, $this->prev_next_month_link('prev'), $this->prev_next_month_link(), $this->posts_dropdown() );
 	}
 	
 	/**
@@ -617,8 +746,8 @@ class Boros_Calendar {
 		$day_index = "{$this->year}-{$this->pmonth}-{$d} 00:00:00";
 		$blank_day = true;
 		
-		if( !empty($this->posts_table) ){
-			foreach( $this->posts_table as $evt ){
+		if( !empty($this->posts) ){
+			foreach( $this->posts as $evt ){
 				if( in_array($day_index, $evt->post_days) ){
 					$link = get_permalink($evt->ID);
 					$title = apply_filters('the_title', $evt->post_title);
@@ -627,37 +756,6 @@ class Boros_Calendar {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Verificar se determinado dia possui eventos e adicionar
-	 * 
-	 * @ver 0.1.0
-	 */
-	function add_events_to_day( $day, $full = true ){
-		$day['events'] = array();
-		
-		$d = sprintf('%02d', $day['day_num']);
-		$day_index = "{$this->year}-{$this->pmonth}-{$d} 00:00:00";
-		$blank_day = true;
-		
-		if( !empty($this->posts_table) ){
-			foreach( $this->posts_table as $evt ){
-				if( in_array($day_index, $evt->post_days) ){
-					if( $full == true ){
-						$day['events'][] = $evt;
-					} else {
-						$day['events'][] = $evt->ID;
-					}
-					$blank_day = false;
-				}
-			}
-		}
-		if( $blank_day == false ){
-			$day['class'] .= ' has-events';
-		}
-		
-		return $day;
 	}
 	
 	/**
@@ -698,7 +796,7 @@ class Boros_Calendar {
 	 * 
 	 * @ver 0.1.0
 	 */
-	function posts_table_dropdown( $echo = true ){
+	function posts_dropdown( $echo = true ){
 		global $wp_locale; //pre($wp_locale, 'wp_locale', false);
 		
 		// buscar todos os posts
@@ -732,336 +830,6 @@ class Boros_Calendar {
 		}
 		
 		return apply_filters( 'boros_calendar_month_dropdown', $dropdown, $class, $dropdown_opts );
-	}
-	
-	
-	
-	/**
-	 * MODO LISTAGEM
-	 * 
-	 */
-	
-	
-	
-	/**
-	 * 
-	 * 
-	 */
-	function get_list_events(){
-		// pegar todos os eventos do ano
-		$query = array(
-			'post_type' => 'evento',
-			'post_status' => 'publish',
-			'posts_per_page' => -1,
-			'meta_query' => array(
-				array(
-					'key' => 'event_end',
-					'value' => "{$this->year}-01-01",
-					'compare' => '>=',
-					'type' => 'DATE',
-				),
-				array(
-					'key' => 'event_start',
-					'value' => "{$this->year}-12-31",
-					'compare' => '<=',
-					'type' => 'DATE',
-				),
-				
-				//'relation' => 'OR',
-				//array(
-				//	'key' => 'event_start_year',
-				//	'value' => $this->year,
-				//),
-				//array(
-				//	'key' => 'event_end_year',
-				//	'value' => $this->year,
-				//),
-			),
-		);
-		$this->query_list_events = new WP_Query();
-		$this->query_list_events->query($query);
-		if( $this->query_list_events->posts ){
-			$year_events = array();
-			foreach( $this->query_list_events->posts as $post ){
-				setup_postdata($post);
-				$metas = get_post_custom($post->ID);
-				// definir os metas
-				$post->metas = $this->set_metas($metas);
-				
-				/**
-				 * Duração do evento em dias, mas considerando apenas o mês atual
-				 * @link http://stackoverflow.com/a/3207849
-				 * 
-				 */
-				$s = new DateTime($post->metas['event_date']['start_iso']); 
-				$e = new DateTime($post->metas['event_date']['end_iso']);
-				$e->modify('+1 day');
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($s, $interval, $e);
-				$post->post_days = array();
-				foreach( $period as $ed ){
-					if( $ed->format('Y') == $this->year ){
-						$post->post_days[] = $ed->format('Y-m-d');
-					}
-				}
-				
-				// categoria
-				$terms = wp_get_post_terms( $post->ID, 'evento_categoria' );
-				$post->evento_categoria = array();
-				if( !empty($terms) ){
-					foreach( $terms as $t ){
-						$post->evento_categoria[] = $t;
-					}
-				}
-				$year_events[] = $post;
-			}
-			//pre($this->list_events);
-			//pre($year_events);
-			
-			foreach( $year_events as $evt ){
-				$evt_month = date('m', strtotime($evt->post_days[0]));
-				$this->list_events[$evt_month][] = $evt;
-			}
-			ksort($this->list_events);
-			//pre($this->list_events, 'list_events', false);
-		}
-	}
-	
-	function show_events_list(){
-		global $wp_locale;
-		?>
-		<div id="events-list-box">
-			<div id="events-list-header">
-				Eventos em 
-				<?php $this->months_dropdown(); ?>
-			</div>
-			<div id="events-list-months">
-			<?php
-			foreach( $this->list_events as $month => $events ){
-				$month_name = $wp_locale->month[$month];
-				echo "<div class='events-list-month' id='eventos-list-mont-{$month}'>";
-				echo "<div class='events-list-month-name'>{$month_name}</div><div class='event-list-items'>";
-				ksort($events);
-				foreach( $events as $evt_date => $evt ){
-					?>
-					<div class="event-list-item">
-						<div class="event-list-item-title"><div><?php echo $evt->post_title; ?></div></div>
-						<div class="event-list-item-details" data-run-toggle="0">
-							<div class="event-list-item-details-info">
-								<div class="event-list-item-details-info-head"><?php echo $evt->metas['event_date_string']; ?></div>
-								<div class="event-list-item-details-info-body">
-									<p><strong><?php echo $evt->metas['event_location_name']; ?></strong> - <?php echo $evt->metas['event_location_address']; ?></p>
-									<p><strong>Valor:</strong> <?php echo $evt->metas['event_price']; ?></p>
-								</div>
-							</div>
-							<div class="event-list-item-details-description">
-								<?php echo apply_filters('the_content', $evt->post_content); ?>
-							</div>
-							<div class="event-list-item-details-ticket">
-								<a href="<?php echo $evt->metas['event_ticket_url']; ?>" target="_blank">Faça sua inscrição aqui</a>
-							</div>
-						</div>
-					</div>
-					<?php
-				}
-				echo '</div></div>';
-			}
-			?>
-			</div><!-- events-list-months -->
-		</div>
-		<?php
-	}
-	
-	function get_month_events(){
-		// pegar todos os eventos do mes
-		$query = array(
-			'post_type' => 'evento',
-			'post_status' => 'publish',
-			'posts_per_page' => -1,
-			'meta_query' => array(
-				array(
-					'key' => 'event_end',
-					'value' => $this->month_start,
-					'compare' => '>=',
-					'type' => 'DATE',
-				),
-				array(
-					'key' => 'event_start',
-					'value' => $this->month_end,
-					'compare' => '<=',
-					'type' => 'DATE',
-				),
-			),
-		);
-		$this->query_month_events = new WP_Query();
-		$this->query_month_events->query($query);
-		if( $this->query_month_events->posts ){
-			$month_events = array();
-			foreach( $this->query_month_events->posts as $post ){
-				setup_postdata($post);
-				$metas = get_post_custom($post->ID);
-				// definir os metas
-				$post->metas = $this->set_metas($metas);
-				
-				/**
-				 * Duração do evento em dias, mas considerando apenas o mês atual
-				 * @link http://stackoverflow.com/a/3207849
-				 * 
-				 */
-				$s = new DateTime($post->metas['event_date']['start_iso']); 
-				$e = new DateTime($post->metas['event_date']['end_iso']);
-				$e->modify('+1 day');
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($s, $interval, $e);
-				$post->post_days = array();
-				foreach( $period as $ed ){
-					if( $ed->format('m') == $this->pmonth ){
-						$post->post_days[] = $ed->format('Y-m-d');
-					}
-				}
-				
-				// categoria
-				$terms = wp_get_post_terms( $post->ID, 'evento_categoria' );
-				$post->evento_categoria = array();
-				if( !empty($terms) ){
-					foreach( $terms as $t ){
-						$post->evento_categoria[] = $t;
-					}
-				}
-				$month_events[] = $post;
-			}
-			
-			foreach( $month_events as $evt ){
-				$this->month_events[$evt->post_days[0]] = $evt;
-			}
-			ksort($this->month_events);
-			//pre($this->month_events);
-		}
-	}
-	
-	function show_month_events(){
-		global $wp_locale; //pre($wp_locale->weekday);
-		$events_in_years = get_option('events_in_years'); //pre($events_in_years, 'events_in_years', false);
-		?>
-		<div id="month-events-box" class="visible-lg-block visible-md-block">
-			<div id="month-events-box-index">
-				<div id="month-events-header">
-					Eventos em 
-					<?php $this->months_dropdown(); ?>
-				</div>
-				<div id="month-events-month-list">
-					<ul>
-						<li <?php $this->month_events_next_month_class(1); ?>><a href="<?php $this->month_events_next_month_link(1); ?>">Jan</a></li>
-						<li class="separator"></li>
-						<li <?php $this->month_events_next_month_class(2); ?>><a href="<?php $this->month_events_next_month_link(2); ?>">Fev</a></li>
-						<li class="separator"></li>
-						<li <?php $this->month_events_next_month_class(3); ?>><a href="<?php $this->month_events_next_month_link(3); ?>">Mar</a></li>
-						<li class="separator three"></li>
-						<li <?php $this->month_events_next_month_class(4); ?>><a href="<?php $this->month_events_next_month_link(4); ?>">Abr</a></li>
-						<li class="separator four"></li>
-						<li <?php $this->month_events_next_month_class(5); ?>><a href="<?php $this->month_events_next_month_link(5); ?>">Mai</a></li>
-						<li class="separator"></li>
-						<li <?php $this->month_events_next_month_class(6); ?>><a href="<?php $this->month_events_next_month_link(6); ?>">Jun</a></li>
-						<li class="separator three"></li>
-						<li <?php $this->month_events_next_month_class(7); ?>><a href="<?php $this->month_events_next_month_link(7); ?>">Jul</a></li>
-						<li class="separator"></li>
-						<li <?php $this->month_events_next_month_class(8); ?>><a href="<?php $this->month_events_next_month_link(8); ?>">Ago</a></li>
-						<li class="separator four"></li>
-						<li <?php $this->month_events_next_month_class(9); ?>><a href="<?php $this->month_events_next_month_link(9); ?>">Set</a></li>
-						<li class="separator three"></li>
-						<li <?php $this->month_events_next_month_class(10); ?>><a href="<?php $this->month_events_next_month_link(10); ?>">Out</a></li>
-						<li class="separator"></li>
-						<li <?php $this->month_events_next_month_class(11); ?>><a href="<?php $this->month_events_next_month_link(11); ?>">Nov</a></li>
-						<li class="separator"></li>
-						<li <?php $this->month_events_next_month_class(12); ?>><a href="<?php $this->month_events_next_month_link(12); ?>">Dez</a></li>
-					</ul>
-					<span></span>
-				</div>
-			</div>
-			<div id="month-events-list">
-				<?php
-				if( empty($this->month_events) ){
-					echo '<h2>Ainda não temos eventos programados para essa data</h2>';
-					echo '<p>Mas fique ligado! Cadastre-se em nossa Newsletter e receba informações sobre nossos eventos, assim como dicas e atualizações para ajudar na sua carreira</p>';
-				}
-				else {
-					//pre( $this->month_events, 'month_events', false );
-					echo '<div class="month-events-list-items">';
-					foreach( $this->month_events as $evt ){
-						//pre($evt, 'evt', false);
-						$weekday = str_replace('-feira', '', $wp_locale->weekday[date('w', strtotime($evt->post_days[0]))]);
-						$day = date('j', strtotime($evt->post_days[0]));
-						
-						?>
-						<div class="month-events-list-item">
-							<div class="month-events-list-item-date">
-								<div class="month-events-list-item-date-weekday"><?php echo $weekday; ?></div>
-								<div class="month-events-list-item-date-day"><?php echo $day; ?></div>
-							</div>
-							<div class="month-events-list-item-desc">
-								<div class="month-events-list-item-desc-title"><h2><?php echo $evt->post_title; ?> <a href="<?php echo $evt->metas['event_ticket_url']; ?>" target="_blank">Faça sua inscrição</a></h2></div>
-								<div class="month-events-list-item-desc-info">
-									<div class="month-events-list-item-desc-info-date"><?php echo $evt->metas['event_date_string']; ?></div>
-									<div class="month-events-list-item-desc-info-location"><strong><?php echo $evt->metas['event_location_name']; ?></strong> <?php echo $evt->metas['event_location_address']; ?></div>
-								</div>
-								<div class="month-events-list-item-desc-text">
-									<?php echo apply_filters('the_content', $evt->post_content); ?>
-								</div>
-							</div>
-						</div>
-						<?php
-					}
-					echo '</div>';
-				}
-				?>
-			</div>
-		</div>
-		<?php
-	}
-	
-	function month_events_next_month_link( $n ){
-		$next = new DateTime("{$this->year}-{$n}");
-		echo add_query_arg( array('ca' => $next->format('Y'), 'cm' => $next->format('n')) );
-	}
-	
-	function month_events_next_month_class( $n ){
-		if( $n == $this->month ){
-			echo ' class="active"';
-		}
-	}
-	
-	function months_dropdown(){
-		$events_in_years = get_option('events_in_years');
-		if( !empty($events_in_years) ){
-			echo "<select id='month-events-dropdown' class='month-events-dropdown'>";
-			foreach( $events_in_years as $year => $months ){
-				$selected = ($this->year == $year) ? ' selected="selected"' : '';
-				$link = add_query_arg( array('ca' => $year, 'cm' => 1) );
-				echo "<option value='{$link}' {$selected}>{$year}</option>";
-			}
-			echo '</select>';
-		}
-	}
-	
-	function show_year_events(){
-		global $wp_locale; //pre($wp_locale->weekday);
-		$events_in_years = get_option('events_in_years'); //pre($events_in_years, 'events_in_years', false);
-		?>
-		<div id="year-events">
-			<div id="year-events-header">
-				Eventos em 
-				<?php $this->months_dropdown(); ?>
-			</div>
-			<div id="year-month-events-list">
-				<?php
-				if( isset($events_in_years[$this->year]) )
-				foreach( $events_in_years[$this->year] as $month ){
-					pre($month);
-				}
-				?>
-			</div>
-		</div>
-		<?php
 	}
 }
 
