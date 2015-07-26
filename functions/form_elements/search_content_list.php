@@ -33,6 +33,7 @@ class BFE_search_content_list extends BorosFormElement {
 			'show_thumbnails' => true,
 			'show_excerpt' => true,
 			'excerpt_length' => 55,
+			'show_post_type' => true,
 		);
 		$this->defaults['options'] = $options;
 	}
