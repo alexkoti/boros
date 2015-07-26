@@ -225,11 +225,12 @@ function related_content_output( $post, $options = array(), $index = '' ){
 		$pt = get_post_type_object($post->post_type);
 		$post_type_name = "<em>({$pt->labels->singular_name})</em> :";
 	}
+	$post_title = apply_filters('the_title', $post->post_title, $post->ID);
 	?>
 	<li id="related_item_<?php echo $post->ID; ?>" class="related_item">
 		<div class="related_content">
 			<div class="result_head">
-				<strong><?php echo "{$post_type_name} {$post->post_title} <small>[id: {$post->ID}]</small>"; ?></strong>
+				<strong><?php echo "{$post_type_name} {$post_title} <small>[id: {$post->ID}]</small>"; ?></strong>
 				<input type="button" value="remover este item" class="button result_deselect" />
 				<input type="button" value="selecionar este item" class="button-primary result_select" />
 			</div>

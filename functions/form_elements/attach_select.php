@@ -154,7 +154,7 @@ function attach_select_load( $id ){
 			$file_size = filesize( $file );
 		}
 		$thumb = wp_get_attachment_image_src( $id, 'thumbnail', true );
-		$title = apply_filters( 'the_title', $attch->post_title );
+		$title = apply_filters( 'the_title', $attch->post_title, $attch->ID );
 		echo '<div class="inner">';
 		echo "<div class='attach_select_icon'><img class='thumbnail' src='{$thumb[0]}' alt='' /><div class='hide-if-no-js attach_select_remove'><span class='btn' title='Remover este arquivo'>&nbsp;</span></div></div>";
 		echo "<strong>Nome:</strong> {$title} <br /><strong>Tipo do arquivo:</strong> {$attch->post_mime_type} <br />";
