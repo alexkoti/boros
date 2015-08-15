@@ -255,20 +255,22 @@ function special_image_load( $name, $attch_id, $opts ){
 	if( !empty($attch_id) ){
 		$image = wp_get_attachment_image_src($attch_id, $options['image_size']);
 		
-		// caso seja false, usar a largura real da imagem
-		if( $options['width'] == false ){
-			$image_dimensions = "width='{$image[1]}' height='{$image[2]}'";
-			$holder_style = "style='width:{$image[1]}px;height:{$image[2]}px'";
+		if( !empty($image) ){
+			// caso seja false, usar a largura real da imagem
+			if( $options['width'] == false ){
+				$image_dimensions = "width='{$image[1]}' height='{$image[2]}'";
+				$holder_style = "style='width:{$image[1]}px;height:{$image[2]}px'";
+			}
+			// calcular a altura proporcinalmente à largura
+			else{
+				$ratio = $image[2]/ $image[1];
+				$height = $options['width'] * $ratio;
+				$image_dimensions = "width='{$options['width']}' height='{$height}'";
+				$holder_style = "style='width:{$options['width']}px;height:{$height}px'";
+			}
+			$image_url = $image[0];
+			$remove_buttom = "<div class='hide-if-no-js special_img_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div>";
 		}
-		// calcular a altura proporcinalmente à largura
-		else{
-			$ratio = $image[2]/ $image[1];
-			$height = $options['width'] * $ratio;
-			$image_dimensions = "width='{$options['width']}' height='{$height}'";
-			$holder_style = "style='width:{$options['width']}px;height:{$height}px'";
-		}
-		$image_url = $image[0];
-		$remove_buttom = "<div class='hide-if-no-js special_img_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div>";
 	}
 	// imagem padrão
 	else{
