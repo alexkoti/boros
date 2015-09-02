@@ -376,11 +376,13 @@ function opengraph_tags( $args = false ){
 	}
 	elseif( is_post_type_archive() ){
 		global $wp_query;
-		$pt = $wp_query->query['post_type'];
-		$pt_image = get_option("{$pt}_image");
-		if( !empty($pt_image) ){
-			$thumb = wp_get_attachment_image_src( $pt_image, 'full' );
-			$image_url = $thumb[0];
+		if( isset($wp_query->query['post_type']) ){
+			$pt = $wp_query->query['post_type'];
+			$pt_image = get_option("{$pt}_image");
+			if( !empty($pt_image) ){
+				$thumb = wp_get_attachment_image_src( $pt_image, 'full' );
+				$image_url = $thumb[0];
+			}
 		}
 	}
 	

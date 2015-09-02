@@ -374,6 +374,12 @@ add_action('manage_pages_custom_column', 'render_columns');
 function render_columns( $column_name ){
 	global $post;
 	
+	// filter: pular coluna, nos casos onde mais de um plugin está formatando uma mesma coluna
+	$skip_columns = apply_filters('boros_skip_post_type_columns', array());
+	if( isset($skip_columns[$post->post_type]) and in_array($column_name, $skip_columns[$post->post_type]) ){
+		return;
+	}
+	
 	/**
 	 * Lista de termos
 	 * 
