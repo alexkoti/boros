@@ -16,14 +16,14 @@
  * ADMIN ENQUEUE SCRIPTS
  * Adicionar scripts e css necessários
  * 
+ * Adicionar os slugs das páginas de admin no filtro
+ * 
  */
-add_action( 'admin_enqueue_scripts', 'boros_upload_admin_enqueue' );
-function boros_upload_admin_enqueue( $hook ){
+add_action( 'admin_enqueue_scripts', 'boros_upload_admin_pages_enqueues' );
+function boros_upload_admin_pages_enqueues( $hook ){
 	//pal($hook);
-	$media_pages = array(
-		'edit.php',
-		'produto_page_mass_add_produto',
-	);
+	$media_pages = apply_filters('boros_upload_admin_pages_enqueues', array());
+	
 	if( !in_array( $hook, $media_pages ) ){
 		return;
 	}
@@ -39,9 +39,14 @@ function boros_upload_admin_enqueue( $hook ){
  * ADMIN HEAD
  * Adicionar um modelo padrão para as configs do plupload. Por questões de performance, preferir fazer a adição contextual desta varoável.
  * 
- */
+ * Adicionar no hook da página de edição, modelos:
+
 add_action( 'admin_head-edit.php', 'boros_upload_admin_head' );
-add_action( 'admin_head-produto_page_mass_add_produto', 'boros_upload_admin_head' );
+add_action( 'admin_head-product_page_mass_add_produto', 'boros_upload_admin_head' );
+add_action( 'admin_head-{admin_page_slug}', 'boros_upload_admin_head' );
+
+ * 
+ */
 function boros_upload_admin_head(){
 	global $post;
 	
