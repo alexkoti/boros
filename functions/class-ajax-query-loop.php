@@ -72,9 +72,17 @@ abstract class Boros_Ajax_Query_Loop {
 			var boros_ajax_query_loop_offset = <?php echo $this->ajax_args['initial_offset']; ?>;
 			jQuery(document).ready(function($){
 				var boros_ajax_query_loop = {
+					btn : false,
 					init : function(){
 						$('#boros-ajax-query-loop-submit').on('click', function(){
+							boros_ajax_query_loop.btn = $(this);
+							boros_ajax_query_loop.btn.prop('disabled', true);
 							var results = $('#boros-ajax-query-loop-results');
+							
+							// verificar se existe algum offset definido por campo de texto
+							if( $('#boros_ajax_query_loop_initial_offset').length && $('#boros_ajax_query_loop_initial_offset').val() > 0 ){
+								boros_ajax_query_loop_offset = $('#boros_ajax_query_loop_initial_offset').val();
+							}
 							boros_ajax_query_loop.proccess_item();
 						});
 					},
@@ -83,18 +91,32 @@ abstract class Boros_Ajax_Query_Loop {
 							action : '<?php echo $this->ajax_args['action']; ?>',
 							offset : boros_ajax_query_loop_offset,
 						};
-						// mostrar loading
-						//mass_add.loading();
 						
-						jQuery.post(ajaxurl, data, function(response){
-							var resp = JSON.parse(response);
-							console.log(resp);
-							
-							if( resp.offset > 0 ){
-								boros_ajax_query_loop_offset = resp.offset;
-								boros_ajax_query_loop.proccess_item();
+						$.ajax({
+							type: 'POST',
+							url: ajaxurl,
+							data: data,
+							success: function(response){
+								var resp = JSON.parse(response);
+								if( typeof resp !== 'object' ){
+									var n = boros_ajax_query_loop_offset + 1;
+									$('#boros-ajax-query-loop-results').append('<li class="text_error">Ocorreu um problema com a requisição. Utilize o offset ' + n + '</li>');
+									boros_ajax_query_loop.btn.prop('disabled', false);
+								} else {
+									console.log(resp);
+									if( resp.offset > 0 ){
+										boros_ajax_query_loop_offset = resp.offset;
+										boros_ajax_query_loop.proccess_item();
+									}
+									$('#boros-ajax-query-loop-results').append(resp.html);
+								}
+							},
+							error: function(XMLHttpRequest, textStatus, errorThrown) {
+								console.log('erro');
+								console.log(textStatus);
+								console.log(errorThrown);
+								boros_ajax_query_loop.btn.prop('disabled', false);
 							}
-							$('#boros-ajax-query-loop-results').append(resp.html);
 						});
 					}
 				};
