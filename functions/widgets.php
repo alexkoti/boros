@@ -21,7 +21,7 @@
  */
 function register_widgets(){
 	
-	foreach( glob( BOROS_FUNCTIONS . "/widgets/*.php" ) as $filename ){
+	foreach( glob( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . "widgets/*.php" ) as $filename ){
 		if( !preg_match( "/^_.*php$/", basename($filename) ) ){
 			$files[] = $filename;
 			include_once $filename;
@@ -32,7 +32,7 @@ function register_widgets(){
 		'custom_tagcloud.php',
 	);
 	foreach( $files as $file ){
-		include_once BOROS_FUNCTIONS . "/widgets/{$file}";
+		include_once BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . "widgets/{$file}";
 	}
 	
 	/**

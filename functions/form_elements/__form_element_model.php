@@ -100,7 +100,7 @@ class BFE_form_element_model extends BorosFormElement {
 	 * 
 	 */
 	function includes(){
-		require_once( BOROS_LIBS . 'grecaptcha/recaptchalib.php' );
+		require_once( BOROS_LIBS . DIRECTORY_SEPARATOR . 'grecaptcha/recaptchalib.php' );
 	}
 	
 	/**

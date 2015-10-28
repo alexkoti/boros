@@ -351,7 +351,7 @@ class BorosValidation {
 		//pre( $value, 'value' );
 		//pre( $args, 'args' );
 		//pre( $message, 'message' );
-		require_once( BOROS_LIBS . 'recaptcha/recaptchalib.php' );
+		require_once( BOROS_LIBS . DIRECTORY_SEPARATOR . 'recaptcha/recaptchalib.php' );
 		$publickey = get_option('recaptcha_publickey');
 		$privatekey = get_option('recaptcha_privatekey');
 		$resp = null;
@@ -379,7 +379,7 @@ class BorosValidation {
 	 * 
 	 */
 	function validate_grecaptcha( $name, $value, $args, $message ){
-		require_once( BOROS_LIBS . 'grecaptcha/recaptchalib.php' );
+		require_once( BOROS_LIBS . DIRECTORY_SEPARATOR . 'grecaptcha/recaptchalib.php' );
 		$publickey = get_option('recaptcha_publickey');
 		$privatekey = get_option('recaptcha_privatekey');
 		$resp = null;

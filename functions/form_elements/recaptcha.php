@@ -43,7 +43,7 @@ class BFE_recaptcha extends BorosFormElement {
 	);
 	
 	function includes(){
-		require_once( BOROS_LIBS . 'recaptcha/recaptchalib.php' );
+		require_once( BOROS_LIBS . DIRECTORY_SEPARATOR . 'recaptcha/recaptchalib.php' );
 	}
 	
 	/**

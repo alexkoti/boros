@@ -240,9 +240,9 @@ img.aligncenter			{display:block;margin:0 auto;}
 .small_text				{font-size:80%;}
 .hide					{display:none;}
 .text_error				{color:red;}
-.text_success			{color:green;}
-.text_alert				{color:orange;}
-.text_info				{color:cyan;}
+.text_success			{color:#11B511;}
+.text_alert				{color:#FF8F00;}
+.text_info				{color:#00a0d2;}
 
 
 
@@ -255,36 +255,36 @@ img.aligncenter			{display:block;margin:0 auto;}
 .boros_taxonomy_block input[type="text"] {
 	width:auto;
 }
-.input_textarea 	{height:150px;width:100%;}
-.iptw_tiny 		{width:10%;}
-.iptw_small 		{width:25%;}
-.iptw_medium 	{width:50%;}
-.iptw_large 		{width:75%;}
-.iptw_full 		{width:100%;}
+.input_textarea   {height:150px;width:100%;}
+.iptw_tiny        {width:10%;}
+.iptw_small       {width:25%;}
+.iptw_medium      {width:50%;}
+.iptw_large       {width:75%;}
+.iptw_full        {width:100%;}
 
-.iptw_30		{width:30px}
-.iptw_50		{width:50px}
-.iptw_75		{width:75px}
-.iptw_100		{width:100px}
-.iptw_150		{width:150px}
-.iptw_200		{width:200px}
-.iptw_250		{width:250px}
-.iptw_300		{width:300px}
-.iptw_350		{width:350px}
-.iptw_400		{width:400px}
-.iptw_450		{width:450px}
-.iptw_500		{width:500px}
+.iptw_30          {width:30px}
+.iptw_50          {width:50px}
+.iptw_75          {width:75px}
+.iptw_100         {width:100px}
+.iptw_150         {width:150px}
+.iptw_200         {width:200px}
+.iptw_250         {width:250px}
+.iptw_300         {width:300px}
+.iptw_350         {width:350px}
+.iptw_400         {width:400px}
+.iptw_450         {width:450px}
+.iptw_500         {width:500px}
 
-.inline_block		{display:inline-block;}
-.inline_block_25 	{width:25%}
-.inline_block_50 	{width:50%}
-.inline_block_75 	{width:75%}
-.inline_block_100 	{width:100%}
+.inline_block     {display:inline-block;}
+.inline_block_25  {width:25%}
+.inline_block_50  {width:50%}
+.inline_block_75  {width:75%}
+.inline_block_100 {width:100%}
 
-.ipth_tiny 		{height:60px;}
-.ipth_small 		{height:100px;}
-.ipth_medium	{height:250px;}
-.ipth_tall		{height:400px;}
+.ipth_tiny        {height:60px;}
+.ipth_small       {height:100px;}
+.ipth_medium      {height:250px;}
+.ipth_tall        {height:400px;}
 
 input[disabled='disabled'],
 input[disabled='1']{

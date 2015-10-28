@@ -59,11 +59,11 @@ function create_form_elements( $context, $data, $data_value ){
 			<p class="error">A class "<code><strong><?php echo $classname; ?></strong></code>" não existe ou não é subclasse de <code>BorosFormElement</code></p>
 			<p>Arquivos para o form element requerido:</p>
 			<ul>
-				<li><?php echo BOROS_ELEMENTS . "<code><strong>{$data['type']}.php</strong></code>" ; ?> - <em>obrigatório</em></li>
+				<li><?php echo BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "<code><strong>{$data['type']}.php</strong></code>" ; ?> - <em>obrigatório</em></li>
 				<li><?php echo "Classe <code><strong>{$classname}</strong></code>, no arquivo php" ; ?> - <em>obrigatório</em></li>
 				<li><?php echo "Método <code><strong>set_input()</strong></code>, na class <code><strong>{$classname}</strong></code>" ; ?> - <em>obrigatório</em></li>
-				<li><?php echo "<code>" . BOROS_ELEMENTS . "js/<strong>{$data['type']}.js</strong></code>" ; ?> - <em>opcional</em></li>
-				<li><?php echo "<code>" . BOROS_ELEMENTS . "css/<strong>{$data['type']}.css</strong></code>" ; ?> - <em>opcional</em></li>
+				<li><?php echo "<code>" . BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "js/<strong>{$data['type']}.js</strong></code>" ; ?> - <em>opcional</em></li>
+				<li><?php echo "<code>" . BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "css/<strong>{$data['type']}.css</strong></code>" ; ?> - <em>opcional</em></li>
 			</ul>
 			<p>Modelo de dados:</p>
 			<pre><?php print_r($data); ?></pre>
@@ -90,7 +90,7 @@ function add_form_elements(){
 	 * 
 	 */
 	$glob = false;
-	foreach( glob( BOROS_ELEMENTS . "*.php" ) as $filename ){
+	foreach( glob( BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "*.php" ) as $filename ){
 		$path = pathinfo( $filename );
 		if( !preg_match( "/^_/", $path['filename'] ) ){
 			include_once $filename;
@@ -145,7 +145,7 @@ function add_form_elements(){
 			'wp_editor',
 		);
 		foreach( $files as $file ){
-			include_once BOROS_ELEMENTS . "/{$file}.php";
+			include_once BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "{$file}.php";
 		}
 		
 		// fallback para custom elements - é preciso que o array venha com o caminho completo
