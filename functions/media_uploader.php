@@ -127,6 +127,7 @@ function boros_drop_upload_remove_ajax() {
  * @todo o loop para exibir multiplos arquivos com botão de remoção não está feito!!!
  */
 add_action( 'manage_posts_custom_column', 'boros_post_media_column_render' );
+add_action( 'manage_pages_custom_column', 'boros_post_media_column_render' );
 function boros_post_media_column_render( $column_name ){
 	global $post;
 	
