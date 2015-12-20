@@ -121,7 +121,7 @@ class BorosFrontendForm {
 	
 	/**
 	 * $type         usado para o layout do form_element
-	 * $object_type  pode ser 'post' ou 'user' -- talvez adicionar 'terms' e 'option'
+	 * $object_type  pode ser 'post', 'user', 'login' e 'generic' -- talvez adicionar 'terms' e 'option'
 	 * $object_id    0 = new post
 	 * $form_name    nome do formulário usado, é útil para identificar corretamente o formulario postado quando existem mais de um formulário na página com names repetidos.
 	 *               Este valor poderá ser usado pelo form_element, que poderá comparar o 'name' e o 'form_name'
@@ -349,6 +349,40 @@ class BorosFrontendForm {
 			}
 		}
 	}
+    
+    /**
+     * Definir o valide_data e valid_meta
+     * 
+     * @todo aplicar em outros métodos
+     */
+    function valid_infos(){
+        $post_data = array();
+        foreach( $this->core_post_fields as $field => $default ){
+            if( isset($this->posted_data[$field]) ){
+                $post_data[$field] = $this->posted_data[$field];
+            }
+        }
+        
+        $post_meta = array();
+        // alertar que o modelo de 'accepted_metas' está antigo
+        if( !is_assoc_array($this->config['accepted_metas']) ){
+            wp_die('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults <strong>create_post()</strong>');
+        }
+        foreach( $this->config['accepted_metas'] as $field => $default ){
+            if( isset($this->posted_data[$field]) ){
+                $post_meta[$field] = $this->posted_data[$field];
+            }
+            else{
+                $post_meta[$field] = $default;
+            }
+        }
+        //pre( $post_data, 'ACCEPTED POST_DATA' );
+        //pre( $post_meta, 'ACCEPTED POST_META' );
+        
+        
+        $this->valid_data = $this->validate( $this->context, $post_data );
+        $this->valid_meta = $this->validate( $this->context, $post_meta );
+    }
 	
 	/**
 	 * Normalizar o array de elementos colocando index associativo
@@ -382,35 +416,48 @@ class BorosFrontendForm {
 	 * Manipular dados genéricos, que não envolvam objetos do WordPress. A principal ação é enviar os dados validados e pós-processados À função de callback.
 	 * 
 	 */
-	function generic_form(){
-		$this->valid_data = $this->validate( $this->context, $this->posted_data );
-		if( empty( $this->validation->data_errors ) ){
-			// acionar callbacks: elements
-			$this->do_callbacks( $this->valid_data );
-			$this->do_callbacks( $this->valid_meta );
-			
-			// acionar callbacks: form->config
-			$this->form_callback( $this->config['callbacks']['success'] );
-			// deprecated: typo error ('sucess')
-			if( isset($this->config['callbacks']['sucess']) ){
-				$this->form_callback( $this->config['callbacks']['sucess'] );
-			}
-			
-			// registrar mensagem de sucesso
-			$this->messages['success'] = $this->config['messages']['success'];
-			
-			// redirect
-			if( $this->config['redirect_on_sucess'] !== false ){
-				wp_redirect( $this->get_redirect_url('success') );
-				exit();
-			}
-		}
-		else{
-			// acionar callbacks: form->config
-			$this->form_callback( $this->config['callbacks']['error'] );
-			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
-		}
-	}
+    function generic_form(){
+        //$this->valid_data = $this->validate( $this->context, $this->posted_data );
+        $this->valid_infos();
+        
+        if( empty( $this->validation->data_errors ) ){
+            $error = false;
+            
+            // acionar callbacks: elements
+            $this->do_callbacks( $this->valid_data );
+            $this->do_callbacks( $this->valid_meta );
+            
+            //pre($this->valid_data, 'valid_data');
+            //pre($this->valid_meta, 'valid_meta');
+            
+            // acionar callbacks: form->config
+            $this->form_callback( $this->config['callbacks']['success'] );
+            
+            // deprecated: typo error ('sucess')
+            if( isset($this->config['callbacks']['sucess']) ){
+                $error = $this->form_callback( $this->config['callbacks']['sucess'] );
+            }
+            
+            if( $error == false ){
+                // registrar mensagem de sucesso
+                $this->messages['success'] = $this->config['messages']['success'];
+                
+                // redirect
+                if( $this->config['redirect_on_sucess'] !== false ){
+                    wp_redirect( $this->get_redirect_url('success') );
+                    exit();
+                }
+            } else {
+                // acionar callbacks: form->config
+                $this->form_callback( $this->config['callbacks']['error'] );
+            }
+        }
+        else{
+            // acionar callbacks: form->config
+            $this->form_callback( $this->config['callbacks']['error'] );
+            $this->errors = array_merge( $this->errors, $this->validation->data_errors );
+        }
+    }
 	
 	// NÃO USADO NO MOMENTO!!!
 	// mapear mensagens em versão numerica para ser usado após redirect
