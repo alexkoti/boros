@@ -1,6 +1,0 @@
-Lista de funções, class e métodos depreciados. Sempre revisar para a remoção destes códigos.
-
-extend_wp.php
-	pagenavi_filtered();
-	pagenavi_list();
-	PageNaviList::tresm_pagenavi();
