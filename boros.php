@@ -61,13 +61,13 @@ print_r($const['user']);
  * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
  */
 function version_id(){
-	if( defined('BOROS_NO_SCRIPT_CACHE') ){
-		return time(); //para remover totalmente o cache;
-	}
-	if( defined('BOROS_VERSION_ID') ){
-		return BOROS_VERSION_ID;
-	}
-	return apply_filters('boros_version_id', '1.0');
+    if( defined('BOROS_NO_SCRIPT_CACHE') ){
+        return time(); //para remover totalmente o cache;
+    }
+    if( defined('BOROS_VERSION_ID') ){
+        return BOROS_VERSION_ID;
+    }
+    return apply_filters('boros_version_id', '1.0');
 }
 
 
@@ -89,7 +89,7 @@ function version_id(){
  * 
  */
 if( defined('LOCALHOST') and LOCALHOST === true ){
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'localhost.php' );          // functions restritas ao desenvolvimento localhost
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'localhost.php' );          // functions restritas ao desenvolvimento localhost
 }
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'debug.php' );                  // functions de debug(pre, pal, prex)
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'autoload.php' );               // autoload
@@ -116,7 +116,7 @@ include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'tests.php');             
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'third_party_facebook.php');    // integração com facebook
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'security.php' );               // configurações e filtros de segurança
 if( defined('MULTISITE') and MULTISITE == true ){
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'multisite.php');           // functions extras para multisite
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'multisite.php');           // functions extras para multisite
 }
 
 /**
@@ -125,9 +125,9 @@ if( defined('MULTISITE') and MULTISITE == true ){
  * 
  */
 if( !is_admin() ){
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_static.php' );    // actions e filters fixas para frontend
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_head.php' );      // functions para o <head> do frontend - scripts, css
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_media.php');      // functions extendidas para manipulação de midias para frontend apenas
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_static.php' );    // actions e filters fixas para frontend
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_head.php' );      // functions para o <head> do frontend - scripts, css
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_media.php');      // functions extendidas para manipulação de midias para frontend apenas
 }
 
 /**
@@ -136,11 +136,26 @@ if( !is_admin() ){
  * 
  */
 if( is_admin() ){
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin.php');               // 
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_dashboard.php');     // auxiliar do dashboard
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_functions.php');     //
-	include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_nav_menus.php');     // personalização do controle de menus
-	//include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_tools.php');       // functions para sub-tarefas, como criar conteúdo dummy
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin.php');               // 
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_dashboard.php');     // auxiliar do dashboard
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_functions.php');     //
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_nav_menus.php');     // personalização do controle de menus
+    //include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_tools.php');       // functions para sub-tarefas, como criar conteúdo dummy
+    
+    /**
+     * UPDATE CHECKER
+     * Verificar updates
+     * 
+     * @link https://github.com/YahnisElsts/plugin-update-checker
+     * 
+     */
+    require 'plugin-update-checker/plugin-update-checker.php';
+    $className = PucFactory::getLatestClassVersion('PucGitHubChecker');
+    $myUpdateChecker = new $className(
+        'https://github.com/alexkoti/boros',
+        __FILE__,
+        'master'
+    );
 }
 
 

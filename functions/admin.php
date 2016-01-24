@@ -35,14 +35,10 @@ function force_daily_login_activation() {
 		wp_schedule_event( time(), 'daily', 'force_daily_login_hook');
 	}
 }
+
 add_action('force_daily_login_hook', 'force_daily_login');
 function force_daily_login(){
 	wp_clear_auth_cookie();
 }
-
-
-
-
-
 
 
