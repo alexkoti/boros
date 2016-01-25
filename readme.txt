@@ -16,6 +16,9 @@ Funções para o admin do WordPress, páginas personalizadas de administração(
 
 == Changelog ==
 
+= 1.0.2 (2016.01.24) =
+* Melhorias na adição de css e js no frontend
+
 = 1.0.1 (2016.01.23) =
 * Implementado auto updates utilizando a biblioteca https://github.com/YahnisElsts/plugin-update-checker
 
