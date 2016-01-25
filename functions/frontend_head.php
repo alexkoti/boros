@@ -11,169 +11,169 @@
  * @todo: trocar ou adicionar setar a configuração via array único
  */
 class BorosJs {
-	var $js_dir = '';
-	var $current = '';
-	
-	private $conditionals = array(
-		'head' => array(),
-		'footer' => array(),
-	);
-	
-	/**
-	 * jQuery no footer
-	 * Ao instanciar o objeto, define o jquery do CDN Google com fallback para jquery local, via wp_localize_script
-	 * 
-	 */
-	function __construct( $args = array() ){
-		add_action( 'wp_head', array($this, 'cond_head') );
-		add_action( 'wp_footer', array($this, 'cond_footer') );
-		
-		// definir o local do jquery - pode ser o jquery do wp-includes
-		if( defined('JQUERY_URL') ){
-			$jquery = JQUERY_URL;
-		}
-		else{
-			$jquery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
-			define('JQUERY_URL', $jquery);
-		}
-		
-		$defaults = array(
-			'src' => $jquery,
-			'ver' => null,
-			'in_footer' => true,
-		);
-		$this->options = boros_parse_args( $defaults, $args );
-		
-		$this->js_dir = get_bloginfo('template_url') . '/js/';
-		
-		if( !in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) and JQUERY_URL !== false ){
-			wp_deregister_script( 'jquery' );
-			wp_enqueue_script(
-				$handle = 'jquery',
-				$src = $this->options['src'],
-				$deps = false,
-				$ver = $this->options['ver'],
-				$in_footer = $this->options['in_footer']
-			);
-		}
-		
-		/**
-		 * Adicionar variáveis dinâmicas
-		 * A forma ideal para adicionar variáveis gerados por php é colocá-las via localize_script
-		 * 
-		 */
-		$localize_array = array(
-			'local_url' => $this->js_dir . 'libs/jquery.js',
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-		);
-		wp_localize_script( 'jquery', 'jquery_vars', $localize_array );
-		$this->current = 'jquery';
-		
-		// scripts de comentários aninhados
-		if ( is_singular() && get_option( 'thread_comments' ) )
-			wp_enqueue_script( 'comment-reply' );
-	}
-	
-	/**
-	 * bug: foi modificado o padrão $in_footer para true no lugar de null, porque quando existe a adição condicional(ex 3Minovação) as adições acabam ficando no head
-	 * bug: na mesma situação acima, o jquery acaba sendo renderizado no head, embora os deps fiquem corretamente no footer
-	 * 
-	 */
-	function add( $name, $folder = false, $deps = false, $in_footer = true, $cond = false ){
-		$dir = ($folder) ? $folder . '/' : '';
-		$src = $this->js_dir . $dir . $name . '.js';
-		$this->current = $name;
-		if( is_null($in_footer) ){
-			$in_footer = false;
-		}
-		
-		if( $cond == true ){
-			$pos = ($in_footer == true) ? 'footer' : 'head';
-			$this->conditionals[$pos][] = array(
-				'name' => $name,
-				'src' => $src,
-				'cond' => $cond,
-			);
-		}
-		else{
-			wp_enqueue_script( $name, $src, $deps, version_id(), $in_footer );
-		}
-		return $this;
-	}
-	
-	function jquery( $name, $folder = false, $cond = false ){
-		$this->current = 'jquery';
-		$this->add( $name, $folder, array('jquery'), $this->options['in_footer'], $cond );
-		return $this;
-	}
-	
-	function child( $name, $folder = false, $parent = false, $cond = false ){
-		if( !$parent )
-			$parent = $this->current;
-		$this->add( $name, $folder, array($parent) );
-		return $this;
-	}
-	
-	function cond_head(){
-		$this->cond_out('head');
-	}
-	
-	function cond_footer(){
-		$this->cond_out('footer');
-	}
-	
-	function cond_out( $pos ){
-		foreach( $this->conditionals[$pos] as $js ){
-			echo "<!--[{$js['cond']}]><script src='{$js['src']}'></script><![endif]-->";
-		}
-	}
-	
-	/**
-	 * Não implementado ainda no core do WordPress :(
-	 * 
-	 * @link http://stackoverflow.com/a/16221114
-	 */
-	function cond( $cond, $name = false ){
-		if( $name )
-			$this->current = $name;
-		$GLOBALS['wp_scripts']->add_data( $this->current, 'conditional', $cond );
-		return $this;
-	}
-	
-	/**
-	 * Adiciona um script com caminho absoluto. Aceita apenas o scr como string
-	 * 
-	 */
-	function abs( $config ){
-		if( !is_array($config) ){
-			$config = array('src' => $config);
-		}
-		$defaults = array(
-			'name' => 'abs',
-			'src' => '',
-			'parent' => false,
-			'ver' => 1,
-			'in_footer' => true,
-			'cond' => false,
-		);
-		$config = boros_parse_args( $defaults, $config );
-		if( $config['cond'] == true ){
-			$pos = ($config['in_footer'] == true) ? 'footer' : 'head';
-			$this->conditionals[$pos][] = array(
-				'name' => $config['name'],
-				'src' => $config['src'],
-				'cond' => $config['cond'],
-			);
-		}
-		else{
-			wp_enqueue_script( $config['name'], $config['src'], $config['deps'], $config['ver'], $config['in_footer'] );
-		}
-		return $this;
-	}
-	
-	function head( $name ){
-		return $this;
-	}
+    var $js_dir      = '';
+    var $vendors_dir = '';
+    var $current     = '';
+    
+    private $conditionals = array(
+        'head' => array(),
+        'footer' => array(),
+    );
+    
+    /**
+     * jQuery no footer
+     * Ao instanciar o objeto, define o jquery do CDN Google com fallback para jquery local, via wp_localize_script
+     * 
+     */
+    function __construct( $args = array() ){
+        if( !is_admin() ){
+            add_action( 'wp_head', array($this, 'cond_head') );
+            add_action( 'wp_footer', array($this, 'cond_footer') );
+            
+            $defaults = array(
+                'src' => '/wp-includes/js/jquery/jquery.js',
+                'ver' => null,
+                'in_footer' => true,
+            );
+            $this->options = boros_parse_args( $defaults, $args );
+            
+            $this->js_dir      = get_bloginfo('template_url') . '/js/';
+            $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
+            
+            wp_deregister_script( 'jquery' );
+            wp_enqueue_script(
+                $handle = 'jquery',
+                $src = $this->options['src'],
+                $deps = false,
+                $ver = $this->options['ver'],
+                $in_footer = $this->options['in_footer']
+            );
+            
+            $this->current = 'jquery';
+            
+            // scripts de comentários aninhados
+            if ( is_singular() && get_option( 'thread_comments' ) ){
+                wp_enqueue_script( 'comment-reply' );
+            }
+        }
+    }
+    
+    /**
+     * bug: foi modificado o padrão $in_footer para true no lugar de null, porque quando existe a adição condicional(ex 3Minovação) as adições acabam ficando no head
+     * bug: na mesma situação acima, o jquery acaba sendo renderizado no head, embora os deps fiquem corretamente no footer
+     * 
+     */
+    function add( $name, $folder = false, $deps = false, $in_footer = true, $cond = false ){
+        $dir = ($folder) ? $folder . '/' : '';
+        $src = $this->js_dir . $dir . $name . '.js';
+        $this->current = $name;
+        if( is_null($in_footer) ){
+            $in_footer = false;
+        }
+        
+        if( $cond == true ){
+            $pos = ($in_footer == true) ? 'footer' : 'head';
+            $this->conditionals[$pos][] = array(
+                'name' => $name,
+                'src' => $src,
+                'cond' => $cond,
+            );
+        }
+        else{
+            wp_enqueue_script( $name, $src, $deps, version_id(), $in_footer );
+        }
+        return $this;
+    }
+    
+    /**
+     * Adicionar script da pasta vendors
+     * 
+     */
+    function vendor( $name, $folder = false, $deps = false, $in_footer = true ){
+        $dir = ($folder) ? $folder . '/' : '';
+        $src = $this->vendors_dir . $dir . $name . '.js';
+        $this->current = $name;
+        if( is_null($in_footer) ){
+            $in_footer = false;
+        }
+        
+        wp_enqueue_script( $name, $src, $deps, version_id(), $in_footer );
+        return $this;
+    }
+    
+    function jquery( $name, $folder = false, $cond = false ){
+        $this->current = 'jquery';
+        $this->add( $name, $folder, array('jquery'), $this->options['in_footer'], $cond );
+        return $this;
+    }
+    
+    function child( $name, $folder = false, $parent = false, $cond = false ){
+        if( !$parent )
+            $parent = $this->current;
+        $this->add( $name, $folder, array($parent) );
+        return $this;
+    }
+    
+    function cond_head(){
+        $this->cond_out('head');
+    }
+    
+    function cond_footer(){
+        $this->cond_out('footer');
+    }
+    
+    function cond_out( $pos ){
+        foreach( $this->conditionals[$pos] as $js ){
+            echo "<!--[{$js['cond']}]><script src='{$js['src']}'></script><![endif]-->";
+        }
+    }
+    
+    /**
+     * Não implementado ainda no core do WordPress :(
+     * 
+     * @link http://stackoverflow.com/a/16221114
+     */
+    function cond( $cond, $name = false ){
+        if( $name )
+            $this->current = $name;
+        $GLOBALS['wp_scripts']->add_data( $this->current, 'conditional', $cond );
+        return $this;
+    }
+    
+    /**
+     * Adiciona um script com caminho absoluto. Aceita apenas o scr como string
+     * 
+     */
+    function abs( $config ){
+        if( !is_array($config) ){
+            $config = array('src' => $config);
+        }
+        $defaults = array(
+            'name' => 'abs',
+            'src' => '',
+            'parent' => false,
+            'ver' => 1,
+            'in_footer' => true,
+            'cond' => false,
+        );
+        $config = boros_parse_args( $defaults, $config );
+        if( $config['cond'] == true ){
+            $pos = ($config['in_footer'] == true) ? 'footer' : 'head';
+            $this->conditionals[$pos][] = array(
+                'name' => $config['name'],
+                'src' => $config['src'],
+                'cond' => $config['cond'],
+            );
+        }
+        else{
+            wp_enqueue_script( $config['name'], $config['src'], $config['deps'], $config['ver'], $config['in_footer'] );
+        }
+        return $this;
+    }
+    
+    function head( $name ){
+        return $this;
+    }
 }
 
 
@@ -186,111 +186,125 @@ class BorosJs {
  * @todo ESCREVER UMA DESCRIÇÃO DETALHADA
  */
 class BorosCss {
-	var $css_dir = '';
-	var $current = '';
-	
-	function __construct(){
-		$this->css_dir = get_bloginfo('template_url') . '/css/';
-	}
-	
-	/**
-	 * Adicionar stylesheet ao <head> da página
-	 * 
-	 * @param string $name Nome do arquivo; será o mesmo o mesmo nome a ser registrado no handler
-	 * @param string $folder optional Sub-pasta de thema/css onde está o stylesheet
-	 * 
-	 * @return o próprio objeto, para que seja possível o encadeamento.
-	 */
-	function add( $name, $folder = false, $media = 'screen', $parent = false ){
-		$dir = ($folder) ? $folder . '/' : '';
-		$src = $this->css_dir . $dir . $name . '.css';
-		$this->current = $name;
-		wp_enqueue_style($name, $src, $parent, version_id(), $media);
-		return $this;
-	}
-	
-	/**
-	 * Adicionar stylesheet child(dependente)
-	 * 
-	 * @param string $name Nome do arquivo; será o mesmo o mesmo nome a ser registrado no handler
-	 * @param string $folder optional Sub-pasta de thema/css onde está o stylesheet
-	 * @param string $parent optional Parent do stylesheet; caso seja encadeado, é usado o como parent o $current do objeto
-	 * 
-	 * @return o próprio objeto, para que seja possível o encadeamento.
-	 */
-	function child( $name, $folder = false, $media = 'screen', $parent = false ){
-		if( !$parent )
-			$parent = $this->current;
-		$this->add( $name, $folder, $media, array($parent) );
-		return $this;
-	}
-	
-	/**
-	 * Define o 'rel' do stylesheet como 'alternate stylesheet'.
-	 * Caso a chamada seja encadeada, não é preciso inserir o $name
-	 * 
-	 * @param string $name optional Nome do stylesheet a ser modificado o rel
-	 * 
-	 * @return o próprio objeto, para que seja possível o encadeamento.
-	 */
-	function alt( $name = false ){
-		if( $name )
-			$this->current = $name;
-		$GLOBALS['wp_styles']->add_data( $this->current, 'alt', 'alternate stylesheet' );
-		return $this;
-	}
-	
-	
-	/**
-	 * Adiciona o stylesheet com comentários condicionais para internat explorer
-	 * 
-	 * $param string $cond Condicional para filtragem
-	 * @param string $name optional Nome do stylesheet a ser condicionado
-	 * 
-	 * @return o próprio objeto, para que seja possível o encadeamento.
-	 */
-	function cond( $cond, $name = false ){
-		if( $name )
-			$this->current = $name;
-		$GLOBALS['wp_styles']->add_data( $this->current, 'conditional', $cond );
-		return $this;
-	}
-	
-	/**
-	 * ATENÇÃO:: NÃO ESTÁ FUNCIONANDO!!!
-	 * Configurar a media do stylesheet, caso seja diferente de 'screen'
-	 * Não funciona nos encadeamentos de child(), apenas em add(), pois sempre referencia o $current do objeto
-	 * 
-	 * @param $media Nome da media a ser atribuída
-	 * 
-	 * @return o próprio objeto, para que seja possível o encadeamento.
-	 */
-	function media( $media, $name = false ){
-		if( $name )
-			$this->current = $name;
-		$GLOBALS['wp_styles']->add_data( $this->current, 'media', $media );
-		return $this;
-	}
-	
-	/**
-	 * Adiciona um css com caminho absoluto. Aceita apenas o scr como string
-	 * 
-	 */
-	function abs( $config ){
-		if( !is_array($config) ){
-			$config = array('src' => $config);
-		}
-		$defaults = array(
-			'name' => 'custom',
-			'src' => '',
-			'parent' => false,
-			'version' => '1',
-			'media' => 'screen',
-		);
-		$config = boros_parse_args($defaults, $config);
-		wp_enqueue_style($config['name'], $config['src'], $config['parent'], $config['version'], $config['media']);
-		return $this;
-	}
+    var $css_dir = '';
+    var $vendors_dir = '';
+    var $current = '';
+    
+    function __construct(){
+        $this->css_dir     = get_bloginfo('template_url') . '/css/';
+        $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
+    }
+    
+    /**
+     * Adicionar stylesheet ao <head> da página
+     * 
+     * @param string $name Nome do arquivo; será o mesmo o mesmo nome a ser registrado no handler
+     * @param string $folder optional Sub-pasta de thema/css onde está o stylesheet
+     * 
+     * @return o próprio objeto, para que seja possível o encadeamento.
+     */
+    function add( $name, $folder = false, $media = 'screen', $parent = false ){
+        $dir = ($folder) ? $folder . '/' : '';
+        $src = $this->css_dir . $dir . $name . '.css';
+        $this->current = $name;
+        wp_enqueue_style($name, $src, $parent, version_id(), $media);
+        return $this;
+    }
+    
+    /**
+     * Adicionar stylesheet da pasta vendors
+     * 
+     */
+    function vendor( $name, $folder = false, $media = 'screen', $parent = false ){
+        $dir = ($folder) ? $folder . '/' : '';
+        $src = $this->vendors_dir . $dir . $name . '.css';
+        $this->current = $name;
+        wp_enqueue_style($name, $src, $parent, version_id(), $media);
+        return $this;
+    }
+    
+    /**
+     * Adicionar stylesheet child(dependente)
+     * 
+     * @param string $name Nome do arquivo; será o mesmo o mesmo nome a ser registrado no handler
+     * @param string $folder optional Sub-pasta de thema/css onde está o stylesheet
+     * @param string $parent optional Parent do stylesheet; caso seja encadeado, é usado o como parent o $current do objeto
+     * 
+     * @return o próprio objeto, para que seja possível o encadeamento.
+     */
+    function child( $name, $folder = false, $media = 'screen', $parent = false ){
+        if( !$parent )
+            $parent = $this->current;
+        $this->add( $name, $folder, $media, array($parent) );
+        return $this;
+    }
+    
+    /**
+     * Define o 'rel' do stylesheet como 'alternate stylesheet'.
+     * Caso a chamada seja encadeada, não é preciso inserir o $name
+     * 
+     * @param string $name optional Nome do stylesheet a ser modificado o rel
+     * 
+     * @return o próprio objeto, para que seja possível o encadeamento.
+     */
+    function alt( $name = false ){
+        if( $name )
+            $this->current = $name;
+        $GLOBALS['wp_styles']->add_data( $this->current, 'alt', 'alternate stylesheet' );
+        return $this;
+    }
+    
+    
+    /**
+     * Adiciona o stylesheet com comentários condicionais para internat explorer
+     * 
+     * $param string $cond Condicional para filtragem
+     * @param string $name optional Nome do stylesheet a ser condicionado
+     * 
+     * @return o próprio objeto, para que seja possível o encadeamento.
+     */
+    function cond( $cond, $name = false ){
+        if( $name )
+            $this->current = $name;
+        $GLOBALS['wp_styles']->add_data( $this->current, 'conditional', $cond );
+        return $this;
+    }
+    
+    /**
+     * ATENÇÃO:: NÃO ESTÁ FUNCIONANDO!!!
+     * Configurar a media do stylesheet, caso seja diferente de 'screen'
+     * Não funciona nos encadeamentos de child(), apenas em add(), pois sempre referencia o $current do objeto
+     * 
+     * @param $media Nome da media a ser atribuída
+     * 
+     * @return o próprio objeto, para que seja possível o encadeamento.
+     */
+    function media( $media, $name = false ){
+        if( $name )
+            $this->current = $name;
+        $GLOBALS['wp_styles']->add_data( $this->current, 'media', $media );
+        return $this;
+    }
+    
+    /**
+     * Adiciona um css com caminho absoluto. Aceita apenas o scr como string
+     * 
+     */
+    function abs( $config ){
+        if( !is_array($config) ){
+            $config = array('src' => $config);
+        }
+        $defaults = array(
+            'name' => 'custom',
+            'src' => '',
+            'parent' => false,
+            'version' => '1',
+            'media' => 'screen',
+        );
+        $config = boros_parse_args($defaults, $config);
+        wp_enqueue_style($config['name'], $config['src'], $config['parent'], $config['version'], $config['media']);
+        return $this;
+    }
 }
 
 
