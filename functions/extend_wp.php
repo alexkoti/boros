@@ -27,6 +27,31 @@ function boros_calendar( $config ){
 
 /**
  * ==================================================
+ * ADICIONAR NOTIFICAÇÃO DE ALERTA DE ADMIN =========
+ * ==================================================
+ * Adicionar mensagem de notificação de alerta no widget "Mensagens e alertas"
+ * 
+ * 
+ */
+function boros_add_dashboard_notification( $key = 'alert', $message = 'Mensagem de alerta' ){
+    $alerts = get_option('boros_dashboard_notifications');
+    if( !isset( $alerts[$key] ) ){
+        update_option( 'boros_dashboard_notifications', $alerts );
+    }
+}
+
+function boros_remove_dashboard_notification( $key = 'alert' ){
+    $alerts = get_option('boros_dashboard_notifications');
+    if( !isset( $alerts[$key] ) ){
+        unset( $alerts[$key] );
+        update_option( 'boros_dashboard_notifications', $alerts );
+    }
+}
+
+
+
+/**
+ * ==================================================
  * CUSTOM EXCERPT ===================================
  * ==================================================
  * Criar um excerpt com base em qualquer string. Baseado no código core do wp, removendo tags, shortcodes, porém mais simplificado, podendo ser aplicado em qulauer tipo de string.
@@ -818,6 +843,10 @@ class Boros_Pagination {
 	);
 	private $output = '';
 	
+    /**
+     * Aplicar defaults via boros_defaults
+     * 
+     */
 	function __construct( $args ){
 		$this->current = (int)$args['current'];
 		$this->total = (int)$args['total'];
