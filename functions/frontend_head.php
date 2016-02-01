@@ -14,6 +14,12 @@ class BorosJs {
     var $js_dir      = '';
     var $vendors_dir = '';
     var $current     = '';
+    var $options     = array(
+        'src' => '/wp-includes/js/jquery/jquery.js',
+        'ver' => null,
+        'in_footer' => true,
+    );
+    var $queue = array();
     
     private $conditionals = array(
         'head' => array(),
@@ -26,41 +32,50 @@ class BorosJs {
      * 
      */
     function __construct( $args = array() ){
-        if( !is_admin() ){
+        if( !is_admin() and !in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) ){
             add_action( 'wp_head', array($this, 'cond_head') );
             add_action( 'wp_footer', array($this, 'cond_footer') );
-            
-            $defaults = array(
-                'src' => '/wp-includes/js/jquery/jquery.js',
-                'ver' => null,
-                'in_footer' => true,
-            );
-            $this->options = boros_parse_args( $defaults, $args );
+            $this->options = boros_parse_args( $this->options, $args );
             
             $this->js_dir      = get_bloginfo('template_url') . '/js/';
             $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
             
             wp_deregister_script( 'jquery' );
-            wp_enqueue_script(
-                $handle = 'jquery',
-                $src = $this->options['src'],
-                $deps = false,
-                $ver = $this->options['ver'],
-                $in_footer = $this->options['in_footer']
+            $this->queue[] = array(
+                'jquery',
+                $this->options['src'],
+                false,
+                $this->options['ver'],
+                $this->options['in_footer']
             );
             
             $this->current = 'jquery';
             
             // scripts de comentários aninhados
             if ( is_singular() && get_option( 'thread_comments' ) ){
-                wp_enqueue_script( 'comment-reply' );
+                $this->queue[] = 'comment-reply';
+            }
+            
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        }
+    }
+    
+    /**
+     * Run enqueues
+     * 
+     */
+    function enqueue_scripts(){
+        foreach( $this->queue as $args ){
+            if( is_array($args) ){
+                wp_enqueue_script( $args[0], $args[1], $args[2], $args[3], $args[4] );
+            } else {
+                wp_enqueue_script( $args );
             }
         }
     }
     
     /**
-     * bug: foi modificado o padrão $in_footer para true no lugar de null, porque quando existe a adição condicional(ex 3Minovação) as adições acabam ficando no head
-     * bug: na mesma situação acima, o jquery acaba sendo renderizado no head, embora os deps fiquem corretamente no footer
+     * Adição comum, sem dependência de jquery, instalado na pasta /js do tema.
      * 
      */
     function add( $name, $folder = false, $deps = false, $in_footer = true, $cond = false ){
@@ -80,13 +95,23 @@ class BorosJs {
             );
         }
         else{
-            wp_enqueue_script( $name, $src, $deps, version_id(), $in_footer );
+            $this->queue[] = array( $name, $src, $deps, version_id(), $in_footer );
         }
         return $this;
     }
     
     /**
-     * Adicionar script da pasta vendors
+     * Adicionar script dependente de jquery da pasta /js
+     * 
+     */
+    function jquery( $name, $folder = false, $cond = false ){
+        $this->current = 'jquery';
+        $this->add( $name, $folder, array('jquery'), $this->options['in_footer'], $cond );
+        return $this;
+    }
+    
+    /**
+     * Adicionar script da pasta /vendors
      * 
      */
     function vendor( $name, $folder = false, $deps = false, $in_footer = true ){
@@ -97,16 +122,15 @@ class BorosJs {
             $in_footer = false;
         }
         
-        wp_enqueue_script( $name, $src, $deps, version_id(), $in_footer );
+        $this->queue[] = array( $name, $src, $deps, version_id(), $in_footer );
         return $this;
     }
     
-    function jquery( $name, $folder = false, $cond = false ){
-        $this->current = 'jquery';
-        $this->add( $name, $folder, array('jquery'), $this->options['in_footer'], $cond );
-        return $this;
-    }
-    
+    /**
+     * Adicionar um script dependente, na concatenação
+     * Ex: $js->add('thickbox')->child('extendthick');
+     * 
+     */
     function child( $name, $folder = false, $parent = false, $cond = false ){
         if( !$parent )
             $parent = $this->current;
@@ -166,7 +190,7 @@ class BorosJs {
             );
         }
         else{
-            wp_enqueue_script( $config['name'], $config['src'], $config['deps'], $config['ver'], $config['in_footer'] );
+            $this->queue[] = array( $config['name'], $config['src'], $config['deps'], $config['ver'], $config['in_footer'] );
         }
         return $this;
     }
@@ -191,6 +215,11 @@ class BorosCss {
     var $current = '';
     
     function __construct(){
+        
+        // Adicionar mensagem de aviso de hook deprecated
+        if( current_filter() == 'wp_print_styles' ){
+            boros_add_dashboard_notification('old_enqueue_css_hook', 'É necessário registrar os CSS no hook "init", em vez do atual "wp_print_styles"');
+        }
         $this->css_dir     = get_bloginfo('template_url') . '/css/';
         $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
     }
