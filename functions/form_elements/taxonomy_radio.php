@@ -77,21 +77,27 @@ class BFE_taxonomy_radio extends BorosFormElement {
 			case 'termmeta':
 			case 'frontend':
 				$selected_term = $value;
-				$name = $this->data['name'];
 				break;
 			
+			// existe duas possibilidades: o valor ser de um taxonomy term relacionado ao post_type, ou um post_meta entre valores de
+			// de um outro post_type, como no caso de cruzamento entre post_types.
 			// taxonomy terms associado ao post. Por ser um rádio, espera-se que possua apenas um term
 			case 'post_meta':
-				$selected_terms = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
-				if( !empty($selected_terms) ){
-					$selected_term = $selected_terms[0]->term_id;
+				if( strpos( $this->data['name'], 'tax_input' ) === false ){
+					$selected_term = $value;
+				} else {
+					$selected_terms = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
+					if( !empty($selected_terms) ){
+						$selected_term = $selected_terms[0]->term_id;
+					}
+					else{
+						$selected_term = false;
+					}
 				}
-				else{
-					$selected_term = false;
-				}
-				$name = "tax_input[{$this->data['options']['taxonomy']}][]";
+				
 				break;
 		}
+		$name = $this->data['name'];
 		
 		if( !empty($terms) ){
 			$radios = array();

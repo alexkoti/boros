@@ -40,6 +40,7 @@ class BFE_taxonomy_terms_radio extends BorosFormElement {
 			'show_recent' => true,
 			'show_favs' => true,
 			'show_adder' => false,
+			'show_filter' => false,
 		);
 		$options = wp_parse_args($this->data['options'], $defaults);
 		//pre($options);

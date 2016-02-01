@@ -34,7 +34,7 @@ class BFE_taxonomy_checkbox extends BorosFormElement {
 	function set_input( $value = null ){
 		global $post;
 		
-		// $object_id será usado por wp_terms_checklist, e someente no caso de 'post' irá procurar as taxonomias relativas diretamente ao objeto
+		// $object_id será usado por wp_terms_checklist, e somente no caso de 'post' irá procurar as taxonomias relativas diretamente ao objeto
 		// caso seja 'taxonomy' ou 'user' será '0', para que faça a busca geral em todos os termos da taxonomia
 		$object_id = 0;
 		
@@ -58,6 +58,7 @@ class BFE_taxonomy_checkbox extends BorosFormElement {
 		else{
 			$object_id = $post->ID;
 			$selecteds = wp_get_object_terms( $post->ID, $this->data['options']['taxonomy'] );
+			//pre($selecteds);
 			foreach( $selecteds as $tt ){
 				$selected_terms[] = absint( $tt->term_id );
 			}
