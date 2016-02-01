@@ -40,9 +40,9 @@ class BorosMetaBoxes {
 		'post_mime_type',
 		'comment_count',
 		'post_category',
-		'tags_input',
-		'tax_input',
-		'page_template',
+		//'tags_input',
+		//'tax_input',
+		//'page_template',
 	);
 	
 	/**
@@ -133,6 +133,7 @@ class BorosMetaBoxes {
 		//echo "<input type='hidden' name='custom_data' value='1' />";
 		
 		foreach( $meta_itens as $meta_item ){
+			//pre($meta_item);
 			$data_value = null;
 			
 			/**
@@ -365,7 +366,6 @@ class BorosMetaBoxes {
 					}
 					/**/
 					
-					
 					//pre($data, $element['name']);
 					//pre($element['name']);
 					
@@ -376,6 +376,7 @@ class BorosMetaBoxes {
 						//pal( $element['name'], $data );
 						$this->save_single( $post_id, $element['name'], $data );
 					}
+					
 					/**
 					if( get_post_meta( $post_id, $element['name'] ) == '' ){
 						add_post_meta( $post_id, $element['name'], $data, true );
@@ -401,12 +402,15 @@ class BorosMetaBoxes {
 			 * Gravar mensagens de erro, se houver
 			 * @todo mostrar avisos no admin
 			 */
-			if( !empty($validation->meta_errors) )
+			if( !empty($validation->meta_errors) ){
 				set_transient( "{$post_id}_meta_errors", $validation->meta_errors, 30 );
+			}
 		}
 		//pre($_POST, '$_POST');
 		//pre($post_id, '$post_id');
 		//pre($post, '$post');
+		//pre($_POST, '$_POST'); die();
+		//pal('DEBUG!!!');
 	}
 	
 	function save_single( $post_id, $name, $value ){

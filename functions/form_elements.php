@@ -1038,7 +1038,9 @@ class BorosFormElement {
 		//pre($this->in_duplicate_group);
 		if( ($this->data['in_duplicate_group'] == false) and !empty($this->data['name']) and ($this->data['type'] != 'html') and ($this->data['type'] != 'separator') ){
 			//pal('nonce');
-			$nonce = wp_nonce_field( $this->data['name'], "{$this->data['name']}_nonce", false, false );
+			// normalizar o name do nonce, pois em caso de taxonomias possui colchetes (tax_input[category])
+			$field_name = str_replace(array('[', ']'), array('_', ''), $this->data['name']);
+			$nonce = wp_nonce_field( $this->data['name'], "{$field_name}_nonce", false, false );
 		}
 		else{
 			$nonce = '';
