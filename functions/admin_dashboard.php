@@ -2,10 +2,10 @@
 /**
  * DASHBOARD
  * 
- * 
+ * As functions boros_add_dashboard_notification() e boros_remove_dashboard_notification() estão em extend_wp.php pois 
+ * precisam ser carregadas no frontend e admin
  * 
  */
-
 
 
 /**
@@ -17,43 +17,31 @@
  */
 add_action( 'admin_init', 'boros_update_checks' );
 function boros_update_checks(){
-	
-	/**
-	 * Verificar o plugin code do tinymce
-	 * 
-	 */
-	global $pagenow;
-	if( $pagenow == 'index.php' ){
-		$alerts = get_option('boros_dashboard_notifications');
-		
-		// verificar plugin "CODE" de tinymce
-		if( !file_exists( ABSPATH . '/wp-includes/js/tinymce/plugins/code/plugin.min.js' ) ){
-			if( !isset($alerts['need_tinymce_code_plugin']) ){
-				$alerts['need_tinymce_code_plugin'] = 'É preciso atualizar os plugins do tinymce, adicionando o plugin "<code>code</code>"';
-				update_option('boros_dashboard_notifications', $alerts);
-			}
-		}
-		else{
-			if( isset($alerts['need_tinymce_code_plugin']) ){
-				unset($alerts['need_tinymce_code_plugin']);
-				update_option('boros_dashboard_notifications', $alerts);
-			}
-		}
-		
-		// verificar se o plugin wp-email-login está ativo
-		if( function_exists('dr_email_login_authenticate') ){
-			if( !isset($alerts['plugin_wp_email_login_active']) ){
-				$alerts['plugin_wp_email_login_active'] = 'O plugin Wp Email Login está ativo, porém ele não é mais necessário, pois as funcionalidades deste foram incorporadas no plugin base."';
-				update_option('boros_dashboard_notifications', $alerts);
-			}
-		}
-		else{
-			if( isset($alerts['plugin_wp_email_login_active']) ){
-				unset($alerts['plugin_wp_email_login_active']);
-				update_option('boros_dashboard_notifications', $alerts);
-			}
-		}
-	}
+
+    /**
+     * Verificar o plugin code do tinymce
+     * 
+     */
+    global $pagenow;
+    if( $pagenow == 'index.php' ){
+        $alerts = get_option('boros_dashboard_notifications');
+        
+        // verificar plugin "CODE" de tinymce
+        if( !file_exists( ABSPATH . '/wp-includes/js/tinymce/plugins/code/plugin.min.js' ) ){
+            boros_add_dashboard_notification('need_tinymce_code_plugin', 'É preciso atualizar os plugins do tinymce, adicionando o plugin "<code>code</code>"');
+        }
+        else{
+            boros_remove_dashboard_notification('need_tinymce_code_plugin');
+        }
+        
+        // verificar se o plugin wp-email-login está ativo
+        if( function_exists('dr_email_login_authenticate') ){
+            boros_add_dashboard_notification('plugin_wp_email_login_active', 'O plugin Wp Email Login está ativo, porém ele não é mais necessário, pois as funcionalidades deste foram incorporadas no plugin base.');
+        }
+        else{
+            boros_remove_dashboard_notification('plugin_wp_email_login_active');
+        }
+    }
 }
 
 /**
@@ -65,11 +53,15 @@ function boros_update_checks(){
  */
 add_action( 'wp_dashboard_setup', 'boros_dashboard_notifications_widget' );
 function boros_dashboard_notifications_widget(){
-	wp_add_dashboard_widget(
-		'boros_dashboard_notifications_widget',       // Widget slug.
-		'Mensagens e alertas',                        // Title.
-		'boros_dashboard_notifications_widget_output' // Display function.
-	);
+    $alerts = get_option('boros_dashboard_notifications'); //pre($alerts);
+    if( empty($alerts) ){
+        return;
+    }
+    wp_add_dashboard_widget(
+        'boros_dashboard_notifications_widget',       // Widget slug.
+        'Mensagens e alertas',                        // Title.
+        'boros_dashboard_notifications_widget_output' // Display function.
+    );
 }
 
 function boros_dashboard_notifications_widget_output(){
@@ -96,12 +88,10 @@ function boros_dashboard_admin_enqueue_scripts( $hook ){
 
 add_action('wp_ajax_boros_dashboard_notifications_widget_remove_item', 'boros_dashboard_notifications_widget_remove_item');
 function boros_dashboard_notifications_widget_remove_item(){
-	check_ajax_referer( $_POST['alert'], 'nonce', true );
-	$alerts = get_option('boros_dashboard_notifications');
-	unset($alerts[$_POST['alert']]);
-	update_option('boros_dashboard_notifications', $alerts);
-	$alerts = get_option('boros_dashboard_notifications'); print_r($alerts); echo 'aaaa';
-	die();
+    check_ajax_referer( $_POST['alert'], 'nonce', true );
+    boros_remove_dashboard_notification( $_POST['alert'] );
+    //$alerts = get_option('boros_dashboard_notifications'); print_r($alerts); echo 'aaaa';
+    die();
 }
 
 
