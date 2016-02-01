@@ -62,7 +62,11 @@ function boros_current_page_info(){
 		$show_debug = get_user_meta($current_user->ID, 'show_debug', true);
 		if(!empty($show_debug)){
 		?>
-		<ul class="header_debug" style="background:#FFFFE0;border:1px dotted #E6DB55;font-size:11px;margin:0;overflow:hidden;padding:4px;">
+		<ul class="header_debug" 
+            style="position:fixed;width:100%;bottom:0;left:0;opacity:0.3;background:#FFFFE0;border:1px dotted #E6DB55;font-size:11px;margin:0;overflow:hidden;padding:4px;" 
+            onMouseOver="this.style.opacity='1'"
+            onMouseOut="this.style.opacity='0.3'"
+        >
 			<li><span title="Para trabalhar com forms">(?)</span> URL corrente: <code><?php echo self_url(); ?></code></li>
 			<li>Template: <code><?php echo basename($template); ?></code></li>
 		</ul>
