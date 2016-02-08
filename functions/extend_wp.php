@@ -891,6 +891,10 @@ class Boros_Pagination {
 		$previous_class = array('first_item');
 		if( $start_page >= 2 && $this->options['num_pages'] < $this->total_pages ){
 			unset($previous_class[0]);
+            // permitir o 'first' numérico
+            if( $this->options['first_text'] == 'NUMBER' ){
+                $this->options['first_text'] = 1;
+            }
 			$this->items[] = $this->set_item( 1, 'page', array('firstpostslink', 'first_item'), $this->options['first_text'], true, '%TOTAL_PAGES%' );
 		}
 		
@@ -945,6 +949,10 @@ class Boros_Pagination {
 		
 		// Last
 		if( $end_page < $this->total_pages ){
+            // permitir o 'last' numérico
+            if( $this->options['last_text'] == 'NUMBER' ){
+                $this->options['last_text'] = $end_page;
+            }
 			$this->items[] = $this->set_item( $this->total_pages, 'page', array('lastpostslink', 'last_item'), $this->options['last_text'], true, '%PAGE_NUMBER%' );
 		}
 	}
