@@ -200,7 +200,7 @@ class BorosFb {
 		}
 		
 		if( !class_exists('Facebook') ){
-			require 'libs/facebook/facebook.php';
+            require BOROS_LIBS . DIRECTORY_SEPARATOR . 'facebook' . DIRECTORY_SEPARATOR . 'facebook.php';
 		}
 		
 		$this->boros_fb_appid = get_option('boros_fb_appid');

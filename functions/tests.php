@@ -211,7 +211,7 @@ function _rand_birth_date( $start_date = '1940-01-01 00:00:00', $end_date = '199
 
 function rand_lipsum( $size = 100, $mode = 'plain' ){
 	if( !class_exists('LoremIpsumGenerator') ){
-		require_once('libs/LoremIpsum.class.php');
+		require_once( BOROS_LIBS . DIRECTORY_SEPARATOR . 'LoremIpsum.class.php' );
 	}
 	$lipsum = new LoremIpsumGenerator;
 	return $lipsum->getContent($size, $mode, false);
