@@ -122,27 +122,27 @@ function add_form_elements(){
 	 */
 	if( $glob == false ){
 		$files = array(
-			'attach_select', 
+			'attach-select', 
 			'checkbox', 
-			'checkbox_group', 
-			'content_order', 
-			'duplicable_group', 
-			'factory_options', 
+			'checkbox-group', 
+			'content-order', 
+			'duplicable-group', 
+			'factory-options', 
 			'hidden', 
 			'html', 
 			'password', 
 			'radio', 
-			'search_content_list', 
+			'search-content-list', 
 			'select', 
-			'select_query_posts', 
+			'select-query-posts', 
 			'separator', 
-			'special_image', 
+			'special-image', 
 			'submit', 
-			'taxonomy_checkbox', 
-			'taxonomy_radio', 
+			'taxonomy-checkbox', 
+			'taxonomy-radio', 
 			'text', 
 			'textarea', 
-			'wp_editor',
+			'wp-editor',
 		);
 		foreach( $files as $file ){
 			include_once BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "{$file}.php";
