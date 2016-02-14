@@ -29,8 +29,8 @@ class BFE_special_image extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'special_image',
-		'css' => 'special_image',
+		'js' => 'special-image',
+		'css' => 'special-image',
 	);
 	
 	/**

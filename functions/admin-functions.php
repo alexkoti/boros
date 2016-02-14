@@ -78,12 +78,12 @@ function add_custom_admin_scripts(){
 		//'admin_scripts_element_sortable',
 		//'admin_scripts_upload',
 		'admin',
-		'admin_ajax',
-		'admin_scripts',
-		'form_elements',
+		'admin-ajax',
+		'admin-scripts',
+		'form-elements',
 		'plugins',
 		'events',
-		//'current_work',
+		//'current-work',
 	);
 	
 	foreach( $scripts as $script ){
