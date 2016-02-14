@@ -21,8 +21,8 @@ class BFE_duplicate_group extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'duplicate_group',
-		'css' => 'duplicate_group',
+		'js' => 'duplicate-group',
+		'css' => 'duplicate-group',
 	);
 	
 	var $compact_buttom = '<div class="duplicate_compact"><label><input type="checkbox" /> visualização compacta</label> <span class="btn_help" title="Exibe apenas um item de cada grupo, facilitando a tarefa de arrastar para organizar os itens."></span></div>';

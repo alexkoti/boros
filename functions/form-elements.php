@@ -83,8 +83,28 @@ function create_form_elements( $context, $data, $data_value ){
  * no contexto da página 'options.php', onde não é instanciado nenhum element, apenas as configs gerais, sendo chamdos os méthodos estáticos para retornar oa nomes certos dos
  * callbacks.
  */
-add_action( 'init', 'add_form_elements' );
+//add_action( 'init', 'add_form_elements' );
 function add_form_elements(){
+    
+    // Rascunho para versão usando opendir() no lugar de blob()
+    // 
+    //if( is_dir(BOROS_ELEMENTS) ){
+    //    if( $dh = opendir(BOROS_ELEMENTS) ){
+    //        while( ($file = readdir($dh)) !== false AND !preg_match( "/^_/", $file ) ){
+    //            if( !is_dir($file) ){
+    //                pal($file);
+    //                include_once BOROS_ELEMENTS . DIRECTORY_SEPARATOR . $file;
+    //                $glob = true;
+    //            }
+    //        }
+    //        closedir($dh);
+    //    } else {
+    //        pal('Não conseguiu abrir a pasta');
+    //    }
+    //} else {
+    //    pal('Não é diretório');
+    //}
+    
 	/**
 	 * Adicionar elementos padrão
 	 * 

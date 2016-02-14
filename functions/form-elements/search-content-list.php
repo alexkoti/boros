@@ -24,8 +24,8 @@ class BFE_search_content_list extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'search_content_list',
-		'css' => 'search_content_list',
+		'js'  => 'search-content-list',
+		'css' => 'search-content-list',
 	);
 	
 	function add_defaults(){

@@ -30,7 +30,7 @@ class BFE_color_picker extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => array('color_picker'),
+		'js' => array('color-picker'),
 	);
 	
 	function init(){
