@@ -888,19 +888,19 @@ class Boros_Pagination {
 		//pal($end_page, '$end_page');
 		
 		// First
-		$previous_class = array('first_item');
+		$previous_class = array('first-item');
 		if( $start_page >= 2 && $this->options['num_pages'] < $this->total_pages ){
 			unset($previous_class[0]);
             // permitir o 'first' numérico
             if( $this->options['first_text'] == 'NUMBER' ){
                 $this->options['first_text'] = 1;
             }
-			$this->items[] = $this->set_item( 1, 'page', array('firstpostslink', 'first_item'), $this->options['first_text'], true, '%TOTAL_PAGES%' );
+			$this->items[] = $this->set_item( 1, 'page', array('first-posts-link', 'first-item'), $this->options['first_text'], true, '%TOTAL_PAGES%' );
 		}
 		
 		// Previous
 		if( $this->current > 1 ){
-			$previous_class[] = 'previouspostslink';
+			$previous_class[] = 'previous-posts-link';
 			$this->items[] = $this->set_item( ($this->current - 1), 'page', $previous_class, $this->options['prev_text'], true, '%PAGE_NUMBER%' );
 		}
 		
@@ -910,19 +910,19 @@ class Boros_Pagination {
 		foreach ( range( $start_page, $end_page ) as $i ) {
 			$class = array();
 			if( $u == 1 ){
-				$class[] = 'first_number';
+				$class[] = 'first-number';
 			}
 			
 			if( $i == $end_page ){
-				$class[] = 'last_number';
+				$class[] = 'last-number';
 			}
 			
 			if( ($i == $start_page) AND ($i == $this->current) ){
-				$class[] = 'first_item';
+				$class[] = 'first-item';
 			}
 			
 			if( ($i == $this->total_pages) AND ($this->total_pages == $this->current) ){
-				$class[] = 'last_item';
+				$class[] = 'last-item';
 			}
 			
 			if( $i == $this->current ){
@@ -940,7 +940,7 @@ class Boros_Pagination {
 		
 		// Next
 		if( $this->current < $this->total_pages ){
-			$class = array('nextpostslink');
+			$class = array('next-posts-link');
 			if( $end_page == $this->total_pages ){
 				$class = 'last_item';
 			}
@@ -953,7 +953,7 @@ class Boros_Pagination {
             if( $this->options['last_text'] == 'NUMBER' ){
                 $this->options['last_text'] = $end_page;
             }
-			$this->items[] = $this->set_item( $this->total_pages, 'page', array('lastpostslink', 'last_item'), $this->options['last_text'], true, '%PAGE_NUMBER%' );
+			$this->items[] = $this->set_item( $this->total_pages, 'page', array('last-posts-link', 'last-item'), $this->options['last_text'], true, '%PAGE_NUMBER%' );
 		}
 	}
 	
