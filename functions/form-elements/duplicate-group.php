@@ -21,7 +21,7 @@ class BFE_duplicate_group extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'duplicate-group',
+		'js'  => 'duplicate-group',
 		'css' => 'duplicate-group',
 	);
 	

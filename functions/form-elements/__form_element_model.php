@@ -49,11 +49,14 @@ class BFE_form_element_model extends BorosFormElement {
 	var $enqueues = array(
 		'folder' => 'url_to_plugin_directory',
 		'js' => array(
-			'my_custom_js_name',
-			'my_second_custom_js',
+			'my-custom-js-name',
+			'my-second-custom-js',
 			array('google_grecaptcha', 'https://www.google.com/recaptcha/api.js?onload=boros_grecaptcha_onload&render=explicit'),
 		),
-		'css' => array( 'my_custom_css_name', 'my_second_custom_css' ),
+		'css' => array(
+            'my-custom-css-name', 
+            'my-second-custom-css'
+        ),
 		'core' => array(
 			'js' => array('jquery-ui-draggable', 'admin-tags'),
 			'css' => array('wp-pointer', 'wp-mediaelement'),

@@ -19,8 +19,8 @@ class BFE_content_order extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'content_order',
-		'css' => 'content_order',
+		'js'  => 'content-order',
+		'css' => 'content-order',
 	);
 	
 	static function set_callback_functions(){

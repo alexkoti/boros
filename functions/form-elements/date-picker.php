@@ -31,8 +31,8 @@ class BFE_date_picker extends BorosFormElement {
 	static $localized = false;
 	
 	var $enqueues = array(
-		'js' => array('date_picker'),
-		'css' => array('date_picker'),
+		'js'  => array('date-picker'),
+		'css' => array('date-picker'),
 	);
 	
 	function localize_script(){

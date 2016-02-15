@@ -23,8 +23,8 @@ class BFE_date_picker_multiple extends BorosFormElement {
 	static $localized = false;
 	
 	var $enqueues = array(
-		'js' => array('date_picker_multiple'),
-		'css' => array('date_picker_multiple'),
+		'js'  => array('date-picker-multiple'),
+		'css' => array('date-picker-multiple'),
 	);
 	
 	/**

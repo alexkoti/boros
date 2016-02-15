@@ -16,8 +16,8 @@ class BFE_attach_select extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'attach_select',
-		'css' => 'attach_select',
+		'js'  => 'attach-select',
+		'css' => 'attach-select',
 	);
 	
 	function set_input( $value = null ){

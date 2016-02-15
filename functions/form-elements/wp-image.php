@@ -17,7 +17,7 @@ class BFE_wp_image extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'wp_image',
+		'js' => 'wp-image',
 	);
 	
 	/**

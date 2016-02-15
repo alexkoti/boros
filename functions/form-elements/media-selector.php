@@ -21,7 +21,7 @@ class BFE_media_selector extends BorosFormElement {
 	);
 	
 	var $enqueues = array(
-		'js' => 'thb.media_selector',
+		'js' => 'thb.media-selector',
 	);
 	
 	function set_input( $value = null ){
