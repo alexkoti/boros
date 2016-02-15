@@ -92,6 +92,7 @@ if( defined('LOCALHOST') and LOCALHOST === true ){
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'localhost.php' );          // functions restritas ao desenvolvimento localhost
 }
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'debug.php' );                  // functions de debug(pre, pal, prex)
+include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'deprecated.php' );             // deprecated functions
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'autoload.php' );               // autoload
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'extend-php.php' );             // functions extras de PHP
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'extend-array.php' );           // functions extras para manipulação de arrays
