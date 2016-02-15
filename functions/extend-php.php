@@ -199,6 +199,29 @@ function self_url( $args = array() ){
 }
 
 
+
+/**
+ * ==================================================
+ * MAKE ATTRIBUTES ==================================
+ * ==================================================
+ * Criar o output de attributes a partir de um array
+ * 
+ */
+function boros_make_attributes( $args = array(), $prefix = '' ){
+	$attrs = '';
+	foreach( $args as $k => $v ){
+		if( $v !== false and ($k != 'dataset' and $k != 'elem_class') ){
+			$attrs .= " {$prefix}{$k}='{$v}'";
+		}
+		elseif( $k == 'dataset' ){
+			$attrs .= boros_make_attributes( $v, 'data-' );
+		}
+	}
+	return $attrs;
+}
+
+
+
 /**
  * ==================================================
  * AUTO LINK ========================================
@@ -351,7 +374,7 @@ function formatted_link( $args ){
 	 */
 	$attrs = '';
 	if( $attr !== false and is_array($attr) ){
-		$attrs .= make_attributes($attr);
+		$attrs .= boros_make_attributes($attr);
 	}
 	
 	/**

@@ -161,7 +161,7 @@ class BFE_date_picker extends BorosFormElement {
 			$name_hour   = $this->set_name('hour');
 			$name_minute = $this->set_name('minute');
 			unset($this->data['attr']['name']); // não renderizar o name para este element
-			$attrs = make_attributes($this->data['attr']);
+			$attrs = $this->make_attributes($this->data['attr']);
 			echo "<input type='text' value='{$value['view']}' name='{$name_view}' data-key='view' {$attrs} />";
 			echo "<input type='hidden' value='{$value['iso']}' name='{$name_iso}' data-name='{$name}' data-key='iso' class='boros_form_input input_date_picker_iso' />";
 			if( $this->data['options']['split_time'] === true ){
@@ -171,7 +171,7 @@ class BFE_date_picker extends BorosFormElement {
 		else{
 			die('É preciso criar os names dos subitens com $this->set_name()!!!');
 			unset($this->data['attr']['name']); // não renderizar o name para este element
-			$attrs = make_attributes($this->data['attr']);
+			$attrs = $this->make_attributes($this->data['attr']);
 			echo "<label for='{$this->data['attr']['id']}'>Início:</label> <input type='text' value='{$value['start_view']}' name='{$name}[start_view]' {$attrs} />";
 			echo "<input type='hidden' value='{$value['start_iso']}' name='{$name}[start_iso]' class='input_date_picker_iso' />";
 			if( $this->data['options']['split_time'] === true ){

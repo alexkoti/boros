@@ -24,7 +24,7 @@ class BFE_checkbox extends BorosFormElement {
 		// verificar defaults/checked, é comparado o option_value, que é a informação gravada
 		$checked = checked( $this->data_value, true, false );
 		$name = $this->data['attr']['name'];
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		$input = '';
 		$for = $this->data['attr']['id'];
 		

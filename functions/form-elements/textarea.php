@@ -24,7 +24,7 @@ class BFE_textarea extends BorosFormElement {
 	);
 	
 	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		return "<textarea {$attrs}>{$this->data_value}</textarea>{$this->input_helper}";
 	}
 }

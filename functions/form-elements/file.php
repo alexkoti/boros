@@ -37,7 +37,7 @@ class BFE_file extends BorosFormElement {
 		if( is_array($value) ){
 			$value = '';
 		}
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		$input = "<input type='file' value='{$value}'{$attrs} />{$this->input_helper}";
 		
 		return $input;

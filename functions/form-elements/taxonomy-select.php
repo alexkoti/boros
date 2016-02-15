@@ -97,7 +97,7 @@ class BFE_taxonomy_select extends BorosFormElement {
 		unset($this->data['attr']['id']);
 		unset($this->data['attr']['class']);
 		// Criar os atributos auxiliares. Alguns como data-name são importantes para o controle duplicável
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		
 		// Criar o dropdown
 		$tdp = wp_dropdown_categories( $args );

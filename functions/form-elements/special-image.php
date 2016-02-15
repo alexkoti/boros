@@ -122,12 +122,12 @@ class BFE_special_image extends BorosFormElement {
 				}
 				$actions_width = '';
 				
-				$attrs = make_attributes($this->data['attr']);
+				$attrs = $this->make_attributes($this->data['attr']);
 				echo "<input type='hidden' value='{$this->data_value}' {$attrs} />";
 				
 				// Existe imagem padrão?
 				//$default_image = ( $this->data['options']['default_image'] != false ) ? " data-default_image='{$this->data['options']['default_image']}'" : '';
-				$dataset = make_attributes($this->data['options'], 'data-');
+				$dataset = $this->make_attributes($this->data['options'], 'data-');
 			?>
 			<div class="special_image_view" <?php echo $dataset; ?>>
 				<?php
@@ -166,7 +166,7 @@ class BFE_special_image extends BorosFormElement {
 				'input' => $input_name,
 				'callback' => 'boros_special_image',
 			);
-			$dataset = make_attributes($dataset_args, 'data-');
+			$dataset = $this->make_attributes($dataset_args, 'data-');
 			
 			/**
 			 * Actions buttons

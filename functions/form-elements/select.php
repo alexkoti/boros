@@ -56,7 +56,7 @@ class BFE_select extends BorosFormElement {
 				$this->data['attr']['value'] = issetor($this->data_value[1], '');
 				$custom_attr = issetor($this->data['options']['other_field']['attr'], array());
 				$custom_attr['id'] = isset($this->data['attr']['id']) ? $this->data['attr']['id'] . '_other' : $this->data['attr']['name'] . '_other';
-				$other_attr = make_attributes( boros_parse_args( $this->data['attr'], $custom_attr ) );
+				$other_attr = $this->make_attributes( boros_parse_args( $this->data['attr'], $custom_attr ) );
 				$input_other = " <input type='text'{$other_attr} />";
 			}
 			$attrs = $this->make_attributes($this->data['attr']);

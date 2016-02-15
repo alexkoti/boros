@@ -32,7 +32,7 @@ class BFE_password extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		$input = "<input type='password' value='{$value}'{$attrs} />{$this->input_helper}";
 		return $input;
 	}

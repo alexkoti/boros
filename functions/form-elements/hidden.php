@@ -20,7 +20,7 @@ class BFE_hidden extends BorosFormElement {
 	);
 	
 	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		$input = "<input type='hidden' value='{$value}'{$attrs} />";
 		return $input;
 	}

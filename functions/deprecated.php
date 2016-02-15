@@ -11,5 +11,10 @@
  * 
  */
 
+function make_attributes( $args = array(), $prefix = '' ){
+    pal('Deprecated function: make_attributes()');
+    boros_make_attributes( $args = array(), $prefix = '' );
+}
+
 
 

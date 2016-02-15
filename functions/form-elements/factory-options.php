@@ -23,7 +23,7 @@ class BFE_factory_options extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		
 		ob_start();
 		

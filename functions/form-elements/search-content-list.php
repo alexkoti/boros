@@ -53,7 +53,7 @@ class BFE_search_content_list extends BorosFormElement {
 		// começar a guardar o output do script js em buffer
 		ob_start();
 		
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		?>
 		<div class="search_content_box">
 			<input type="hidden" value="<?php echo $value; ?>" <?php echo $attrs; ?> />

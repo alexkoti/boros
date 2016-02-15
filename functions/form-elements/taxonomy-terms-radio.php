@@ -26,7 +26,7 @@ class BFE_taxonomy_terms_radio extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
+		$attrs = $this->make_attributes($this->data['attr']);
 		
 		/**
 		 * ATENÇÃO: VALUE_FIELD define a coluna a ser usada para o atributo VALUE do input.

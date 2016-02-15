@@ -62,7 +62,7 @@ class BFE_select_query_posts extends BFE_select {
 			
 			// walk_page_dropdown_tree() exige a lista de objetos retornados pela query, a profundidade(aqui marcada como zero, pois os devidos filtros devem ser feitos na query) e $args, já definidos anteriormente.
 			if( $contents->posts ){
-				$attrs = make_attributes($this->data['attr']);
+				$attrs = $this->make_attributes($this->data['attr']);
 				$input = "<select {$attrs}>\n";
 				if( $this->data['options']['show_option_none'] ){
 					$input .= "\t<option value='{$this->data['options']['option_none_value']}'>{$this->data['options']['show_option_none']}</option>\n";

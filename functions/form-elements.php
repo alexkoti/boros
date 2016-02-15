@@ -1261,30 +1261,11 @@ class BorosFormElement {
 				$out .= " {$prefix}{$k}='{$v}'";
 			}
 			elseif( $k == 'dataset' ){
-				$out .= make_attributes( $v, 'data-' );
+				$out .= $this->make_attributes( $v, 'data-' );
 			}
 		}
 		return $out;
 	}
-}
-
-
-
-/**
- * Criar o output de attributes a partir de um array
- * 
- */
-function make_attributes( $args = array(), $prefix = '' ){
-	$attrs = '';
-	foreach( $args as $k => $v ){
-		if( $v !== false and ($k != 'dataset' and $k != 'elem_class') ){
-			$attrs .= " {$prefix}{$k}='{$v}'";
-		}
-		elseif( $k == 'dataset' ){
-			$attrs .= make_attributes( $v, 'data-' );
-		}
-	}
-	return $attrs;
 }
 
 

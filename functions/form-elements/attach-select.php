@@ -45,7 +45,7 @@ class BFE_attach_select extends BorosFormElement {
 		?>
 		<div class="attach_select" id="<?php echo "attach_select_{$input_name}"; ?>">
 			<?php
-			$attrs = make_attributes($this->data['attr']);
+			$attrs = $this->make_attributes($this->data['attr']);
 			echo "<input type='hidden' value='{$this->data_value}' {$attrs} />";
 			?>
 			
