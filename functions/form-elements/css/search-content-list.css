@@ -25,7 +25,8 @@
 .search_content_inputs .ipt_text,
 .search_content_inputs .button,
 .search_content_inputs .waiting {
-	vertical-align:middle;
+    margin-left: 5px;
+    vertical-align:middle;
 }
 .search_content_inputs .ipt_text {
 	width:400px;
@@ -33,16 +34,51 @@
 .search_content_inputs .waiting {
 	display:none;
 }
-.search_content_inputs .search_content_clear {
-	background:url(img/btn_cross.png) no-repeat 0 0;
-	cursor:pointer;
-	display:none;
-	height:16px;
-	left:380px;
-	position:absolute;
-	top:4px;
-	width:16px;
+
+.search-content-input {
+    position: relative;
 }
+
+.input-group {
+    position: relative;
+    display: table;
+}
+
+.input-group .input-dismissable {
+    display: table-cell;
+    position: relative;
+}
+
+.input-group .input-dismissable input {
+    height: 29px;
+    margin: 0;
+}
+
+.input-group .search_content_submit {
+    margin-left: -1px;
+    -webkit-border-bottom-left-radius:  0;
+    -webkit-border-top-left-radius:     0;
+
+    -moz-border-radius-bottomleft:      0;
+    -moz-border-radius-topleft:         0;
+
+    border-bottom-left-radius:          @0;
+    border-top-left-radius:             @0;
+}
+
+.input-group .search_content_clear {
+    background: url(img/btn_cross.png) no-repeat center center;
+    cursor: pointer;
+    display: none;
+    height: 24px;
+    right: 0;
+    position:absolute;
+    top: 50%;
+    width: 24px;
+    margin: -11px 0 0;
+}
+
+
 
 .inside .search_content_list  {
 	

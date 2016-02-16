@@ -91,7 +91,8 @@ jQuery(document).ready(function($){
 		 * 
 		 */
 		var data = {};
-		data.action = 'duplicate_element';
+		data.action = 'boros_form_element_ajax';
+		data.task = 'duplicate_group';
 		data.args = {  
 			index : $item.length
 		};

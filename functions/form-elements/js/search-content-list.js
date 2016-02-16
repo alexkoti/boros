@@ -52,7 +52,8 @@ jQuery(document).ready(function($){
 					
 					// preparar dados da busca
 					var data = {
-						action: 'search_content',
+                        action: 'boros_form_element',
+						task: 'search_content_list',
 						search_text: search_text,
 						query: $query.val(),
 						show_post_type: $show_post_type.val(),

@@ -76,6 +76,50 @@ function create_form_elements( $context, $data, $data_value ){
 
 /**
  * ==================================================
+ * AJAX ELEMENTS ====================================
+ * ==================================================
+ * Todos as chamadas AJAX devem ser centralizadas nesta function, para que seja possível resolver o autoload.
+ * Quando uma chamada AJAX é realizada, as functions dos elements e wp_ajax_* não estarão disponíveis pois elas são incluídas via autoload. Quando uma
+ * requisição wp_ajax_* é feita, ela obrigatoriamente necessita de um callback pré-definido. Por isso a function a seguir manipula a requisição e
+ * faz o autoload do arquivo necessário.
+ * 
+ * 
+ */
+add_action( 'wp_ajax_boros_form_element', 'boros_form_element_ajax' );
+function boros_form_element_ajax(){
+    $task = $_POST['task'];
+    $classname = "BFE_{$task}";
+    
+    if( class_exists($classname) and is_subclass_of($classname, 'BorosFormElement') ){
+        //$element = new $classname( $context, $data, $data_value );
+        //$element->ajax();
+        call_user_func( "{$classname}::ajax" );
+    }
+}
+
+
+
+/**
+ * (re)carregar um element diretamente. USado para inserção em widget ou relaod/duplicate via ajax
+ * 
+ * @todo adicionar os contextos termmeta, usermeta, widget
+ */
+add_action('wp_ajax_duplicate_element', 'ajax_duplicate_element');
+function ajax_duplicate_element(){
+	$context = $_POST['context'];
+	//pre($context, 'context');
+	//pre($group_id, 'group_id');
+	//pre($element_name, 'element_name');
+	//return;
+	
+	do_action( 'ajax_duplicate_element', $context );
+	die();
+}
+
+
+
+/**
+ * ==================================================
  * INCLUDES DOS FORM ELEMENTS =======================
  * ==================================================
  * 
@@ -181,25 +225,6 @@ function add_form_elements(){
 
 
 /**
- * (re)carregar um element diretamente. USado para inserção em widget ou relaod/duplicate via ajax
- * 
- * @todo adicionar os contextos termmeta, usermeta, widget
- */
-add_action('wp_ajax_duplicate_element', 'ajax_duplicate_element');
-function ajax_duplicate_element(){
-	$context = $_POST['context'];
-	//pre($context, 'context');
-	//pre($group_id, 'group_id');
-	//pre($element_name, 'element_name');
-	//return;
-	
-	do_action( 'ajax_duplicate_element', $context );
-	die();
-}
-
-
-
-/**
  * Carrega as configurações de um elemento com base no seu contexto e name.
  * 'load_element_config' é um filter que precisa estar presente em todos os contextos(option, post_meta, termmeta, usermeta, widget), que irá buscar em todas as configs de todas as instâncias do
  * contexto. Por exemplo, caso tenham sido criadas duas instâncias de 'BorosMetaBoxes', ambos possuem o filter 'load_element_config', portanto serão feitas duas verificações, em ambas as configs.
@@ -261,6 +286,10 @@ function update_element_config( $raw_config ){
 						$itens[$item['type']] = $item;
 						$itens[$item['type']]['name'] = $item['type'];
 					}
+                    
+                    // tentar fazer o autoload
+                    $classname = 'BFE_' . $data['type'];
+                    class_exists($classname);
 				}
 				$group['itens'] = $itens;
 			}
@@ -572,7 +601,7 @@ class BorosFormElement {
 		$this->set_label();
 		$this->dataset();
 		//$this->set_input();
-		$this->enqueues();
+        add_action('admin_enqueue_scripts', $this->enqueues());
 		$this->error_messages();
 		$this->final_input();
 		$this->input = apply_filters( "BFE_{$this->data['type']}_input", $this->input );

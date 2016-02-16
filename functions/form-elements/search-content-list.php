@@ -124,17 +124,22 @@ class BFE_search_content_list extends BorosFormElement {
 			?>
 			<div class="search_content_inputs">
 				<p class="results_h">Buscar:</p>
-				<p>
+				<div class="search-content-input">
 					<input type='hidden' name='search_content_query' value='<?php echo $json_query_search; ?>' />
 					<input type='hidden' name='show_post_type' value='<?php echo $this->data['options']['show_post_type']; ?>' />
 					<input type='hidden' name='show_thumbnails' value='<?php echo $this->data['options']['show_thumbnails']; ?>' />
 					<input type='hidden' name='show_excerpt' value='<?php echo $this->data['options']['show_excerpt']; ?>' />
 					<input type='hidden' name='excerpt_length' value='<?php echo $this->data['options']['excerpt_length']; ?>' />
-					<input type="text" name="search_content_text" class="ipt_text" />
-					<span class="search_content_clear"></span>
-					<span class="button search_content_submit">buscar</span>
-					<img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
-				</p>
+                    
+                    <div class="input-group">
+                        <div class="input-dismissable">
+                            <input type="text" name="search_content_text" class="ipt_text" />
+                            <span class="search_content_clear"></span>
+                        </div>
+                        <span class="button search_content_submit">buscar</span>
+                        <img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
+                    </div>
+				</div>
 			</div>
 			
 			<div class="search_content_list search_content_list_results"></div>
@@ -145,6 +150,47 @@ class BFE_search_content_list extends BorosFormElement {
 		ob_end_clean();
 		return $input;
 	}
+    
+    function ajax(){
+        /* Primeiro remover os slashes que o wordpress adicona por padrão em todos os dados
+         * Não esquecer de setar o segundo argumento $assoc como true, para que retorne um array no lugar de object
+         */
+        $query = json_decode( stripslashes($_POST['query']), true );
+        
+        if ( isset( $_POST['search_text'] ) )
+            $query['s'] = stripslashes( $_POST['search_text'] );
+        
+        if ( isset( $_POST['remove'] ) ){
+            $query['post__not_in'] = array_map( 'absint', explode(',', $_POST['remove']) );
+        }
+        
+        $search_result = new WP_Query();
+        $search_result->query($query);
+        // Check if any posts were found.
+        if ( !$search_result->post_count ){
+            echo '<p class="results_h">Sem resultados. <strong>Atenção: os resultados excluem conteúdos já adicionados.</strong></p>';
+            die();
+        }
+        if( $search_result->posts ){
+            echo '<p class="results_h">Resultados:</p>';
+            echo '<ul>';
+            $index = 1;
+            foreach($search_result->posts as $post){
+                setup_postdata($post);
+                $args = array(
+                    'show_post_type' => $_POST['show_post_type'], 
+                    'show_thumbnails' => $_POST['show_thumbnails'], 
+                    'show_excerpt' => $_POST['show_excerpt'], 
+                    'excerpt_length' => $_POST['excerpt_length']
+                );
+                related_content_output( $post, $args );
+                $index++;
+            }
+            echo '</ul>';
+        }
+        wp_reset_query();
+        die();
+    }
 }
 
 

@@ -31,9 +31,24 @@ spl_autoload_register( 'boros_autoload_form_elements' );
 function boros_autoload_form_elements( $class_name ){
     if( false !== strpos( $class_name, 'BFE_' ) ){
         $class = str_replace( array('BFE_', '_'), array('', '-'), $class_name );
+        
+        // core elements
         $filename = BOROS_ELEMENTS . DIRECTORY_SEPARATOR . $class . '.php';
         if( is_readable($filename) ){
             require_once $filename;
+            return;
+        }
+        
+        // extra elements
+        $extra_folders = apply_filters( 'boros_extra_form_elements_folder', array() );
+        if( !empty($extra_folders) ){
+            foreach( $extra_folders as $folder ){
+                $filename = $folder . DIRECTORY_SEPARATOR . $class . '.php';
+                if( is_readable($filename) ){
+                    require_once $filename;
+                    return;
+                }
+            }
         }
     }
 }
