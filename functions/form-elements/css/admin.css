@@ -297,35 +297,53 @@ input[disabled='1']{
  * Botões
  * 
  */
-.btn_item_new {
-	background:url(img/btn_add.gif) no-repeat 0 0;
-	color:#21759B;
-	cursor:pointer;
-	padding:1px 0 1px 20px;
+.btn-action {
+    font-size: 11px;
+    color:#21759B;
+    cursor:pointer;
 }
-.btn_item_new:hover {
-	background-position:0 -50px;
-	color:#D54E21;
+.btn-action:hover {
+    color:#D54E21;
 }
-.btn_item_select {
-	background:url(img/btn_select_images.png) no-repeat 0 0;
-	color:#21759B;
-	cursor:pointer;
-	padding:0 0 0 20px;
+.btn-action-new:before {
+    background: url(img/admin-sprites.png) no-repeat 0 0;
+    content: '';
+    display: inline-block;
+    height: 14px;
+    margin-right:4px;
+    position: relative;
+    top: -2px;
+    width: 14px;
+    vertical-align:middle;
 }
-.btn_item_select:hover {
-	background-position:0 -21px;
-	color:#D54E21;
+.btn-action-new:hover:before {
+    background-position:0 -32px;
 }
+
+.btn-action-select:before {
+    background: url(img/admin-sprites.png) no-repeat 0 -64px;
+    content: '';
+    display: inline-block;
+    height: 13px;
+    margin-right:4px;
+    position: relative;
+    top: -2px;
+    width: 15px;
+    vertical-align:middle;
+}
+.btn-action-select:hover:before {
+    background-position:0 -96px;
+}
+
 .btn_help {
-	background:url(img/help.png) no-repeat center center;
-	cursor:help;
-	display:inline-block;
-	height:16px;
-	font-size:0;
-	line-height:0;
-	vertical-align:text-bottom;
-	width:16px;
+    background:url(img/help.png) no-repeat center center;
+    cursor:help;
+    display:inline-block;
+    height:16px;
+    font-size:0;
+    line-height:0;
+    vertical-align:text-bottom;
+    width:16px;
 }
 
 
@@ -650,7 +668,7 @@ table.boros_taxonomy_block {
 	background-position:right center;
 }
 .duplicable_input_item .duplicable_add {
-	background:url(img/btn_add.gif) no-repeat left -50px;
+	background:url(img/btn-action-add.gif) no-repeat left -50px;
 	cursor:pointer;
 	display:inline-block;
 	height:16px;

@@ -35,8 +35,10 @@ jQuery(document).ready(function($){
 		 * 
 		 */
 		var data = {};
-		data.action = 'attach_select';
-		data.value = h;
+		data.action    = 'boros_form_element';
+		data.classname = 'attach_select';
+		data.task      = 'select';
+		data.value     = h;
 		
 		/**
 		 * Context
@@ -86,7 +88,9 @@ jQuery(document).ready(function($){
 		 * O ajax irá executar special_image_remove(), que irá apagar o option/post_meta/etc caso não esteja dentro
 		 */
 		var data = {};
-		data.action = 'attach_select_remove';
+		data.action    = 'boros_form_element';
+		data.classname = 'attach_select';
+		data.task      = 'remove';
 		
 		/**
 		 * Context

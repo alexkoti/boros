@@ -87,12 +87,13 @@ function create_form_elements( $context, $data, $data_value ){
  */
 add_action( 'wp_ajax_boros_form_element', 'boros_form_element_ajax' );
 function boros_form_element_ajax(){
-    $task = $_POST['task'];
-    $classname = "BFE_{$task}";
+    if( !isset($_POST['classname']) ){
+        die('Classe do elemento não definida');
+    }
+    
+    $classname = "BFE_{$_POST['classname']}";
     
     if( class_exists($classname) and is_subclass_of($classname, 'BorosFormElement') ){
-        //$element = new $classname( $context, $data, $data_value );
-        //$element->ajax();
         call_user_func( "{$classname}::ajax" );
     }
 }
@@ -112,113 +113,107 @@ function ajax_duplicate_element(){
 	//pre($element_name, 'element_name');
 	//return;
 	
-	do_action( 'ajax_duplicate_element', $context );
+    boros_duplicate_element( $context );
 	die();
 }
 
 
 
 /**
- * ==================================================
- * INCLUDES DOS FORM ELEMENTS =======================
- * ==================================================
+ * Duplicar OU Reacrregar elemento
  * 
- * Action definida em 'init', para ser disponível em qualquer contexto, principalmente devido aos callbacks atrelados a alguns elementos, como {taxonomy|content}_order, que rodam 
- * no contexto da página 'options.php', onde não é instanciado nenhum element, apenas as configs gerais, sendo chamdos os méthodos estáticos para retornar oa nomes certos dos
- * callbacks.
+ * @todo URGENTE em recarregar elemento, verificar o trecho para recuperar user_meta, talvez não esteja funcionando! testar!!!
  */
-//add_action( 'init', 'add_form_elements' );
-function add_form_elements(){
-    
-    // Rascunho para versão usando opendir() no lugar de blob()
-    // 
-    //if( is_dir(BOROS_ELEMENTS) ){
-    //    if( $dh = opendir(BOROS_ELEMENTS) ){
-    //        while( ($file = readdir($dh)) !== false AND !preg_match( "/^_/", $file ) ){
-    //            if( !is_dir($file) ){
-    //                pal($file);
-    //                include_once BOROS_ELEMENTS . DIRECTORY_SEPARATOR . $file;
-    //                $glob = true;
-    //            }
-    //        }
-    //        closedir($dh);
-    //    } else {
-    //        pal('Não conseguiu abrir a pasta');
-    //    }
-    //} else {
-    //    pal('Não é diretório');
-    //}
-    
+function boros_duplicate_element( $context ){
 	/**
-	 * Adicionar elementos padrão
+	 * Carregar configuração do element baseado no $context.
+	 * O contexto precisa possuir o método 'load_element_config' para retornar a configuração correta
 	 * 
 	 */
-	$glob = false;
-	foreach( glob( BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "*.php" ) as $filename ){
-		$path = pathinfo( $filename );
-		if( !preg_match( "/^_/", $path['filename'] ) ){
-			include_once $filename;
-			$glob = true;
-		}
-	}
+	$config = load_element_config( $context );
+	//pre($config, 'load_element_config');//return $context;
+	
+	if( !isset($config) or empty($config) )
+		return $context;
+	
+	$item = $config;
 	
 	/**
-	 * Adicionar elementos customizados para o projeto.
+	 * O primeiro bloco somente será executado caso a requisição seja um conjunto de duplicate elements, que serão adicionados à uma li.duplicate_element nova.
+	 * Para reload de elementos dependentes, é usado o segundo bloco.
 	 * 
-	 * @todo verificar a existência da funciton glob, da pasta e se está vazia, pois qualquer uma das 3 situações causam erro.
 	 */
-	$extra_elements = apply_filters( 'boros_extra_form_elements_folder', array() );
-	//pre($extra_elements);
-	if( !empty($extra_elements) ){
-		foreach( $extra_elements as $folder ){
-			foreach( glob( $folder . "/*.php" ) as $filename ){
-				$path = pathinfo( $filename );
-				if( !preg_match( "/^_/", $path['filename'] ) ){
-					include_once $filename;
-				}
-			}
+	if( $item['type'] == 'duplicate_group' ){
+		//pal(1);
+		foreach( $item['group_itens'] as $element ){
+			if( isset($element['options']) )
+				$element['options'] = array_merge( $element['options'], $_POST['args'] );
+			else
+				$element['options'] = $_POST['args'];
+			
+			if( isset($_POST['args']['index']) )
+				$element['index'] = $_POST['args']['index'];
+			
+			// armazenar o 'name' original em 'data-name'
+			$element['attr']['dataset']['name'] = $element['name'];
+			
+			// modificar o 'id' e 'name' para o formato aninhado
+			$element['attr']['id'] = "{$item['name']}_{$element['index']}_{$element['name']}";
+			$element['name'] = "{$item['name']}[{$element['index']}][{$element['name']}]";
+			
+			// SEMPRE sinalizar que é um duplicate
+			$element['in_duplicate_group'] = true;
+			
+			create_form_elements( $context, $element, false );
 		}
 	}
-	
 	/**
-	 * Fallback para servidores onde a função blob() não está disponível.
+	 * Recarregar elemento dependente sempre será nesse trecho
 	 * 
 	 */
-	if( $glob == false ){
-		$files = array(
-			'attach-select', 
-			'checkbox', 
-			'checkbox-group', 
-			'content-order', 
-			'duplicable-group', 
-			'factory-options', 
-			'hidden', 
-			'html', 
-			'password', 
-			'radio', 
-			'search-content-list', 
-			'select', 
-			'select-query-posts', 
-			'separator', 
-			'special-image', 
-			'submit', 
-			'taxonomy-checkbox', 
-			'taxonomy-radio', 
-			'text', 
-			'textarea', 
-			'wp-editor',
-		);
-		foreach( $files as $file ){
-			include_once BOROS_ELEMENTS . DIRECTORY_SEPARATOR . "{$file}.php";
+	else{
+		//pal(2);
+		if( isset($item['options']) )
+			$item['options'] = array_merge( $item['options'], $_POST['args'] );
+		else
+			$item['options'] = $_POST['args'];
+		
+		if( isset($_POST['args']['index']) )
+			$item['index'] = $_POST['args']['index'];
+		
+		//pre($context);
+		$item['in_duplicate_group'] = $context['in_duplicate_group'];
+		
+		// armazenar o 'name' original em 'data-name'
+		$item['attr']['dataset']['name'] = $item['name'];
+		
+		$item['attr']['dataset'] = array_merge( $context, $item['attr']['dataset'] );
+		
+		if( $item['in_duplicate_group'] == true ){
+			// modificar o 'id' e 'name' para o formato aninhado
+			$item['attr']['id'] = "{$item['parent']}_{$item['index']}_{$item['name']}";
+			$item['name'] = "{$item['parent']}[{$item['index']}][{$item['name']}]";
 		}
 		
-		// fallback para custom elements - é preciso que o array venha com o caminho completo
-		$extra_elements = apply_filters( 'boros_extra_form_elements_folder', array() );
-		if( !empty($extra_elements) ){
-			foreach( $extra_elements as $file ){
-				include_once $file;
-			}
+		/**
+		 * É preciso recuperar o valor do input conforme o contexto
+		 * 
+		 */
+		switch( $context['type'] ){
+			case 'post_meta':
+				$data_value = get_post_meta( $context['post_id'], $item['name'], true );
+				break;
+			case 'user_meta':
+				$data_value = get_user_meta( $context['user_id'], $item['name'], true );
+				break;
+			case 'option':
+				$data_value = get_option( $item['name'] );
+				break;
+			default:
+				break;
 		}
+		create_form_elements( $context, $item, $data_value );
+		//create_form_elements( $context, $item, false );
 	}
 }
 
@@ -334,107 +329,6 @@ function update_element_config( $raw_config ){
 		}
 		//pre($config);return array();
 		return $config;
-	}
-}
-
-
-
-/**
- * Duplicar OU Reacrregar elemento
- * 
- * @todo URGENTE em recarregar elemento, verificar o trecho para recuperar user_meta, talvez não esteja funcionando! testar!!!
- */
-add_action( 'ajax_duplicate_element', 'boros_duplicate_element', 10, 3 );
-function boros_duplicate_element( $context ){
-	/**
-	 * Carregar configuração do element baseado no $context.
-	 * O contexto precisa possuir o método 'load_element_config' para retornar a configuração correta
-	 * 
-	 */
-	$config = load_element_config( $context );
-	//pre($config, 'load_element_config');//return $context;
-	
-	if( !isset($config) or empty($config) )
-		return $context;
-	
-	$item = $config;
-	
-	/**
-	 * O primeiro bloco somente será executado caso a requisição seja um conjunto de duplicate elements, que serão adicionados à uma li.duplicate_element nova.
-	 * Para reload de elementos dependentes, é usado o segundo bloco.
-	 * 
-	 */
-	if( $item['type'] == 'duplicate_group' ){
-		//pal(1);
-		foreach( $item['group_itens'] as $element ){
-			if( isset($element['options']) )
-				$element['options'] = array_merge( $element['options'], $_POST['args'] );
-			else
-				$element['options'] = $_POST['args'];
-			
-			if( isset($_POST['args']['index']) )
-				$element['index'] = $_POST['args']['index'];
-			
-			// armazenar o 'name' original em 'data-name'
-			$element['attr']['dataset']['name'] = $element['name'];
-			
-			// modificar o 'id' e 'name' para o formato aninhado
-			$element['attr']['id'] = "{$item['name']}_{$element['index']}_{$element['name']}";
-			$element['name'] = "{$item['name']}[{$element['index']}][{$element['name']}]";
-			
-			// SEMPRE sinalizar que é um duplicate
-			$element['in_duplicate_group'] = true;
-			
-			create_form_elements( $context, $element, false );
-		}
-	}
-	/**
-	 * Recarregar elemento dependente sempre será nesse trecho
-	 * 
-	 */
-	else{
-		//pal(2);
-		if( isset($item['options']) )
-			$item['options'] = array_merge( $item['options'], $_POST['args'] );
-		else
-			$item['options'] = $_POST['args'];
-		
-		if( isset($_POST['args']['index']) )
-			$item['index'] = $_POST['args']['index'];
-		
-		//pre($context);
-		$item['in_duplicate_group'] = $context['in_duplicate_group'];
-		
-		// armazenar o 'name' original em 'data-name'
-		$item['attr']['dataset']['name'] = $item['name'];
-		
-		$item['attr']['dataset'] = array_merge( $context, $item['attr']['dataset'] );
-		
-		if( $item['in_duplicate_group'] == true ){
-			// modificar o 'id' e 'name' para o formato aninhado
-			$item['attr']['id'] = "{$item['parent']}_{$item['index']}_{$item['name']}";
-			$item['name'] = "{$item['parent']}[{$item['index']}][{$item['name']}]";
-		}
-		
-		/**
-		 * É preciso recuperar o valor do input conforme o contexto
-		 * 
-		 */
-		switch( $context['type'] ){
-			case 'post_meta':
-				$data_value = get_post_meta( $context['post_id'], $item['name'], true );
-				break;
-			case 'user_meta':
-				$data_value = get_user_meta( $context['user_id'], $item['name'], true );
-				break;
-			case 'option':
-				$data_value = get_option( $item['name'] );
-				break;
-			default:
-				break;
-		}
-		create_form_elements( $context, $item, $data_value );
-		//create_form_elements( $context, $item, false );
 	}
 }
 

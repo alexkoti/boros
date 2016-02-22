@@ -132,7 +132,7 @@ class BFE_special_image extends BorosFormElement {
 			<div class="special_image_view" <?php echo $dataset; ?>>
 				<?php
 				//pre($this->data_value);
-				special_image_load( $this->data['name'], $this->data_value, $this->data['options'] );
+				$this->special_image_load( $this->data['name'], $this->data_value, $this->data['options'] );
 				?>
 			</div>
 			
@@ -174,8 +174,8 @@ class BFE_special_image extends BorosFormElement {
 			 */
 			?>
 			<div class="special_image_actions hide-if-no-js <?php echo $actions_class; ?>" <?php echo $actions_width; ?>>
-				<a class="thickbox btn_item_new" href="<?php echo $new_link; ?>" <?php echo $dataset;?>><?php echo $send_string; ?></a> <span class="separator">&nbsp; &nbsp;</span>
-				<a class="thickbox btn_item_select" href="<?php echo $select_link; ?>" <?php echo $dataset;?>>Escolher entre as existentes</a>
+				<a class="thickbox btn-action btn-action-new" href="<?php echo $new_link; ?>" <?php echo $dataset;?>><?php echo $send_string; ?></a> <span class="separator">&nbsp; &nbsp;</span>
+				<a class="thickbox btn-action btn-action-select" href="<?php echo $select_link; ?>" <?php echo $dataset;?>>Escolher entre as existentes</a>
 			</div>
 			<?php echo $this->input_helper; ?>
 		</div>
@@ -185,6 +185,136 @@ class BFE_special_image extends BorosFormElement {
 		ob_end_clean();
 		return $input;
 	}
+    
+    /**
+     * Bloco com a imagem escolhida + botão de remover
+     * 
+     */
+    function special_image_load( $name, $attch_id, $opts ){
+        $defaults = array(
+            'image_size' 	=> 'thumbnail',
+            'width' 		=> 100,
+            'default_image' => false,
+            'layout' 		=> 'row',
+        );
+        $options = boros_parse_args( $defaults, $opts );
+        //pre($opts, 'opts');
+        //pre($options, 'options');
+        
+        // existe uma imagem
+        if( !empty($attch_id) ){
+            $image = wp_get_attachment_image_src($attch_id, $options['image_size']);
+            
+            if( !empty($image) ){
+                // caso seja false, usar a largura real da imagem
+                if( $options['width'] == false ){
+                    $image_dimensions = "width='{$image[1]}' height='{$image[2]}'";
+                    $holder_style = "style='width:{$image[1]}px;height:{$image[2]}px'";
+                }
+                // calcular a altura proporcinalmente à largura
+                else{
+                    $ratio = $image[2]/ $image[1];
+                    $height = $options['width'] * $ratio;
+                    $image_dimensions = "width='{$options['width']}' height='{$height}'";
+                    $holder_style = "style='width:{$options['width']}px;height:{$height}px'";
+                }
+                $image_url = $image[0];
+                $remove_buttom = "<div class='hide-if-no-js special_img_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div>";
+            }
+        }
+        // imagem padrão
+        else{
+            if( $options['width'] == false ){
+                $image_dimensions = "width='100'";
+                $holder_style = "style='width:100px;'";
+            }
+            else{
+                $image_dimensions = "width='{$options['width']}'";
+                $holder_style = "style='width:{$options['width']}px;'";
+            }
+            $image_url = $options['default_image'];
+            $remove_buttom = '';
+        }
+        
+        // apenas exibir a view caso exista um attch ou default_image
+        if( !empty($attch_id) or $options['default_image'] != false ){
+            echo "
+                <div class='special_image_img' {$holder_style}>
+                    <img src='{$image_url}' id='special_image_{$attch_id}' alt='' {$image_dimensions} />
+                    {$remove_buttom}
+                </div>
+            ";
+        }
+    }
+    
+    function ajax(){
+        if( !isset($_POST['task']) ){
+            die('Task não definida');
+        }
+        
+        if( $_POST['task'] == 'swap' ){
+            self::image_swap();
+        }
+        elseif( $_POST['task'] == 'remove' ){
+            self::image_remove();
+        }
+    }
+    
+    /**
+     * Recarregar o thumbnal após trocar de imagem
+     * 
+     * @todo adicionar contextos para termmeta e usermeta
+     * @todo criar função verificadora de 'valid_post_metas'
+     */
+    function image_swap(){
+        //pal('special_image_swap');
+        $action  = $_POST['action'];
+        $context = $_POST['context'];
+        $value   = $_POST['value'];
+        
+        // carregar config do elemento
+        $elem = load_element_config( $context );
+        
+        // salvar caso não pertença a um duplicate
+        if( isset($context['in_duplicate_group']) and $context['in_duplicate_group'] == false ){
+            if( $context['type'] == 'option' ){
+                update_option( $context['name'], $value );
+            }
+            elseif( $context['type'] == 'post_meta' ){
+                update_post_meta( $context['post_id'], $context['name'], $value );
+            }
+            elseif( $context['type'] == 'user_meta' ){
+                update_user_meta( $context['user_id'], $context['name'], $value );
+            }
+        }
+        $options = isset($elem['options']) ? $elem['options'] : false;
+        self::special_image_load( $context['name'], $value, $options );
+        die();
+    }
+
+    /**
+     * Remover a imagem e o post_meta correspondente
+     * 
+     * 
+     */
+    function image_remove(){
+        $context = $_POST['context'];
+        $options = isset($_POST['options']) ? $_POST['options'] : array();
+        
+        self::special_image_load( $context['name'], 0, $options );
+        
+        // não salvar dados e interromper caso esteja dentro de um duplicate
+        if( $context['in_duplicate_group'] == true )
+            die();
+        
+        if( $context['type'] == 'option' ){
+            delete_option( $context['name'] );
+        }
+        elseif( $context['type'] == 'post_meta' ){
+            delete_post_meta( $context['post_id'], $context['name'] );
+        }
+        die();
+    }
 }
 
 /**
@@ -235,127 +365,6 @@ function ajax_upload_div(){
 	<?php
 }
 
-
-/**
- * Bloco com a imagem escolhida + botão de remover
- * 
- */
-function special_image_load( $name, $attch_id, $opts ){
-	$defaults = array(
-		'image_size' 	=> 'thumbnail',
-		'width' 		=> 100,
-		'default_image' => false,
-		'layout' 		=> 'row',
-	);
-	$options = boros_parse_args( $defaults, $opts );
-	//pre($opts, 'opts');
-	//pre($options, 'options');
-	
-	// existe uma imagem
-	if( !empty($attch_id) ){
-		$image = wp_get_attachment_image_src($attch_id, $options['image_size']);
-		
-		if( !empty($image) ){
-			// caso seja false, usar a largura real da imagem
-			if( $options['width'] == false ){
-				$image_dimensions = "width='{$image[1]}' height='{$image[2]}'";
-				$holder_style = "style='width:{$image[1]}px;height:{$image[2]}px'";
-			}
-			// calcular a altura proporcinalmente à largura
-			else{
-				$ratio = $image[2]/ $image[1];
-				$height = $options['width'] * $ratio;
-				$image_dimensions = "width='{$options['width']}' height='{$height}'";
-				$holder_style = "style='width:{$options['width']}px;height:{$height}px'";
-			}
-			$image_url = $image[0];
-			$remove_buttom = "<div class='hide-if-no-js special_img_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div>";
-		}
-	}
-	// imagem padrão
-	else{
-		if( $options['width'] == false ){
-			$image_dimensions = "width='100'";
-			$holder_style = "style='width:100px;'";
-		}
-		else{
-			$image_dimensions = "width='{$options['width']}'";
-			$holder_style = "style='width:{$options['width']}px;'";
-		}
-		$image_url = $options['default_image'];
-		$remove_buttom = '';
-	}
-	
-	// apenas exibir a view caso exista um attch ou default_image
-	if( !empty($attch_id) or $options['default_image'] != false ){
-		echo "
-			<div class='special_image_img' {$holder_style}>
-				<img src='{$image_url}' id='special_image_{$attch_id}' alt='' {$image_dimensions} />
-				{$remove_buttom}
-			</div>
-		";
-	}
-}
-
-
-/**
- * Recarregar o thumbnal após trocar de imagem
- * 
- * @todo adicionar contextos para termmeta e usermeta
- * @todo criar função verificadora de 'valid_post_metas'
- */
-add_action('wp_ajax_special_image_swap', 'special_image_swap');
-function special_image_swap(){
-	//pal('special_image_swap');
-	$action  = $_POST['action'];
-	$context = $_POST['context'];
-	$value   = $_POST['value'];
-	
-	// carregar config do elemento
-	$elem = load_element_config( $context );
-	
-	// salvar caso não pertença a um duplicate
-	if( isset($context['in_duplicate_group']) and $context['in_duplicate_group'] == false ){
-		if( $context['type'] == 'option' ){
-			update_option( $context['name'], $value );
-		}
-		elseif( $context['type'] == 'post_meta' ){
-			update_post_meta( $context['post_id'], $context['name'], $value );
-		}
-		elseif( $context['type'] == 'user_meta' ){
-			update_user_meta( $context['user_id'], $context['name'], $value );
-		}
-	}
-	$options = isset($elem['options']) ? $elem['options'] : false;
-	special_image_load( $context['name'], $value, $options );
-	die();
-}
-
-/**
- * Remover a imagem e o post_meta correspondente
- * 
- * 
- */
-add_action('wp_ajax_special_image_remove', 'special_image_remove');
-function special_image_remove(){
-	$context = $_POST['context'];
-	$options = isset($_POST['options']) ? $_POST['options'] : array();
-	
-	special_image_load( $context['name'], 0, $options );
-	
-	// não salvar dados e interromper caso esteja dentro de um duplicate
-	if( $context['in_duplicate_group'] == true )
-		die();
-	
-	if( $context['type'] == 'option' ){
-		delete_option( $context['name'] );
-	}
-	elseif( $context['type'] == 'post_meta' ){
-		delete_post_meta( $context['post_id'], $context['name'] );
-	}
-	die();
-}
-
 /**
  * Carregar imagens já enviadas ao post
  * 
@@ -363,6 +372,7 @@ function special_image_remove(){
  */
 add_action('wp_ajax_special_image_attchs', 'special_image_attchs');
 function special_image_attchs(){
+    pal('special_image_attchs');
 	$parent = (int)$_GET['parent'];
 	
 	$args = array(
