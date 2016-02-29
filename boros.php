@@ -13,13 +13,7 @@ License: GPL2
  * =====================================================================================================================
  * CONSTANTS ===========================================================================================================
  * =====================================================================================================================
- * Em localhost, configurar as seguintes constantes no arquivo /wp-config.php: PLUGINDIR, WP_PLUGIN_DIR, WP_PLUGIN_URL e LOCAL_BOROS_CONFIG
  * 
- * PLUGINDIR        Compatibilidade com plugins antigos
- * WP_PLUGIN_DIR    Caminho de servidor da pasta de plugins
- * WP_PLUGIN_URL    URL do plugins, para CSS, JS e imagens
- * 
- * @link http://wpengineer.com/2374/easier-plugin-development-by-moving-plugin-directory/
  */
 
 // CAMINHOS ABSOLUTOS - para includes
@@ -56,7 +50,7 @@ print_r($const['user']);
  * A constante BOROS_VERSION_ID deverá indicar a versão desejada para o site final. Ao pedir a versão do script/css a ser utilizada, será retornado este valor, mas
  * caso o BOROS_NO_SCRIPT_CACHE esteja habilitado, será retornado a versão temporária, que poderá ser valor hardcoded ou time(), que removerá o cache.
  *
- * @todo: rever este reço e passar para o plugin do job ou tema, para definir o cache de enqueue conforme a necessidade
+ * @todo: rever este trecho e passar para o plugin do job ou tema, para definir o cache de enqueue conforme a necessidade
  * 
  * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
  */
