@@ -36,19 +36,18 @@ define( 'BOROS_JS',           plugins_url( 'functions/form-elements/js/', __FILE
 
 /**
  * DEBUG CONSTANTS
+ * 
  */
-/**
-print_r(BOROS);echo "\n";
-print_r(BOROS_FUNCTIONS);echo "\n";
-print_r(BOROS_ELEMENTS);echo "\n";
-print_r(BOROS_LIBS);echo "\n";
-print_r(BOROS_URL);echo "\n";
-print_r(BOROS_CSS);echo "\n";
-print_r(BOROS_IMG);echo "\n";
-print_r(BOROS_JS);echo "\n";
-$const = get_defined_constants(true);  
-print_r($const['user']);  
-/**/
+//print_r(BOROS);echo "\n";
+//print_r(BOROS_FUNCTIONS);echo "\n";
+//print_r(BOROS_ELEMENTS);echo "\n";
+//print_r(BOROS_LIBS);echo "\n";
+//print_r(BOROS_URL);echo "\n";
+//print_r(BOROS_CSS);echo "\n";
+//print_r(BOROS_IMG);echo "\n";
+//print_r(BOROS_JS);echo "\n";
+//$const = get_defined_constants(true);  
+//print_r($const['user']);  
 
 
 /**
