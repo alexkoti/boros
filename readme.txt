@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Boros Elements ===
 Contributors: alexkoti
 Donate link: http://example.com/
 Tags: comments, spam

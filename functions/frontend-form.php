@@ -88,6 +88,7 @@ class BorosFrontendForm {
 		// user
 		'auto_login'            => false,       // logar automaticamente em caso de sucesso no registro de novo usuário
 		'notification_email'    => false,       // avisar por email
+		'numeric_username'      => false,       // criar um username numérico automaticamente, baseado no autoincrement da tabela
 		
 		'class'                 => '',          // class html para formatação
 		'page_name'             => 'any',       // apenas aceitar caso is_page('page_name')
