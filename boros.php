@@ -13,13 +13,8 @@ License: GPL2
  * =====================================================================================================================
  * CONSTANTS ===========================================================================================================
  * =====================================================================================================================
- * Em localhost, configurar as seguintes constantes no arquivo /wp-config.php: PLUGINDIR, WP_PLUGIN_DIR, WP_PLUGIN_URL e LOCAL_BOROS_CONFIG
  * 
- * PLUGINDIR        Compatibilidade com plugins antigos
- * WP_PLUGIN_DIR    Caminho de servidor da pasta de plugins
- * WP_PLUGIN_URL    URL do plugins, para CSS, JS e imagens
  * 
- * @link http://wpengineer.com/2374/easier-plugin-development-by-moving-plugin-directory/
  */
 
 // CAMINHOS ABSOLUTOS - para includes
@@ -108,7 +103,6 @@ include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'page.php' );             
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'taxonomy.php');                // functions extendidas para taxonomias e termos
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'taxonomy-meta.php' );          // functions para ediçao das taxonomias - registra aqui a tabela 'termmeta'
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'user.php');                    // functions extendidas para manipulação de usuários
-include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'qtranslate.php');              // functions auxiliares para o plugin qTranslate(multilingua)
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'widgets.php' );                // widgets, fazer includes dos widgets conforme array de config
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend-form.php');           // class de postagem no frontend, ele precisa ter acesso geral para os controles de admin.
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'email.php');                   // function para todos os emails - as configs deverão ser feitas no plgin do trabalho
