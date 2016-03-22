@@ -400,7 +400,7 @@ function opengraph_tags( $args = false ){
 		
 		// refazer title apenas se não tiver no args
 		if( !isset($args['title']) ){
-			$info['title'] = get_the_title( $post->ID ) . $info['separator'] . get_bloginfo('name');
+			$info['title'] = get_the_title( $post->ID );
 		}
 		
 		//url
