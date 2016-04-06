@@ -325,17 +325,17 @@ function active_page_class( $page, $post_type = 'page', $detect = null, $append 
 	// É utilizado get_queried_object(), pois é possível que $post já tenha sido modificado, por query_posts, custom queries, filtros, etc
 	$queried = $wp_query->get_queried_object();
 	if( isset($queried->ID) AND ($queried->ID == $page_id) ){
-		$class = "{$post_type}_item current_{$post_type}_item current-item current active {$append}";
+		$class = "{$post_type}_item current_{$post_type}_item current-menu-item current-item current active {$append}";
 	}
 	
 	// Subpage ou page_parent
 	$parent = is_subpage( $page_id );
 	if( $parent ){
 		// subpage
-		$class = "{$post_type}_item current_{$post_type}_subitem current-item current active {$append}";
+		$class = "{$post_type}_item current_{$post_type}_subitem current-menu-item current-item current active {$append}";
 		// page_parent
 		if($parent == $page_id){
-			$class = "{$post_type}_item current-{$post_type}-ancestor current_{$post_type}_parent current-item current active {$append}";
+			$class = "{$post_type}_item current-{$post_type}-ancestor current_{$post_type}_parent current-menu-item current-item current active {$append}";
 		}
 	}
 	
@@ -377,7 +377,7 @@ function active_page_class( $page, $post_type = 'page', $detect = null, $append 
 			}
 		}
 		if( !empty($detected_class) ){
-			$class = "{$post_type}_item current_{$post_type}_item current-item current active {$append}{$detected_class}";
+			$class = "{$post_type}_item current_{$post_type}_item current-menu-item current-item current active {$append}{$detected_class}";
 		}
 	}
 	
