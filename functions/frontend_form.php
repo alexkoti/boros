@@ -1132,6 +1132,7 @@ class BorosFrontendForm {
 		$user_message = apply_filters( 'the_content', $user_message );
 		// aplicar filtro final, como por exemplo holder em HTML
 		$user_message = apply_filters( 'BFF_new_user_notification_text', $user_message, $user_login, $user_data['user_pass'], $login_url, $user_data, $user_meta );
+        // novo hook com mais informações
 		
 		$user_title = sprintf(__('[%s] Your username and password'), $blogname);
 		$user_title = apply_filters( 'BFF_new_user_notification_title', $user_title );
