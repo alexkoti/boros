@@ -690,6 +690,18 @@ class BorosValidation {
 		$count = count($users_with_cpf->results);
 		return $count;
 	}
+    
+    function sanitize_wp_kses( $name, $value, $args, $message ){
+        return wp_kses($value);
+    }
+    
+    function sanitize_wp_kses_post( $name, $value, $args, $message ){
+        return wp_kses_post($value);
+    }
+    
+    function sanitize_strip_all_tags( $name, $value, $args, $message ){
+        return wp_strip_all_tags($value);
+    }
 	
 }
 

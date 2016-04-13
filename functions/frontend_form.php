@@ -279,10 +279,14 @@ class BorosFrontendForm {
 	
 	/**
 	 * Normalizar os dados e aplicar filtros default às informações puras.
+	 * O WordPress adiciona os slashes no load
+	 * 
 	 * 
 	 */
 	function pre_process(){
-		$this->posted_data = apply_filters( 'boros_frontend_form_posted_data', array_merge( $_POST, $_FILES ) );
+        $this->posted_data = array_merge( $_POST, $_FILES );
+        $this->posted_data = wp_unslash( $this->posted_data );
+		$this->posted_data = apply_filters( 'boros_frontend_form_posted_data', $this->posted_data );
 		$this->posted_data = apply_filters( "boros_frontend_form_posted_data_{$this->form_name}", $this->posted_data );
 	}
 	
@@ -490,7 +494,7 @@ class BorosFrontendForm {
 	function user_info(){
 		if( is_user_logged_in() ){
 			global $current_user;
-			get_currentuserinfo();
+			wp_get_current_user();
 			//pre($current_user->data, '$current_user');
 		}
 	}
@@ -794,14 +798,12 @@ class BorosFrontendForm {
 			$this->validation->data_errors['user_pass']['password_empty'] = $error;
 		}
 		
-		/**
-		pre( $user_data, 'USER_DATA' );
-		pre( $user_meta, 'USER_META' );
-		pre( $this->valid_data, 'VALID DATA' );
-		pre( $this->valid_meta, 'VALID META' );
-		pre( $this->validation->data_errors, 'VALID ERRORS' );
-		die('teste de criação de usuário');
-		/**/
+		//pre( $user_data, 'USER_DATA' );
+		//pre( $user_meta, 'USER_META' );
+		//pre( $this->valid_data, 'VALID DATA' );
+		//pre( $this->valid_meta, 'VALID META' );
+		//pre( $this->validation->data_errors, 'VALID ERRORS' );
+		//die('teste de criação de usuário');
 		
 		/**
 		 * Filtro de pós-processamento
@@ -1508,7 +1510,7 @@ class BorosFrontendForm {
 		// resetar valores caso necessário
 		if( isset($item['options']['reset_after_submit']) and $item['options']['reset_after_submit'] == true ){
 			if( isset( $item['std']) ){
-				return $item['std'];
+				$return = $item['std'];
 			}
 			else{
 				return null;
@@ -1521,7 +1523,7 @@ class BorosFrontendForm {
 		}
 		// recarregar valid_meta
 		elseif( isset($item['name']) and array_key_exists( $item['name'], $this->valid_meta ) ){
-			return $this->valid_meta[ $item['name'] ];
+			$return = $this->valid_meta[ $item['name'] ];
 		}
 		// recarregar valid_taxonomy_terms
 		elseif( isset($item['name']) and $item['core_type'] == 'tax_input' ){
@@ -1529,17 +1531,18 @@ class BorosFrontendForm {
 			//pre($this->valid_taxonomy_terms);
 			//pre($this->valid_taxonomy_terms[$item['options']['taxonomy']]);
 			if( isset($this->valid_taxonomy_terms[$item['options']['taxonomy']]) ){
-				return $this->valid_taxonomy_terms[$item['options']['taxonomy']];
+				$return = $this->valid_taxonomy_terms[$item['options']['taxonomy']];
 			}
 			//return $this->valid_meta[ $item['name'] ];
 		}
 		// recarregar padrão, caso exista
 		elseif( isset( $item['std']) ){
-			return $item['std'];
+			$return = $item['std'];
 		}
 		else{
 			return null;
 		}
+        return esc_html($return);
 	}
 	
 	// desativado
@@ -1754,7 +1757,7 @@ class BorosFrontendForm {
 	
 	function save_as_user_meta( $args ){
 		global $current_user;
-		get_currentuserinfo();
+		wp_get_current_user();
 		$user_meta = get_user_meta( $current_user->ID, $args['name'], true );
 		
 		if( !empty($user_meta) and $args['args']['overwrite'] == false )
