@@ -360,7 +360,7 @@ function bev_signin_status( $bev_id, $user_id ){
 
 function bev_profile_page_user_id(){
 	global $current_user;
-	get_currentuserinfo();
+	wp_get_current_user();
 	if( isset($_POST['user_id']) ){
 		$user_id = $_POST['user_id'];
 	}
@@ -781,7 +781,7 @@ function bev_user_info_lightbox(){
  */
 function bev_signin( $args ){
 	//global $current_user;
-	//get_currentuserinfo();
+	//wp_get_current_user();
 	
 	$add = new BevDriveAddOrRemoveUser( $args['bev_id'], $args['user_id'] );
 	$add->queue_user();
@@ -963,7 +963,7 @@ class BevDriveAddOrRemoveUser {
 add_action( 'init', 'bev_verify_cancel' );
 function bev_verify_cancel(){
 	global $current_user;
-	get_currentuserinfo();
+	wp_get_current_user();
 	
 	if( isset($_GET['ecancel']) and isset($_GET['eid']) and isset($_GET['user']) ){
 		// verificar se o usuário está tentando remover ele mesmo ou se é um admin

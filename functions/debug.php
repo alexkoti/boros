@@ -22,7 +22,7 @@ if( !function_exists('pre') ){
 add_action( 'admin_footer', 'boros_current_screen_info' );
 function boros_current_screen_info() {
 	global $current_user;
-	get_currentuserinfo();
+	wp_get_current_user();
 	$show_debug = get_user_meta($current_user->ID, 'show_debug', true);
 	if(!empty($show_debug)){
 		global $plugin_page, $page_hook, $admin_page_hooks, $hook_suffix, $pagenow, $typenow, $current_screen;
@@ -58,7 +58,7 @@ add_action( 'wp_footer', 'boros_current_page_info' );
 function boros_current_page_info(){
 	global $template, $current_user;
 	if( is_user_logged_in() ){
-		get_currentuserinfo();
+		wp_get_current_user();
 		$show_debug = get_user_meta($current_user->ID, 'show_debug', true);
 		if(!empty($show_debug)){
 		?>

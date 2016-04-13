@@ -41,7 +41,7 @@ function boros_wp_login_check(){
 			}
 			else{
 				global $current_user;
-				get_currentuserinfo();
+				wp_get_current_user();
 				
 				$boros_fb = BorosFb::init();
 				if( $boros_fb->facebook != false ){
@@ -264,7 +264,7 @@ class BorosFb {
 		if( is_user_logged_in() ){
 			// verificar se é um user também do fb, então mandar para o login do fb
 			global $current_user;
-			get_currentuserinfo();
+			wp_get_current_user();
 			$user_fb_uid = get_post_meta( $current_user->ID, 'fb_uid', true );
 			if( $this->user == false and !empty($user_fb_uid) ){
 				$params = array(
@@ -392,7 +392,7 @@ class BorosFb {
 		if( is_user_logged_in() ){
 			// logout wp only)
 			global $current_user;
-			get_currentuserinfo();
+			wp_get_current_user();
 			$user_fb_uid = get_user_meta( $current_user->ID, 'fb_uid', true );
 			if( empty($user_fb_uid) ){
 				return wp_logout_url( self_url() );

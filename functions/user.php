@@ -176,7 +176,7 @@ function boros_get_user_profile( $user_id = 0, $fields = array() ){
  */
 function get_current_user_role(){
 	global $current_user;
-	get_currentuserinfo();
+	wp_get_current_user();
 	$user_roles = $current_user->roles;
 	$user_role = array_shift($user_roles);
 	return $user_role;
@@ -367,7 +367,7 @@ function boros_user_show_errors(){
  */
 function boros_user_profile_page_user_id(){
 	global $current_user;
-	get_currentuserinfo();
+	wp_get_current_user();
 	
 	if( isset($_POST['user_id']) ){
 		$user_id = $_POST['user_id'];
