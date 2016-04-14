@@ -691,6 +691,97 @@ class BorosValidation {
 		return $count;
 	}
     
+    /**
+     * Validate a date
+     * 
+     * 
+     * @link https://gist.github.com/TiuTalk/0effe55821e82eb0f745
+     * @link http://pt.stackoverflow.com/questions/14560/como-validar-data-de-nascimento-entre-o-ano-de-1900-e-hoje
+     * 
+     * @param    string    $data
+     * @param    string    formato
+     * @return    bool
+     */
+    function valid_birth_date( $data, $formato = 'DD/MM/AAAA' ){
+        
+        switch($formato) {
+            case 'DD-MM-AAAA':
+            case 'DD/MM/AAAA':
+                $parts = preg_split('~[-./ ]~', $data);
+                if( count($parts) != 3 ){
+                    return false;
+                }
+                list($d, $m, $a) = $parts;
+                break;
+
+            case 'AAAA/MM/DD':
+            case 'AAAA-MM-DD':
+                list($a, $m, $d) = preg_split('~[-./ ]~', $data);
+                if( count($parts) != 3 ){
+                    return false;
+                }
+                break;
+
+            case 'AAAA/DD/MM':
+            case 'AAAA-DD-MM':
+                list($a, $d, $m) = preg_split('~[-./ ]~', $data);
+                break;
+
+            case 'MM-DD-AAAA':
+            case 'MM/DD/AAAA':
+                list($m, $d, $a) = preg_split('~[-./ ]~', $data);
+                break;
+
+            case 'AAAAMMDD':
+                $a = substr($data, 0, 4);
+                $m = substr($data, 4, 2);
+                $d = substr($data, 6, 2);
+                break;
+
+            case 'AAAADDMM':
+                $a = substr($data, 0, 4);
+                $d = substr($data, 4, 2);
+                $m = substr($data, 6, 2);
+                break;
+
+            default:
+                throw new Exception( "Formato de data inválido");
+                break;
+        }
+        
+        if( !checkdate( $m , $d , $a ) || $a < 1900 || mktime( 0, 0, 0, $m, $d, $a ) > time() ){
+            return false;
+        }
+        return true;
+    }
+    
+    function validate_birth_date( $name, $value, $args, $message ){
+        $valid_birth_date = $this->valid_birth_date( $value, $args['format'] );
+        
+        // boros
+        if( $valid_birth_date == false ){
+            if( $this->context['type'] == 'frontend' ){
+                $error = array(
+                    'name' => $name,
+                    'message' => $message,
+                    'type' => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+            elseif( $this->context['type'] == 'user_meta' ){
+                $error = array(
+                    'name' => $name,
+                    'message' => $message,
+                    'type' => 'error'
+                );
+                $this->user_errors[$name][$args['rule']] = $error;
+                // RESETAR VALOR PARA QUE NÃO SEJA SALVO
+                $value = false;
+            }
+        }
+        return $value;
+    }
+    
     function sanitize_wp_kses( $name, $value, $args, $message ){
         return wp_kses($value);
     }
