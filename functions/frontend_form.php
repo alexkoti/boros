@@ -6,7 +6,6 @@
  * 
  * 
  * @TODOS
- *  - URGENTE: mudar 'accepted_metas' e 'core_user_fields' para array associativo
  *  - fazer redirect para '$config->page_name' em caso de 'redirect_on_sucess' === true, ou redirect para o local deseja em caso de 'redirect_on_sucess' == string
  *  - 'field_type' está sendo usado? Aplicado atualmente nas configs
  *  - revisar o BorosValidation() no construct, pois ele acaba rodando mesmo sem o $_POST
@@ -191,6 +190,7 @@ class BorosFrontendForm {
 		'user_pass_confirm' => '',
 		'user_nicename' => '',
 		'user_email' => '',
+		'user_email_confirm' => '',
 		'user_url' => '',
 		'user_registered' => '',
 		'user_activation_key' => '',
@@ -591,7 +591,8 @@ class BorosFrontendForm {
 		// erro no login: um só objeto de erro já define as mensagens de erro de ambos os campos do login( username/email e senha )
 		if( is_wp_error($user) ){
 			foreach( $user->errors as $code => $message ){
-				//pal( $code);
+				//pre( $code);
+				//pre( $message);
 				
 				// mensagem original
 				$msg = $message[0];
@@ -648,6 +649,15 @@ class BorosFrontendForm {
 				
 				// Adicionar a mensagem de erro conforme o tipo e associando ao campo correto no form
 				switch( $code ){
+					case 'empty_password':
+						$error = array(
+							'name' => $code,
+							'message' => $msg,
+							'type' => 'error'
+						);
+						$this->errors['user_pass']['empty_password'] = $error;
+						break;
+                        
 					case 'incorrect_password':
 						$error = array(
 							'name' => $code,
@@ -743,6 +753,25 @@ class BorosFrontendForm {
 		$this->valid_meta = $this->validate( $this->context, $user_meta );
 		//pre( $this->valid_data, 'VALID DATA' );
 		//pre( $this->valid_meta, 'VALID META' );
+        
+        /**
+         * Verificar segundo email
+         * Existem dois cenários: com ou sem o campo de confirmação de email
+         * 
+         * 1) Com campo de confirmação: comparar os valores dos dois campos
+         * 2) Sem campo de confirmação: não fazer nenhuma verificação
+         * 
+         */
+        if( isset($this->valid_data['user_email_confirm']) and $this->valid_data['user_email'] != $this->valid_data['user_email_confirm'] ){
+            $this->errors[] = new WP_Error( 'email_not_match', 'Os e-mails não são iguais' );
+            $error = array(
+                'name' => 'user_email_confirm',
+                'message' => 'Os e-mails não são iguais',
+                'type' => 'error'
+            );
+            $this->validation->data_errors['user_email_confirm']['email_not_match'] = $error;
+        }
+        
 		
 		/**
 		 * Decidir qual será o user name
@@ -773,7 +802,7 @@ class BorosFrontendForm {
 		 * Existem dois cenários: com ou sem o campo de confirmação de senha
 		 * 
 		 * 1) Com campo de confirmação: comparar os valores dos dois campos
-		 * 2) Sem campo de confirmação: não fazer nenhum verificação
+		 * 2) Sem campo de confirmação: não fazer nenhuma verificação
 		 */
 		if( isset($this->valid_data['user_pass_confirm']) and $this->valid_data['user_pass'] != $this->valid_data['user_pass_confirm'] ){
 			$this->errors[] = new WP_Error( 'password_not_match', "As senhas não são iguais \n" );
@@ -782,8 +811,9 @@ class BorosFrontendForm {
 				'message' => 'As senhas não são iguais',
 				'type' => 'error'
 			);
-			$this->validation->data_errors['user_pass_confirm']['password_match'] = $error;
+			$this->validation->data_errors['user_pass_confirm']['password_not_match'] = $error;
 		}
+        
 		/**
 		 * Verificar senha vazia
 		 * 
@@ -798,12 +828,13 @@ class BorosFrontendForm {
 			$this->validation->data_errors['user_pass']['password_empty'] = $error;
 		}
 		
-		//pre( $user_data, 'USER_DATA' );
-		//pre( $user_meta, 'USER_META' );
-		//pre( $this->valid_data, 'VALID DATA' );
-		//pre( $this->valid_meta, 'VALID META' );
-		//pre( $this->validation->data_errors, 'VALID ERRORS' );
-		//die('teste de criação de usuário');
+        //pre($_POST);
+        //pre( $user_data, 'USER_DATA' );
+        //pre( $user_meta, 'USER_META' );
+        //pre( $this->valid_data, 'VALID DATA' );
+        //pre( $this->valid_meta, 'VALID META' );
+        //pre( $this->validation->data_errors, 'VALID ERRORS' );
+        //die('teste de criação de usuário');
 		
 		/**
 		 * Filtro de pós-processamento
@@ -970,7 +1001,7 @@ class BorosFrontendForm {
 			if( $this->valid_data['user_pass'] != $this->valid_data['user_pass_confirm'] ){
 				$error = array(
 					'name' => 'user_pass_confirm',
-					'message' => "As senhas não são iguais \n",
+					'message' => 'As senhas não são iguais',
 					'type' => 'error',
 				);
 				$this->errors['user_pass']['password_not_match'] = $error;
@@ -988,6 +1019,8 @@ class BorosFrontendForm {
 			if( $email_exists == true and $email_exists != $user->ID ){
 				$this->errors[] = new WP_Error( 'email_already_exists', 'Este email já está sendo usado por outra pessoa' );
 			}
+            
+            
 		}
 		
 		//pre($this->validation->data_errors);
@@ -2188,6 +2221,8 @@ class BorosFrontendForm {
 		$args = array(
 			'form_name' => $this->form_name,
 			'new_post_id' => $this->new_post_id,
+            'valid_data' => $this->valid_data,
+            'valid_meta' => $this->valid_meta,
 		);
 		return apply_filters( 'boros_frontend_form_redirect_url', $url, $args );
 	}

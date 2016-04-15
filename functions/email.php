@@ -96,7 +96,7 @@ class BorosEmail {
 		
 		// recuperação de senha
 		add_filter( 'retrieve_password_title', 		array($this, 'retrieve_password_title') );
-		add_filter( 'retrieve_password_message', 	array($this, 'retrieve_password_message'), 10, 2 );
+		add_filter( 'retrieve_password_message', 	array($this, 'retrieve_password_message'), 10, 4 );
 		add_action( 'retrieve_password', 			array($this, 'register_user_data_for_retrieve') );
 		
 		// novo usuário >>> ATENÇÃO: filtros para o email enviado pela class 'BorosFrontendForm'
@@ -290,7 +290,7 @@ class BorosEmail {
 	 * 
 	 * @link http://wp.smashingmagazine.com/2011/10/25/create-perfect-emails-wordpress-website/
 	 */
-	function retrieve_password_message( $message, $key ){
+	function retrieve_password_message( $message, $key, $user_login, $user ){
 		$custom_message = get_option('retrieve_password_message');
 		
 		// usar mensagem padrão
@@ -315,10 +315,6 @@ class BorosEmail {
 		}
 		// usar mensagem personalizada
 		else{
-			// pegar username relativo ao código de ativação fornecido
-			global $wpdb;
-			$user = $wpdb->get_row("SELECT * FROM $wpdb->users WHERE user_activation_key = '$key'");
-			
 			// montar a url de recuperação de senha
 			$login_args = array(
 				'action' => 'rp',
