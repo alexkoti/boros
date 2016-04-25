@@ -59,6 +59,7 @@ class BorosValidation {
 		if( isset($element['name']) ){
 			$this->validations[$element['name']]['element'] = $element;
 			$this->validations[$element['name']]['rules'] = $vals;
+			$this->validations[$element['name']]['remaining_rules'] = $vals;
 		}
 	}
 	
@@ -188,6 +189,7 @@ class BorosValidation {
 					$validation['args']['object'] = $this;
 					$newval = call_user_func( $validation['rule'], $element['name'], $newval, $validation['args'], $validation['message'] );
 				}
+                unset( $this->validations[$element['name']]['remaining_rules'][$rule]);
 			}
 		}
 		//pal($newval, "pos validate ({$element['name']})");
@@ -413,17 +415,115 @@ class BorosValidation {
 		}
 	}
 	
-	/**
-	 * File
-	 * 
-	 * @ATENÇÃO : A presença desta function é obrigatória para não entrar em conflito com a function do core de mesmo nome.
-	 *            É feita a tentativa de utilizar um metodo da classe BorosValidation, e caso contrário, tenta utilizar
-	 *            uma function de mesmo nome, que no caso já existe no core, mas não serve para esta validação.
-	 */
-	function validate_file( $name, $value, $args, $message ){
-		return $value;
-	}
-	
+    /**
+     * File
+     * 
+     * @ATENÇÃO : A presença desta function é obrigatória para não entrar em conflito com a function do core de mesmo nome.
+     *            É feita a tentativa de utilizar um metodo da classe BorosValidation, e caso contrário, tenta utilizar
+     *            uma function de mesmo nome, que no caso já existe no core, mas não serve para esta validação.
+     */
+    function validate_file( $name, $value, $args, $message ){
+        //pre($this);
+        if( isset($value['error']) and $value['error'] > 0 ){
+            // caso existe apenas uma regra de validação(ou seja a corrente), retornar vazio, 
+            // caso contrário retorna o valor original para as outras validações
+            if( count($this->validations[$name]['remaining_rules']) > 1 ){
+                return $value;
+            }
+            else{
+                return '';
+            }
+        }
+        return $value;
+    }
+    
+    /**
+     * Validar tamanho
+     * 
+     */
+    function validate_file_size( $name, $value, $args, $message ){
+        
+        //pre($value['size']);
+        //pre($args['size_bytes']);
+        //die('validate_file_size');
+        
+        if( isset($value['size']) and $value['size'] > $args['size_bytes'] ){
+            $error = array(
+                'name' => $name,
+                'message' => $message,
+                'type' => 'error'
+            );
+            $this->data_errors[$name][$args['rule']] = $error;
+        }
+        
+        // Caso seja 4(não enviado), retornar vazio. A verificação de campo obrigatório já é feito em BorosFrontendForm:required()
+        if( isset($value['error']) and $value['error'] == 4 ){
+            
+            // caso existe apenas uma regra de validação(ou seja a corrente), retornar vazio, 
+            // caso contrário retorna o valor original para as outras validações
+            if( count($this->validations[$name]['remaining_rules']) > 1 ){
+                return $value;
+            }
+            else{
+                return '';
+            }
+        }
+        
+        //$limit = $args['size_bytes'];
+        //pre(func_get_args());
+        //die();
+        return $value;
+    }
+    
+    /**
+     * Validar MIME type
+     * 
+     */
+    function validate_file_mime_type( $name, $value, $args, $message ){
+        
+        //pre($value);
+        //pre($args);
+        //pre($this);
+        //die('validate_file');
+        
+        // não gerar erro caso esteja vazio
+        if( empty($value) ){
+            return $value;
+        }
+        
+        // validar mime
+        if( isset($args['mimes']) and !empty($value['name']) ){
+            require_once( BOROS_LIBS . '/mime_type_lib.php' );
+            $mime = get_file_mime_type($value['name']);
+            //pre($mime);
+            //pre($args['mimes']);
+            //pre($this);
+            //die();
+            if( !in_array($mime, $args['mimes']) ){
+                $error = array(
+                    'name' => $name,
+                    'message' => $message,
+                    'type' => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+        }
+        
+        // Caso seja 4(não enviado), retornar vazio. A verificação de campo obrigatório já é feito em BorosFrontendForm:required()
+        if( isset($value['error']) and $value['error'] == 4 ){
+            
+            // caso existe apenas uma regra de validação(ou seja a corrente), retornar vazio, 
+            // caso contrário retorna o valor original para as outras validações
+            if( count($this->validations[$name]['remaining_rules']) > 1 ){
+                return $value;
+            }
+            else{
+                return '';
+            }
+        }
+        return $value;
+    }
+    
 	/**
 	 * Image file
 	 * 
@@ -444,6 +544,7 @@ class BorosValidation {
 			'message' => $message,
 			'type' => 'error'
 		);
+        
 		/**
 		 * Caso não tenha sido feito o upload, será gerado o valor 4 em 'error'
 		 * @http://php.net/manual/pt_BR/features.file-upload.errors.php
@@ -451,7 +552,14 @@ class BorosValidation {
 		 */
 		if( is_array($value) ){
 			if( isset($value['error']) and $value['error'] == 4 ){
-				return '';
+                // caso existe apenas uma regra de validação(ou seja a corrente), retornar vazio, 
+                // caso contrário retorna o valor original para as outras validações
+                if( count($this->validations[$name]['rules']) > 1 ){
+                    return $value;
+                }
+                else{
+                    return '';
+                }
 			}
 			else{
 				// Corrigir imagem caso ela esteja com extensão errada. Apenas para arquivos de imagem reais
@@ -548,6 +656,10 @@ class BorosValidation {
 		return mb_strlen( $check ) <= $max;
 	}
 	
+    /**
+     * Apenas verificar o limite máximo da string, sem interferir no valor
+     * 
+     */
 	function string_limit( $name, $value, $args, $message ){
 		if( mb_strlen($value) > $args['max'] ){
 			// adicionar box de erro apenas em option_page
@@ -568,9 +680,25 @@ class BorosValidation {
 				);
 				$this->meta_errors[$name][] = $error;
 			}
-			$value = substr( $value, 0, $args );
+			// frontend
+			elseif( $this->context['type'] == 'frontend' ){
+				$error = array(
+					'name' => $name,
+					'message' => $message,
+					'type' => 'error'
+				);
+				$this->data_errors[$name][] = $error;
+			}
 		}
 		return $value;
+	}
+	
+    /**
+     * Limpar string além do limite
+     * 
+     */
+	function sanitize_string_limit( $name, $value, $args, $message ){
+		return mb_substr( $value, 0, $args['max'] );
 	}
 	
 	function string_min_required( $name, $value, $args, $message ){
@@ -791,7 +919,15 @@ class BorosValidation {
     }
     
     function sanitize_strip_all_tags( $name, $value, $args, $message ){
-        return wp_strip_all_tags($value);
+        if( is_array($value) ){
+            foreach( $value as $k => $v ){
+                $value[$k] = $this->sanitize_strip_all_tags( false, $v, false, false );
+            }
+        }
+        else {
+            $value = wp_strip_all_tags($value);
+        }
+        return $value;
     }
 	
 }
