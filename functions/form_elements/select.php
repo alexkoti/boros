@@ -41,6 +41,9 @@ class BFE_select extends BorosFormElement {
 			else{
 				$data_value = $value;
 			}
+            
+            $values = apply_filters( "BFE_select_values", $this->data['options']['values'], $this );
+            $values = apply_filters( "BFE_{$this->data['attr']['name']}_values", $values, $this );
 			
 			/**
 			 * Adicionar o campo 'outros': será adicionado um input:text e a valor será dividido em um array, sendo o valor do select o índice [0] e o other o índice [1]
