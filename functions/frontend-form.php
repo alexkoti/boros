@@ -6,7 +6,6 @@
  * 
  * 
  * @TODOS
- *  - URGENTE: mudar 'accepted_metas' e 'core_user_fields' para array associativo
  *  - fazer redirect para '$config->page_name' em caso de 'redirect_on_sucess' === true, ou redirect para o local deseja em caso de 'redirect_on_sucess' == string
  *  - 'field_type' está sendo usado? Aplicado atualmente nas configs
  *  - revisar o BorosValidation() no construct, pois ele acaba rodando mesmo sem o $_POST
@@ -191,6 +190,7 @@ class BorosFrontendForm {
 		'user_pass_confirm' => '',
 		'user_nicename' => '',
 		'user_email' => '',
+		'user_email_confirm' => '',
 		'user_url' => '',
 		'user_registered' => '',
 		'user_activation_key' => '',
@@ -279,10 +279,14 @@ class BorosFrontendForm {
 	
 	/**
 	 * Normalizar os dados e aplicar filtros default às informações puras.
+	 * O WordPress adiciona os slashes no load
+	 * 
+	 * ATENÇÃO wp_unslash() é aplicado apenas em $_POST, pois em $_FILES altera o tmp_name
 	 * 
 	 */
 	function pre_process(){
-		$this->posted_data = apply_filters( 'boros_frontend_form_posted_data', array_merge( $_POST, $_FILES ) );
+        $this->posted_data = array_merge( wp_unslash($_POST), $_FILES );
+		$this->posted_data = apply_filters( 'boros_frontend_form_posted_data', $this->posted_data );
 		$this->posted_data = apply_filters( "boros_frontend_form_posted_data_{$this->form_name}", $this->posted_data );
 	}
 	
@@ -490,7 +494,7 @@ class BorosFrontendForm {
 	function user_info(){
 		if( is_user_logged_in() ){
 			global $current_user;
-			get_currentuserinfo();
+			wp_get_current_user();
 			//pre($current_user->data, '$current_user');
 		}
 	}
@@ -587,7 +591,8 @@ class BorosFrontendForm {
 		// erro no login: um só objeto de erro já define as mensagens de erro de ambos os campos do login( username/email e senha )
 		if( is_wp_error($user) ){
 			foreach( $user->errors as $code => $message ){
-				//pal( $code);
+				//pre( $code);
+				//pre( $message);
 				
 				// mensagem original
 				$msg = $message[0];
@@ -644,6 +649,15 @@ class BorosFrontendForm {
 				
 				// Adicionar a mensagem de erro conforme o tipo e associando ao campo correto no form
 				switch( $code ){
+					case 'empty_password':
+						$error = array(
+							'name' => $code,
+							'message' => $msg,
+							'type' => 'error'
+						);
+						$this->errors['user_pass']['empty_password'] = $error;
+						break;
+                        
 					case 'incorrect_password':
 						$error = array(
 							'name' => $code,
@@ -739,6 +753,25 @@ class BorosFrontendForm {
 		$this->valid_meta = $this->validate( $this->context, $user_meta );
 		//pre( $this->valid_data, 'VALID DATA' );
 		//pre( $this->valid_meta, 'VALID META' );
+        
+        /**
+         * Verificar segundo email
+         * Existem dois cenários: com ou sem o campo de confirmação de email
+         * 
+         * 1) Com campo de confirmação: comparar os valores dos dois campos
+         * 2) Sem campo de confirmação: não fazer nenhuma verificação
+         * 
+         */
+        if( isset($this->valid_data['user_email_confirm']) and $this->valid_data['user_email'] != $this->valid_data['user_email_confirm'] ){
+            $this->errors[] = new WP_Error( 'email_not_match', 'Os e-mails não são iguais' );
+            $error = array(
+                'name' => 'user_email_confirm',
+                'message' => 'Os e-mails não são iguais',
+                'type' => 'error'
+            );
+            $this->validation->data_errors['user_email_confirm']['email_not_match'] = $error;
+        }
+        
 		
 		/**
 		 * Decidir qual será o user name
@@ -769,7 +802,7 @@ class BorosFrontendForm {
 		 * Existem dois cenários: com ou sem o campo de confirmação de senha
 		 * 
 		 * 1) Com campo de confirmação: comparar os valores dos dois campos
-		 * 2) Sem campo de confirmação: não fazer nenhum verificação
+		 * 2) Sem campo de confirmação: não fazer nenhuma verificação
 		 */
 		if( isset($this->valid_data['user_pass_confirm']) and $this->valid_data['user_pass'] != $this->valid_data['user_pass_confirm'] ){
 			$this->errors[] = new WP_Error( 'password_not_match', "As senhas não são iguais \n" );
@@ -778,8 +811,9 @@ class BorosFrontendForm {
 				'message' => 'As senhas não são iguais',
 				'type' => 'error'
 			);
-			$this->validation->data_errors['user_pass_confirm']['password_match'] = $error;
+			$this->validation->data_errors['user_pass_confirm']['password_not_match'] = $error;
 		}
+        
 		/**
 		 * Verificar senha vazia
 		 * 
@@ -794,14 +828,13 @@ class BorosFrontendForm {
 			$this->validation->data_errors['user_pass']['password_empty'] = $error;
 		}
 		
-		/**
-		pre( $user_data, 'USER_DATA' );
-		pre( $user_meta, 'USER_META' );
-		pre( $this->valid_data, 'VALID DATA' );
-		pre( $this->valid_meta, 'VALID META' );
-		pre( $this->validation->data_errors, 'VALID ERRORS' );
-		die('teste de criação de usuário');
-		/**/
+        //pre($_POST);
+        //pre( $user_data, 'USER_DATA' );
+        //pre( $user_meta, 'USER_META' );
+        //pre( $this->valid_data, 'VALID DATA' );
+        //pre( $this->valid_meta, 'VALID META' );
+        //pre( $this->validation->data_errors, 'VALID ERRORS' );
+        //die('teste de criação de usuário');
 		
 		/**
 		 * Filtro de pós-processamento
@@ -968,7 +1001,7 @@ class BorosFrontendForm {
 			if( $this->valid_data['user_pass'] != $this->valid_data['user_pass_confirm'] ){
 				$error = array(
 					'name' => 'user_pass_confirm',
-					'message' => "As senhas não são iguais \n",
+					'message' => 'As senhas não são iguais',
 					'type' => 'error',
 				);
 				$this->errors['user_pass']['password_not_match'] = $error;
@@ -986,6 +1019,8 @@ class BorosFrontendForm {
 			if( $email_exists == true and $email_exists != $user->ID ){
 				$this->errors[] = new WP_Error( 'email_already_exists', 'Este email já está sendo usado por outra pessoa' );
 			}
+            
+            
 		}
 		
 		//pre($this->validation->data_errors);
@@ -1168,12 +1203,17 @@ class BorosFrontendForm {
 				$post_meta[$field] = $default;
 			}
 		}
-		//pre( $post_data, 'ACCEPTED POST_DATA' );
-		//pre( $post_meta, 'ACCEPTED POST_META' );
-		
-		
-		$this->valid_data = $this->validate( $this->context, $post_data );
-		$this->valid_meta = $this->validate( $this->context, $post_meta );
+        
+        //pre( $post_data, 'ACCEPTED POST_DATA' );
+        //pre( $post_meta, 'ACCEPTED POST_META' );
+        //sep();
+        
+        $this->valid_data = $this->validate( $this->context, $post_data );
+        $this->valid_meta = $this->validate( $this->context, $post_meta );
+        
+        //pre($this->valid_data, 'VALID DATA');
+        //pre($this->valid_meta, 'VALID META');
+        //sep();
 		
 		// mesclar dados 'core_post_fields' da config
 		$this->valid_data = boros_parse_args( $this->config['core_post_fields'], $this->valid_data );
@@ -1202,7 +1242,7 @@ class BorosFrontendForm {
 		//pre($this->valid_data, 'VALID DATA');
 		//pre($this->valid_meta, 'VALID META');
 		//pre($this->validation->data_errors, 'VALIDATION $this->validation->data_errors');
-		//return;
+		//die('CREATE POST');
 		
 		// adicionar filtro para pós validação, por exemplo para verificar campos dependentes de respostas de outros campos
 		$this->valid_data = apply_filters( 'boros_frontend_form_pos_validation_data', $this->valid_data, $this->valid_meta, $this->validation->data_errors, $this->form_name );
@@ -1298,15 +1338,15 @@ class BorosFrontendForm {
 					update_option('boros_dashboard_notifications', $alerts);
 				}
 				
-				// reset data
-				$this->valid_data = array();
-				$this->valid_meta = array();
-				
 				// redirect
 				if( $this->config['redirect_on_sucess'] != false ){
 					wp_redirect( $this->get_redirect_url('success') );
 					exit();
 				}
+				
+				// reset data, apenas caso seja um reload de página
+				$this->valid_data = array();
+				$this->valid_meta = array();
 			}
 		}
 		else{
@@ -1398,6 +1438,8 @@ class BorosFrontendForm {
 		if( !function_exists( 'wp_handle_upload' ) ){
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
+        
+        do_action('boros_pre_upload', $this->form_name, $elem_config, $this);
 		
 		$movefile = wp_handle_upload( $file_info, array( 'test_form' => false ) );
 		if( $movefile ){
@@ -1432,7 +1474,188 @@ class BorosFrontendForm {
 	}
 	
 	function edit_post(){
+        //pal('edit_post');
+        //pre( $_POST, '$_POST' );
+        //pre( $this->posted_data, 'posted_data' );
+        //die();
+		//pre($this->posted_data, 'RAW $this->posted_data');
 		
+		$post_data = array();
+		foreach( $this->core_post_fields as $field => $default ){
+			if( isset($this->posted_data[$field]) ){
+				$post_data[$field] = $this->posted_data[$field];
+			}
+		}
+		
+		$post_meta = array();
+		// alertar que o modelo de 'accepted_metas' está antigo
+		if( !is_assoc_array($this->config['accepted_metas']) ){
+			wp_die('ALERTA: o modelo de accepted_metas está no formato antigo, corrigir mudando para array associativo com defaults <strong>create_post()</strong>');
+		}
+		foreach( $this->config['accepted_metas'] as $field => $default ){
+			if( isset($this->posted_data[$field]) ){
+				$post_meta[$field] = $this->posted_data[$field];
+			}
+			else{
+				$post_meta[$field] = $default;
+			}
+		}
+        
+        //pre( $post_data, 'ACCEPTED POST_DATA' );
+        //pre( $post_meta, 'ACCEPTED POST_META' );
+        //sep();
+        
+        $this->valid_data = $this->validate( $this->context, $post_data );
+        $this->valid_meta = $this->validate( $this->context, $post_meta );
+        
+        //pre($this->valid_data, 'VALID DATA');
+        //pre($this->valid_meta, 'VALID META');
+        //sep();
+		
+		// mesclar dados 'core_post_fields' da config
+		$this->valid_data = boros_parse_args( $this->config['core_post_fields'], $this->valid_data );
+		// mesclar dados 'core_post_fields' da class
+		$this->valid_data = boros_parse_args( $this->core_post_fields, $this->valid_data );
+		
+		/**
+		 * Aplicar termos de taxonomia setados pelo usuário.
+		 * 
+		 * @todo Caso seja configurado um array de termos, apenas esses termos serão válidos para que o usuário aplique.
+		 */
+		if( !empty( $this->config['accepted_taxonomies'] ) ){
+			$this->validate_taxonomy_terms($post_data);
+		}
+		//pre($this->valid_taxonomy_terms, 'valid_taxonomy_terms');
+		if( !empty($this->valid_taxonomy_terms) ){
+			$this->valid_data['tax_input'] = $this->valid_taxonomy_terms;
+		}
+		
+		// remover os vazios de core_data, para que o próprio WordPress processe corretamente os valores.
+		$this->valid_data = array_non_empty_items( $this->valid_data );
+		
+		// mesclar dados 'accepted_metas' da config
+		$this->valid_meta = boros_parse_args( $this->config['accepted_metas'], $this->valid_meta );
+		
+		//pre($this->valid_data, 'VALID DATA');
+		//pre($this->valid_meta, 'VALID META');
+		//pre($this->validation->data_errors, 'VALIDATION $this->validation->data_errors');
+		//die('EDIT POST');
+		
+		// adicionar filtro para pós validação, por exemplo para verificar campos dependentes de respostas de outros campos
+		$this->valid_data = apply_filters( 'boros_frontend_form_pos_validation_data', $this->valid_data, $this->valid_meta, $this->validation->data_errors, $this->form_name );
+		$this->valid_meta = apply_filters( 'boros_frontend_form_pos_validation_meta', $this->valid_meta, $this->valid_data, $this->validation->data_errors, $this->form_name );
+		$this->validation->data_errors = apply_filters( 'boros_frontend_form_pos_validation_errors', $this->validation->data_errors, $this->valid_data, $this->valid_meta, $this->form_name );
+		
+		//pre($this->validation->data_errors, 'ERRORS');
+		
+		// verificar errors, caso negativo, editar post
+		if( empty( $this->validation->data_errors ) ){
+            
+            // filtrar título do post com informações extras postadas
+            if( isset($this->valid_data['post_title']) ){
+                $this->valid_data['post_title'] =  $this->template_tags( $this->valid_data['post_title'], $this->valid_data );
+                $this->valid_data['post_title'] =  $this->template_tags( $this->valid_data['post_title'], $this->valid_meta );
+            }
+			
+			// mesclar dados defaults_config
+			//$insert_data = boros_parse_args( $this->config['core_post_fields'], $this->valid_data );
+			// mesclar dados core_config
+			//$insert_data = boros_parse_args( $this->core_post_fields, $insert_data );
+			//$new_post_id = wp_insert_post( $insert_data, 1 ); // segundo argumento habilita WP_Error
+			$this->new_post_id = wp_update_post( $this->valid_data, 1 ); // segundo argumento habilita WP_Error
+			
+			if( is_wp_error($this->new_post_id) ){
+				$this->errors[] = $this->new_post_id;
+			}
+			else{
+				// adicionar ID ao valid_data, para ser usado pelos callbacks
+				//$this->valid_data['ID'] = $this->new_post_id;
+				
+				// carrega o novo post para o objeto
+				$this->post = get_post($this->new_post_id);
+				
+				// fixed taxonomy terms
+				if( !empty( $this->config['taxonomies'] ) ){
+					foreach( $this->config['taxonomies'] as $taxonomy => $terms ){
+						wp_set_object_terms( $this->new_post_id, $terms, $taxonomy );
+					}
+				}
+				
+				// post_metas e arquivos
+				foreach( $this->valid_meta as $meta_key => $meta_value ){
+					$config = array_search_kv( 'name', $meta_key, $this->elements );
+					
+					// Salvar upload. Mesmo que esteja configurado para 'skip_save', o arquivo será enviado para o Mídia do WordPress, e o ID do attachment será salvo como post_meta
+					if( $config['type'] == 'file' ){
+						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
+						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
+							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');die();
+							// não salvar post_meta em caso de erro no upload e registrar o erro
+							if( is_wp_error($attachment_id) ){
+								$this->errors[] = $attachment_id;
+								$meta_value = false;
+								continue;
+							}
+							else{
+								/**
+								 * Atualizar também o valid_meta para o ID do anexo, pois inicialmente ele possui apenas os dados puros de upload (name, type, tmp_name, size), e irá permitir o uso pelos callbacks
+								 * 
+								 */
+								$this->valid_meta[$meta_key] = $attachment_id;
+								$meta_value = $attachment_id;
+							}
+						}
+						else{
+							continue;
+						}
+					}
+					
+					if( isset($config['skip_save']) and $config['skip_save'] == true ){
+						continue;
+					}
+					
+					// verificar se o meta_value é false, e remover
+					if( $meta_value === false or !boros_check_empty_var($meta_value) ){
+						delete_post_meta( $this->new_post_id, $meta_key );
+					}
+					else{
+						update_post_meta( $this->new_post_id, $meta_key, $meta_value );
+					}
+				}
+				$this->messages['success'] = $this->config['messages']['success'];
+				
+				// acionar callbacks: elements
+				$this->do_callbacks( $this->valid_data );
+				$this->do_callbacks( $this->valid_meta );
+				// acionar callbacks: form->config
+				$this->form_callback( $this->config['callbacks']['success'] );
+				// acionar callbacks escrito errado('sucess') e adicionar erro em 'boros_dashboard_notifications'
+				// @deprecated
+				if( isset($this->config['callbacks']['sucess']) ){
+					$this->form_callback( $this->config['callbacks']['sucess'] );
+					$alerts = get_option('boros_dashboard_notifications');
+					$alerts['callback_index_typo'] = 'Foi identificado o uso de um callback de formulário de frontend com index errado <strong>sucess</strong>';
+					update_option('boros_dashboard_notifications', $alerts);
+				}
+				
+				// redirect
+				if( $this->config['redirect_on_sucess'] != false ){
+					wp_redirect( $this->get_redirect_url('success') );
+					exit();
+				}
+				
+				// reset data, apenas caso seja um reload de página
+				$this->valid_data = array();
+				$this->valid_meta = array();
+			}
+		}
+		else{
+			// registrar erros
+			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+			
+			// acionar callbacks de erro
+			$this->form_callback( $this->config['callbacks']['error'] );
+		}
 	}
 	
 	function save(){
@@ -1508,7 +1731,7 @@ class BorosFrontendForm {
 		// resetar valores caso necessário
 		if( isset($item['options']['reset_after_submit']) and $item['options']['reset_after_submit'] == true ){
 			if( isset( $item['std']) ){
-				return $item['std'];
+				$return = $item['std'];
 			}
 			else{
 				return null;
@@ -1521,7 +1744,7 @@ class BorosFrontendForm {
 		}
 		// recarregar valid_meta
 		elseif( isset($item['name']) and array_key_exists( $item['name'], $this->valid_meta ) ){
-			return $this->valid_meta[ $item['name'] ];
+			$return = $this->valid_meta[ $item['name'] ];
 		}
 		// recarregar valid_taxonomy_terms
 		elseif( isset($item['name']) and $item['core_type'] == 'tax_input' ){
@@ -1529,18 +1752,35 @@ class BorosFrontendForm {
 			//pre($this->valid_taxonomy_terms);
 			//pre($this->valid_taxonomy_terms[$item['options']['taxonomy']]);
 			if( isset($this->valid_taxonomy_terms[$item['options']['taxonomy']]) ){
-				return $this->valid_taxonomy_terms[$item['options']['taxonomy']];
+				$return = $this->valid_taxonomy_terms[$item['options']['taxonomy']];
 			}
 			//return $this->valid_meta[ $item['name'] ];
 		}
 		// recarregar padrão, caso exista
 		elseif( isset( $item['std']) ){
-			return $item['std'];
+			$return = $item['std'];
 		}
 		else{
 			return null;
 		}
+        
+        // esc_html
+        $return = $this->esc_html($return);
+        
+        return $return;
 	}
+    
+    function esc_html( $value ){
+        if( is_array($value) ){
+            foreach( $value as $k => $v ){
+                $value[$k] = $this->esc_html($v);
+            }
+        }
+        else{
+            $value = esc_html($value);
+        }
+        return $value;
+    }
 	
 	// desativado
 	function add_persistent_messages( $user_id, $messages ){
@@ -1754,7 +1994,7 @@ class BorosFrontendForm {
 	
 	function save_as_user_meta( $args ){
 		global $current_user;
-		get_currentuserinfo();
+		wp_get_current_user();
 		$user_meta = get_user_meta( $current_user->ID, $args['name'], true );
 		
 		if( !empty($user_meta) and $args['args']['overwrite'] == false )
@@ -2185,6 +2425,8 @@ class BorosFrontendForm {
 		$args = array(
 			'form_name' => $this->form_name,
 			'new_post_id' => $this->new_post_id,
+            'valid_data' => $this->valid_data,
+            'valid_meta' => $this->valid_meta,
 		);
 		return apply_filters( 'boros_frontend_form_redirect_url', $url, $args );
 	}

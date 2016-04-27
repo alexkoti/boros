@@ -35,6 +35,8 @@ function load_uf_list(){
 
 function load_cities_list( $uf = false ){
 	$municipios = array();
+    
+    // AC: 22
 	$municipios['AC'] = array(
 		"Acrelândia",
 		"Assis Brasil",
@@ -59,6 +61,8 @@ function load_cities_list( $uf = false ){
 		"Tarauacá",
 		"Xapuri",
 	);
+    
+    // AL 102
 	$municipios['AL'] = array(
 		"Água Branca",
 		"Anadia",
@@ -163,7 +167,8 @@ function load_cities_list( $uf = false ){
 		"União dos Palmares",
 		"Viçosa",
 	);
-
+    
+    // AM: 62
 	$municipios['AM'] = array(
 		"Alvarães",
 		"Amaturá",
@@ -228,6 +233,8 @@ function load_cities_list( $uf = false ){
 		"Urucará",
 		"Urucurituba",
 	);
+    
+    // AP: 16
 	$municipios['AP'] = array(
 		"Amapá",
 		"Calçoene",
@@ -246,6 +253,8 @@ function load_cities_list( $uf = false ){
 		"Tartarugalzinho",
 		"Vitória do Jari",
 	);
+    
+    // BA: 417
 	$municipios['BA'] = array(
 		"Abaíra",
 		"Abaré",
@@ -665,6 +674,8 @@ function load_cities_list( $uf = false ){
 		"Wenceslau Guimarães",
 		"Xique-Xique",
 	);
+    
+    // CE: 184
 	$municipios['CE'] = array(
 		"Abaiara",
 		"Acarapé",
@@ -851,9 +862,13 @@ function load_cities_list( $uf = false ){
 		"Várzea Alegre",
 		"Viçosa do Ceará",
 	);
+    
+    // DF: 1
 	$municipios['DF'] = array(
 		"Brasília",
 	);
+    
+    // ES: 78
 	$municipios['ES'] = array(
 		"Afonso Cláudio",
 		"Água Doce do Norte",
@@ -934,6 +949,8 @@ function load_cities_list( $uf = false ){
 		"Vila Velha",
 		"Vitória",
 	);
+    
+    // GO: 246
 	$municipios['GO'] = array(
 		"Abadia de Goiás",
 		"Abadiânia",
@@ -1182,6 +1199,8 @@ function load_cities_list( $uf = false ){
 		"Vila Boa",
 		"Vila Propício",
 	);
+    
+    // MA: 217
 	$municipios['MA'] = array(
 		"Açailândia",
 		"Afonso Cunha",
@@ -1401,6 +1420,8 @@ function load_cities_list( $uf = false ){
 		"Vitorino Freire",
 		"Zé Doca",
 	);
+    
+    // MG: 853
 	$municipios['MG'] = array(
 		"Abadia dos Dourados",
 		"Abaeté",
@@ -2256,10 +2277,12 @@ function load_cities_list( $uf = false ){
 		"Volta Grande",
 		"Wenceslau Braz",
 	);
+    
+    // MS: 77
 	$municipios['MS'] = array(
 		"Água Clara",
 		"Alcinópolis",
-		"Amambaí",
+		"Amambai",
 		"Anastácio",
 		"Anaurilândia",
 		"Angélica",
@@ -2269,7 +2292,7 @@ function load_cities_list( $uf = false ){
 		"Aral Moreira",
 		"Bandeirantes",
 		"Bataguassu",
-		"Bataiporã",
+		"Batayporã",
 		"Bela Vista",
 		"Bodoquena",
 		"Bonito",
@@ -2291,6 +2314,7 @@ function load_cities_list( $uf = false ){
 		"Dourados",
 		"Eldorado",
 		"Fátima do Sul",
+		"Figueirão",
 		"Glória de Dourados",
 		"Guia Lopes da Laguna",
 		"Iguatemi",
@@ -2313,6 +2337,7 @@ function load_cities_list( $uf = false ){
 		"Nova Alvorada do Sul",
 		"Nova Andradina",
 		"Novo Horizonte do Sul",
+		"Paraíso das Águas",
 		"Paranaíba",
 		"Paranhos",
 		"Pedro Gomes",
@@ -2335,6 +2360,8 @@ function load_cities_list( $uf = false ){
 		"Três Lagoas",
 		"Vicentina",
 	);
+    
+    // MT: 139
 	$municipios['MT'] = array(
 		"Acorizal",
 		"Água Boa",
@@ -2371,21 +2398,23 @@ function load_cities_list( $uf = false ){
 		"Colniza",
 		"Comodoro",
 		"Confresa",
-		"Conquista d&rsquo;Oeste",
+		"Conquista d`Oeste",
 		"Cotriguaçu",
-		"Curvelândia",
 		"Cuiabá",
+		"Curvelândia",
 		"Denise",
 		"Diamantino",
 		"Dom Aquino",
 		"Feliz Natal",
-		"Figueirópolis d&rsquo;Oeste",
+		"Figueirópolis d`Oeste",
 		"Gaúcha do Norte",
 		"General Carneiro",
-		"Glória d&rsquo;Oeste",
+		"Glória d`Oeste",
 		"Guarantã do Norte",
 		"Guiratinga",
 		"Indiavaí",
+		"Ipiranga do Norte",
+		"Itanhangá",
 		"Itaúba",
 		"Itiquira",
 		"Jaciara",
@@ -2395,23 +2424,23 @@ function load_cities_list( $uf = false ){
 		"Juína",
 		"Juruena",
 		"Juscimeira",
-		"Lambari d&rsquo;Oeste",
+		"Lambari d`Oeste",
 		"Lucas do Rio Verde",
 		"Luciára",
 		"Marcelândia",
 		"Matupá",
-		"Mirassol d&rsquo;Oeste",
+		"Mirassol d`Oeste",
 		"Nobres",
 		"Nortelândia",
 		"Nossa Senhora do Livramento",
 		"Nova Bandeirantes",
 		"Nova Brasilândia",
-		"Nova Canãa do Norte",
+		"Nova Canaã do Norte",
 		"Nova Guarita",
 		"Nova Lacerda",
 		"Nova Marilândia",
 		"Nova Maringá",
-		"Nova Monte Verde",
+		"Nova Monte verde",
 		"Nova Mutum",
 		"Nova Nazaré",
 		"Nova Olímpia",
@@ -2476,6 +2505,8 @@ function load_cities_list( $uf = false ){
 		"Vila Bela da Santíssima Trindade",
 		"Vila Rica",
 	);
+    
+    // PA: 143
 	$municipios['PA'] = array(
 		"Abaetetuba",
 		"Abel Figueiredo",
@@ -2523,7 +2554,7 @@ function load_cities_list( $uf = false ){
 		"Curuá",
 		"Curuçá",
 		"Dom Eliseu",
-		"Eldorado dos Carajás",
+		"Eldorado do Carajás",
 		"Faro",
 		"Floresta do Araguaia",
 		"Garrafão do Norte",
@@ -2550,6 +2581,7 @@ function load_cities_list( $uf = false ){
 		"Melgaço",
 		"Mocajuba",
 		"Moju",
+		"Mojuí dos Campos",
 		"Monte Alegre",
 		"Muaná",
 		"Nova Esperança do Piriá",
@@ -2566,7 +2598,7 @@ function load_cities_list( $uf = false ){
 		"Palestina do Pará",
 		"Paragominas",
 		"Parauapebas",
-		"Pau d&rsquo;Arco",
+		"Pau d`Arco",
 		"Peixe-Boi",
 		"Piçarra",
 		"Placas",
@@ -2584,7 +2616,7 @@ function load_cities_list( $uf = false ){
 		"Salvaterra",
 		"Santa Bárbara do Pará",
 		"Santa Cruz do Arari",
-		"Santa Isabel do Pará",
+		"Santa Izabel do Pará",
 		"Santa Luzia do Pará",
 		"Santa Maria das Barreiras",
 		"Santa Maria do Pará",
@@ -2592,7 +2624,7 @@ function load_cities_list( $uf = false ){
 		"Santarém",
 		"Santarém Novo",
 		"Santo Antônio do Tauá",
-		"São Caetano de Odivela",
+		"São Caetano de Odivelas",
 		"São Domingos do Araguaia",
 		"São Domingos do Capim",
 		"São Félix do Xingu",
@@ -2621,6 +2653,8 @@ function load_cities_list( $uf = false ){
 		"Vitória do Xingu",
 		"Xinguara",
 	);
+    
+    // PB: 223
 	$municipios['PB'] = array(
 		"Água Branca",
 		"Aguiar",
@@ -2846,6 +2880,8 @@ function load_cities_list( $uf = false ){
 		"Vista Serrana",
 		"Zabelê",
 	);
+    
+    // PE: 185
 	$municipios['PE'] = array(
 		"Abreu e Lima",
 		"Afogados da Ingazeira",
@@ -3033,7 +3069,10 @@ function load_cities_list( $uf = false ){
 		"Vitória de Santo Antão",
 		"Xexéu",
 	);
+    
+    // PI: 122
 	$municipios['PI'] = array(
+		
 		"Acauã",
 		"Agricolândia",
 		"Água Branca",
@@ -3047,11 +3086,12 @@ function load_cities_list( $uf = false ){
 		"Anísio de Abreu",
 		"Antônio Almeida",
 		"Aroazes",
+		"Aroeiras do Itaim",
 		"Arraial",
 		"Assunção do Piauí",
 		"Avelino Lopes",
 		"Baixa Grande do Ribeiro",
-		"Barra d&rsquo;Alcântara",
+		"Barra d`Alcântara",
 		"Barras",
 		"Barreiras do Piauí",
 		"Barro Duro",
@@ -3169,13 +3209,14 @@ function load_cities_list( $uf = false ){
 		"Morro do Chapéu do Piauí",
 		"Murici dos Portelas",
 		"Nazaré do Piauí",
+		"Nazária",
 		"Nossa Senhora de Nazaré",
 		"Nossa Senhora dos Remédios",
 		"Nova Santa Rita",
 		"Novo Oriente do Piauí",
 		"Novo Santo Antônio",
 		"Oeiras",
-		"Olho d&rsquo;Água do Piauí",
+		"Olho d`Água do Piauí",
 		"Padre Marcos",
 		"Paes Landim",
 		"Pajeú do Piauí",
@@ -3186,7 +3227,7 @@ function load_cities_list( $uf = false ){
 		"Parnaíba",
 		"Passagem Franca do Piauí",
 		"Patos do Piauí",
-		"Pau d&rsquo;Arco do Piauí",
+		"Pau d`Arco do Piauí",
 		"Paulistana",
 		"Pavussu",
 		"Pedro II",
@@ -3257,6 +3298,8 @@ function load_cities_list( $uf = false ){
 		"Vila Nova do Piauí",
 		"Wall Ferraz",
 	);
+    
+    // PR: 399
 	$municipios['PR'] = array(
 		"Abatiá",
 		"Adrianópolis",
@@ -3658,6 +3701,8 @@ function load_cities_list( $uf = false ){
 		"Wenceslau Braz",
 		"Xambrê",
 	);
+    
+    // RJ: 92
 	$municipios['RJ'] = array(
 		"Angra dos Reis",
 		"Aperibé",
@@ -3752,6 +3797,8 @@ function load_cities_list( $uf = false ){
 		"Vassouras",
 		"Volta Redonda",
 	);
+    
+    // RN: 167
 	$municipios['RN'] = array(
 		"Acari",
 		"Açu",
@@ -3921,6 +3968,8 @@ function load_cities_list( $uf = false ){
 		"Viçosa",
 		"Vila Flor",
 	);
+    
+    // RO: 52
 	$municipios['RO'] = array(
 		"Alta Floresta d&rsquo;Oeste",
 		"Alto Alegre do Parecis",
@@ -3975,6 +4024,8 @@ function load_cities_list( $uf = false ){
 		"Vale do Paraíso",
 		"Vilhena",
 	);
+    
+    // RR: 15
 	$municipios['RR'] = array(
 		"Alto Alegre",
 		"Amajari",
@@ -3992,6 +4043,8 @@ function load_cities_list( $uf = false ){
 		"São Luiz",
 		"Uiramutã",
 	);
+    
+    // RS: 496
 	$municipios['RS'] = array(
 		"Aceguá",
 		"Água Santa",
@@ -4034,7 +4087,7 @@ function load_cities_list( $uf = false ){
 		"Barra Funda",
 		"Barracão",
 		"Barros Cassal",
-		"Benjamin Constan do Sul",
+		"Benjamin Constant do Sul",
 		"Bento Gonçalves",
 		"Boa Vista das Missões",
 		"Boa Vista do Buricá",
@@ -4098,7 +4151,7 @@ function load_cities_list( $uf = false ){
 		"Chapada",
 		"Charqueadas",
 		"Charrua",
-		"Chiapeta",
+		"Chiapetta",
 		"Chuí",
 		"Chuvisca",
 		"Cidreira",
@@ -4290,7 +4343,7 @@ function load_cities_list( $uf = false ){
 		"Palmeira das Missões",
 		"Palmitinho",
 		"Panambi",
-		"Pântano Grande",
+		"Pantano Grande",
 		"Paraí",
 		"Paraíso do Sul",
 		"Pareci Novo",
@@ -4310,6 +4363,7 @@ function load_cities_list( $uf = false ){
 		"Pinhal Grande",
 		"Pinheirinho do Vale",
 		"Pinheiro Machado",
+		"Pinto Bandeira",
 		"Pirapó",
 		"Piratini",
 		"Planalto",
@@ -4352,6 +4406,7 @@ function load_cities_list( $uf = false ){
 		"Salvador das Missões",
 		"Salvador do Sul",
 		"Sananduva",
+		"Sant'Ana do Livramento",
 		"Santa Bárbara do Sul",
 		"Santa Cecília do Sul",
 		"Santa Clara do Sul",
@@ -4363,7 +4418,6 @@ function load_cities_list( $uf = false ){
 		"Santa Tereza",
 		"Santa Vitória do Palmar",
 		"Santana da Boa Vista",
-		"Santana do Livramento",
 		"Santiago",
 		"Santo Ângelo",
 		"Santo Antônio da Patrulha",
@@ -4490,6 +4544,8 @@ function load_cities_list( $uf = false ){
 		"Westfália",
 		"Xangri-lá",
 	);
+    
+    // SC: 293
 	$municipios['SC'] = array(
 		"Abdon Batista",
 		"Abelardo Luz",
@@ -4520,6 +4576,8 @@ function load_cities_list( $uf = false ){
 		"Balneário Barra do Sul",
 		"Balneário Camboriú",
 		"Balneário Gaivota",
+		"Balneário Piçarras",
+		"Balneário Rincão",
 		"Bandeirante",
 		"Barra Bonita",
 		"Barra Velha",
@@ -4595,7 +4653,7 @@ function load_cities_list( $uf = false ){
 		"Guaramirim",
 		"Guarujá do Sul",
 		"Guatambú",
-		"Herval d&rsquo;Oeste",
+		"Herval d`Oeste",
 		"Ibiam",
 		"Ibicaré",
 		"Ibirama",
@@ -4683,8 +4741,8 @@ function load_cities_list( $uf = false ){
 		"Pedras Grandes",
 		"Penha",
 		"Peritiba",
+		"Pescaria Brava",
 		"Petrolândia",
-		"Piçarras",
 		"Pinhalzinho",
 		"Pinheiro Preto",
 		"Piratuba",
@@ -4697,7 +4755,7 @@ function load_cities_list( $uf = false ){
 		"Porto União",
 		"Pouso Redondo",
 		"Praia Grande",
-		"Presidente Castelo Branco",
+		"Presidente Castello Branco",
 		"Presidente Getúlio",
 		"Presidente Nereu",
 		"Princesa",
@@ -4785,6 +4843,8 @@ function load_cities_list( $uf = false ){
 		"Xaxim",
 		"Zortéa",
 	);
+    
+    // SE: 75
 	$municipios['SE'] = array(
 		"Amparo de São Francisco",
 		"Aquidabã",
@@ -4862,6 +4922,8 @@ function load_cities_list( $uf = false ){
 		"Tomar do Geru",
 		"Umbaúba",
 	);
+    
+    // SP: 645
 	$municipios['SP'] = array(
 		"Adamantina",
 		"Adolfo",
@@ -5509,6 +5571,8 @@ function load_cities_list( $uf = false ){
 		"Votuporanga",
 		"Zacarias",
 	);
+    
+    // TO: 139
 	$municipios['TO'] = array(
 		"Abreulândia",
 		"Aguiarnópolis",
