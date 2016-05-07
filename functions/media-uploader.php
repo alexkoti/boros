@@ -29,7 +29,7 @@ function boros_upload_admin_pages_enqueues( $hook ){
 	}
 	
 	wp_enqueue_script( 'plupload-handlers' );
-	wp_enqueue_script( 'upload', BOROS_JS . 'upload.js', array('jquery') );
+	wp_enqueue_script( 'upload', BOROS_ELEMENTS_JS . 'upload.js', array('jquery') );
 	wp_enqueue_style( 'upload', BOROS_CSS . 'upload.css' );
 }
 

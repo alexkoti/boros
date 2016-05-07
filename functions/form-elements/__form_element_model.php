@@ -37,7 +37,7 @@ class BFE_form_element_model extends BorosFormElement {
 	 * Geralmente é necessário apenas adicionar javascript do core e não css
 	 * 
 	 * ['folder'] string Caminho do diretório onde estarão as pastas /js e /css, normalmente a pasta do plugin.
-	 *                   Por padrão a pasta usada é as BOROS_JS e BOROS_CSS
+	 *                   Por padrão a pasta usada é as BOROS_ELEMENTS_JS e BOROS_CSS
 	 * ['js'] array Lista de names dos arquivos js customizados a serem adicionados. EM caso de js absoluto, utilizar 
 	 *              array com dois itens: name e url
 	 * ['css'] array Lista de names dos arquivos css customizados a serem adicionados

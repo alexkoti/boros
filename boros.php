@@ -27,7 +27,8 @@ define( 'BOROS_LIBS',         BOROS . DIRECTORY_SEPARATOR . 'vendors' );
 define( 'BOROS_URL',          plugins_url( '/', __FILE__ ) );
 define( 'BOROS_CSS',          plugins_url( 'functions/form-elements/css/', __FILE__ ) );
 define( 'BOROS_IMG',          plugins_url( 'functions/form-elements/css/img/', __FILE__ ) );
-define( 'BOROS_JS',           plugins_url( 'functions/form-elements/js/', __FILE__ ) );
+define( 'BOROS_JS',           plugins_url( 'functions/js/', __FILE__ ) );
+define( 'BOROS_ELEMENTS_JS',  plugins_url( 'functions/form-elements/js/', __FILE__ ) );
 
 /**
  * DEBUG CONSTANTS
@@ -130,7 +131,7 @@ if( !is_admin() ){
  * 
  */
 if( is_admin() ){
-    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin.php');               // 
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-static.php');        // 
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-dashboard.php');     // auxiliar do dashboard
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-functions.php');     //
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-nav-menus.php');     // personalização do controle de menus

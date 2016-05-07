@@ -1149,7 +1149,7 @@ class BorosFormElement {
 		if( isset( $this->enqueues['js'] ) ){
 			$files = $this->enqueues['js'];
 			$files_array = is_array($files) ? $files : array($files);
-			$folder = isset($this->enqueues['folder']) ? $this->enqueues['folder'] . 'js/' : BOROS_JS;
+			$folder = isset($this->enqueues['folder']) ? $this->enqueues['folder'] . 'js/' : BOROS_ELEMENTS_JS;
 			foreach( $files_array as $js ){
 				// enqueue absoluto
 				if( is_array($js) ){
