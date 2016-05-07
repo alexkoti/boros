@@ -133,7 +133,7 @@ if( !is_admin() ){
 if( is_admin() ){
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-static.php');        // 
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-dashboard.php');     // auxiliar do dashboard
-    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-functions.php');     //
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-head.php');      // JS e CSS geral
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-nav-menus.php');     // personalização do controle de menus
     //include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_tools.php');       // functions para sub-tarefas, como criar conteúdo dummy
     
