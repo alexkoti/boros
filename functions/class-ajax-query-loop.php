@@ -82,6 +82,7 @@ abstract class Boros_Ajax_Query_Loop {
 							// verificar se existe algum offset definido por campo de texto
 							if( $('#boros_ajax_query_loop_initial_offset').length && $('#boros_ajax_query_loop_initial_offset').val() > 0 ){
 								boros_ajax_query_loop_offset = $('#boros_ajax_query_loop_initial_offset').val();
+                                $('#boros-ajax-query-loop-results').attr('start', Number(boros_ajax_query_loop_offset) + 1);
 							}
 							boros_ajax_query_loop.proccess_item();
 						});
@@ -132,7 +133,7 @@ abstract class Boros_Ajax_Query_Loop {
 		<div class="wrap">
 			<h1><?php echo $this->page_args['page_title']; ?></h1>
 			<?php echo $this->page_args['intro_html']; ?>
-			<ol id="boros-ajax-query-loop-results"></ol>
+			<ol id="boros-ajax-query-loop-results" start="1"></ol>
 			<p class="submit">
 				<button id="boros-ajax-query-loop-submit" class="button button-primary">Iniciar</button>
 			</p>
