@@ -109,18 +109,23 @@ function formatted_post_type_link( $args ){
 
 
 function active_post_type_class( $post_type, $detect = null, $append = '' ){
-	global $wp_query; //pre($wp_query);
-	
-	// class mínima
-	$class = "post-type-item post-type-{$post_type}";
-	
-	// current post-type
-	if( isset($wp_query->query_vars['post_type']) or isset($wp_query->queried_object->post_type) ){
-		if( $post_type == $wp_query->query_vars['post_type'] or $post_type == $wp_query->queried_object->post_type ){
-			$class = "post-type-item post-type-{$post_type} current-post-type current-item active {$append}";
-		}
-	}
-	
+    global $wp_query; //pre($wp_query);
+    
+    // class mínima
+    $class = "post-type-item post-type-{$post_type}";
+    
+    // current post-type
+    if( isset($wp_query->query_vars['post_type']) ){
+        if( $post_type == $wp_query->query_vars['post_type'] ){
+            $class = "post-type-item post-type-{$post_type} current-post-type current-item active {$append}";
+        }
+    }
+    elseif( isset($wp_query->queried_object->post_type) ){
+        if( $post_type == $wp_query->queried_object->post_type ){
+            $class = "post-type-item post-type-{$post_type} current-post-type current-item active {$append}";
+        }
+    }
+    
 	// é a home de blog?
 	if( isset($wp_query->queried_object->ID) and $post_type == 'post' ){
 		if( get_option('page_for_posts') == $wp_query->queried_object->ID ){
