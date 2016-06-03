@@ -343,19 +343,19 @@ function in_array_r( $needle, $array ){
  * @return bool true|false
  * @link http://www.php.net/manual/en/function.array-key-exists.php#85184
  */
-function &array_key_exists_r( $key, &$array ){
-	if( array_key_exists( $key, $array ) ){
-		$ret =& $array[$key];
-		return $ret;
-	}
-	foreach( $array as $k => $v ){
-		if( is_array($v) ){
-			$ret =& array_key_exists_r( $key, $array[$k] );
-			if( $ret )
-				return $ret;
-		}
-	}
-	return $array;
+function array_key_exists_r($needle, $haystack)
+{
+    $result = array_key_exists($needle, $haystack);
+    if ($result)
+        return $result;
+    foreach ($haystack as $v)
+    {
+        if (is_array($v) || is_object($v))
+            $result = array_key_exists_r($needle, $v);
+        if ($result)
+        return $result;
+    }
+    return $result;
 }
 
 /**

@@ -792,8 +792,3 @@ class BorosAdminPages {
 }
 
 
-class BorosAdminSubPages {
-	function __construct(){
-		
-	}
-}
