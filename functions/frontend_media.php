@@ -127,7 +127,7 @@ add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
 function tdd_oembed_filter($html, $url, $attr, $post_ID){
 	// Videos: youtube e vimeo. Adicionar mais serviços se necessário
 	if( strpos($html, 'youtube') !== false or strpos($html, 'vimeo') !== false ){
-		return "<div class='cleaner'></div><div class='videoWrapper'>{$html}</div>";
+		return "<div class='cleaner'></div><div class='videoWrapper embed-responsive embed-responsive-16by9'>{$html}</div>";
 	}
 	
 	// Issuu
