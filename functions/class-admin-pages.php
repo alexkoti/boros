@@ -117,6 +117,8 @@ class Boros_Admin_Pages {
         // Registrar as páginas
         add_action( 'admin_menu', array($this, 'register_pages'), 9 ); // ver 1*
         
+        // filtro ajax para load de configuração de elemento
+        add_filter( 'boros_load_element_config', array($this, 'ajax_load_element_config'), 10, 2 );
         
         // debug
         add_action( 'admin_footer', array($this, 'admin_footer') );
@@ -376,7 +378,8 @@ class Boros_Admin_Pages {
         if( file_exists($file) ){
             require_once( $file ); // possui $elements
             if( isset($elements) ){
-                $this->current_page_elements = $elements;
+                // Normalizar arrays dos elementos
+                $this->current_page_elements = boros_elements_setup($elements);
                 
                 // @TODO - register settings
             }
@@ -445,7 +448,42 @@ class Boros_Admin_Pages {
             return;
         }
         
+        $this->debug( $this->current_page_elements, 'current_page_elements: ' );
         
+    }
+    
+    /**
+     * Retornar configuração de elemento individual, para ser usando em requisições ajax.
+     * 
+     */
+    public function ajax_load_element_config( $config, $context ){
+        if( $context['type'] != 'option' ){
+            return $config;
+        }
+        
+        // verificar se a página requerida existe
+        if( array_key_exists( $context['page'], $this->pages ) ){
+            
+            // @TODO retornar wp_error caso o $context['page'] exista, mas não encontre o $group e/ou $element
+            
+            $this->current_page = $context['page'];
+            $this->current_page_config = $this->get_page_config( $context['page'] );
+            $this->load_current_page_elements();
+            
+            if( !isset($this->current_page_elements[ $context['group'] ]) ){
+                return new WP_Error( 'boros_load_element_config', 'Group não encontrado' );
+            }
+            
+            if( !isset($this->current_page_elements[ $context['group'] ]['items'][ $context['element'] ]) ){
+                return new WP_Error( 'boros_load_element_config', 'Element não encontrado' );
+            }
+            
+            return $this->current_page_elements[ $context['group'] ]['items'][ $context['element'] ];
+        }
+        // nenhum resultado nesta instância, retornar $config original
+        else{
+            return $config;
+        }
     }
     
     private function debug( $var, $label = '' ){
@@ -468,6 +506,28 @@ class Boros_Admin_Pages {
     }
     
     
+}
+
+/**
+ * Teste simulando uma requisição ajax
+ * 
+ * @TODO remover este teste
+ * 
+ */
+add_action( 'wp_ajax_boros_load_element_config_test', 'boros_load_element_config_test' );
+function boros_load_element_config_test(){
+    pre( $_GET );
+    
+    $context = array(
+        'type'    => 'option',
+        'page'    => 'section-networks',
+        'group'   => 'twitter_api',
+        'element' => 'twitter_api_key_oauth_access_token_secret',
+    );
+    $config = boros_load_element_config( $context );
+    pre($config, 'boros_load_element_config_test');
+    
+    die();
 }
 
 

@@ -1191,3 +1191,67 @@ class BorosFormElement {
 	}
 }
 
+
+/**
+ * ==================================================
+ * VERSÃO 2.0.0 =====================================
+ * ==================================================
+ * 
+ * 
+ */
+
+function boros_load_element_config( $context ){
+    return apply_filters( 'boros_load_element_config', array(), $context );
+}
+
+/**
+ * Normalizar a array de elementos, adicionando índices associativos
+ * 
+ * @TODO autload
+ */
+function boros_elements_setup( $raw_config ){
+    $config = array();
+    // loop nos grupos
+    foreach( $raw_config as $id => $group ){
+        // modificar os elements primeiro
+        if( isset($group['items']) ){
+            $items = array();
+            foreach( $group['items'] as $item ){
+                // duplicable group
+                if( isset($item['group_itens']) ){
+                    $subitens = array();
+                    foreach( $item['group_itens'] as $subitem ){
+                        $subitens[$subitem['name']] = $subitem;
+                        $subitens[$subitem['name']]['parent'] = $item['name'];
+                    }
+                    $item['group_itens'] = $subitens;
+                }
+                
+                // item normal, mas verificar antes caso seja um element sem name, como o 'separator'
+                if( isset($item['name']) ){
+                    $items[$item['name']] = $item;
+                }
+                else{
+                    $items[$item['type']] = $item;
+                    $items[$item['type']]['name'] = $item['type'];
+                }
+                
+                //// tentar fazer o autoload
+                //$classname = 'BFE_' . $data['type'];
+                //class_exists($classname);
+            }
+            $group['items'] = $items;
+        }
+        
+        $group['id'] = $id;
+        $config[$id] = $group;
+    }
+    return $config;
+}
+
+
+
+
+
+
+
