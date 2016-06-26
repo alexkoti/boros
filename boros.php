@@ -98,7 +98,6 @@ include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'media-uploader.php');    
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'validation.php');              // classe de validação
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-media.php' );            // [REVER TODOS AS FUNCTIONS AQUI]
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'meta-boxes.php' );             // funções dos metaboxes
-include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-pages.php');             // funções para adicionar e renderizar as páginas do admin
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'post-types.php');              // funções para post_types
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'page.php' );                   // functions extendidas para páginas
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'taxonomy.php');                // functions extendidas para taxonomias e termos
@@ -133,7 +132,8 @@ if( !is_admin() ){
 if( is_admin() ){
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-static.php');        // 
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-dashboard.php');     // auxiliar do dashboard
-    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-head.php');      // JS e CSS geral
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-head.php');          // JS e CSS geral
+    include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-pages.php');         // funções para adicionar e renderizar as páginas do admin
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin-nav-menus.php');     // personalização do controle de menus
     //include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'admin_tools.php');       // functions para sub-tarefas, como criar conteúdo dummy
     

@@ -39,17 +39,54 @@ class Boros_Admin_Pages {
         'options-general.php',      // Settings
     );
     
+    /**
+     * Diretório local dos arquivos
+     * 
+     */
     private $path;
     
+    /**
+     * URL dos arquivos
+     * 
+     */
     private $url;
     
+    /**
+     * Hook da página atual, criado pelo add_(sub)menu_page()
+     * 
+     */
+    private $current_hook;
+    
+    /**
+     * Slug da página atual, equivalente ao $_GET['page']
+     * 
+     */
     private $current_page;
     
+    /**
+     * Configuração inicial da página atual. Corresponde ao array de configuração inicial declarado em new Boros_Admin_Pages($args).
+     * Os elementos sempre estarão em outro arquivo na pasta definida em $args.
+     * 
+     */
     private $current_page_config;
     
-        private $views = array();
-        
-        private $not_founds = array();
+    /**
+     * Form elements da página atual
+     * 
+     */
+    private $current_page_elements;
+    
+    /**
+     * Arquivos de elementos não encontrados
+     * 
+     */
+    private $error_file_not_exists = array();
+    
+    /**
+     * Array $elements não definidos
+     * 
+     */
+    private $error_elements_not_exists = array();
     
     // ===================
     
@@ -79,8 +116,6 @@ class Boros_Admin_Pages {
         
         // Registrar as páginas
         add_action( 'admin_menu', array($this, 'register_pages'), 9 ); // ver 1*
-        
-        // Adicionar hooks para a página corrente: registrar elements, enqueues
         
         
         // debug
@@ -122,7 +157,7 @@ class Boros_Admin_Pages {
     /**
      * Aplica as capabilities de cada página para que se possa aplicar os filtros adequados, ja que a capability padrão de admin_pages é 'manage_options'
      * 
-     * @todo: testar a aplicação correta dos filtros de permissão
+     * @TODO: testar se esses filtros de permissão foram aplicados corretamente. Testar utilizando permissões personalizadas.
      * 
      */
     function set_pages_capabilities(){
@@ -164,8 +199,8 @@ class Boros_Admin_Pages {
      */
     public function register_pages(){
         foreach( $this->pages as $page_name => $attr ){
+            
             if( !in_array( $page_name, $this->core_pages ) ){
-                
                 // Registrar página no menu, e adicionar o hook no array $hooks
                 $page_hook = add_menu_page(
                     $page_title     = $attr['page_title'], 
@@ -180,27 +215,27 @@ class Boros_Admin_Pages {
                 
                 // Adicionar hook de load
                 add_action( "load-{$page_hook}", array($this, 'load') );
-                
-                // Adicionar css/js
-                add_action( 'admin_enqueue_scripts', array($this, 'enqueues') );
-                
-                // @todo Adicionar help nativo
-                //add_action( 'load-'.$admin_page, array( $this, 'add_help' ) );
-                
-                // Adicionar subpages
-                if( isset( $attr['subpages'] ) ){
-                    foreach( $attr['subpages'] as $subpage_name => $subattr ){
-                        $subpage_hook = add_submenu_page(
-                            $parent_slug    = $page_name, 
-                            $page_title     = $subattr['page_title'], 
-                            $menu_title     = $subattr['menu_title'], 
-                            $capability     = $subattr['capability'], 
-                            $menu_slug      = $subattr['menu_slug'], 
-                            $function       = array( $this, 'output' )
-                        );
-                        $this->hooks[$subpage_name] = $subpage_hook;
-                        add_action( "load-{$subpage_hook}", array($this, 'load') );
-                    }
+            }
+            
+            // Adicionar css/js
+            add_action( 'admin_enqueue_scripts', array($this, 'enqueues') );
+            
+            // @TODO Adicionar help nativo
+            //add_action( 'load-'.$admin_page, array( $this, 'add_help' ) );
+            
+            // Adicionar subpages
+            if( isset( $attr['subpages'] ) ){
+                foreach( $attr['subpages'] as $subpage_name => $subattr ){
+                    $subpage_hook = add_submenu_page(
+                        $parent_slug    = $page_name, 
+                        $page_title     = $subattr['page_title'], 
+                        $menu_title     = $subattr['menu_title'], 
+                        $capability     = $subattr['capability'], 
+                        $menu_slug      = $subattr['menu_slug'], 
+                        $function       = array( $this, 'output' )
+                    );
+                    $this->hooks[$subpage_name] = $subpage_hook;
+                    add_action( "load-{$subpage_hook}", array($this, 'load') );
                 }
             }
         }
@@ -245,7 +280,7 @@ class Boros_Admin_Pages {
                     if( file_exists($file) ){
                         $pathinfo = pathinfo($file);
                         $this->debug($pathinfo, 'relative script: ');
-                        wp_enqueue_script( $pathinfo['filename'], $file );
+                        wp_enqueue_script( $pathinfo['filename'], $this->url . $js );
                     }
                 }
             }
@@ -253,7 +288,7 @@ class Boros_Admin_Pages {
         
         // Enqueue CSS
         if( isset($this->current_page_config['enqueues']['css']) ){
-        foreach( $this->current_page_config['enqueues']['css'] as $css ){
+            foreach( $this->current_page_config['enqueues']['css'] as $css ){
                 // Verificar 4 opções: array, registered, absoluto, relativo
                 
                 // array de configuração completo
@@ -288,7 +323,14 @@ class Boros_Admin_Pages {
         }
     }
     
+    /**
+     * Carregar 
+     * 
+     */
     public function load(){
+        $action = current_filter();
+        $this->debug($action, 'current_filter: ');
+        
         global $hook_suffix, $plugin_page;
         $this->debug('LOAD');
         $this->debug($hook_suffix, 'hook_suffix: ');
@@ -297,14 +339,12 @@ class Boros_Admin_Pages {
         $this->current_hook = $hook_suffix;
         $this->current_page = $plugin_page;
         $this->current_page_config = $this->get_page_config( $plugin_page );
-        $this->debug($config, '$config: ');
         
-        $action = current_filter();
-        $this->debug($action, 'current_filter: ');
+        $this->load_current_page_elements();
     }
     
     /**
-     * 
+     * Definir as configurações da página atual
      * 
      */
     private function get_page_config( $required ){
@@ -323,12 +363,88 @@ class Boros_Admin_Pages {
     }
     
     /**
+     * Carregar form-elements da página atual.
+     * Os elementos das páginas sempre estarão em um arquivo no diretório definido em $this->path
+     * O modelo de nome de arquivo é "{$this->path}{$this->current_page}.php", 'admin-pages/section-networks.php'
+     * No arquivo em questão, ele sempre deve declarar o array $elements
+     * 
+     */
+    private function load_current_page_elements(){
+        $file = "{$this->path}{$this->current_page}.php";
+        $this->debug( $file, 'load_current_page_elements: ' );
+        
+        if( file_exists($file) ){
+            require_once( $file ); // possui $elements
+            if( isset($elements) ){
+                $this->current_page_elements = $elements;
+                
+                // @TODO - register settings
+            }
+            else{
+                $this->error_elements_not_exists[$this->current_page] = $file;
+            }
+        }
+        else{
+            $this->error_file_not_exists[$this->current_page] = $file;
+        }
+    }
+    
+    function header_error( $message ){
+        ?>
+        <div class="wrap">
+            <h2>Erro</h2>
+            <div class="alert_box updated admin_page_error" id="admin_page_error_<?php echo $this->current_page_config['menu_slug']; ?>">
+                <p class="error"><?php echo $message['title']; ?></p>
+                <p><?php echo $message['desc']; ?></p>
+                <p>Requisitos:</p>
+                <ul>
+                    <?php
+                    foreach( $message['requirements'] as $req ){
+                        echo "<li>{$req}</li>";
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+        <?php
+    }
+    
+    /**
      * Exibir página de admin
      * 
      */
     public function output(){
         $action = current_filter();
-        $this->debug($action, 'current_filter: ');
+        $this->debug($action, 'output current_filter: ');
+        $this->debug($this->current_page, 'current_page: ');
+        $this->debug($this->error_file_not_exists, 'error_file_not_exists: ');
+        
+        // arquivo de configuração existe?
+        if( array_key_exists($this->current_page, $this->error_file_not_exists) ){
+            $this->header_error(array(
+                'title' => "O arquivo <code><strong>{$this->error_file_not_exists[$this->current_page]}</strong></code> não existe.",
+                'desc' => "Ele é necessário para a página <strong>{$this->current_page_config['page_title']}</strong>",
+                'requirements' => array(
+                    "Arquivo <code><strong>{$this->error_file_not_exists[$this->current_page]}.php</strong></code>",
+                    "No arquivo acima, possuir o array <code><strong>&#36;elements</strong></code>, com as configurações dos elementos de formulário desta página.",
+                )
+            ));
+            return;
+        }
+        
+        // $elements definido?
+        if( array_key_exists($this->current_page, $this->error_elements_not_exists) ){
+            $this->header_error(array(
+                'title' => 'Não foi encontrado o array de configuração da página.',
+                'desc' => "Ele é necessário para a página <strong>{$this->current_page_config['page_title']}</strong>",
+                'requirements' => array(
+                    "Arquivo <code><strong>{$this->error_elements_not_exists[$this->current_page]}.php</strong></code>",
+                    "No arquivo acima, possuir o array <code><strong>&#36;elements</strong></code>, com as configurações dos elementos de formulário desta página.",
+                ),
+            ));
+            return;
+        }
+        
         
     }
     
