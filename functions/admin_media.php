@@ -50,6 +50,7 @@ function force_linkto_media_button(){
 add_filter('post_mime_types', 'modify_post_mime_types');
 function modify_post_mime_types($post_mime_types) {
     $post_mime_types['text'] = array(__('TXT'), __('Manage TXT'), _n_noop('TXT <span class="count">(%s)</span>', 'TXT <span class="count">(%s)</span>'));
+    $post_mime_types['application/pdf'] = array( __( 'PDFs' ), __( 'Manage PDFs' ), _n_noop( 'PDF <span class="count">(%s)</span>', 'PDFs <span class="count">(%s)</span>' ) );
     return $post_mime_types;
 }
 
