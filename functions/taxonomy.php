@@ -320,7 +320,7 @@ function boros_term_is_ancestor_of( $term1, $term2, $taxonomy ){
  */
 function _get_term_parents( $term_id, $taxonomy, $link = false, $separator = ' &gt; ', $visited = array() ) {
 	$chain = '';
-	$parent = &get_term( $term_id, $taxonomy );
+	$parent = get_term( $term_id, $taxonomy );
 	if ( is_wp_error( $parent ) ){
 		return $parent;
 	}

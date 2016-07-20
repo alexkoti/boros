@@ -101,7 +101,6 @@ include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'page.php' );             
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'taxonomy.php');                // functions extendidas para taxonomias e termos
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'taxonomy_meta.php' );          // functions para ediçao das taxonomias - registra aqui a tabela 'termmeta'
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'user.php');                    // functions extendidas para manipulação de usuários
-include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'qtranslate.php');              // functions auxiliares para o plugin qTranslate(multilingua)
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'widgets.php' );                // widgets, fazer includes dos widgets conforme array de config
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_form.php');           // class de postagem no frontend, ele precisa ter acesso geral para os controles de admin.
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'email.php');                   // function para todos os emails - as configs deverão ser feitas no plgin do trabalho
