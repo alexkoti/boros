@@ -1211,6 +1211,8 @@ function boros_load_element_config( $context ){
  */
 function boros_elements_setup( $raw_config ){
     $config = array();
+    $i = 1;
+    
     // loop nos grupos
     foreach( $raw_config as $id => $group ){
         // modificar os elements primeiro
@@ -1233,12 +1235,14 @@ function boros_elements_setup( $raw_config ){
                 }
                 else{
                     $items[$item['type']] = $item;
-                    $items[$item['type']]['name'] = $item['type'];
+                    $items[$item['type']]['name'] = "{$item['type']}_{$i}";
                 }
                 
                 //// tentar fazer o autoload
                 //$classname = 'BFE_' . $data['type'];
                 //class_exists($classname);
+                
+                $i++;
             }
             $group['items'] = $items;
         }

@@ -11,6 +11,12 @@
 class Boros_Admin_Pages {
     
     /**
+     * Contador de instâncias
+     * 
+     */
+    private static $i = 0;
+    
+    /**
      * Configuração das páginas, fornecido pelo plugin
      * 
      */
@@ -40,13 +46,13 @@ class Boros_Admin_Pages {
     );
     
     /**
-     * Diretório local dos arquivos
+     * Diretório local dos arquivos de configuração, será usado para os includes
      * 
      */
     private $path;
     
     /**
-     * URL dos arquivos
+     * URL dos arquivos de configuração, será usado para os enqueues
      * 
      */
     private $url;
@@ -98,6 +104,8 @@ class Boros_Admin_Pages {
      * apontado para o post_type.
      */
     public function __construct( $config ){
+        self::$i = self::$i + 1;
+        
         //$this->debug( 'Boros_Admin_Pages::__construct()' );
         //$this->debug( $config, '$config ORIGINAL' );
         
@@ -373,7 +381,7 @@ class Boros_Admin_Pages {
      */
     private function load_current_page_elements(){
         $file = "{$this->path}{$this->current_page}.php";
-        $this->debug( $file, 'load_current_page_elements: ' );
+        //$this->debug( $file, 'load_current_page_elements: ' );
         
         if( file_exists($file) ){
             require_once( $file ); // possui $elements
@@ -464,11 +472,10 @@ class Boros_Admin_Pages {
         // verificar se a página requerida existe
         if( array_key_exists( $context['page'], $this->pages ) ){
             
-            // @TODO retornar wp_error caso o $context['page'] exista, mas não encontre o $group e/ou $element
-            
-            $this->current_page = $context['page'];
-            $this->current_page_config = $this->get_page_config( $context['page'] );
-            $this->load_current_page_elements();
+            // Definir as variáveis que normalmente seriam setadas no construct
+            $this->current_page = $context['page']; // Definir admin page
+            $this->current_page_config = $this->get_page_config( $context['page'] ); // Carregar config do arquivo
+            $this->load_current_page_elements(); 
             
             if( !isset($this->current_page_elements[ $context['group'] ]) ){
                 return new WP_Error( 'boros_load_element_config', 'Group não encontrado' );
@@ -507,28 +514,5 @@ class Boros_Admin_Pages {
     
     
 }
-
-/**
- * Teste simulando uma requisição ajax
- * 
- * @TODO remover este teste
- * 
- */
-add_action( 'wp_ajax_boros_load_element_config_test', 'boros_load_element_config_test' );
-function boros_load_element_config_test(){
-    pre( $_GET );
-    
-    $context = array(
-        'type'    => 'option',
-        'page'    => 'section-networks',
-        'group'   => 'twitter_api',
-        'element' => 'twitter_api_key_oauth_access_token_secret',
-    );
-    $config = boros_load_element_config( $context );
-    pre($config, 'boros_load_element_config_test');
-    
-    die();
-}
-
 
 
