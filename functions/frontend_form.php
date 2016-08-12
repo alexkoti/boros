@@ -1249,7 +1249,7 @@ class BorosFrontendForm {
 		$this->valid_meta = apply_filters( 'boros_frontend_form_pos_validation_meta', $this->valid_meta, $this->valid_data, $this->validation->data_errors, $this->form_name );
 		$this->validation->data_errors = apply_filters( 'boros_frontend_form_pos_validation_errors', $this->validation->data_errors, $this->valid_data, $this->valid_meta, $this->form_name );
 		
-		//pre($this->validation->data_errors, 'ERRORS');
+		//pre($this->validation->data_errors, 'ERRORS'); die();
 		
 		// verificar errors, caso negativo, adicionar post
 		if( empty( $this->validation->data_errors ) ){

@@ -1019,5 +1019,28 @@ function boros_validation_is_cpf_valid( $cpf ){
 }
 
 
+function boros_validate_akismet( $data ){
+    require_once BOROS_LIBS . '/Akismet.class.php';
+    
+    $akismet_key = get_option('wordpress_api_key');
+    $home_url = home_url('/');
+    $akismet = new AkismetValidation( $home_url, $akismet_key);
+    if( $akismet->isKeyValid() ){
+        //$akismet->setCommentAuthor('viagra-test-123'); // test positive spam
+        $akismet->setCommentAuthor($data['author']);
+        $akismet->setCommentAuthorEmail($data['email']);
+        $akismet->setCommentContent($data['comment']);
+        $akismet->setPermalink( $home_url );
+        return $akismet->isCommentSpam();
+    }
+    else{
+        $alerts = get_option('boros_dashboard_notifications');
+        if( !isset($alerts['akismet_key_error']) ){
+            $alerts['akismet_key_error'] = 'A chave API do Akismet está vazia ou é incorreta';
+            update_option('boros_dashboard_notifications', $alerts);
+        }
+    }
+    return false;
+}
 
 
