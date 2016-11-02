@@ -36,10 +36,10 @@ class BFE_special_image extends BorosFormElement {
 	/**
 	 * Opções deste controle:
 	 * 
-	 * $image_size 	- sizes cadastrados: thumbnail, medium, large, full, custom
-	 * $width 	- largura máxima da imagem - será aplicado via style="width:100px;"
-	 * $default_image 	- caminho da imagem padrão caso deixe vazio - ATENÇÃO: essa imagem só serve com o propósito de exibição no admin, não será gravado o valor dela para o campo, que será considerdo vazio
-	 * $layout 		- modelo de exibição: large(imagem em cima, botões em baixo), row(imagem à esquerda, botões ao lado), grid(imagem em cima, botões icones em baixo, caixa pequena com float)
+	 * $image_size    - sizes cadastrados: thumbnail, medium, large, full, custom
+	 * $width         - largura máxima da imagem - será aplicado via style="width:100px;"
+	 * $default_image - caminho da imagem padrão caso deixe vazio - ATENÇÃO: essa imagem só serve com o propósito de exibição no admin, não será gravado o valor dela para o campo, que será considerdo vazio
+	 * $layout        - modelo de exibição: large(imagem em cima, botões em baixo), row(imagem à esquerda, botões ao lado), grid(imagem em cima, botões icones em baixo, caixa pequena com float)
 	 */
 	function add_defaults(){
 		$options = array(
