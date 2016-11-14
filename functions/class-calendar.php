@@ -43,34 +43,11 @@
         border-bottom:none;
         padding:0;
     }
-    table.calendar td.cell-events .performance-item  {
-        padding:0;
+    table.calendar td.cell-events .events-list {
+        display: block;
     }
-    .performance-info-xs {
-        padding:10px 48px 10px 10px;
-        position:relative;
-    }
-    .performance-info-xs .event-day-number {
-        background-color:#fdc222;
-        border-top-left-radius:6px;
-        border-bottom-left-radius:6px;
-        display:block;
-        font-size:20px;
-        font-weight:bold;
-        margin:-20px 0 0;
-        padding:10px;
-        text-align:right;
-        width:45px;
-        position:absolute;
-        top:50%;
-        right:0;
-    }
-    .performance-info-xs h3 {
-        font-size:20px;
-        margin:0 0 10px;
-    }
-    .performance-info-xs li p:last-child {
-        margin:0;
+    table.calendar tr.week-extra td {
+        border:0;
     }
     .agenda-no-posts {
         background-color: #fff4d4;
@@ -172,6 +149,12 @@ class Boros_Calendar {
     );
     
     /**
+     * Adicionar row extra para slideDown e exibição de dados
+     * 
+     */
+    protected $extra_row = false;
+    
+    /**
      * Construct
      * 
      * $config
@@ -187,6 +170,7 @@ class Boros_Calendar {
      *     ['accepted_metas'] array Array de meta_keys que os posts serão incorporados ao objeto post. Caso não declarado, 
      *                              será retornado todos os post_metas
      *     ['taxonomies']     array|string Taxonomias que deverão ser incorporados ao objeto post. Default nenhum
+     *     ['extra_row']      bool Mostrar <row> extra para slideDown e exibição de dados. Default false
      * 
      * @param array $config (ver acima)
      * 
@@ -203,6 +187,7 @@ class Boros_Calendar {
             'timezone',
             'accepted_metas',
             'taxonomies',
+            'extra_row',
         );
         foreach( $vars as $v ){
             if( isset($config[$v]) ){
@@ -218,14 +203,6 @@ class Boros_Calendar {
         $this->day   = isset($config['day'])   ? $config['day']   : date('d', $today); 
         $this->month = isset($config['month']) ? $config['month'] : date('m', $today); 
         $this->year  = isset($config['year'])  ? $config['year']  : date('Y', $today); 
-        
-        // variáveis de url
-        if( isset($_GET['cm']) ){
-            $this->month = (int) $_GET['cm'];
-        }
-        if( isset($_GET['ca']) ){
-            $this->year = (int) $_GET['ca'];
-        }
         
         // primeiro dia do mês
         $this->first_day = mktime(0,0,0,$this->month, 1, $this->year) ; 
@@ -244,6 +221,10 @@ class Boros_Calendar {
         // início e fim do mês
         $this->month_start = "{$this->year}-{$this->pmonth}-01";
         $this->month_end   = "{$this->year}-{$this->pmonth}-{$this->days_in_month}";
+        
+        if( $this->extra_row == true ){
+            add_action( 'wp_footer', array($this, 'extra_row_javascript'), 99 );
+        }
     }
     
     /**
@@ -405,7 +386,8 @@ class Boros_Calendar {
      */
     function get_posts_by_post_meta(){
         $transient_name = "boros_cldr_{$this->post_type}_{$this->post_meta}_{$this->pmonth}";
-        if( false === ( $this->posts = get_transient($transient_name) ) ){
+        $transient = get_transient($transient_name);
+        if( false === $transient ){
             $query = apply_filters('boros_calendar_posts_by_post_meta_query', array(
                 'post_type' => $this->post_type,
                 'post_status' => $this->post_status,
@@ -428,7 +410,6 @@ class Boros_Calendar {
             $this->posts_query = new WP_Query();
             $this->posts_query->query($query);
             if( $this->posts_query->posts ){
-                //pre($this->posts_query->posts);
                 foreach( $this->posts_query->posts as $post ){
                     setup_postdata($post);
                     
@@ -458,10 +439,14 @@ class Boros_Calendar {
                     
                     $this->posts[] = $post;
                 }
+                
+                $this->posts = apply_filters( 'boros_calendar_posts_transient', $this->posts );
             }
             wp_reset_query();
             set_transient( $transient_name, $this->posts, $this->transient_expiration );
-            //pal("set transient {$transient_name} POSTS BY META");
+        }
+        else{
+            $this->posts = apply_filters( 'boros_calendar_posts', $transient );
         }
         
         $this->add_events_to_month();
@@ -625,6 +610,7 @@ class Boros_Calendar {
             $i = 1;
             foreach( $week as $cday ){
                 $cday['class'] .= " mday-{$cday['mday']} wday-{$i} {$this->weedays[$i]} cell-events";
+                $cday['attr'] = " data-day='{$cday['mday']}' data-weekday='{$this->weedays[$i]}' data-month='{$this->month}' data-year='{$this->year}'";
                 // verificar se este dia possui eventos
                 $cday = $this->add_events_to_day( $cday, true );
                 $this->posts_table[$windex]['events'][] = $cday;
@@ -690,36 +676,45 @@ class Boros_Calendar {
         // loop
         foreach( $this->posts_table as $windex => $week ){
             // primeiro loop, head de dias
-            echo "\t<tr class='week-{$windex} week-heads'>\n";
+            echo "\t<tr class='week-{$windex} week-heads' data-row='{$windex}'>\n";
             foreach( $week['header'] as $day ){
                 echo "\t\t<td class='{$day['class']}'><div class='day-number'>{$day['day_pad']}</div></td>\n";
             }
             echo "\t</tr>\n";
             
             // segundo loop, posts
-            echo "\t<tr class='week-{$windex} week-events'>\n";
+            echo "\t<tr class='week-{$windex} week-events' data-row='{$windex}'>\n";
             foreach( $week['events'] as $day ){
-                echo "\t\t<td class='cell-events {$day['class']}'>\n\t\t";
+                echo "\t\t<td class='cell-events {$day['class']}' {$day['attr']}>\n\t\t";
                 $this->show_day_posts($day);
                 echo "</td>\n";
             }
             echo "\t</tr>\n";
             
-            // @todo adicionar row opcional
+            // terceiro loop, row extra para slideDown e exibição de dados
+            if( $this->extra_row == true ){
+                echo "\t<tr class='week-{$windex} week-extra' data-row='{$windex}'>\n";
+                echo "\t\t<td colspan='7' class='week-extra-cell'></td>";
+                echo "\t</tr>\n";
+            }
         }
         
         echo "\t</tr>\n</table>";
     }
     
-    function calendar_table_nav( $context = 'head' ){
+    function calendar_table_nav( $context = 'head', $dropdown = false ){
+        $center = '';
+        if( $dropdown == true ){
+            $center = $this->posts_dropdown();
+        }
         $calendar_head = sprintf(
             '<div class="calendar-nav row"><div class="col-md-4 col-sm-4">%s</div><div class="col-md-4 col-sm-4">%s</div><div class="col-md-4 col-sm-4">%s</div></div>', 
             $this->prev_next_month_link('prev'), 
-            $this->posts_dropdown(), 
+            apply_filters( 'calendar_table_nav_center', $center ), 
             $this->prev_next_month_link()
         );
         // filtros: boros_calendar_header ou boros_calendar_footer
-        echo apply_filters( "boros_calendar_{$context}", $calendar_head, $this->prev_next_month_link('prev'), $this->prev_next_month_link(), $this->posts_dropdown() );
+        echo apply_filters( "boros_calendar_{$context}", $calendar_head, $this->prev_next_month_link('prev'), $this->prev_next_month_link(), $center );
     }
     
     /**
@@ -727,17 +722,17 @@ class Boros_Calendar {
      * 
      * @ver 0.1.0
      */
-    function show_calendar_head(){
-        $this->calendar_table_nav( 'head' );
+    function show_calendar_head( $dropdown = false ){
+        $this->calendar_table_nav( 'head', $dropdown );
     }
     
-    function show_calendar_footer(){
-        $this->calendar_table_nav( 'footer' );
+    function show_calendar_footer( $dropdown = false ){
+        $this->calendar_table_nav( 'footer', $dropdown );
     }
     
     /**
      * Output dos eventos do dia.
-     * Cadda evento passa pelo filtro 'boros_calendar_event_day_output'
+     * Cada evento passa pelo filtro 'boros_calendar_event_day_item_output'
      * 
      * @ver 0.1.0
      */
@@ -747,13 +742,31 @@ class Boros_Calendar {
         $blank_day = true;
         
         if( !empty($this->posts) ){
+            $list_class = 'events-list';
+            $show_events_button = '';
+            $events_list = array();
+            
+            if( $this->extra_row == true ){
+                $list_class = 'events-list hidden';
+            }
             foreach( $this->posts as $evt ){
                 if( in_array($day_index, $evt->post_days) ){
                     $link = get_permalink($evt->ID);
                     $title = apply_filters('the_title', $evt->post_title);
-                    $output = sprintf('<p><a href="%s">%s</a></p>', $link, $title);
-                    echo apply_filters( 'boros_calendar_event_day_output', $output, $evt, $day, $link, $title );
+                    $output = sprintf('<li><a href="%s">%s</a></li>', $link, $title);
+                    $events_list[] = apply_filters( 'boros_calendar_event_day_item_output', $output, $evt, $day, $link, $title );
                 }
+            }
+            if( !empty($events_list) and $this->extra_row == true ){
+                $show_events_button = apply_filters( 'boros_calendar_show_events_button', "<div class='show-events-btn hidden-xs'>&#x26AB;</div>", array('year' => $this->year, 'month' => $this->pmonth, 'day' => $day, 'posts' => $this->posts) );
+            }
+            
+            if( !empty($events_list) ){
+                echo "<span class='visible-xs' data-date='{$day_index}'>{$d}</span>";
+                echo $show_events_button;
+                echo "<ul class='{$list_class}'>";
+                echo implode('', $events_list);
+                echo '</ul>';
             }
         }
     }
@@ -830,6 +843,59 @@ class Boros_Calendar {
         }
         
         return apply_filters( 'boros_calendar_month_dropdown', $dropdown, $class, $dropdown_opts );
+    }
+    
+    /**
+     * Javascript para extra_row
+     * 
+     */
+    function extra_row_javascript(){
+        ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function($){
+            var boros_calendar_extra_row = {day: 0, content: ''};
+            
+            $('table.calendar .show-events-btn').on('click', function(e){
+                var btn = $(this);
+                var table = $(this).closest('table.calendar');
+                var td = $(this).closest('td');
+                var day = td.attr('data-day');
+                var month = td.attr('data-month');
+                var year = td.attr('data-year');
+                var row = $(this).closest('tr').attr('data-row');
+                var today = day + month + year;
+                var extra_row = $(this).closest('table.calendar').find('.week-' + row + '.week-extra .week-extra-cell');
+                
+                if( boros_calendar_extra_row.day != today ){
+                    $('table.calendar .show-events-btn').removeClass('opened');
+                    extra_row.removeClass('opened');
+                    boros_calendar_extra_row.day = today;
+                    boros_calendar_extra_row.content = td.find('.events-list').clone();
+                    boros_calendar_extra_row.content.removeClass('hidden').hide();
+                    if( extra_row.find('.events-list').length ){
+                        extra_row.find('.events-list').slideUp(400, function(){
+                            extra_row.html( boros_calendar_extra_row.content );
+                            extra_row.find('.events-list').slideDown();
+                        });
+                    }
+                    else{
+                        extra_row.html( boros_calendar_extra_row.content );
+                        extra_row.find('.events-list').slideDown();
+                    }
+                    extra_row.addClass('opened');
+                    btn.addClass('opened');
+                }
+                else{
+                    extra_row.find('.events-list').slideToggle();
+                    extra_row.toggleClass('opened');
+                    btn.toggleClass('opened');
+                }
+                
+                
+            });
+        });
+        </script>
+        <?php
     }
 }
 
