@@ -356,7 +356,6 @@ class Boros_Calendar {
             $this->posts = apply_filters( 'boros_calendar_posts', $transient );
         }
         else{
-            pal('get_posts_by_date');
             delete_transient($transient_name);
             $query = apply_filters('boros_calendar_posts_by_date_query', array(
                 'post_type' => $this->post_type,
@@ -912,11 +911,13 @@ class Boros_Calendar {
                     if( extra_row.find('.events-list').length ){
                         extra_row.find('.events-list').slideUp(400, function(){
                             extra_row.html( boros_calendar_extra_row.content );
+                            table.find('.events-list').slideUp();
                             extra_row.find('.events-list').slideDown();
                         });
                     }
                     else{
                         extra_row.html( boros_calendar_extra_row.content );
+                        table.find('.events-list').slideUp();
                         extra_row.find('.events-list').slideDown();
                     }
                     extra_row.addClass('opened');
