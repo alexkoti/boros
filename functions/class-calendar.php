@@ -227,7 +227,7 @@ class Boros_Calendar {
         $this->month_name   = $wp_locale->month[$this->month_number];
         
         // início e fim do mês
-        $this->month_start = "{$this->year}-{$this->pmonth}-01";
+        $this->month_start = "{$this->year}-{$this->pmonth}-00";
         $this->month_end   = "{$this->year}-{$this->pmonth}-{$this->days_in_month}";
         
         // adicionar javascript
