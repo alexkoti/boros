@@ -155,6 +155,13 @@ class Boros_Calendar {
     protected $extra_row = false;
     
     /**
+     * Variável de url para o reset do transient(cache)
+     * 
+     */
+    protected $delete_cache_var = false;
+    protected $delete_cache = false;
+    
+    /**
      * Construct
      * 
      * $config
@@ -188,6 +195,7 @@ class Boros_Calendar {
             'accepted_metas',
             'taxonomies',
             'extra_row',
+            'delete_cache_var',
         );
         foreach( $vars as $v ){
             if( isset($config[$v]) ){
@@ -222,8 +230,15 @@ class Boros_Calendar {
         $this->month_start = "{$this->year}-{$this->pmonth}-01";
         $this->month_end   = "{$this->year}-{$this->pmonth}-{$this->days_in_month}";
         
+        // adicionar javascript
         if( $this->extra_row == true ){
             add_action( 'wp_footer', array($this, 'extra_row_javascript'), 99 );
+        }
+        add_action( 'wp_footer', array($this, 'xs_javascript'), 99 );
+        
+        // sinalizar se precisa remover o cache(transient)
+        if( $this->delete_cache_var != false and isset($_GET[$this->delete_cache_var]) ){
+            $this->delete_cache = true;
         }
     }
     
@@ -245,14 +260,14 @@ class Boros_Calendar {
         
     }
     
-    
-    
-    /**
-     * MODO TABELA
-     * 
-     */
-    
-    
+    function get_transient( $transient_name ){
+        if( $this->delete_cache == true ){
+            return false;
+        }
+        else{
+            return get_transient($transient_name);
+        }
+    }
     
     /**
      * Iniciar a exibição da tabela do calendário
@@ -278,9 +293,14 @@ class Boros_Calendar {
         // verificar se já foi buscado
         if( empty($this->all_posts) ){
             $transient_name = ( $this->post_meta === false ) ? "boros_cldr_{$this->post_type}" : "boros_cldr_{$this->post_type}_{$this->post_meta}";
+            $transient = $this->get_transient($transient_name);
             
             // verifica o transient
-            if( false === ( $this->all_posts = get_transient($transient_name) ) ){
+            if( false !== $transient ){
+                $this->all_posts = apply_filters( 'boros_calendar_all_posts', $transient );
+            }
+            else{
+                delete_transient($transient_name);
                 // todos os posts, sem post_meta
                 $args = array(
                     'post_type' => $this->post_type,
@@ -320,7 +340,6 @@ class Boros_Calendar {
                 set_transient( $transient_name, $this->all_posts, $this->transient_expiration );
                 //pal("set transient {$transient_name} ALL POSTS");
             }
-            //pre($this->all_posts, 'a');
         }
     }
     
@@ -330,8 +349,15 @@ class Boros_Calendar {
      * @ver 0.1.0
      */
     function get_posts_by_date(){
-        $transient_name = "boros_cldr_{$this->post_type}_{$this->pmonth}";
-        if( false === ( $this->posts = get_transient($transient_name) ) ){
+        $transient_name = "boros_cldr_{$this->post_type}_{$this->pmonth}_{$this->year}";
+        $transient = $this->get_transient($transient_name);
+        
+        if( false !== $transient ){
+            $this->posts = apply_filters( 'boros_calendar_posts', $transient );
+        }
+        else{
+            pal('get_posts_by_date');
+            delete_transient($transient_name);
             $query = apply_filters('boros_calendar_posts_by_date_query', array(
                 'post_type' => $this->post_type,
                 'post_status' => $this->post_status,
@@ -385,9 +411,14 @@ class Boros_Calendar {
      * @ver 0.1.0
      */
     function get_posts_by_post_meta(){
-        $transient_name = "boros_cldr_{$this->post_type}_{$this->post_meta}_{$this->pmonth}";
-        $transient = get_transient($transient_name);
-        if( false === $transient ){
+        $transient_name = "boros_cldr_{$this->post_type}_{$this->post_meta}_{$this->pmonth}_{$this->year}";
+        $transient = $this->get_transient($transient_name);
+        
+        if( false !== $transient ){
+            $this->posts = apply_filters( 'boros_calendar_posts', $transient );
+        }
+        else{
+            delete_transient($transient_name);
             $query = apply_filters('boros_calendar_posts_by_post_meta_query', array(
                 'post_type' => $this->post_type,
                 'post_status' => $this->post_status,
@@ -444,9 +475,6 @@ class Boros_Calendar {
             }
             wp_reset_query();
             set_transient( $transient_name, $this->posts, $this->transient_expiration );
-        }
-        else{
-            $this->posts = apply_filters( 'boros_calendar_posts', $transient );
         }
         
         $this->add_events_to_month();
@@ -708,7 +736,7 @@ class Boros_Calendar {
             $center = $this->posts_dropdown();
         }
         $calendar_head = sprintf(
-            '<div class="calendar-nav row"><div class="col-md-4 col-sm-4">%s</div><div class="col-md-4 col-sm-4">%s</div><div class="col-md-4 col-sm-4">%s</div></div>', 
+            '<div class="calendar-nav row"><div class="col-md-4 col-sm-4 col-xs-6 prev-month">%s</div><div class="col-md-4 col-sm-4 month-dropdown">%s</div><div class="col-md-4 col-sm-4 col-xs-6 next-month">%s</div></div>', 
             $this->prev_next_month_link('prev'), 
             apply_filters( 'calendar_table_nav_center', $center ), 
             $this->prev_next_month_link()
@@ -745,28 +773,36 @@ class Boros_Calendar {
             $list_class = 'events-list';
             $show_events_button = '';
             $events_list = array();
+            $events_available = array();
+            $output = array();
             
             if( $this->extra_row == true ){
                 $list_class = 'events-list hidden';
             }
             foreach( $this->posts as $evt ){
                 if( in_array($day_index, $evt->post_days) ){
-                    $link = get_permalink($evt->ID);
-                    $title = apply_filters('the_title', $evt->post_title);
-                    $output = sprintf('<li><a href="%s">%s</a></li>', $link, $title);
-                    $events_list[] = apply_filters( 'boros_calendar_event_day_item_output', $output, $evt, $day, $link, $title );
+                    $evt->url = get_permalink($evt->ID);
+                    $evt->title = apply_filters('the_title', $evt->post_title);
+                    $item = sprintf('<li><a href="%s">%s</a></li>', $evt->url, $evt->title);
+                    $events_available[] = $evt;
+                    $events_list[] = apply_filters( 'boros_calendar_event_day_item_output', $item, array('post' => $evt, 'day' => $day) );
                 }
             }
+            
+            $filter_args = array('year' => $this->year, 'month' => $this->pmonth, 'day' => $day, 'events_list' => $events_list, 'events_available' => $events_available);
+            
             if( !empty($events_list) and $this->extra_row == true ){
-                $show_events_button = apply_filters( 'boros_calendar_show_events_button', "<div class='show-events-btn hidden-xs'>&#x26AB;</div>", array('year' => $this->year, 'month' => $this->pmonth, 'day' => $day, 'posts' => $this->posts) );
+                $show_events_button = apply_filters( 'boros_calendar_show_events_button', "<div class='show-events-btn hidden-xs'>&#x26AB;</div>", $filter_args );
             }
             
             if( !empty($events_list) ){
-                echo "<span class='visible-xs' data-date='{$day_index}'>{$d}</span>";
-                echo $show_events_button;
-                echo "<ul class='{$list_class}'>";
-                echo implode('', $events_list);
-                echo '</ul>';
+                $output[] = "<span class='visible-xs' data-date='{$day_index}'>{$d}</span>";
+                $output[] = $show_events_button;
+                $output[] = "<ul class='{$list_class}'>";
+                $output[] = implode('', $events_list);
+                $output[] = '</ul>';
+                $output = apply_filters( 'boros_calendar_event_day_output', $output, $filter_args );
+                echo implode('', $output);
             }
         }
     }
@@ -848,6 +884,7 @@ class Boros_Calendar {
     /**
      * Javascript para extra_row
      * 
+     * @ver 0.1.1
      */
     function extra_row_javascript(){
         ?>
@@ -892,6 +929,23 @@ class Boros_Calendar {
                 }
                 
                 
+            });
+        });
+        </script>
+        <?php
+    }
+    
+    /**
+     * Javascript para a view XS
+     * 
+     * @ver 0.1.1
+     */
+    function xs_javascript(){
+        ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function($){
+            $('.calendar-xs-title').on('click', function(e){
+                $(this).closest('.row').find('.calendar-xs-content').slideToggle();
             });
         });
         </script>
