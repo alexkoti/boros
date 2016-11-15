@@ -234,7 +234,6 @@ class Boros_Calendar {
         if( $this->extra_row == true ){
             add_action( 'wp_footer', array($this, 'extra_row_javascript'), 99 );
         }
-        add_action( 'wp_footer', array($this, 'xs_javascript'), 99 );
         
         // sinalizar se precisa remover o cache(transient)
         if( $this->delete_cache_var != false and isset($_GET[$this->delete_cache_var]) ){
@@ -930,23 +929,6 @@ class Boros_Calendar {
                 }
                 
                 
-            });
-        });
-        </script>
-        <?php
-    }
-    
-    /**
-     * Javascript para a view XS
-     * 
-     * @ver 0.1.1
-     */
-    function xs_javascript(){
-        ?>
-        <script type="text/javascript">
-        jQuery(document).ready(function($){
-            $('.calendar-xs-title').on('click', function(e){
-                $(this).closest('.row').find('.calendar-xs-content').slideToggle();
             });
         });
         </script>
