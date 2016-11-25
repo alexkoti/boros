@@ -794,7 +794,7 @@ class Boros_Calendar {
             }
             
             if( !empty($events_list) ){
-                $output[] = "<span class='visible-xs' data-date='{$day_index}'>{$d}</span>";
+                $output[] = "<span class='visible-xs day-number' data-date='{$day_index}'>{$d}</span>";
                 $output[] = $show_events_button;
                 $output[] = "<ul class='{$list_class}'>";
                 $output[] = implode('', $events_list);

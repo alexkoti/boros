@@ -38,7 +38,7 @@ class BFE_checkbox extends BorosFormElement {
 			$input = "<label for='{$name}' class='checkbox'><input type='checkbox' {$attrs} value='1'{$checked} /> {$this->input_helper}</label>";
 		}
 		elseif( $this->data['layout'] == 'bootstrap3' ){
-			$input = "<label class='checkbox'><input type='checkbox' {$attrs} value='1'{$checked} /> {$this->input_helper}</label>";
+			$input = "<div class='checkbox'><label><input type='checkbox' {$attrs} value='1'{$checked} /> {$this->input_helper}</label></div>";
 		}
 		
 		return $input;
