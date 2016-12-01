@@ -42,7 +42,7 @@ function boros_add_dashboard_notification( $key = 'alert', $message = 'Mensagem 
 
 function boros_remove_dashboard_notification( $key = 'alert' ){
     $alerts = get_option('boros_dashboard_notifications');
-    if( !isset( $alerts[$key] ) ){
+    if( isset( $alerts[$key] ) ){
         unset( $alerts[$key] );
         update_option( 'boros_dashboard_notifications', $alerts );
     }
