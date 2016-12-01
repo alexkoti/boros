@@ -90,7 +90,7 @@ add_action('wp_ajax_boros_dashboard_notifications_widget_remove_item', 'boros_da
 function boros_dashboard_notifications_widget_remove_item(){
     check_ajax_referer( $_POST['alert'], 'nonce', true );
     boros_remove_dashboard_notification( $_POST['alert'] );
-    //$alerts = get_option('boros_dashboard_notifications'); print_r($alerts); echo 'aaaa';
+    $alerts = get_option('boros_dashboard_notifications'); //print_r($alerts); echo 'aaaa';
     die();
 }
 
