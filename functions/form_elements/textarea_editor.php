@@ -39,7 +39,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
-				'css' => get_bloginfo('template_url') . '/css/editor.css',
+				'css' => get_template_directory_uri() . '/css/editor.css',
 			),
 			'simple' => array(
 				'editor_type' => 'simple',
@@ -48,7 +48,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
-				'css' => get_bloginfo('template_url') . '/css/editor.css',
+				'css' => get_template_directory_uri() . '/css/editor.css',
 			),
 			'full' => array(
 				'editor_type' => 'full',
@@ -57,7 +57,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
-				'css' => get_bloginfo('template_url') . '/css/editor.css',
+				'css' => get_template_directory_uri() . '/css/editor.css',
 			),
 		);
 		
@@ -68,7 +68,7 @@ class BFE_textarea_editor extends BorosFormElement {
 			'buttons3' => '',
 			'toolbar' => 'bold italic link bullist numlist code',
 			'height' => 150,
-			'css' => get_bloginfo('template_url') . '/css/editor.css',
+			'css' => get_template_directory_uri() . '/css/editor.css',
 		);
 		
 		/**

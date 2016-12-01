@@ -158,7 +158,7 @@ else{
 		'buttons2' => '',
 		'buttons3' => '',
 		'height' => 150,
-		'css' => get_stylesheet_directory_uri() . '/css/site.css,' . get_stylesheet_directory_uri() . '/css/editor.css',
+		'css' => get_template_directory_uri() . '/css/editor.css',
 	);
 	
 	if( $modify_cores = true ){
