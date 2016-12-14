@@ -806,6 +806,8 @@ function boros_pagination( $args ){
 /**
  * Classe de paginação, baseado no pagenavi
  * 
+ * @todo 'pages_text'
+ * 
  */
 class Boros_Pagination {
 	private $current = 1;
