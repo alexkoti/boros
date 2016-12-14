@@ -826,20 +826,20 @@ class Boros_Pagination {
 	private $items;
 	
 	private $options = array(
-		'always_show' => false,
-		'num_pages' => 5,
-		'ul_class' => '',
-		'li_class' => ' ',
-		'link_class' => 'btn',
-		'pages_text' => '',
-		'first_text' => '«',
-		'dotleft_text' => '',
-		'last_text' => '»',
+		'always_show'   => false,
+		'num_pages'     => 5,
+		'ul_class'      => '',
+		'li_class'      => ' ',
+		'link_class'    => 'btn',
+		'pages_text'    => '',
+		'first_text'    => '«',
+		'dotleft_text'  => '',
+		'last_text'     => '»',
 		'dotright_text' => '',
-		'prev_text' => '‹',
-		'next_text' => '›',
-		'page_text' => '%PAGE_NUMBER%',
-		'current_text' => '%PAGE_NUMBER%',
+		'prev_text'     => '‹',
+		'next_text'     => '›',
+		'page_text'     => '%PAGE_NUMBER%',
+		'current_text'  => '%PAGE_NUMBER%',
 	);
 	private $output = '';
 	
