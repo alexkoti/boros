@@ -92,12 +92,15 @@ function boros_excerpt_letters( $content, $excerpt_length = 55 ){
  * @return	string	$meta_value	valor gravado
  * @uses		get_post_meta()		function core
  */
-function pmeta( $meta, $echo = true ){
-	global $post;
-	$meta_value = get_post_meta($post->ID, $meta, true);
-	if( $echo == true )
-		echo $meta_value;
-	return $meta_value;
+function pmeta( $meta, $echo = true, $filter = false ){
+    global $post;
+    $meta_value = get_post_meta($post->ID, $meta, true);
+    if( $filter !== false ){
+        $meta_value= apply_filters( $filter, $meta_value );
+    }
+    if( $echo == true )
+        echo $meta_value;
+    return $meta_value;
 }
 
 /**
