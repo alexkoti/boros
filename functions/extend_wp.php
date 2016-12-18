@@ -86,21 +86,31 @@ function boros_excerpt_letters( $content, $excerpt_length = 55 ){
  * ==================================================
  * GET POST META SINGLE =============================
  * ==================================================
- * Pegar post_meta de forma simplificada, sempre quando o valor é único e o post seja o post corrente.
+ * Pegar post_meta de forma simplificada, sempre quando o valor é único e o post seja o post corrente. Precisa ser dentro do loop por conta 
+ * da global $post.
  * 
- * @param	string	$meta		nome do meta a ser puxado
- * @return	string	$meta_value	valor gravado
- * @uses		get_post_meta()		function core
+ * @param   string         $meta              Nome do meta a ser recuperado
+ * @param   bool|string    $filter_or_echo    Caso seja false, apenas retorna o meta, caso seja true, faz o echo() do meta, e caso seja
+ *                                            string, imprime o meta aplicado o filtro com nome no valor de $filter_echo, ex. 'the_content'
+ * 
+ * @return  string  $meta_value valor gravado
+ * @uses    get_post_meta() function core
  */
-function pmeta( $meta, $echo = true, $filter = false ){
+function pmeta( $meta, $filter_or_echo = true ){
     global $post;
     $meta_value = get_post_meta($post->ID, $meta, true);
-    if( $filter !== false ){
-        $meta_value= apply_filters( $filter, $meta_value );
+    
+    if( $filter_or_echo === false ){
+        return $meta_value;
     }
-    if( $echo == true )
-        echo $meta_value;
-    return $meta_value;
+    else{
+        if( $filter_or_echo === true ){
+            echo $meta_value;
+        }
+        else{
+            echo apply_filters( $filter_or_echo, $meta_value );
+        }
+    }
 }
 
 /**
