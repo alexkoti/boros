@@ -92,25 +92,32 @@ function boros_excerpt_letters( $content, $excerpt_length = 55 ){
  * @param   string         $meta              Nome do meta a ser recuperado
  * @param   bool|string    $filter_or_echo    Caso seja false, apenas retorna o meta, caso seja true, faz o echo() do meta, e caso seja
  *                                            string, imprime o meta aplicado o filtro com nome no valor de $filter_echo, ex. 'the_content'
+ *                                            (default true, imprime o valor)
+ * @parnm   string         $wrapper           String padrão que acompanha o valor, pode ser html, ex '<div class='wrapper'>%s</div>'
+ *                                            (default '%s')
  * 
  * @return  string  $meta_value valor gravado
  * @uses    get_post_meta() function core
  */
-function pmeta( $meta, $filter_or_echo = true ){
+function pmeta( $meta, $filter_or_echo = true, $wrapper = '%s' ){
     global $post;
     $meta_value = get_post_meta($post->ID, $meta, true);
     
-    if( $filter_or_echo === false ){
-        return $meta_value;
-    }
-    else{
-        if( $filter_or_echo === true ){
-            echo $meta_value;
+    if( !empty($meta_value) ){
+        $meta_value = sprintf( $wrapper . "\n", $meta_value );
+        if( $filter_or_echo === false ){
+            return $meta_value;
         }
         else{
-            echo apply_filters( $filter_or_echo, $meta_value );
+            if( $filter_or_echo === true ){
+                echo $meta_value;
+            }
+            else{
+                echo apply_filters( $filter_or_echo, $meta_value );
+            }
         }
     }
+    return $meta_value;
 }
 
 /**
