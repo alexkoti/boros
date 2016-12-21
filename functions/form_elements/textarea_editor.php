@@ -107,7 +107,8 @@ class BFE_textarea_editor extends BorosFormElement {
 		$this->data['attr']['class'] .= "form_textarea_editor editor_type_{$editor_attr['editor_type']}";
 		$attrs = make_attributes($this->data['attr']);
 		//pal($attrs);
-		$input_content = wpautop($this->data_value);
+		//$input_content = wpautop($this->data_value); // Não é mais necessário e causa bugs em UL|OL
+		$input_content = $this->data_value;
 		echo "<textarea {$attrs}>{$input_content}</textarea>{$this->input_helper}";
 		//echo "<textarea id='{$this->data['name']}' name='{$this->data['name']}' class='form_element form_textarea form_textarea_editor editor_type_{$editor_attr['editor_type']}' rel='{$this->data['name']}'>{$input_content}</textarea>";
 		?>
