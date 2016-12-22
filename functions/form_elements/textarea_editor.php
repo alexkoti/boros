@@ -26,6 +26,8 @@ class BFE_textarea_editor extends BorosFormElement {
 	
 	function set_input( $value = null ){
 		global $post;
+        $editor_css = apply_filters( 'boros_admin_editor_css', get_template_directory_uri() . '/css/editor.css' );
+        
 		// Usar $post->post_content no lugar do post_meta > $this->data['name']
 		if( isset($this->data['options']['use_post_content']) )
 			$this->data_value = $post->post_content;
@@ -39,7 +41,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
-				'css' => get_template_directory_uri() . '/css/editor.css',
+				'css' => $editor_css,
 			),
 			'simple' => array(
 				'editor_type' => 'simple',
@@ -48,7 +50,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
-				'css' => get_template_directory_uri() . '/css/editor.css',
+				'css' => $editor_css,
 			),
 			'full' => array(
 				'editor_type' => 'full',
@@ -57,7 +59,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
-				'css' => get_template_directory_uri() . '/css/editor.css',
+				'css' => $editor_css,
 			),
 		);
 		
@@ -68,7 +70,7 @@ class BFE_textarea_editor extends BorosFormElement {
 			'buttons3' => '',
 			'toolbar' => 'bold italic link bullist numlist code',
 			'height' => 150,
-			'css' => get_template_directory_uri() . '/css/editor.css',
+			'css' => $editor_css,
 		);
 		
 		/**

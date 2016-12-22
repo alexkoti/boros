@@ -64,13 +64,13 @@ function admin_scripts(){
 	wp_enqueue_script( 'postbox' );
 	wp_enqueue_script( 'jquery-form' );
 	wp_enqueue_script( 'post' );
+	wp_enqueue_script( 'tiny_mce' );
 	
 	//CUSTOM SCRIPTS
 	add_custom_admin_scripts();
 }
 
 function add_custom_admin_scripts(){
-	wp_enqueue_script( 'tiny_mce' );
 	$scripts = array(
 		//'admin_scripts_duplicate_elements',
 		//'admin_scripts_element_selectable',
@@ -158,7 +158,7 @@ else{
 		'buttons2' => '',
 		'buttons3' => '',
 		'height' => 150,
-		'css' => get_template_directory_uri() . '/css/editor.css',
+		'css' => apply_filters( 'boros_admin_editor_css', get_template_directory_uri() . '/css/editor.css' ),
 	);
 	
 	if( $modify_cores = true ){
