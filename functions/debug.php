@@ -68,7 +68,8 @@ function boros_current_page_info(){
             onMouseOut="this.style.opacity='0.3'"
         >
 			<li><span title="Para trabalhar com forms">(?)</span> URL corrente: <code><?php echo self_url(); ?></code></li>
-			<li>Template: <code><?php echo basename($template); ?></code></li>
+			<li>Template-name: <code><?php echo basename($template); ?></code></li>
+			<li>Template-path: <code><?php echo $template; ?></code></li>
 		</ul>
 		<?php
 		}
