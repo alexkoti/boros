@@ -78,11 +78,12 @@ abstract class Boros_Ajax_Query_Loop {
 							boros_ajax_query_loop.btn = $(this);
 							boros_ajax_query_loop.btn.prop('disabled', true);
 							var results = $('#boros-ajax-query-loop-results');
+							results.html('');
 							
 							// verificar se existe algum offset definido por campo de texto
 							if( $('#boros_ajax_query_loop_initial_offset').length && $('#boros_ajax_query_loop_initial_offset').val() > 0 ){
 								boros_ajax_query_loop_offset = $('#boros_ajax_query_loop_initial_offset').val();
-                                $('#boros-ajax-query-loop-results').attr('start', Number(boros_ajax_query_loop_offset) + 1);
+								$('#boros-ajax-query-loop-results').attr('start', Number(boros_ajax_query_loop_offset) + 1);
 							}
 							boros_ajax_query_loop.proccess_item();
 						});
@@ -105,14 +106,21 @@ abstract class Boros_Ajax_Query_Loop {
 									boros_ajax_query_loop.btn.prop('disabled', false);
 								} else {
 									console.log(resp);
+									// append do resultado independente se irá continuar o loop
+									$('#boros-ajax-query-loop-results').append(resp.html);
+									// continuar o loop
 									if( resp.offset > 0 ){
 										boros_ajax_query_loop_offset = resp.offset;
 										boros_ajax_query_loop.proccess_item();
 									}
-									$('#boros-ajax-query-loop-results').append(resp.html);
+									// reabilitar o botão
+									else if( resp.post_id == 0 ){
+										boros_ajax_query_loop.btn.prop('disabled', false);
+									}
 								}
 							},
 							error: function(XMLHttpRequest, textStatus, errorThrown) {
+								alert('Ocorreu um erro na requisição, consultar o console.');
 								console.log('erro');
 								console.log(textStatus);
 								console.log(errorThrown);
