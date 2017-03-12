@@ -8,7 +8,7 @@
 /* ========================================================================== */
 /* CRIAR TABELA DE TERMMETA ================================================= */
 /* ========================================================================== */
-add_action( 'init', 'init_metadata' );
+//add_action( 'init', 'init_metadata' );
 function init_metadata(){
 	global $wpdb;
 	$type = 'term';
@@ -63,13 +63,13 @@ function create_metadata_table($table_name, $type){
  * Inspirado no plugin my-category-order
  * 
  */
+//add_filter( 'get_terms_orderby', 'custom_terms_orderby', 10, 2 );
 function custom_terms_orderby( $orderby, $args ){
 	if($args['orderby'] == 'term_order')
 		return 't.term_order';
 	else
 		return $orderby;
 }
-add_filter( 'get_terms_orderby', 'custom_terms_orderby', 10, 2 );
 
 /**
  * ==================================================
