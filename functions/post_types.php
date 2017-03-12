@@ -462,7 +462,9 @@ function render_columns( $column_name ){
 			break;
 			
 		case 'thumb':
-			if ( has_post_thumbnail() ) { the_post_thumbnail('thumbnail'); }
+			if ( has_post_thumbnail() and $post->post_type != 'product' ) {
+				the_post_thumbnail('thumbnail');
+			}
 			break;
 		
 		case 'resumo':
