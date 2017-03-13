@@ -119,10 +119,11 @@ function pal( $var = false, $legend = '' ){
  * @param mix $message mensagem que deseja exibir
  * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
  */
-function pcm( $var = false, $legend = '' ){
+function pcm( $var = false, $legend = '', $pad = 0 ){
     if( !empty($legend) ){
         $legend = "{$legend} : ";
     }
+    $legend = str_pad($legend, $pad, ' ', STR_PAD_LEFT);
     echo "<!-- {$legend}{$var} -->\n";
 }
 
