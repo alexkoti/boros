@@ -110,6 +110,23 @@ function pal( $var = false, $legend = '' ){
 }
 
 /**
+ * ==================================================
+ * PCM ==============================================
+ * ==================================================
+ * {P}rint {C}o{M}ment
+ * Exibir string em comentário HTML
+ *
+ * @param mix $message mensagem que deseja exibir
+ * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
+ */
+function pcm( $var = false, $legend = '' ){
+    if( !empty($legend) ){
+        $legend = "{$legend} : ";
+    }
+    echo "<!-- {$legend}{$var} -->\n";
+}
+
+/**
  * Separador simples, usar apenas para melhorar a legibilidade em debugs complexos
  * 
  */
