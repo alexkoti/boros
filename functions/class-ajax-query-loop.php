@@ -135,7 +135,16 @@ abstract class Boros_Ajax_Query_Loop {
 			<?php
 		}
 	}
-	
+    
+    final public function ajax_response( $offset, $post_id, $status = 'success', $message ){
+        echo json_encode(array(
+            'offset'  => $offset,
+            'post_id' => $post_id,
+            'html'    => "<li class='text_{$status}'>{$message}</li>",
+        ));
+        die();
+    }
+    
 	final public function output(){
 		?>
 		<div class="wrap">
