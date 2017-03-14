@@ -115,6 +115,7 @@ abstract class Boros_Ajax_Query_Loop {
 									}
 									// reabilitar o botão
 									else if( resp.post_id == 0 ){
+										boros_ajax_query_loop_offset = 0;
 										boros_ajax_query_loop.btn.prop('disabled', false);
 									}
 								}
@@ -132,6 +133,41 @@ abstract class Boros_Ajax_Query_Loop {
 				boros_ajax_query_loop.init();
 			});
 			</script>
+            <style type="text/css">
+            #boros-ajax-query-loop-results li {
+                background-color: #fff;
+                border: 1px dotted #ccc;
+                margin: 0 0 10px;
+                padding: 10px;
+            }
+            #boros-ajax-query-loop-results li .pre_box {
+                margin: 0 0 10px;
+            }
+            #boros-ajax-query-loop-results li .message_title {
+                border: 1px dotted #ccc;
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0 0 10px;
+                padding: 10px;
+            }
+            #boros-ajax-query-loop-results li .message {
+                border: 1px dotted #ccc;
+                margin: 0 0 10px;
+                padding: 10px;
+            }
+            #boros-ajax-query-loop-results li .alert {
+                border-color: red;
+                color: red;
+            }
+            #boros-ajax-query-loop-results li .success {
+                border-color: green;
+                color: green;
+            }
+            #boros-ajax-query-loop-results li .divider {
+                border-top: 1px dotted #ccc;
+                margin: 20px 0;
+            }
+            </style>
 			<?php
 		}
 	}
