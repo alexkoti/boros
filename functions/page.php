@@ -98,6 +98,22 @@ function has_parent( $post, $parent_id ) {
 }
 
 
+/**
+ * Verificar se o post possui sub-páginas
+ * 
+ * @link https://wordpress.stackexchange.com/a/226461
+ * 
+ */
+function has_children( $post = null ){
+    if( $post === null ){
+        global $post;
+        $post = $post->ID;
+    }
+    $query = new WP_Query(array('post_parent' => $post->ID, 'post_type' => $post->post_type));
+
+    return $query->have_posts();
+}
+
 
 /**
  * ==================================================
@@ -130,43 +146,88 @@ function page_permalink_by_name( $page_name, $echo = true, $post_type = 'page' )
  * ==================================================
  * Similiar ao next_post_link() do core, porém aplicado a post_type hierárquico
  * 
+ * 
+ * 
+ * 
+ * 
  */
-function boros_adjacent_page_link( $format, $link, $previous = true ){
-	global $wpdb, $post;
-	// pegar todas as páginas
-	$args = "sort_column=menu_order&sort_order=asc&post_type={$post->post_type}&post_parent={$post->post_parent}";
-	$page_list = get_pages( $args );
-	$page_order = array();
-	// ordenar as IDs
-	foreach( $page_list as $page ){
-		$page_order[] = $page->ID;
-	}
-	// pegar a página corrente
-	$current = array_search( $post->ID, $page_order );
-	$adjacent = ($previous == true) ? $current - 1 : $current + 1;
-	// caso não exista, retornar
-	if( !isset($page_order[$adjacent]) ){
-		return;
-	}
-	// recuperar o post completo
-	foreach( $page_list as $page ){
-		if( $page->ID == $page_order[$adjacent] ){
-			$adjacent_page = $page;
-			break;
-		}
-	}
-	$permalink = get_permalink( $adjacent_page->ID );
-	$title = apply_filters( 'the_title', $adjacent_page->post_title );
-	$text = str_replace( '%title', $title, $link );
-	$anchor = "<a href='{$permalink}'>{$text}</a>";
-	$output = str_replace( '%link', $anchor, $format );
-	return $output;
+function boros_adjacent_page_link( $args = array() ){
+    global $wpdb, $post;
+    
+    $defaults = array(
+        'format'   => '%link',
+        'link'     => '%title',
+        'parent'   => false,
+        'class'    => 'adjacent-page-link',
+        'previous' => true,
+    );
+    $args = wp_parse_args( $args, $defaults );
+    
+    // pegar todas as páginas
+    $parent = $post->post_parent;
+    if( $args['parent'] != false ){
+        $parent = $args['parent'];
+    }
+    $page_args = "sort_column=menu_order&sort_order=asc&post_type={$post->post_type}&parent={$parent}";
+    $page_list = get_pages( $page_args );
+    
+    // ordenar as IDs
+    $page_order = array();
+    foreach( $page_list as $page ){
+        $page_order[] = $page->ID;
+    }
+    
+    // pegar a página corrente
+    $current = array_search( $post->ID, $page_order );
+    $adjacent = ($args['previous'] == true) ? $current - 1 : $current + 1;
+    
+    // caso não exista, retornar
+    if( !isset($page_order[$adjacent]) ){
+        return false;
+    }
+    
+    // recuperar o post completo
+    foreach( $page_list as $page ){
+        if( $page->ID == $page_order[$adjacent] ){
+            $adjacent_page = $page;
+            break;
+        }
+    }
+    
+    $permalink = get_permalink( $adjacent_page->ID );
+    $title     = apply_filters( 'the_title', $adjacent_page->post_title );
+    $text      = str_replace( '%title', $title, $args['link'] );
+    $anchor    = "<a href='{$permalink}' class='{$args['class']}'>{$text}</a>";
+    $output    = str_replace( '%link', $anchor, $args['format'] );
+    return $output;
 }
-function boros_next_page_link( $format = '&larr; %link', $link = '%title' ){
-	echo boros_adjacent_page_link( $format, $link, true );
+
+function boros_next_page_link( $args = array() ){
+    $defaults = array(
+        'format' => '%link &rarr;',
+        'echo'   => true,
+    );
+    $args = wp_parse_args( $args, $defaults );
+    $args['previous'] = false;
+    $link = boros_adjacent_page_link( $args );
+    if( $args['echo'] == true ){
+        echo $link;
+    }
+    return $link;
 }
-function boros_prev_page_link( $format = '%link &rarr;', $link = '%title' ){
-	echo boros_adjacent_page_link( $format, $link, false );
+
+function boros_prev_page_link( $args = array() ){
+    $defaults = array(
+        'format' => '&larr; %link',
+        'echo'   => true,
+    );
+    $args = wp_parse_args( $args, $defaults );
+    $args['previous'] = true;
+    $link = boros_adjacent_page_link( $args );
+    if( $args['echo'] == true ){
+        echo $link;
+    }
+    return $link;
 }
 
 
