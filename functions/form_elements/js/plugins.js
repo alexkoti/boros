@@ -177,7 +177,7 @@ function url_params( url ){
  * 
  */
 function getParameterByName( name, str ){name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");var regexS = "[\\?&]"+name+"=([^&#]*)";var regex = new RegExp( regexS );var results = regex.exec( str );if( results == null ){return "";}else{return decodeURIComponent(results[1].replace(/\+/g, " "));}}
-s
+
 /** 
  * #IN_ARRAY
  * 
