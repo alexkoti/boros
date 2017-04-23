@@ -32,6 +32,7 @@ abstract class Boros_Ajax_Query_Loop {
 		'page_title' => 'Page title',
 		'menu_title' => 'Menu title',
 		'menu_slug'  => 'page-slug',
+		'parent'     => false,
 		'intro_html' => '<p>Page intro</p>',
 	);
 	
@@ -47,7 +48,12 @@ abstract class Boros_Ajax_Query_Loop {
 		$this->ajax_args  = boros_parse_args( $this->ajax_args, $args['ajax_args'] );
 		$this->query_args = $args['query_args'];
 		
-		add_action( 'admin_menu', array($this, 'add_menu_page') );
+		if( $this->page_args['parent'] == false ){
+			add_action( 'admin_menu', array($this, 'add_menu_page') );
+		}
+		else{
+			add_action( 'admin_menu', array($this, 'add_submenu_page') );
+		}
 		add_action( "wp_ajax_{$this->ajax_args['action']}", array($this, 'ajax') );
 	}
 	
@@ -57,6 +63,15 @@ abstract class Boros_Ajax_Query_Loop {
 	 */
 	final public function add_menu_page(){
 		add_menu_page( $this->page_args['page_title'], $this->page_args['menu_title'], 'activate_plugins', $this->page_args['menu_slug'], array($this, 'output') );
+		add_action( 'admin_print_footer_scripts', array($this, 'footer') );
+	}
+	
+	/**
+	 * Registrar subpágina do admin
+	 * 
+	 */
+	final public function add_submenu_page(){
+		add_submenu_page( $this->page_args['parent'], $this->page_args['page_title'], $this->page_args['menu_title'], 'activate_plugins', $this->page_args['menu_slug'], array($this, 'output') );
 		add_action( 'admin_print_footer_scripts', array($this, 'footer') );
 	}
 	
