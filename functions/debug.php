@@ -11,6 +11,19 @@ if( !function_exists('pre') ){
  * 
  */
 
+/**
+ * ==================================================
+ * VARIÁVEIS DEFINIDAS ==============================
+ * ==================================================
+ * Listar todas as variáveis globais definidas até o momento.
+ * 
+ * @link http://stackoverflow.com/a/13629899
+ * 
+ */
+//$ignore = array('GLOBALS', '_FILES', '_COOKIE', '_POST', '_GET', '_SERVER', '_ENV', 'ignore');
+//$vars   = array_diff_key(get_defined_vars($GLOBALS) + array_flip($ignore), array_flip($ignore));
+//pre($vars);
+
 
 
 /**
