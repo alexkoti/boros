@@ -9,6 +9,38 @@
  * @TODO: revisar e separar as functions antigas para deprecated(setor no final do arquivo
  */
 
+/**
+ * Shorthand config taxonomy
+ * 
+ */
+function boros_config_taxonomy_labels( $singular, $plural, $gender = 'masc', $hierarchical = true ){
+    
+    $l = ($gender == 'masc') ? 'o' : 'a';
+    
+    $labels = array(
+        'name'          => $plural,
+        'singular_name' => $plural,
+        'search_items'  => "Buscar {$singular}",
+        'popular_items' => "{$plural} Populares",
+        'all_items'     => "Todas {$l}s {$plural}",
+        'edit_item'     => "Editar {$singular}",
+        'update_item'   => "Atualizar {$singular}",
+        'add_new_item'  => "Adicionar nov{$l} {$singular}",
+        'new_item_name' => "Nome da nov{$l} {$singular}",
+    );
+    
+    if( $hierarchical == true ){
+        $labels['parent_item']       = "{$singular} Ascendente";
+        $labels['parent_item_colon'] = "{$singular} Ascendente:";
+    }
+    else{
+        $labels['separate_items_with_commas'] = "Separar {$plural} com vírgulas";
+        $labels['add_or_remove_items']        = "Adicionar ou remover {$plural}";
+        $labels['choose_from_most_used']      = "Selecionar d{$l}s {$plural} mais usad{$l}s";
+    }
+    
+    return $labels;
+}
 
 /**
  * GET SINGLE TERM ==================================
