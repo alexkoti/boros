@@ -149,6 +149,12 @@ class Boros_Calendar {
     );
     
     /**
+     * Mostrar linha própria para os números de dias separados da linha de evento
+     * 
+     */
+    protected $number_heads = true;
+    
+    /**
      * Adicionar row extra para slideDown e exibição de dados
      * 
      */
@@ -194,6 +200,7 @@ class Boros_Calendar {
             'timezone',
             'accepted_metas',
             'taxonomies',
+            'number_heads',
             'extra_row',
             'delete_cache_var',
         );
@@ -702,11 +709,13 @@ class Boros_Calendar {
         // loop
         foreach( $this->posts_table as $windex => $week ){
             // primeiro loop, head de dias
-            echo "\t<tr class='week-{$windex} week-heads' data-row='{$windex}'>\n";
-            foreach( $week['header'] as $day ){
-                echo "\t\t<td class='{$day['class']}'><div class='day-number'>{$day['day_pad']}</div></td>\n";
+            if( $this->number_heads == true ){
+                echo "\t<tr class='week-{$windex} week-heads' data-row='{$windex}'>\n";
+                foreach( $week['header'] as $day ){
+                    echo "\t\t<td class='{$day['class']}'><div class='day-number'>{$day['day_pad']}</div></td>\n";
+                }
+                echo "\t</tr>\n";
             }
-            echo "\t</tr>\n";
             
             // segundo loop, posts
             echo "\t<tr class='week-{$windex} week-events' data-row='{$windex}'>\n";
