@@ -1,5 +1,35 @@
 <?php
 
+/**
+ * Shorthand post_type labels
+ * 
+ */
+function boros_config_posttype_labels( $singular, $plural, $gender = 'masc' ){
+    
+    $l = ($gender == 'masc') ? 'o' : 'a';
+    
+    $labels = array(
+        'name'                  => $plural,
+        'menu_name'             => $plural,
+        'singular_name'         => $singular,
+        'add_new'               => "Adicionar nov{$l}",
+        'add_new_item'          => "Adicionar nov{$l} {$singular}",
+        'edit_item'             => "Editar {$singular}",
+        'new_item'              => "Nov{$l} {$singular}",
+        'view_item'             => "Ver {$singular}",
+        'search_items'          => "Buscar {$plural}",
+        'not_found'             => ($gender == 'masc') ? "Nenhum {$singular} encontrado" : "Nenhuma {$singular} encontrada",
+        'not_found_in_trash'    => ($gender == 'masc') ? "Nenhum {$singular} encontrado na lixeira" : "Nenhuma {$singular} encontrada na lixeira",
+        'parent_item_colon'     => "{$singular} Ascendente",
+        'all_items'             => "Tod{$l}s {$l}s {$plural}",
+        'archives'              => "Arquivo de {$plural}",
+        'attributes'            => "Atributos d{$l} {$singular}",
+        'insert_into_item'      => "Inserir n{$l} {$singular}",
+        'uploaded_to_this_item' => "Enviado para {$l} {$singular}",
+    );
+    
+    return $labels;
+}
 
 /**
  * ==================================================
