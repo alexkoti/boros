@@ -13,7 +13,7 @@
  * Shorthand taxonomy labels
  * 
  */
-function boros_config_taxonomy_labels( $singular, $plural, $gender = 'masc' ){
+function boros_config_taxonomy_labels( $singular, $plural, $gender = 'masc', $custom = array() ){
     
     $l = ($gender == 'masc') ? 'o' : 'a';
     
@@ -38,6 +38,18 @@ function boros_config_taxonomy_labels( $singular, $plural, $gender = 'masc' ){
         'add_or_remove_items'        => "Adicionar ou remover {$plural}",
         'choose_from_most_used'      => "Selecionar d{$l}s {$plural} mais usad{$l}s",
     );
+    
+    /**
+     * Permitir custom labels
+     * 
+     */
+    if( !empty($custom) ){
+        foreach( $labels as $key => $label ){
+            if( isset($custom[$key]) ){
+                $labels[$key] = sprintf( $custom[$key], $singular, $plural );
+            }
+        }
+    }
     
     return $labels;
 }

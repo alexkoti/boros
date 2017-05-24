@@ -4,7 +4,7 @@
  * Shorthand post_type labels
  * 
  */
-function boros_config_posttype_labels( $singular, $plural, $gender = 'masc' ){
+function boros_config_posttype_labels( $singular, $plural, $gender = 'masc', $custom = array() ){
     
     $l = ($gender == 'masc') ? 'o' : 'a';
     
@@ -27,6 +27,18 @@ function boros_config_posttype_labels( $singular, $plural, $gender = 'masc' ){
         'insert_into_item'      => "Inserir n{$l} {$singular}",
         'uploaded_to_this_item' => "Enviado para {$l} {$singular}",
     );
+    
+    /**
+     * Permitir custom labels
+     * 
+     */
+    if( !empty($custom) ){
+        foreach( $labels as $key => $label ){
+            if( isset($custom[$key]) ){
+                $labels[$key] = sprintf( $custom[$key], $singular, $plural );
+            }
+        }
+    }
     
     return $labels;
 }
