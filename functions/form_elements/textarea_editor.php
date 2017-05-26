@@ -82,7 +82,7 @@ class BFE_textarea_editor extends BorosFormElement {
 		}
 		
 		if( is_array($this->data['options']['editor']) ){
-			$this->data['options']['editor']['editor_type'] = str_replace(array('[', ']'), array('_', ''), $this->data['name']);
+			$this->data['options']['editor']['editor_type'] = str_replace(array('[', ']', '-'), array('_', '', ''), $this->data['name']);
 			$editor_attr = wp_parse_args( $this->data['options']['editor'], $editor_defs );
 		}
 		else{
