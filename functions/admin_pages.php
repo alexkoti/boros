@@ -126,22 +126,24 @@ class BorosAdminPages {
 	 * Aplica as capabilities de cada página para que se possa aplicar os filtros adequados, ja que a capability padrão de admin_pages é 'manage_options'
 	 */
 	function set_pages_capabilities(){
-		foreach( $this->pages as $page_name => $options ){
-			$this->set_page_capability( $page_name, $options );
-			
-			if( isset($options['subpages']) ){
-				foreach( $options['subpages'] as $subpage_name => $sub_options ){
-					$this->set_page_capability( $subpage_name, $sub_options );
-				}
-			}
-			
-			if( isset($options['tabs']) ){
-				foreach( array_slice( $options['tabs'], 1 ) as $tab => $title ){
-					$options['page_title'] = $options['menu_title'] = $title;
-					$this->set_page_capability( "{$page_name}_{$tab}", $options );
-				}
-			}
-		}
+        foreach( $this->pages as $page_name => $options ){
+            $this->set_page_capability( $page_name, $options );
+            
+            if( isset($options['subpages']) ){
+                foreach( $options['subpages'] as $subpage_name => $sub_options ){
+                    $this->set_page_capability( $subpage_name, $sub_options );
+                    // subpage tabs permissions
+                    if( isset($sub_options['tabs']) ){
+                        $this->set_tabs_capabilities( $subpage_name, $sub_options );
+                    }
+                }
+            }
+            
+            // page tabs permissions
+            if( isset($options['tabs']) ){
+                $this->set_tabs_capabilities( $page_name, $options );
+            }
+        }
 	}
 	
 	/**
@@ -157,7 +159,18 @@ class BorosAdminPages {
 			}
 		}
 	}
-	
+    
+    /**
+     * Permissões das abas
+     * 
+     */
+    function set_tabs_capabilities( $page_name, $options ){
+        foreach( array_slice( $options['tabs'], 1 ) as $tab => $title ){
+            $options['page_title'] = $options['menu_title'] = $title;
+            $this->set_page_capability( "{$page_name}_{$tab}", $options );
+        }
+    }
+    
 	/**
 	 * Adicionar as page no admin.
 	 * Registro das pages e subpages, assim como os hooks, que farão os includes quando necessário, assim como a fila de js e css
