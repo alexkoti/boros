@@ -35,7 +35,7 @@
 /**
  * The reCAPTCHA server URL's
  */
-define("RECAPTCHA_API_SERVER", "http://www.google.com/recaptcha/api");
+define("RECAPTCHA_API_SERVER", "https://www.google.com/recaptcha/api");
 define("RECAPTCHA_API_SECURE_SERVER", "https://www.google.com/recaptcha/api");
 define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
 
@@ -230,7 +230,7 @@ function _recaptcha_mailhide_urlbase64 ($x) {
 function recaptcha_mailhide_url($pubkey, $privkey, $email) {
 	if ($pubkey == '' || $pubkey == null || $privkey == "" || $privkey == null) {
 		die ("To use reCAPTCHA Mailhide, you have to sign up for a public and private key, " .
-		     "you can do so at <a href='http://www.google.com/recaptcha/mailhide/apikey'>http://www.google.com/recaptcha/mailhide/apikey</a>");
+		     "you can do so at <a href='https://www.google.com/recaptcha/mailhide/apikey'>https://www.google.com/recaptcha/mailhide/apikey</a>");
 	}
 	
 
