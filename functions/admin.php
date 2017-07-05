@@ -23,6 +23,17 @@ function custom_admin_body_class( $a ){
 
 
 /**
+ * Corrigir https nas imagens do admin, listagem de thumbs
+ * 
+ * @link https://core.trac.wordpress.org/ticket/20996
+ * @link https://developer.wordpress.org/reference/functions/set_url_scheme/
+ * 
+ */
+add_filter( 'wp_get_attachment_url', 'set_url_scheme', 10, 2 );
+
+
+
+/**
  * ==================================================
  * FORÇAR LOGIN DIÁRIO ==============================
  * ==================================================
