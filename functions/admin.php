@@ -32,24 +32,3 @@ function custom_admin_body_class( $a ){
 add_filter( 'wp_get_attachment_url', 'set_url_scheme', 10, 2 );
 
 
-
-/**
- * ==================================================
- * FORÇAR LOGIN DIÁRIO ==============================
- * ==================================================
- * 
- * 
- */
-add_action('wp', 'force_daily_login_activation');
-function force_daily_login_activation() {
-	if ( !wp_next_scheduled( 'force_daily_login_hook' ) ) {
-		wp_schedule_event( time(), 'daily', 'force_daily_login_hook');
-	}
-}
-
-add_action('force_daily_login_hook', 'force_daily_login');
-function force_daily_login(){
-	wp_clear_auth_cookie();
-}
-
-
