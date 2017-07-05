@@ -54,7 +54,7 @@ define( 'BOROS_JS',           plugins_url( 'functions/form_elements/js/', __FILE
  * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
  */
 function version_id(){
-    if( defined('BOROS_NO_SCRIPT_CACHE') ){
+    if( defined('BOROS_NO_SCRIPT_CACHE')and BOROS_NO_SCRIPT_CACHE == true ){
         return time(); //para remover totalmente o cache;
     }
     if( defined('BOROS_VERSION_ID') ){
