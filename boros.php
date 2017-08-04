@@ -142,8 +142,7 @@ if( is_admin() ){
      * 
      */
     require 'plugin-update-checker/plugin-update-checker.php';
-    $className = PucFactory::getLatestClassVersion('PucGitHubChecker');
-    $myUpdateChecker = new $className(
+    $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
         'https://github.com/alexkoti/boros',
         __FILE__,
         'master'
