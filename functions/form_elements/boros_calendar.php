@@ -40,11 +40,9 @@ class BFE_boros_calendar extends BorosFormElement {
      * 
      */
     function set_input( $value = null ){
-        $input = '';
         $post_id = ( isset($this->context['post_id']) ) ? $this->context['post_id'] : 0;
-        $post_meta_index = "{$this->data['options']['post_meta']}_index";
         if( $this->data['options']['calendar_instance'] != false ){
-            return $this->data['options']['calendar_instance']->render_metabox( $post_id, $post_meta_index, $this->data['options']['num_months'], 'boros_calendar_save_event_dates', 'boros_calendar_save_event_dates_nonce' );
+            return $this->data['options']['calendar_instance']->render_metabox( $post_id );
         }
         else{
             return '<div class="form_element_error">Não foi definida uma instância de Boros_Calendar_Options em [options][calendar_instance]</div>';

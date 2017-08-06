@@ -33,7 +33,7 @@ class Boros_Calendar_Options {
      * Name que será usado para salvar o post_meta com todos os registros de datas do datepicker separados por vírgula.
      * 
      */
-    protected $post_meta_index = 'event_date_index';
+    protected $post_meta_index = false;
     
     /**
      * Usar o meta_box padrão da classe, caso não seja usado, deverá ser criado separadamente.
@@ -66,6 +66,7 @@ class Boros_Calendar_Options {
         $vars = array(
             'post_type',
             'post_meta',
+            'post_meta_index',
             'use_meta_box',
             'meta_box_title',
         );
@@ -76,7 +77,10 @@ class Boros_Calendar_Options {
         }
         
         // name do campo a ser salvo, será a lista de datas gmt separadas por vírgula
-        $this->post_meta_index = "{$this->post_meta}_index";
+        // caso não tenha sido definido em $config e permaneça false(padrão) será usado o sufixo _index
+        if( $this->post_meta_index == false ){
+            $this->post_meta_index = "{$this->post_meta}_index";
+        }
         
         // definir o post_type name apropriado
         $this->pt_name = Boros_Calendar::generate_post_type_name( $this->post_type, $this->post_meta ); //pre($pt_name);
@@ -125,24 +129,23 @@ class Boros_Calendar_Options {
      * 
      */
     function meta_box( $post ){
-        echo $this->render_metabox( $post->ID, $this->post_meta_index, $this->num_months, $this->nonce_action, $this->nonce_name );
+        echo $this->render_metabox( $post->ID );
     }
     
     /**
      * Exibir o campo, pode ser reutilizado caso não se queira usar o metabox da própria classe
      * 
      */
-    function render_metabox( $post_id, $post_meta, $num_months, $nonce_action, $nonce_name ){
+    function render_metabox( $post_id ){
         
-        $nonce_field = wp_nonce_field( $nonce_action, $nonce_name, true, false );
-        $name  = $post_meta;
-        $value = get_post_meta( $post_id, $post_meta, true );
+        $nonce_field = wp_nonce_field( $this->nonce_action, $this->nonce_name, true, false );
+        $value = get_post_meta( $post_id, $this->post_meta_index, true );
         
-        return  "
+        return "
         {$nonce_field}
-        <div class='date_picker_multiple_box date_picker_multiple_cols_{$num_months}'>
-            <input type='hidden' style='width:100%' name='{$name}' value='{$value}' class='date_picker_input' id='date_picker_input_{$name}'  />
-            <div class='date_picker_multiple_calendars' id='date_picker_calendars_{$name}' data-num-months='{$num_months}'></div>
+        <div class='date_picker_multiple_box date_picker_multiple_cols_{$this->num_months}'>
+            <input type='hidden' style='width:100%' name='{$this->post_meta_index}' value='{$value}' class='date_picker_input' id='date_picker_input_{$this->post_meta_index}'  />
+            <div class='date_picker_multiple_calendars' id='date_picker_calendars_{$this->post_meta_index}' data-num-months='{$this->num_months}'></div>
         </div>";
     }
     
