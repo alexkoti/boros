@@ -358,7 +358,7 @@ class Boros_Calendar {
                 'by_meta'   => "brscldr_{$pt_name}_{$this->post_meta}_{$this->pmonth}_{$this->year}",
             );
         }
-        pre($this->transient_names); //die();
+        //pre($this->transient_names); //die();
     }
     
     /**
