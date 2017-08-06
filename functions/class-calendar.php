@@ -2,11 +2,6 @@
 /**
  * Calendar
  * 
- * WARNINGS!
- * 1) devido ao limite de 64 caracteres no 'option_name' na tabela '_options', o total de caracteres usados no 'post_meta' 
- *    não poderá ultrapassar o limite de 30, segundo a seguinte fórmula: post_meta_length = (30 - post_type_length)
- * 
- * 
  * 
  * Modelo de styles para exibição da tabela em xs:
  
@@ -65,6 +60,8 @@
 
 class Boros_Calendar {
     
+    protected $ver = '0.1.1';
+    
     protected $post_type = 'post';
     
     protected $post_status = 'publish';
@@ -80,13 +77,6 @@ class Boros_Calendar {
      * 
      */
     protected $all_posts = false;
-    
-    /**
-     * Duração dos transients: 'boros_cldr_{post_type}', 'boros_cldr_{post_type}_{month}', 'boros_cldr_{post_type}_{post_meta}', 'boros_cldr_{post_type}_{post_meta}_{month}'
-     * O tamanho do name é limitado a 64 carcteres, portante é preciso manter o name conciso
-     * 
-     */
-    protected $transient_expiration = 3600;
     
     protected $timezone = 'America/Sao_Paulo';
     
@@ -197,7 +187,27 @@ class Boros_Calendar {
      * 
      */
     protected $delete_cache_var = false;
+    
+    /**
+     * Definir se vai usar o cache ou não.
+     * 
+     */
     protected $delete_cache = false;
+    
+    /**
+     * Names dos transients
+     * Os names não podem ultrapassar 37 caracteres
+     * Ver o Warning 1), na descrição da classe.
+     * 
+     */
+    protected $transient_names = array();
+    
+    /**
+     * Duração dos transients: 'brscldr_{post_type}', 'brscldr_{post_type}_{month}', 'brscldr_{post_type}_{post_meta}', 'brscldr_{post_type}_{post_meta}_{month}'
+     * O tamanho do name é limitado a 64 carcteres, portante é preciso manter o name conciso
+     * 
+     */
+    protected $transient_expiration = 3600;
     
     /**
      * Posts através de wp_query
@@ -216,21 +226,22 @@ class Boros_Calendar {
      * 
      * $config
      *     ['timezone']         string
-     *     ['post_type']        string Default 'post'
-     *     ['post_status']      string Default 'publish' 
+     *     ['post_type']        string       Default 'post'
+     *     ['post_status']      string       Default 'publish' 
      *     ['post_meta']        string|mixed Default false, define o post_meta que armazena a informação das datas do evento.
-     *                                       É necessário que o limite de caracteres desse post_meta seja:
-     *                                       post_meta_length = (30 - post_type_length); ver o Warning 1), na descrição da classe.
-     *     ['day']              string Default dia atual via time()
-     *     ['month']            string Default mês atual via time() 
-     *     ['year']             string Default ano atual via time()
-     *     ['accepted_metas']   array Array de meta_keys que os posts serão incorporados ao objeto post. Caso não declarado, 
-     *                                será retornado todos os post_metas
+     *                                       Não utilizar name muito extenso para não comprometer a key do transient. Ver generate_post_type_name()
+     *     ['day']              string       Default dia atual via time()
+     *     ['month']            string       Default mês atual via time() 
+     *     ['year']             string       Default ano atual via time()
+     *     ['accepted_metas']   array        Array de meta_keys que os posts serão incorporados ao objeto post. Caso não declarado, 
+     *                                       será retornado todos os post_metas
      *     ['taxonomies']       array|string Taxonomias que deverão ser incorporados ao objeto post. Default nenhum
-     *     ['number_heads']     bool Mostrar linha própria para os números de dias separados da linha de evento. Default true
-     *     ['weekdays_head']    array Definir as strings dos dias da semana, mostrados no head da tabela. Default empty, será usado 'weekday_initial'
-     *     ['extra_row']        bool Mostrar <row> extra para slideDown e exibição de dados. Default false
-     *     ['delete_cache_var'] string Parâmetro de url para apagar o cache. Default false
+     *     ['number_heads']     bool         Mostrar linha própria para os números de dias separados da linha de evento. Default true
+     *     ['weekdays_head']    array        Definir as strings dos dias da semana, mostrados no head da tabela. Default empty, será usado 'weekday_initial'
+     *     ['extra_row']        bool         Mostrar <row> extra para slideDown e exibição de dados. Default false
+     *     ['delete_cache_var'] string       Parâmetro de url para apagar o cache. Default false
+     *     ['delete_cache']     bool         Definir se será usado o cache ou não. Caso seja true, irá sempre requisitar no banco os posts e recriar o transient!
+     *                                       Usar apenas para desenvolvimento.
      * 
      * @param array $config (ver acima)
      * 
@@ -238,7 +249,7 @@ class Boros_Calendar {
      */
     function __construct( $config = array() ){
         global $wp_locale;
-        $this->locale = $wp_locale; pre($this->locale);
+        $this->locale = $wp_locale;
         
         $vars = array(
             'post_type',
@@ -252,6 +263,7 @@ class Boros_Calendar {
             'weekdays_head',
             'extra_row',
             'delete_cache_var',
+            'delete_cache',
         );
         foreach( $vars as $v ){
             if( isset($config[$v]) ){
@@ -300,10 +312,13 @@ class Boros_Calendar {
         if( $this->delete_cache_var != false and isset($_GET[$this->delete_cache_var]) ){
             $this->delete_cache = true;
         }
+        
+        // definir names dos transients
+        $this->set_transient_names();
     }
     
     /**
-     * 
+     * Retornar propriedades da classe
      * 
      * @ver 0.1.0
      */
@@ -312,7 +327,7 @@ class Boros_Calendar {
     }
     
     /**
-     * 
+     * Definir propriedades, bloqueado
      * 
      * @ver 0.1.0
      */
@@ -320,6 +335,77 @@ class Boros_Calendar {
         
     }
     
+    /**
+     * Definir o padrão de transients
+     * 
+     * @ver 0.1.2
+     */
+    function set_transient_names(){
+        
+        // gerar $post_type name
+        $pt_name = self::generate_post_type_name( $this->post_type, $this->post_meta );
+        
+        // definir se é baseado em date ou post_meta
+        if( $this->post_meta === false ){
+            $this->transient_names = array(
+                'all_posts' => "brscldr_{$pt_name}",
+                'by_date'   => "brscldr_{$pt_name}_{$this->pmonth}_{$this->year}",
+            );
+        }
+        else{
+            $this->transient_names = array(
+                'all_posts' => "brscldr_{$pt_name}_{$this->post_meta}",
+                'by_meta'   => "brscldr_{$pt_name}_{$this->post_meta}_{$this->pmonth}_{$this->year}",
+            );
+        }
+        pre($this->transient_names); //die();
+    }
+    
+    /**
+     * Gerar um name para o post_type dentro dos limites de 64 caracteres para wp_option.option_name.
+     * Como $post_type pode ser um array de muitos elementos, o tamanho total pode exceder o limite da coluna wp_options.option_name, já que
+     * os padrões para o transient são "_transient_{transient_name}" e "_transient_timeout_{transient_name}", sendo que ainda serão acrescentados
+     * o post_meta, mês e ano.
+     * 
+     * @ver 0.1.2
+     */
+    static function generate_post_type_name( $post_type, $post_meta ){
+        $transient_prefix_len = 27; // '_transient_timeout_brscldr_'
+        $date_prefix_len      = 8;  // '_MM_YYYY'
+        $post_meta_len        = strlen($post_meta);
+        $pt_name_limit        = 64 - ($transient_prefix_len + $date_prefix_len + $post_meta_len + 1);
+        
+        // caso $post_type seja um array, converter para string, comparando o limite de caracteres
+        if( is_array($post_type)  ){
+            // unificar os names em caso de array
+            $pt_name = implode('', $post_type);
+            // usar abreviaturas dos post_types caso o tamanho total unificado ultrapasse o limite
+            if( strlen($pt_name) > $pt_name_limit ){
+                $new = array();
+                foreach( $post_type as $pt ){
+                    $name_parts = explode( '_', str_replace('-', '_', $pt) ); // separar em partes
+                    $abbrev = '';
+                    foreach( $name_parts as $np ){
+                        $abbrev .= substr($np, 0, 2);
+                    }
+                    $new[] = $abbrev;
+                }
+                // certificar que o name retornado fique dentro dos limites
+                $pt_name = substr(implode('', $new), 0, $pt_name_limit);
+            }
+        }
+        else{
+            $pt_name = $post_type;
+        }
+        
+        return $pt_name;
+    }
+    
+    /**
+     * Retornar o transient ou novos posts, baseado no status de $delete_cache
+     * 
+     * @ver 0.1.0
+     */
     function get_transient( $transient_name ){
         if( $this->delete_cache == true ){
             return false;
@@ -352,7 +438,7 @@ class Boros_Calendar {
     function get_all_posts(){
         // verificar se já foi buscado
         if( empty($this->all_posts) ){
-            $transient_name = ( $this->post_meta === false ) ? "boros_cldr_{$this->post_type}" : "boros_cldr_{$this->post_type}_{$this->post_meta}";
+            $transient_name = $this->transient_names['all_posts'];
             $transient = $this->get_transient($transient_name);
             
             // verifica o transient
@@ -409,7 +495,7 @@ class Boros_Calendar {
      * @ver 0.1.0
      */
     function get_posts_by_date(){
-        $transient_name = "boros_cldr_{$this->post_type}_{$this->pmonth}_{$this->year}";
+        $transient_name = $this->transient_names['by_date'];
         $transient = $this->get_transient($transient_name);
         
         if( false !== $transient ){
@@ -472,7 +558,7 @@ class Boros_Calendar {
      * @ver 0.1.0
      */
     function get_posts_by_post_meta(){
-        $transient_name = "boros_cldr_{$this->post_type}_{$this->post_meta}_{$this->pmonth}_{$this->year}";
+        $transient_name = $this->transient_names['by_meta'];
         $transient = $this->get_transient($transient_name);
         
         if( false !== $transient ){
@@ -799,6 +885,7 @@ class Boros_Calendar {
     /**
      * Cabeçalho dos dias da semana
      * 
+     * @ver 0.1.2
      */
     function table_weekdays_head(){
         // padrão para iniciais
@@ -828,6 +915,11 @@ class Boros_Calendar {
         echo "\n\t</tr>\n";
     }
     
+    /**
+     * Output de navegação de tabela
+     * 
+     * @ver 0.1.0
+     */
     function calendar_table_nav( $context = 'head', $dropdown = false ){
         $center = '';
         if( $dropdown == true ){
@@ -852,6 +944,11 @@ class Boros_Calendar {
         $this->calendar_table_nav( 'head', $dropdown );
     }
     
+    /**
+     * Rodapé da tabela
+     * 
+     * @ver 0.1.0
+     */
     function show_calendar_footer( $dropdown = false ){
         $this->calendar_table_nav( 'footer', $dropdown );
     }
