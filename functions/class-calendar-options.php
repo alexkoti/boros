@@ -237,6 +237,13 @@ class Boros_Calendar_Options {
             $delete_dates[$year][] = $month;
         }
         
+        // Salvar datas de início e término do evento. Será usado nas queries.
+        update_post_meta( $post->ID, "{$this->post_meta}_start", $event_dates[0] );
+        update_post_meta( $post->ID, "{$this->post_meta}_end", end($event_dates) );
+        
+        // Salvar o post_meta name usado para salvar as datas
+        update_post_meta( $post->ID, 'boros_calendar_post_meta', $this->post_meta );
+        
         // resetar o transient respectivos
         delete_transient("brscldr_{$this->pt_name}_{$this->post_meta}");
         foreach( $delete_dates as $year => $months ){
