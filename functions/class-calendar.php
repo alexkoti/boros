@@ -279,9 +279,9 @@ class Boros_Calendar {
         
         // Definir a data de referência para o mês a ser exibido. Padrão para o dia atual
         $today = time();
-        $this->day   = isset($config['day'])   ? $config['day']   : date('d', $today); 
-        $this->month = isset($config['month']) ? $config['month'] : date('m', $today); 
-        $this->year  = isset($config['year'])  ? $config['year']  : date('Y', $today); 
+        $this->day   = (isset($config['day'])   and !empty($config['day']))   ? (int)$config['day']   : date('d', $today);
+        $this->month = (isset($config['month']) and !empty($config['month'])) ? (int)$config['month'] : date('m', $today);
+        $this->year  = (isset($config['year'])  and !empty($config['year']))  ? (int)$config['year']  : date('Y', $today);
         
         // primeiro dia do mês
         $this->first_day = mktime(0,0,0,$this->month, 1, $this->year) ; 
