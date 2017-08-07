@@ -80,6 +80,8 @@ class Boros_Calendar {
     
     protected $timezone = 'America/Sao_Paulo';
     
+    protected $datetimezone = null;
+    
     protected $day = 0;
     
     protected $month = 0;
@@ -273,6 +275,7 @@ class Boros_Calendar {
         
         // Definir timezone
         date_default_timezone_set( $this->timezone );
+        $this->datetimezone = new DateTimeZone( $this->timezone );
         
         // Definir a data de referência para o mês a ser exibido. Padrão para o dia atual
         $today = time();
@@ -962,6 +965,7 @@ class Boros_Calendar {
     function show_day_posts( $day ){
         $day_index = "{$this->year}-{$this->pmonth}-{$day['day_pad']} 00:00:00";
         $blank_day = true;
+        $day_args = array('year' => $this->year, 'month' => $this->pmonth, 'day' => $day );
         
         if( !empty($this->posts) ){
             $list_class = 'events-list';
@@ -984,7 +988,6 @@ class Boros_Calendar {
             }
             
             // mostrar dia dentro da célula caso a linha própria de dias esteja desabilitada
-            $day_args = array('year' => $this->year, 'month' => $this->pmonth, 'day' => $day );
             if( $this->number_heads == false ){
                 echo apply_filters( 'boros_calendar_cell_day_number', "<div class='day-number' data-date='{$day['day_pad']}'>{$day['day_pad']}</div>", $day_args );
             }
@@ -1005,6 +1008,11 @@ class Boros_Calendar {
             }
             else{
                 echo apply_filters( 'boros_calendar_cell_empty', '', $day_args );
+            }
+        }
+        else{
+            if( $this->number_heads == false ){
+                echo apply_filters( 'boros_calendar_cell_day_number', "<div class='day-number' data-date='{$day['day_pad']}'>{$day['day_pad']}</div>", $day_args );
             }
         }
     }
