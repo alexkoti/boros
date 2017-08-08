@@ -98,7 +98,7 @@ class Boros_Calendar {
     
     protected $year = 0;
     
-    protected $qs_year = 'ca';
+    protected $qs_year = 'cy';
     
     protected $days_in_month = 0;
     
