@@ -1106,6 +1106,44 @@ class Boros_Calendar {
     }
     
     /**
+     * Exibir strong de período de ocorrência de um evento
+     * 
+     */
+    function event_period_string( $post_id, $post_meta, $format = 'd\/m\/Y' ){
+        
+        $event_date = '';
+        
+        $event_start = get_post_meta( $post_id, "{$post_meta}_start", true );
+        $event_end   = get_post_meta( $post_id, "{$post_meta}_end", true );
+        
+        //pre($event_start);
+        //pre($event_end);
+        
+        $event_start_formated = '';
+        $event_end_formated   = '';
+        
+        if( !empty($event_start) ){
+            $event_start_formated = date_i18n( $format, strtotime( $event_start ) );
+        }
+        
+        if( $event_start != $event_end ){
+            $event_end_formated = date_i18n( $format, strtotime( $event_end ) );
+        }
+        
+        // Evento de um só dia
+        if( !empty($event_start) ){
+            $event_date = $event_start_formated;
+        }
+        
+        // Intervalo
+        if( !empty($event_start) and !empty($event_end_formated) ){
+            $event_date = sprintf( '%s a %s', $event_start_formated, $event_end_formated );
+        }
+        
+        return $event_date;
+    }
+    
+    /**
      * Javascript para extra_row
      * 
      * @ver 0.1.1
