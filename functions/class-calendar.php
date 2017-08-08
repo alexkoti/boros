@@ -98,6 +98,8 @@ class Boros_Calendar {
     
     protected $year = 0;
     
+    protected $qs_year = 'ca';
+    
     protected $days_in_month = 0;
     
     protected $first_day = 0;
@@ -107,6 +109,8 @@ class Boros_Calendar {
     protected $month_start = 0;
     
     protected $month_end = 0;
+    
+    protected $qs_month = 'cm';
     
     protected $accepted_metas = array();
     
@@ -235,6 +239,8 @@ class Boros_Calendar {
      *     ['day']              string       Default dia atual via time()
      *     ['month']            string       Default mês atual via time() 
      *     ['year']             string       Default ano atual via time()
+     *     ['qs_month']         string       Querystring para a variável mês
+     *     ['qs_year']          string       Querystring para a variável ano
      *     ['accepted_metas']   array        Array de meta_keys que os posts serão incorporados ao objeto post. Caso não declarado, 
      *                                       será retornado todos os post_metas
      *     ['taxonomies']       array|string Taxonomias que deverão ser incorporados ao objeto post. Default nenhum
@@ -247,17 +253,19 @@ class Boros_Calendar {
      * 
      * @param array $config (ver acima)
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function __construct( $config = array() ){
         global $wp_locale;
         $this->locale = $wp_locale;
         
+        // Aplicar configurações
         $vars = array(
             'post_type',
             'post_status',
             'post_meta',
-            'posts_in_years_option',
+            'qs_month',
+            'qs_year',
             'timezone',
             'accepted_metas',
             'taxonomies',
@@ -273,15 +281,15 @@ class Boros_Calendar {
             }
         }
         
-        // Definir timezone
-        date_default_timezone_set( $this->timezone );
-        $this->datetimezone = new DateTimeZone( $this->timezone );
-        
         // Definir a data de referência para o mês a ser exibido. Padrão para o dia atual
         $today = time();
         $this->day   = (isset($config['day'])   and !empty($config['day']))   ? (int)$config['day']   : date('d', $today);
         $this->month = (isset($config['month']) and !empty($config['month'])) ? (int)$config['month'] : date('m', $today);
         $this->year  = (isset($config['year'])  and !empty($config['year']))  ? (int)$config['year']  : date('Y', $today);
+        
+        // Definir timezone
+        date_default_timezone_set( $this->timezone );
+        $this->datetimezone = new DateTimeZone( $this->timezone );
         
         // primeiro dia do mês
         $this->first_day = mktime(0,0,0,$this->month, 1, $this->year) ; 
@@ -323,7 +331,7 @@ class Boros_Calendar {
     /**
      * Retornar propriedades da classe
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function __get( $var ){
         return $this->$var;
@@ -332,7 +340,7 @@ class Boros_Calendar {
     /**
      * Definir propriedades, bloqueado
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function __set( $var, $val ){
         
@@ -341,7 +349,7 @@ class Boros_Calendar {
     /**
      * Definir o padrão de transients
      * 
-     * @ver 0.1.2
+     * @since 0.1.2
      */
     function set_transient_names(){
         
@@ -370,7 +378,7 @@ class Boros_Calendar {
      * os padrões para o transient são "_transient_{transient_name}" e "_transient_timeout_{transient_name}", sendo que ainda serão acrescentados
      * o post_meta, mês e ano.
      * 
-     * @ver 0.1.2
+     * @since 0.1.2
      */
     static function generate_post_type_name( $post_type, $post_meta ){
         $transient_prefix_len = 27; // '_transient_timeout_brscldr_'
@@ -407,7 +415,7 @@ class Boros_Calendar {
     /**
      * Retornar o transient ou novos posts, baseado no status de $delete_cache
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function get_transient( $transient_name ){
         if( $this->delete_cache == true ){
@@ -421,7 +429,7 @@ class Boros_Calendar {
     /**
      * Iniciar a exibição da tabela do calendário
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function get_posts(){
         if( $this->post_meta === false ){
@@ -436,7 +444,7 @@ class Boros_Calendar {
      * Buscar uma lista completa de todos os posts, no formato anos/meses/posts
      * Salva o resultado em transient, que deverá ser deletado em caso de 'save_post', 'trashed_post', 'untrashed_post'
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function get_all_posts(){
         // verificar se já foi buscado
@@ -495,7 +503,7 @@ class Boros_Calendar {
     /**
      * Busca os posts do mês, baseado na data
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function get_posts_by_date(){
         $transient_name = $this->transient_names['by_date'];
@@ -558,7 +566,7 @@ class Boros_Calendar {
      * O post_meta precisa ser uma data no formato 'Y-m-d', e precisa de uma entrada de post_meta para cada dia de ocorrência.
      * 
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function get_posts_by_post_meta(){
         $transient_name = $this->transient_names['by_meta'];
@@ -633,7 +641,7 @@ class Boros_Calendar {
     /**
      * Adicionar os post_metas ao $post, filtrando por 'accepted_metas', caso definido
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function set_metas( $post_id ){
         $meta_values = get_post_custom($post_id);
@@ -674,7 +682,7 @@ class Boros_Calendar {
     /**
      * Criar array do calendário no formato month > week[header|events] > day > [day_number|day_events]
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function add_events_to_month(){
         
@@ -802,7 +810,7 @@ class Boros_Calendar {
     /**
      * Verificar se determinado dia possui eventos e adicionar
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function add_events_to_day( $day, $full = true ){
         $day['events'] = array();
@@ -836,7 +844,7 @@ class Boros_Calendar {
      * @todo - aplicar tags de tradução no <th>
      * @todo - criar row opcional de output completo com slideDown, semelhante ao http://bootstrap-calendar.azurewebsites.net/
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function show_calendar_table(){
         if( $this->posts == false ){
@@ -888,7 +896,7 @@ class Boros_Calendar {
     /**
      * Cabeçalho dos dias da semana
      * 
-     * @ver 0.1.2
+     * @since 0.1.2
      */
     function table_weekdays_head(){
         // padrão para iniciais
@@ -921,7 +929,7 @@ class Boros_Calendar {
     /**
      * Output de navegação de tabela
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function calendar_table_nav( $context = 'head', $dropdown = false ){
         $center = '';
@@ -941,7 +949,7 @@ class Boros_Calendar {
     /**
      * Cabeçalho da tabela
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function show_calendar_head( $dropdown = false ){
         $this->calendar_table_nav( 'head', $dropdown );
@@ -950,7 +958,7 @@ class Boros_Calendar {
     /**
      * Rodapé da tabela
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function show_calendar_footer( $dropdown = false ){
         $this->calendar_table_nav( 'footer', $dropdown );
@@ -960,7 +968,7 @@ class Boros_Calendar {
      * Output dos eventos do dia.
      * Cada evento passa pelo filtro 'boros_calendar_event_day_item_output'
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function show_day_posts( $day ){
         $day_index = "{$this->year}-{$this->pmonth}-{$day['day_pad']} 00:00:00";
@@ -1020,7 +1028,7 @@ class Boros_Calendar {
     /**
      * Link para mês anterior ou posterior
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function prev_next_month_link( $direction = 'next' ){
         
@@ -1041,34 +1049,53 @@ class Boros_Calendar {
         return apply_filters( 'boros_calendar_prev_next_month_link', $html, $direction, $date_obj, $link, $class, $this->locale->month[$date_obj->format('m')] );
     }
     
-    function month_url( $direction = 'next', $date_obj = false ){
+    /**
+     * Montar link de anterior/próximo mês, baseado em $current_date
+     * 
+     * @param string $direction('prev', 'next') - Direção da requisição. Default 'next'.
+     * @param string $current_date              - Data a partir da qual será feita a requisição de Mês anteior/próximo. Default false.
+     * @param string $compare_date              - Data considerada inicial, quando não será adicionada a querystring. A data inicial poderá
+     *                                            ter duas possibilidades:
+     *                                            1) A data corrente da calendário real:
+     *                                               Por ex.: estamos em 2017.08 e na página inicial do calendário não possuirá querystring
+     *                                            2) A data do mês inicial do evento, no caso de estar exibindo uma single com o calendário:
+     *                                               Por ex.: estamos em 2017.08, mas exibindo uma single cuja primeira ocorrência é de 2017.06.
+     *                                               Nesse caso o permalink será 'limpo' sem querystring quando estiver exibindo o mês 2017.06,
+     *                                               e mostrará a querystring em 2017.08.
+     * 
+     * @since 0.1.1
+     */
+    function month_url( $direction = 'next', $current_date = false, $compare_date = false ){
         
+        if( $current_date == false ){
+            $current_date = "{$this->year}-{$this->month}";
+        }
+        
+        $date_obj = new DateTime( $current_date );
         if( $direction == 'next' ){
             $modifier = '+1 month';
         }
         else{
             $modifier = '-1 month';
         }
-        
-        if( $date_obj == false ){
-            $date_obj = new DateTime("{$this->year}-{$this->month}");
-            $date_obj->modify($modifier);
-        }
+        $date_obj->modify($modifier);
         
         $ca = $date_obj->format('Y');
         $cm = $date_obj->format('n');
-        if( $ca == date('Y') and $cm == date('n') ){
-            return esc_url(remove_query_arg( array('ca', 'cm') ));
+        
+        $compare = new DateTime( ($compare_date != false) ? $compare_date : date('Y-m') );
+        if( $ca == $compare->format('Y') and $cm == $compare->format('m') ){
+            return esc_url(remove_query_arg( array($this->qs_year, $this->qs_month) ));
         }
         else{
-            return esc_url(add_query_arg( array('ca' => $ca, 'cm' => $cm) ));
+            return esc_url(add_query_arg( array($this->qs_year => $ca, $this->qs_month => $cm) ));
         }
     }
     
     /**
      * Dropdown apenas com os meses que possuem posts
      * 
-     * @ver 0.1.0
+     * @since 0.1.0
      */
     function posts_dropdown( $echo = true ){
         
@@ -1085,7 +1112,7 @@ class Boros_Calendar {
                     $selected = ($this->year == $year and $this->month == $month ) ? ' selected="selected"' : '';
                     $month_name = $this->locale->month_genitive[$month];
                     $date = new DateTime("{$year}-{$month}");
-                    $link = add_query_arg( array('ca' => $date->format('Y'), 'cm' => $date->format('n')) );
+                    $link = add_query_arg( array($this->qs_year => $date->format('Y'), $this->qs_month => $date->format('n')) );
                     $html = "<option value='{$link}' {$selected}>{$month_name} de {$year}</option>";
                     $dropdown .= $html;
                     
@@ -1146,7 +1173,7 @@ class Boros_Calendar {
     /**
      * Javascript para extra_row
      * 
-     * @ver 0.1.1
+     * @since 0.1.1
      */
     function extra_row_javascript(){
         ?>
