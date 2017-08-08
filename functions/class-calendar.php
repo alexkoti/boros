@@ -4,56 +4,57 @@
  * 
  * 
  * Modelo de styles para exibição da tabela em xs:
-```
-    table.calendar , 
-    table.calendar thead, 
-    table.calendar tbody, 
-    table.calendar th, 
-    table.calendar td, 
-    table.calendar tr {
-        display:block;
-    }
-    table.calendar .has-events {
-        display:block;
-    }
-    table.calendar td.cell-events {
-        height:auto;
-    }
-    table.calendar {
-        border:0;
-        border-bottom:1px solid #fdc222;
-    }
-    table.calendar th,
-    table.calendar td,
-    table.calendar td.cell-header,
-    table.calendar .event-btn-ovelay {
-        display:none;
-        border:none;
-    }
-    table.calendar tr{
-        border:none;
-    }
-    table.calendar td.cell-events {
-        border:1px solid #fdc222;
-        border-bottom:none;
-        padding:0;
-    }
-    table.calendar td.cell-events .events-list {
-        display: block;
-    }
-    table.calendar tr.week-extra td {
-        border:0;
-    }
-    .agenda-no-posts {
-        background-color: #fff4d4;
-        border: 2px solid #fff;
-        padding:10px;
-        text-align:center;
-    }
-    table.empty-calendar {
-        display:none;
-    }
-```
+ * 
+ *  <css>
+ *      table.calendar , 
+ *      table.calendar thead, 
+ *      table.calendar tbody, 
+ *      table.calendar th, 
+ *      table.calendar td, 
+ *      table.calendar tr {
+ *          display:block;
+ *      }
+ *      table.calendar .has-events {
+ *          display:block;
+ *      }
+ *      table.calendar td.cell-events {
+ *          height:auto;
+ *      }
+ *      table.calendar {
+ *          border:0;
+ *          border-bottom:1px solid #fdc222;
+ *      }
+ *      table.calendar th,
+ *      table.calendar td,
+ *      table.calendar td.cell-header,
+ *      table.calendar .event-btn-ovelay {
+ *          display:none;
+ *          border:none;
+ *      }
+ *      table.calendar tr{
+ *          border:none;
+ *      }
+ *      table.calendar td.cell-events {
+ *          border:1px solid #fdc222;
+ *          border-bottom:none;
+ *          padding:0;
+ *      }
+ *      table.calendar td.cell-events .events-list {
+ *          display: block;
+ *      }
+ *      table.calendar tr.week-extra td {
+ *          border:0;
+ *      }
+ *      .agenda-no-posts {
+ *          background-color: #fff4d4;
+ *          border: 2px solid #fff;
+ *          padding:10px;
+ *          text-align:center;
+ *      }
+ *      table.empty-calendar {
+ *          display:none;
+ *      }
+ *  </css>
  * 
  * 
  */
