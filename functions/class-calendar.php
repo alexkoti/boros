@@ -4,7 +4,7 @@
  * 
  * 
  * Modelo de styles para exibição da tabela em xs:
- 
+```
     table.calendar , 
     table.calendar thead, 
     table.calendar tbody, 
@@ -53,6 +53,7 @@
     table.empty-calendar {
         display:none;
     }
+```
  * 
  * 
  */
@@ -713,9 +714,9 @@ class Boros_Calendar {
             $month_table[$week_count][] = array(
                 'day_num' => ' &nbsp; ',
                 'day_pad' => ' &nbsp; ',
-                'mday' => 'prev',
-                'class' => 'blank-day',
-                'active' => false,
+                'mday'    => 'prev',
+                'class'   => 'blank-day',
+                'active'  => false,
             );
             $blank = ($blank - 1);
             $day_count++;
@@ -726,20 +727,20 @@ class Boros_Calendar {
         
         while ( $day_num <= $this->days_in_month ){
             // Definir a class do dia, verificando se o mesmo está no presente ou passado
-            $today = date('Ymd');
+            $today   = date('Ymd');
             $day_pad = sprintf('%02d', $day_num);
             
             if( "{$this->year}{$this->pmonth}{$day_pad}" < $today ){
                 $active = false;
-                $class = 'past-day';
+                $class  = 'past-day';
             }
             elseif( "{$this->year}{$this->pmonth}{$day_pad}" == $today ){
                 $active = true;
-                $class = 'today';
+                $class  = 'today';
             }
             else{
                 $active = true;
-                $class = 'future-day';
+                $class  = 'future-day';
             }
             
             // identificar se é sexta ou sábado - precisam de class para o posicionamento do popup
@@ -772,9 +773,9 @@ class Boros_Calendar {
             $month_table[$week_count][] = array(
                 'day_num' => ' &nbsp; ',
                 'day_pad' => ' &nbsp; ',
-                'mday' => 'next',
-                'class' => 'blank-day',
-                'active' => false,
+                'mday'    => 'next',
+                'class'   => 'blank-day',
+                'active'  => false,
             );
             $day_count++; 
         }
@@ -976,22 +977,22 @@ class Boros_Calendar {
         $day_args = array('year' => $this->year, 'month' => $this->pmonth, 'day' => $day );
         
         if( !empty($this->posts) ){
-            $list_class = 'events-list';
+            $list_class         = 'events-list';
             $show_events_button = '';
-            $events_list = array();
-            $events_available = array();
-            $output = array();
+            $events_list        = array();
+            $events_available   = array();
+            $output             = array();
             
             if( $this->extra_row == true ){
                 $list_class = 'events-list hidden';
             }
             foreach( $this->posts as $evt ){
                 if( in_array($day_index, $evt->post_days) ){
-                    $evt->url = get_permalink($evt->ID);
-                    $evt->title = apply_filters('the_title', $evt->post_title);
-                    $item = sprintf('<li><a href="%s">%s</a></li>', $evt->url, $evt->title);
+                    $evt->url           = get_permalink($evt->ID);
+                    $evt->title         = apply_filters('the_title', $evt->post_title);
+                    $item               = sprintf('<li><a href="%s">%s</a></li>', $evt->url, $evt->title);
                     $events_available[] = $evt;
-                    $events_list[] = apply_filters( 'boros_calendar_event_day_item_output', $item, array('post' => $evt, 'day' => $day) );
+                    $events_list[]      = apply_filters( 'boros_calendar_event_day_item_output', $item, array('post' => $evt, 'day' => $day) );
                 }
             }
             
@@ -1011,7 +1012,7 @@ class Boros_Calendar {
                 $output[] = "<ul class='{$list_class}'>";
                 $output[] = implode('', $events_list);
                 $output[] = '</ul>';
-                $output = apply_filters( 'boros_calendar_event_day_output', $output, $filter_args );
+                $output   = apply_filters( 'boros_calendar_event_day_output', $output, $filter_args );
                 echo implode('', $output);
             }
             else{
@@ -1034,11 +1035,11 @@ class Boros_Calendar {
         
         if( $direction == 'next' ){
             $modifier = '+1 month';
-            $class = 'prev-next-month next';
+            $class    = 'prev-next-month next';
         }
         else{
             $modifier = '-1 month';
-            $class = 'prev-next-month prev';
+            $class    = 'prev-next-month prev';
         }
         $date_obj = new DateTime("{$this->year}-{$this->month}");
         $date_obj->modify($modifier);
@@ -1109,12 +1110,12 @@ class Boros_Calendar {
             $dropdown = "<select class='{$class}'><option>-</option>";
             foreach( $this->all_posts as $year => $months ){
                 foreach( $months as $month => $events ){
-                    $selected = ($this->year == $year and $this->month == $month ) ? ' selected="selected"' : '';
+                    $selected   = ($this->year == $year and $this->month == $month ) ? ' selected="selected"' : '';
                     $month_name = $this->locale->month_genitive[$month];
-                    $date = new DateTime("{$year}-{$month}");
-                    $link = add_query_arg( array($this->qs_year => $date->format('Y'), $this->qs_month => $date->format('n')) );
-                    $html = "<option value='{$link}' {$selected}>{$month_name} de {$year}</option>";
-                    $dropdown .= $html;
+                    $date       = new DateTime("{$year}-{$month}");
+                    $link       = add_query_arg( array($this->qs_year => $date->format('Y'), $this->qs_month => $date->format('n')) );
+                    $html       = "<option value='{$link}' {$selected}>{$month_name} de {$year}</option>";
+                    $dropdown  .= $html;
                     
                     $dropdown_opts[] = array(
                         'selected'   => $selected,
