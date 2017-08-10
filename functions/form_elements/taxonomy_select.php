@@ -20,6 +20,7 @@ class BFE_taxonomy_select extends BorosFormElement {
 		$this->defaults['options']['taxonomy'] = 'category';
 		$this->defaults['options']['show_option_all'] = ' — ';
 		$this->defaults['options']['hide_empty'] = false;
+		$this->defaults['options']['hierarchical'] = false;
 	}
 	
 	function set_input( $value = null ){
@@ -76,19 +77,20 @@ class BFE_taxonomy_select extends BorosFormElement {
 			'class'           => $this->data['attr']['class'] . "taxonomy_select taxonomy_{$this->data['options']['taxonomy']}",
 			'show_option_all' => $this->data['options']['show_option_all'],
 			'hide_empty'      => $this->data['options']['hide_empty'],
+			'hierarchical'    => $this->data['options']['hierarchical'],
 			'echo'            => false,
 		);
 		
 		// definir o name conforme o contexto
 		// @todo melhorar para tentar deixar essa parte automática, mas avaliar se existirão casos onde
 		//       um meta_box poderá precisar de um name diferente de tax_input[]
-		if( $this->defaults['options']['type'] == 'post_meta' ){
+		if( $this->data['options']['type'] == 'post_meta' ){
 			$args['name'] = "tax_input[{$this->data['options']['taxonomy']}]";
 		}
-		elseif( $this->defaults['options']['type'] == 'option' ){
+		elseif( $this->data['options']['type'] == 'option' ){
 			$args['name'] = $this->data['name'];
 		}
-		elseif( $this->defaults['options']['type'] == 'term_meta' ){
+		elseif( $this->data['options']['type'] == 'term_meta' ){
 			$args['name'] = $this->data['name'];
 		}
 		

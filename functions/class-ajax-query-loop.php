@@ -32,6 +32,7 @@ abstract class Boros_Ajax_Query_Loop {
 		'page_title' => 'Page title',
 		'menu_title' => 'Menu title',
 		'menu_slug'  => 'page-slug',
+		'parent'     => false,
 		'intro_html' => '<p>Page intro</p>',
 	);
 	
@@ -47,7 +48,12 @@ abstract class Boros_Ajax_Query_Loop {
 		$this->ajax_args  = boros_parse_args( $this->ajax_args, $args['ajax_args'] );
 		$this->query_args = $args['query_args'];
 		
-		add_action( 'admin_menu', array($this, 'add_menu_page') );
+		if( $this->page_args['parent'] == false ){
+			add_action( 'admin_menu', array($this, 'add_menu_page') );
+		}
+		else{
+			add_action( 'admin_menu', array($this, 'add_submenu_page') );
+		}
 		add_action( "wp_ajax_{$this->ajax_args['action']}", array($this, 'ajax') );
 	}
 	
@@ -57,6 +63,15 @@ abstract class Boros_Ajax_Query_Loop {
 	 */
 	final public function add_menu_page(){
 		add_menu_page( $this->page_args['page_title'], $this->page_args['menu_title'], 'activate_plugins', $this->page_args['menu_slug'], array($this, 'output') );
+		add_action( 'admin_print_footer_scripts', array($this, 'footer') );
+	}
+	
+	/**
+	 * Registrar subpágina do admin
+	 * 
+	 */
+	final public function add_submenu_page(){
+		add_submenu_page( $this->page_args['parent'], $this->page_args['page_title'], $this->page_args['menu_title'], 'activate_plugins', $this->page_args['menu_slug'], array($this, 'output') );
 		add_action( 'admin_print_footer_scripts', array($this, 'footer') );
 	}
 	
@@ -78,11 +93,12 @@ abstract class Boros_Ajax_Query_Loop {
 							boros_ajax_query_loop.btn = $(this);
 							boros_ajax_query_loop.btn.prop('disabled', true);
 							var results = $('#boros-ajax-query-loop-results');
+							results.html('');
 							
 							// verificar se existe algum offset definido por campo de texto
 							if( $('#boros_ajax_query_loop_initial_offset').length && $('#boros_ajax_query_loop_initial_offset').val() > 0 ){
 								boros_ajax_query_loop_offset = $('#boros_ajax_query_loop_initial_offset').val();
-                                $('#boros-ajax-query-loop-results').attr('start', Number(boros_ajax_query_loop_offset) + 1);
+								$('#boros-ajax-query-loop-results').attr('start', Number(boros_ajax_query_loop_offset) + 1);
 							}
 							boros_ajax_query_loop.proccess_item();
 						});
@@ -105,14 +121,22 @@ abstract class Boros_Ajax_Query_Loop {
 									boros_ajax_query_loop.btn.prop('disabled', false);
 								} else {
 									console.log(resp);
+									// append do resultado independente se irá continuar o loop
+									$('#boros-ajax-query-loop-results').append(resp.html);
+									// continuar o loop
 									if( resp.offset > 0 ){
 										boros_ajax_query_loop_offset = resp.offset;
 										boros_ajax_query_loop.proccess_item();
 									}
-									$('#boros-ajax-query-loop-results').append(resp.html);
+									// reabilitar o botão
+									else if( resp.post_id == 0 ){
+										boros_ajax_query_loop_offset = 0;
+										boros_ajax_query_loop.btn.prop('disabled', false);
+									}
 								}
 							},
 							error: function(XMLHttpRequest, textStatus, errorThrown) {
+								alert('Ocorreu um erro na requisição, consultar o console.');
 								console.log('erro');
 								console.log(textStatus);
 								console.log(errorThrown);
@@ -124,10 +148,54 @@ abstract class Boros_Ajax_Query_Loop {
 				boros_ajax_query_loop.init();
 			});
 			</script>
+            <style type="text/css">
+            #boros-ajax-query-loop-results li {
+                background-color: #fff;
+                border: 1px dotted #ccc;
+                margin: 0 0 10px;
+                padding: 10px;
+            }
+            #boros-ajax-query-loop-results li .pre_box {
+                margin: 0 0 10px;
+            }
+            #boros-ajax-query-loop-results li .message_title {
+                border: 1px dotted #ccc;
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0 0 10px;
+                padding: 10px;
+            }
+            #boros-ajax-query-loop-results li .message {
+                border: 1px dotted #ccc;
+                margin: 0 0 10px;
+                padding: 10px;
+            }
+            #boros-ajax-query-loop-results li .alert {
+                border-color: red;
+                color: red;
+            }
+            #boros-ajax-query-loop-results li .success {
+                border-color: green;
+                color: green;
+            }
+            #boros-ajax-query-loop-results li .divider {
+                border-top: 1px dotted #ccc;
+                margin: 20px 0;
+            }
+            </style>
 			<?php
 		}
 	}
-	
+    
+    final public function ajax_response( $offset, $post_id, $status = 'success', $message ){
+        echo json_encode(array(
+            'offset'  => $offset,
+            'post_id' => $post_id,
+            'html'    => "<li class='text_{$status}'>{$message}</li>",
+        ));
+        die();
+    }
+    
 	final public function output(){
 		?>
 		<div class="wrap">

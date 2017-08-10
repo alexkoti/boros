@@ -3,7 +3,7 @@
 Plugin Name: Boros Elements
 Plugin URI: https://github.com/alexkoti/boros
 Description: Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets e form_elements
-Version: 1.0.3
+Version: 1.5.0
 Author: Alex Koti
 Author URI: http://alexkoti.com
 License: GPL2
@@ -20,7 +20,7 @@ License: GPL2
 define( 'BOROS', dirname(__FILE__) );
 define( 'BOROS_FUNCTIONS',    BOROS . DIRECTORY_SEPARATOR . 'functions' );
 define( 'BOROS_ELEMENTS',     BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'form_elements' );
-define( 'BOROS_LIBS',         BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'libs' );
+define( 'BOROS_LIBS',         BOROS . DIRECTORY_SEPARATOR . 'vendors' );
 
 // URLS
 define( 'BOROS_URL',          plugins_url( '/', __FILE__ ) );
@@ -54,7 +54,7 @@ define( 'BOROS_JS',           plugins_url( 'functions/form_elements/js/', __FILE
  * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
  */
 function version_id(){
-    if( defined('BOROS_NO_SCRIPT_CACHE') ){
+    if( defined('BOROS_NO_SCRIPT_CACHE')and BOROS_NO_SCRIPT_CACHE == true ){
         return time(); //para remover totalmente o cache;
     }
     if( defined('BOROS_VERSION_ID') ){
@@ -142,8 +142,7 @@ if( is_admin() ){
      * 
      */
     require 'plugin-update-checker/plugin-update-checker.php';
-    $className = PucFactory::getLatestClassVersion('PucGitHubChecker');
-    $myUpdateChecker = new $className(
+    $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
         'https://github.com/alexkoti/boros',
         __FILE__,
         'master'
@@ -151,3 +150,31 @@ if( is_admin() ){
 }
 
 
+
+
+
+/**
+ * ==================================================
+ * FORÇAR LOGIN DIÁRIO ==============================
+ * ==================================================
+ * É necessário utilizar no hook de ativação
+ * 
+ * @link https://codex.wordpress.org/Function_Reference/wp_schedule_event
+ * 
+ */
+register_activation_hook( __FILE__, 'force_daily_login_activation' );
+function force_daily_login_activation() {
+    if( !wp_next_scheduled( 'force_daily_login_hook' ) ){
+        wp_schedule_event( time(), 'daily', 'force_daily_login_hook');
+    }
+}
+
+add_action('force_daily_login_hook', 'force_daily_login');
+function force_daily_login(){
+    wp_clear_auth_cookie();
+}
+
+register_deactivation_hook(__FILE__, 'force_daily_login_deactivation');
+function force_daily_login_deactivation() {
+    wp_clear_scheduled_hook( 'force_daily_login_hook ');
+}

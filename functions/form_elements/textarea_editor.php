@@ -82,7 +82,7 @@ class BFE_textarea_editor extends BorosFormElement {
 		}
 		
 		if( is_array($this->data['options']['editor']) ){
-			$this->data['options']['editor']['editor_type'] = str_replace(array('[', ']'), array('_', ''), $this->data['name']);
+			$this->data['options']['editor']['editor_type'] = str_replace(array('[', ']', '-'), array('_', '', ''), $this->data['name']);
 			$editor_attr = wp_parse_args( $this->data['options']['editor'], $editor_defs );
 		}
 		else{
@@ -193,6 +193,15 @@ class BFE_textarea_editor extends BorosFormElement {
 					strikethrough : {inline : 'del'}
 				}
 			};
+            
+            <?php
+            // adicionar configurações adicionais
+            if( isset($editor_attr['additional_config']) ){
+                foreach( $editor_attr['additional_config'] as $k => $v ){
+                    echo "base_config.{$k} = {$v};";
+                }
+            }
+            ?>
 			
 			var <?php echo $editor_attr['editor_type']; ?>_config = jQuery.extend(true, {}, base_config);
 			global_tinymce_config['by_class']['editor_type_<?php echo $editor_attr['editor_type']; ?>'] = <?php echo $editor_attr['editor_type']; ?>_config;

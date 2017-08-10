@@ -9,6 +9,50 @@
  * @TODO: revisar e separar as functions antigas para deprecated(setor no final do arquivo
  */
 
+/**
+ * Shorthand taxonomy labels
+ * 
+ */
+function boros_config_taxonomy_labels( $singular, $plural, $gender = 'masc', $custom = array() ){
+    
+    $l = ($gender == 'masc') ? 'o' : 'a';
+    
+    $labels = array(
+        'name'                       => $plural,
+        'singular_name'              => $singular,
+        'menu_name'                  => $plural,
+        'all_items'                  => "Tod{$l}s {$l}s {$plural}",
+        'view_item'                  => "Ver {$singular}",
+        'edit_item'                  => "Editar {$singular}",
+        'update_item'                => "Atualizar {$singular}",
+        'add_new_item'               => "Adicionar nov{$l} {$singular}",
+        'new_item_name'              => "Nome da nov{$l} {$singular}",
+        'search_items'               => "Buscar {$singular}",
+        'not_found'                  => ($gender == 'masc') ? "Nenhum {$singular} encontrado" : "Nenhuma {$singular} encontrada",
+        // hierarchical
+        'parent_item'                => "{$singular} Ascendente",
+        'parent_item_colon'          => "{$singular} Ascendente:",
+        // NON hierarchical
+        'popular_items'              => "{$plural} Populares",
+        'separate_items_with_commas' => "Separar {$plural} com vírgulas",
+        'add_or_remove_items'        => "Adicionar ou remover {$plural}",
+        'choose_from_most_used'      => "Selecionar d{$l}s {$plural} mais usad{$l}s",
+    );
+    
+    /**
+     * Permitir custom labels
+     * 
+     */
+    if( !empty($custom) ){
+        foreach( $labels as $key => $label ){
+            if( isset($custom[$key]) ){
+                $labels[$key] = sprintf( $custom[$key], $singular, $plural );
+            }
+        }
+    }
+    
+    return $labels;
+}
 
 /**
  * GET SINGLE TERM ==================================

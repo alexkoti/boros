@@ -130,14 +130,7 @@ function tdd_oembed_filter($html, $url, $attr, $post_ID){
 		return "<div class='cleaner'></div><div class='videoWrapper embed-responsive embed-responsive-16by9'>{$html}</div>";
 	}
 	
-	// Issuu
-	if( strpos($url, 'issuu') !== false ){
-		$url_parts = parse_url($url);
-		parse_str($url_parts['query'], $url_args);
-		return strip_tags("<div class='cleaner'></div><div class='issuuWrapper'><iframe width='100%' height='100%' src='//e.issuu.com/embed.html#{$url_args['e']}' frameborder='0' allowfullscreen></iframe></div>", '<iframe><div>');
-	}
-	
-    return "<div class='cleaner'></div><div class='responsiveWrapper'>{$html}</div>";
+	return "<div class='cleaner'></div><div class='responsiveWrapper'>{$html}</div>";
 }
 
 

@@ -192,10 +192,16 @@ function IMAGE( $args, $echo = true ){
  * @return string - a url atual pedida no navegador
  */
 function self_url( $args = array() ){
-	$url = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-	$url = add_query_arg( $args, $url );
-	$url = apply_filters( 'boros_self_url', $url, $args );
-	return $url;
+    if ( (! empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') || (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (! empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ){
+        $scheme = 'https';
+    } else {
+        $scheme = 'http';
+    }
+    
+    $url = "{$scheme}://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+    $url = add_query_arg( $args, $url );
+    $url = apply_filters( 'boros_self_url', $url, $args );
+    return $url;
 }
 
 

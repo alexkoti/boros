@@ -178,34 +178,6 @@ function url_params( url ){
  */
 function getParameterByName( name, str ){name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");var regexS = "[\\?&]"+name+"=([^&#]*)";var regex = new RegExp( regexS );var results = regex.exec( str );if( results == null ){return "";}else{return decodeURIComponent(results[1].replace(/\+/g, " "));}}
 
-/**
- * #URL_PARSER 2
- * Retorna um objeto json, bem fácil de manipular, com possibilidade de usar jQuery.param() para devolver a url formatada novamente. Exemplo
-<code>
-	var urlvars = url_params( $(foo).attr('href') );
-	urlvars.serie = 123; // editar paramêtro 'serie'
-	
-	// voltar para url
-	var new_url = $(foo).attr('href').split('?')[0] + '?' + $.param(urlvars);
-	$(foo).attr('href', new_url);
-</code>
- * 
- * @link http://stackoverflow.com/questions/901115/get-query-string-values-in-javascript/2880929#2880929
- */
-function url_params( url ){
-	var urlParams = {};
-	var e,
-	a = /\+/g,  // Regex for replacing addition symbol with a space
-	r = /([^&=]+)=?([^&]*)/g,
-	d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-	q = url.split('?')[1];
-	
-	while (e = r.exec(q))
-		urlParams[d(e[1])] = d(e[2]);
-	
-	return urlParams;
-}
-
 /** 
  * #IN_ARRAY
  * 

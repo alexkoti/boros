@@ -67,10 +67,10 @@ function boros_verify_approved_user( $user_id ){
  * 
  * @http://premium.wpmudev.org/blog/email-login/
  */
-if( !function_exists('dr_email_login_authenticate') ){
-	remove_filter( 'authenticate', 'wp_authenticate_username_password', 20 );
-	add_filter('authenticate', 'boros_authenticate', 20, 3);
-}
+//if( !function_exists('dr_email_login_authenticate') ){
+//	remove_filter( 'authenticate', 'wp_authenticate_username_password', 20 );
+//	add_filter('authenticate', 'boros_authenticate', 20, 3);
+//}
 
 function boros_authenticate($user, $email, $password){
 	//Check for empty fields

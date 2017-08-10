@@ -23,22 +23,12 @@ function custom_admin_body_class( $a ){
 
 
 /**
- * ==================================================
- * FORÇAR LOGIN DIÁRIO ==============================
- * ==================================================
+ * Corrigir https nas imagens do admin, listagem de thumbs
  * 
+ * @link https://core.trac.wordpress.org/ticket/20996
+ * @link https://developer.wordpress.org/reference/functions/set_url_scheme/
  * 
  */
-add_action('wp', 'force_daily_login_activation');
-function force_daily_login_activation() {
-	if ( !wp_next_scheduled( 'force_daily_login_hook' ) ) {
-		wp_schedule_event( time(), 'daily', 'force_daily_login_hook');
-	}
-}
-
-add_action('force_daily_login_hook', 'force_daily_login');
-function force_daily_login(){
-	wp_clear_auth_cookie();
-}
+add_filter( 'wp_get_attachment_url', 'set_url_scheme', 10, 2 );
 
 

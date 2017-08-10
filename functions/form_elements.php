@@ -502,6 +502,7 @@ class BorosFormElement {
 		'label_helper' => '',
 		'index' => 0,
 		'in_duplicate_group' => false,
+		'skip_save' => false,
 		//'errors' => array(),
 	);
 	
@@ -1036,7 +1037,13 @@ class BorosFormElement {
 		 * 
 		 */
 		//pre($this->in_duplicate_group);
-		if( ($this->data['in_duplicate_group'] == false) and !empty($this->data['name']) and ($this->data['type'] != 'html') and ($this->data['type'] != 'separator') ){
+		if( 
+			$this->data['in_duplicate_group'] == false 
+			and $this->data['skip_save'] == false 
+			and !empty($this->data['name']) 
+			and ($this->data['type'] != 'html') 
+			and ($this->data['type'] != 'separator') 
+		){
 			//pal('nonce');
 			// normalizar o name do nonce, pois em caso de taxonomias possui colchetes (tax_input[category])
 			$field_name = str_replace(array('[', ']'), array('_', ''), $this->data['name']);

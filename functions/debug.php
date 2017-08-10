@@ -11,6 +11,19 @@ if( !function_exists('pre') ){
  * 
  */
 
+/**
+ * ==================================================
+ * VARIÁVEIS DEFINIDAS ==============================
+ * ==================================================
+ * Listar todas as variáveis globais definidas até o momento.
+ * 
+ * @link http://stackoverflow.com/a/13629899
+ * 
+ */
+//$ignore = array('GLOBALS', '_FILES', '_COOKIE', '_POST', '_GET', '_SERVER', '_ENV', 'ignore');
+//$vars   = array_diff_key(get_defined_vars($GLOBALS) + array_flip($ignore), array_flip($ignore));
+//pre($vars);
+
 
 
 /**
@@ -107,6 +120,24 @@ function pre( $var = false, $legend = '', $opened = true, $global_controls = fal
 function pal( $var = false, $legend = '' ){
 	$pre = PRE::init();
 	$pre->pal( $var, $legend );
+}
+
+/**
+ * ==================================================
+ * PCM ==============================================
+ * ==================================================
+ * {P}rint {C}o{M}ment
+ * Exibir string em comentário HTML
+ *
+ * @param mix $message mensagem que deseja exibir
+ * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
+ */
+function pcm( $var = false, $legend = '', $pad = 0 ){
+    if( !empty($legend) ){
+        $legend = "{$legend} : ";
+    }
+    $legend = str_pad($legend, $pad, ' ', STR_PAD_LEFT);
+    echo "<!-- {$legend}{$var} -->\n";
 }
 
 /**
