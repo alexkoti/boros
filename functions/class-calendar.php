@@ -1071,9 +1071,12 @@ class Boros_Calendar {
         
         if( $current_date == false ){
             $current_date = "{$this->year}-{$this->month}";
+            $date_obj = new DateTime( $current_date );
+        }
+        else{
+            $date_obj = $current_date;
         }
         
-        $date_obj = new DateTime( $current_date );
         if( $direction == 'next' ){
             $modifier = '+1 month';
         }
