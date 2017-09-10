@@ -24,14 +24,10 @@ class BFE_boros_calendar extends BorosFormElement {
     /**
      * Opções
      * 
-     * $post_meta         post_meta que devera ser usado
-     * $num_months        número de meses a mostrar simultâneamente
      * $calendar_instance instância de Boros_Calendar_Options, obrigatório. Será usado para renderizar o campo
      * 
      */
     function add_defaults(){
-        $this->defaults['options']['post_meta'] = 'event_date';
-        $this->defaults['options']['num_months'] = 3;
         $this->defaults['options']['calendar_instance'] = false;
     }
     
