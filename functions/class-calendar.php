@@ -309,8 +309,16 @@ class Boros_Calendar {
         $this->month_slug   = $this->locale->month[$this->month_number];
         $this->month_abbrev = $this->locale->month_abbrev[$this->month_slug];
         
-        // head com os dias da semana
-        if( $this->weekdays_head )
+        // adicionar os dias da semana sem "-feira"
+        $this->locale->weekday_name = array(
+            'domingo',
+            'segunda',
+            'terça',
+            'quarta',
+            'quinta',
+            'sexta',
+            'sábado',
+        );
         
         // início e fim do mês
         $this->month_start = "{$this->year}-{$this->pmonth}-00";
@@ -540,16 +548,7 @@ class Boros_Calendar {
                     
                     // Taxonomias
                     if( !empty($this->taxonomies) ){
-                        foreach( (array)$this->taxonomies as $tax ){
-                            $terms = wp_get_post_terms( $post->ID, $tax );
-                            $post_terms = array();
-                            if( !empty($terms) ){
-                                foreach( $terms as $t ){
-                                    $post_terms[] = $t;
-                                }
-                            }
-                            $post->$tax = $post_terms;
-                        }
+                        $post->post_terms = $this->add_post_terms( $post );
                     }
                     
                     $this->posts[] = $post;
@@ -616,16 +615,7 @@ class Boros_Calendar {
                     
                     // Taxonomias
                     if( !empty($this->taxonomies) ){
-                        foreach( (array)$this->taxonomies as $tax ){
-                            $terms = wp_get_post_terms( $post->ID, $tax );
-                            $post_terms = array();
-                            if( !empty($terms) ){
-                                foreach( $terms as $t ){
-                                    $post_terms[] = $t;
-                                }
-                            }
-                            $post->$tax = $post_terms;
-                        }
+                        $post->post_terms = $this->add_post_terms( $post );
                     }
                     
                     $this->posts[] = $post;
@@ -638,6 +628,22 @@ class Boros_Calendar {
         }
         
         $this->add_events_to_month();
+    }
+    
+    function add_post_terms( $post ){
+        $tax_terms = array();
+        foreach( (array)$this->taxonomies as $tax ){
+            $terms = wp_get_post_terms( $post->ID, $tax );
+            $post_terms = array();
+            if( !empty($terms) ){
+                foreach( $terms as $t ){
+                    $post_terms[] = $t;
+                }
+            }
+            $tax_terms[$tax] = $post_terms;
+        }
+        
+        return $tax_terms;
     }
     
     /**
@@ -716,6 +722,7 @@ class Boros_Calendar {
                 'day_num' => ' &nbsp; ',
                 'day_pad' => ' &nbsp; ',
                 'mday'    => 'prev',
+                'wday'    => '',
                 'class'   => 'blank-day',
                 'active'  => false,
             );
@@ -728,6 +735,7 @@ class Boros_Calendar {
         
         while ( $day_num <= $this->days_in_month ){
             // Definir a class do dia, verificando se o mesmo está no presente ou passado
+            $wdayn   = date('w');
             $today   = date('Ymd');
             $day_pad = sprintf('%02d', $day_num);
             
@@ -744,6 +752,8 @@ class Boros_Calendar {
                 $class  = 'future-day';
             }
             
+            $wday = $this->get_wday( $wdayn );
+            
             // identificar se é sexta ou sábado - precisam de class para o posicionamento do popup
             if( $day_count >= 5 ){
                 $class .= ' row-last-days';
@@ -752,6 +762,7 @@ class Boros_Calendar {
             $month_table[$week_count][] = array(
                 'day_num' => $day_num,
                 'day_pad' => $day_pad,
+                'wday'    => $wday,
                 'mday'    => $day_num,
                 'class'   => $class,
                 'attr'    => '',
@@ -809,6 +820,17 @@ class Boros_Calendar {
         //pre($this->posts_table, 'output_table', false);
     }
     
+    function get_wday( $wday_index = 0 ){
+        $i = $this->locale->weekday[$wday_index];
+        $wday = array(
+            'index'   => $wday_index,
+            'abbrev'  => $this->locale->weekday_abbrev[$i],
+            'initial' => $this->locale->weekday_initial[$i],
+            'name'    => $this->locale->weekday_name[$wday_index],
+        );
+        return $wday;
+    }
+    
     /**
      * Verificar se determinado dia possui eventos e adicionar
      * 
@@ -844,7 +866,7 @@ class Boros_Calendar {
      * Output da tabela do calendário
      * 
      * @todo - aplicar tags de tradução no <th>
-     * @todo - criar row opcional de output completo com slideDown, semelhante ao http://bootstrap-calendar.azurewebsites.net/
+     * @todo - tfoot
      * 
      * @since 0.1.0
      */
@@ -865,6 +887,7 @@ class Boros_Calendar {
         $this->table_weekdays_head();
         
         // loop
+        echo '<tbody>';
         foreach( $this->posts_table as $windex => $week ){
             // primeiro loop, head de dias
             if( $this->number_heads == true ){
@@ -891,6 +914,7 @@ class Boros_Calendar {
                 echo "\t</tr>\n";
             }
         }
+        echo '</tbody>';
         
         echo "\t</tr>\n</table>";
     }
@@ -911,12 +935,13 @@ class Boros_Calendar {
                 $w = $this->weekdays_head;
             }
             // usar opções do locale
-            elseif( in_array( $this->weekdays_head, array('weekday', 'weekday_initial', 'weekday_abbrev')) ){
+            elseif( in_array( $this->weekdays_head, array('weekday', 'weekday_initial', 'weekday_abbrev', 'weekday_name')) ){
                 $w = array_values($this->locale->{$this->weekdays_head});
             }
         }
         $w = apply_filters( 'boros_calendar_weekdays_head', $w );
         
+        echo "\t<thead>";
         echo "\t<tr>";
             echo "\n\t\t<th class='wday-1 {$this->weedays[1]}'>{$w[0]}</th>";
             echo "<th class='wday-2 {$this->weedays[2]}'>{$w[1]}</th>";
@@ -925,7 +950,7 @@ class Boros_Calendar {
             echo "<th class='wday-5 {$this->weedays[5]}'>{$w[4]}</th>";
             echo "<th class='wday-6 {$this->weedays[6]}'>{$w[5]}</th>";
             echo "<th class='wday-7 {$this->weedays[7]}'>{$w[6]}</th>";
-        echo "\n\t</tr>\n";
+        echo "\n\t</tr></thead>\n";
     }
     
     /**
@@ -991,7 +1016,7 @@ class Boros_Calendar {
                 if( in_array($day_index, $evt->post_days) ){
                     $evt->url           = get_permalink($evt->ID);
                     $evt->title         = apply_filters('the_title', $evt->post_title);
-                    $item               = sprintf('<li><a href="%s">%s</a></li>', $evt->url, $evt->title);
+                    $item               = sprintf('<li class="event event-%s"><a href="%s">%s</a></li>', $evt->ID, $evt->url, $evt->title);
                     $events_available[] = $evt;
                     $events_list[]      = apply_filters( 'boros_calendar_event_day_item_output', $item, array('post' => $evt, 'day' => $day) );
                 }
@@ -1055,7 +1080,8 @@ class Boros_Calendar {
      * Montar link de anterior/próximo mês, baseado em $current_date
      * 
      * @param string $direction('prev', 'next') - Direção da requisição. Default 'next'.
-     * @param string $current_date              - Data a partir da qual será feita a requisição de Mês anteior/próximo. Default false.
+     * @param string $current_date              - Data a partir da qual será feita a requisição de Mês anterior/próximo. 
+     *                                            Pode ser um objeto DateTime. Default false.
      * @param string $compare_date              - Data considerada inicial, quando não será adicionada a querystring. A data inicial poderá
      *                                            ter duas possibilidades:
      *                                            1) A data corrente da calendário real:
@@ -1069,12 +1095,14 @@ class Boros_Calendar {
      */
     function month_url( $direction = 'next', $current_date = false, $compare_date = false ){
         
-        if( $current_date == false ){
-            $current_date = "{$this->year}-{$this->month}";
-            $date_obj = new DateTime( $current_date );
+        if( is_a($current_date, 'DateTime') ){
+            $date_obj = $current_date;
         }
         else{
-            $date_obj = $current_date;
+            if( $current_date == false ){
+                $current_date = "{$this->year}-{$this->month}";
+            }
+            $date_obj = new DateTime( $current_date );
         }
         
         if( $direction == 'next' ){
@@ -1102,7 +1130,7 @@ class Boros_Calendar {
      * 
      * @since 0.1.0
      */
-    function posts_dropdown( $echo = true ){
+    function posts_dropdown( $echo = false ){
         
         // buscar todos os posts
         $this->get_all_posts();
@@ -1134,7 +1162,12 @@ class Boros_Calendar {
             $dropdown .= '</select>';
         }
         
-        return apply_filters( 'boros_calendar_month_dropdown', $dropdown, $class, $dropdown_opts );
+        $dropdown = apply_filters( 'boros_calendar_month_dropdown', $dropdown, $class, $dropdown_opts );
+        
+        if( $echo == false ){
+            return $dropdown;
+        }
+        echo $dropdown;
     }
     
     /**
