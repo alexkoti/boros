@@ -56,7 +56,7 @@ function array_column( $array, $column ){
  * ==================================================
  * INTERVALO NUMÉRICO COM VÍRGULA E TRAÇO ===========
  * ==================================================
- * Calcular intervalos semelhannte aos de impressoras.
+ * Calcular intervalos semelhante aos de impressoras.
  * 
  * @link http://stackoverflow.com/questions/7698664/converting-a-range-or-partial-array-in-the-form-3-6-or-3-6-12-into-an-arra
  * 
@@ -120,7 +120,7 @@ function is_assoc_array( $array ){
 }
 
 /**
- * Converter array numperico para associativo
+ * Converter array numérico para associativo
  * 
  */
 function numeric_array_to_assoc( $array ){
@@ -163,6 +163,7 @@ function trim_array_values( $array ){
  * 
  * @param array $array
  * @todo Pesquisar se é possível melhorar e remover ::array_has_empty_value()
+ * @todo Adicionar opção de setar chaves que não podem ser removidas
  * @link	http://www.jonasjohn.de/snippets/php/trim-array.htm
  */
 function trim_array( $array ){
