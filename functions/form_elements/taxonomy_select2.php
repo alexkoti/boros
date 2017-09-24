@@ -66,7 +66,7 @@ class BFE_taxonomy_select2 extends BorosFormElement {
          * 
          */
         // termo selecionado - verifica se está buscando post_meta ou taxonomy_meta
-        $selected_terms = false;
+        $selected_terms = array();
         if( isset($_GET['taxonomy']) ){
             if( isset($_GET['tag_ID']) ){
                 $selected_terms = get_metadata( 'term', intval($_GET['tag_ID']), $this->data['options']['taxonomy'], true );
