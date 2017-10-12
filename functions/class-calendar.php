@@ -735,11 +735,12 @@ class Boros_Calendar {
         
         while ( $day_num <= $this->days_in_month ){
             // Definir a class do dia, verificando se o mesmo está no presente ou passado
-            $wdayn   = date('w');
-            $today   = date('Ymd');
-            $day_pad = sprintf('%02d', $day_num);
+            $today   = date('Ymd');                               # hoje
+            $day_pad = sprintf('%02d', $day_num);                 # dia requerido com padding 0
+            $dayf    = "{$this->year}{$this->pmonth}{$day_pad}";  # dia requerido formato YYY-MM-DD
+            $wdayn   = date('w', strtotime($dayf));               # dia requerido da semana, index numerico
             
-            if( "{$this->year}{$this->pmonth}{$day_pad}" < $today ){
+            if( $dayf < $today ){
                 $active = false;
                 $class  = 'past-day';
             }
