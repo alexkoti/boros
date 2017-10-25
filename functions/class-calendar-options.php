@@ -69,6 +69,7 @@ class Boros_Calendar_Options {
             'post_meta_index',
             'use_meta_box',
             'meta_box_title',
+            'num_months',
         );
         foreach( $vars as $v ){
             if( isset($config[$v]) ){
@@ -144,6 +145,7 @@ class Boros_Calendar_Options {
         return "
         {$nonce_field}
         <div class='date_picker_multiple_box date_picker_multiple_cols_{$this->num_months}'>
+            <h1>_{$this->num_months}</h1>
             <input type='hidden' style='width:100%' name='{$this->post_meta_index}' value='{$value}' class='date_picker_input' id='date_picker_input_{$this->post_meta_index}'  />
             <div class='date_picker_multiple_calendars' id='date_picker_calendars_{$this->post_meta_index}' data-num-months='{$this->num_months}'></div>
         </div>";
