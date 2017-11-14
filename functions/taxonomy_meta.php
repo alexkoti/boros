@@ -171,6 +171,10 @@ class BorosTermMeta {
 		if( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) and isset($_POST['_inline_edit']) ){
 			return false;
 		}
+        
+        if( !isset($_POST['taxonomy']) ){
+            return false;
+        }
 		
 		$data_block = $this->config[ $_POST['taxonomy'] ];
 		
