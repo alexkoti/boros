@@ -36,7 +36,7 @@ class BFE_textarea_editor extends BorosFormElement {
 		$editor_profiles = array(
 			'minimal' => array(
 				'editor_type' => 'minimal',
-				'toolbar' => 'bold italic undo redo code',
+				'toolbar' => 'bold italic pastetext removeformat undo redo code',
 				'buttons' => 'bold,italic,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
@@ -45,7 +45,7 @@ class BFE_textarea_editor extends BorosFormElement {
 			),
 			'simple' => array(
 				'editor_type' => 'simple',
-				'toolbar' => 'bold italic link bullist numlist undo redo code',
+				'toolbar' => 'bold italic link bullist numlist pastetext removeformat undo redo code',
 				'buttons' => 'bold,italic,link,bullist,numlist,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
@@ -54,8 +54,8 @@ class BFE_textarea_editor extends BorosFormElement {
 			),
 			'full' => array(
 				'editor_type' => 'full',
-				'toolbar' => 'bold italic link bullist numlist alignleft aligncenter alignright undo redo image code',
-				'buttons' => 'bold,italic,link,bullist,numlist,image,|,justifyleft,justifycenter,justifyright,|,undo,redo,|,code',
+				'toolbar' => 'formatselect bold italic link bullist numlist alignleft aligncenter alignright pastetext removeformat undo redo image code',
+				'buttons' => 'formatselect,bold,italic,link,bullist,numlist,image,|,justifyleft,justifycenter,justifyright,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
@@ -65,10 +65,10 @@ class BFE_textarea_editor extends BorosFormElement {
 		
 		$editor_defs = array(
 			'editor_type' => 'simple',
+			'toolbar' => 'bold italic link bullist numlist pastetext removeformat undo redo code',
 			'buttons' => 'bold,italic,link,bullist,numlist,|,code',
 			'buttons2' => '',
 			'buttons3' => '',
-			'toolbar' => 'bold italic link bullist numlist code',
 			'height' => 150,
 			'css' => $editor_css,
 		);
