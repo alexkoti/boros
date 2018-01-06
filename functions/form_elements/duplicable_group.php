@@ -57,6 +57,7 @@ class BFE_duplicate_group extends BorosFormElement {
 			<?php
 				$data_length = count($this->data['group_itens']);
 				if( $this->data_value == null ){
+					$this->data_value = array();
 					foreach( $this->data['group_itens'] as $item ){
 						$group_values[$item['name']] = isset($item['std']) ? $item['std'] : '';
 					}
