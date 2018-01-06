@@ -46,21 +46,27 @@ function new_post_class( $classes, $class, $post_id ){
 	
 	foreach( $taxonomies as $taxonomy ){
 		$terms = get_the_terms( $post_id, $taxonomy );
-		if( $terms ){
-			$args = array(
-				'orderby' => 'name',
-				'order' => 'ASC',
-				'hide_empty' => 0,
-				'depth' => 0,
-			);
-			// organizar os termos em ordem hierárquica, do nível mais baixo para o mais alto
-			$ordered_terms = walk_simple_taxonomy( $terms, $args['depth'], $args );
-			
-			foreach( $ordered_terms as $level ){
-				$last_level = end($level);
-				foreach( $level as $term ){
-					$classes[] = "{$taxonomy}-{$term->slug}";
-				}
+		if( !empty($terms) ){
+            ////@bug fatal error em walk_simple_taxonomy();
+            //pre($terms);
+			//$args = array(
+			//	'orderby' => 'name',
+			//	'order' => 'ASC',
+			//	'hide_empty' => 0,
+			//	'depth' => 0,
+			//);
+			//// organizar os termos em ordem hierárquica, do nível mais baixo para o mais alto
+			//$ordered_terms = walk_simple_taxonomy( $terms, $args['depth'], $args );
+			//
+			//foreach( $ordered_terms as $level ){
+			//	$last_level = end($level);
+			//	foreach( $level as $term ){
+			//		$classes[] = "{$taxonomy}-{$term->slug}";
+			//	}
+			//}
+            
+			foreach( $terms as $term ){
+				$classes[] = "{$taxonomy}-{$term->slug}";
 			}
 		}
 	}
