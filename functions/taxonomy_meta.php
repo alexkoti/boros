@@ -5,58 +5,7 @@
  * 
  */
 
-/* ========================================================================== */
-/* CRIAR TABELA DE TERMMETA ================================================= */
-/* ========================================================================== */
-//add_action( 'init', 'init_metadata' );
-function init_metadata(){
-	global $wpdb;
-	$type = 'term';
-	$table_name = $wpdb->prefix . $type . 'meta';
-	
-	// criar tabela se não existir
-	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-		create_metadata_table($table_name, $type);
-	}
-	// registrar tabela no wpdb, caso já exista
-	else{
-		$meta_name = "{$type}meta";
-		$wpdb->$meta_name = $wpdb->prefix . $type . 'meta';
-	}
-	
-	/**
-	 * Adicionar coluna de ordem de termos
-	 * Inspirado no plugin my-category-order
-	 * 
-	 * ver a função custom_terms_orderby, que depende desse registro
-	 */
-	$term_order = $wpdb->query( "SHOW COLUMNS FROM $wpdb->terms LIKE 'term_order'" );
-	if ($term_order == 0) {
-		$wpdb->query("ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'");
-	}
-}
 
-function create_metadata_table($table_name, $type){
-	global $wpdb;
-
-	if (!empty ($wpdb->charset))
-		$charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
-	if (!empty ($wpdb->collate))
-		$charset_collate .= " COLLATE {$wpdb->collate}";
-
-	$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-	meta_id bigint(20) NOT NULL AUTO_INCREMENT,
-	{$type}_id bigint(20) NOT NULL default 0,
-
-	meta_key varchar(255) DEFAULT NULL,
-	meta_value longtext DEFAULT NULL,
-
-	UNIQUE KEY meta_id (meta_id)
-	) {$charset_collate};";
-
-	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	dbDelta($sql);
-}
 
 /**
  * Applicar term_order caso seja requerido.
