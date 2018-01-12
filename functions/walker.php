@@ -90,9 +90,11 @@ class ContenOrderTermsOrder extends Walker_Category {
  * 
  */
 function walk_simple_taxonomy(){
-	$args = func_get_args();
-	$walker = new Walker_Simple_Taxonomy;
-	return call_user_func_array(array( &$walker, 'walk' ), $args );
+    $args = func_get_args();
+    $walker = new Walker_Simple_Taxonomy;
+    $walker->walk($args[0], $args[1]);
+    $tree = $walker->get_array_tree();
+    return $tree;
 }
 
 /**
@@ -100,24 +102,27 @@ function walk_simple_taxonomy(){
  * 
  */
 class Walker_Simple_Taxonomy extends Walker {
-	var $tree_type = 'category';
-	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id');
-	var $active_level = 0;
-	
-	function start_lvl( &$output, $depth = 0, $args = array() ){
-		$this->active_level = $depth + 1;
-		if( !is_array($output) )
-			$output = array();
-		$output[$this->active_level] = array();
-	}
-	
-	function end_lvl( &$output, $depth = 0, $args = array() ){
-		$this->active_level = $depth;
-	}
-	
-	function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ){
-		$output[$this->active_level][] = $object;
-	}
+    var $tree_type = 'category';
+    var $db_fields = array ('parent' => 'parent', 'id' => 'term_id');
+    var $active_level = 0;
+    var $tree = array();
+    
+    function start_lvl( &$output, $depth = 0, $args = array() ){
+        $this->active_level = $depth + 1;
+        $this->tree[$this->active_level] = array();
+    }
+    
+    function end_lvl( &$output, $depth = 0, $args = array() ){
+        $this->active_level = $depth;
+    }
+    
+    function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ){
+        $this->tree[$this->active_level][] = $object;
+    }
+    
+    function get_array_tree(){
+        return $this->tree;
+    }
 }
 
 /* ========================================================================== */
