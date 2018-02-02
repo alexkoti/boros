@@ -46,16 +46,17 @@ class BorosValidation {
 		$this->current_element = $element;
 		$vals = array();
 		// adicionar validação fixa do elemento
-		$vals[] = array(
+		$vals["validate_{$element['type']}"] = array(
 			'rule' => "validate_{$element['type']}",
 			'args' => false,
 			'message' => false,
 		);
 		
-		// adicionar validação de config
-		if( isset($element['validate']) )
-			$vals = array_merge( $vals, $element['validate'] );
-		
+        // adicionar validação de config
+        if( isset($element['validate']) ){
+            $vals = array_merge( $vals, $element['validate'] );
+        }
+        
 		if( isset($element['name']) ){
 			$this->validations[$element['name']]['element'] = $element;
 			$this->validations[$element['name']]['rules'] = $vals;
@@ -391,7 +392,7 @@ class BorosValidation {
 			if( empty($_POST["g-recaptcha-response"]) ){
 				$error = array(
 					'name' => $name,
-					'message' => 'É preciso preencher o reCAPTCHA',
+					'message' => $message,
 					'type' => 'error'
 				);
 				$this->data_errors[$name][$args['rule']] = $error;
