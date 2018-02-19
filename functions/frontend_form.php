@@ -1456,6 +1456,27 @@ class BorosFrontendForm {
 					 'post_content' => '',
 					 'post_status' => 'inherit',
 				);
+                
+                // aplicar modificações a partir das configurações do elemento, sem precisar usar o filtro 'boros_frontend_form_pre_file_insert'
+                $allowed_keys = array(
+                    'post_content',
+                    'post_status',
+                    'post_excerpt',
+                    'post_date',
+                    'tax_input',
+                    'meta_input',
+                );
+                if( isset($elem_config['options']['post_data']) ){
+                    foreach( $elem_config['options']['post_data'] as $key => $value ){
+                        if( in_array($key, $allowed_keys) ){
+                            $attachment[$key] = $value;
+                        }
+                    }
+                }
+                
+                // permitir modificação no array de post para o attachment
+                $attachment = apply_filters( 'boros_frontend_form_pre_file_insert', $attachment, $movefile['file'], $elem_config, $file_info, $parent_id );
+                
 				$attach_id = wp_insert_attachment( $attachment, $movefile['file'], $parent_id );
 				if( !$attach_id ) {
 					return new WP_Error( 'insert_attachment_error', 'Erro ao salvar a imagem' );
@@ -1464,6 +1485,18 @@ class BorosFrontendForm {
 					require_once(ABSPATH . "wp-admin" . '/includes/image.php');
 					$attach_data = wp_generate_attachment_metadata( $attach_id, $movefile['file'] );
 					wp_update_attachment_metadata( $attach_id,  $attach_data );
+                    
+                    // adicionar taxonomy terms personalizados:
+                    // em wp_insert_post(), que é utilizado pelo wp_insert_attachment(), os termos só são adicionados caso o 
+                    // usuário corrente possua permissão 'assign_terms', por isso é necessário aplicar os termos 
+                    // separadamente de wp_insert_attachment()
+                    // @link https://developer.wordpress.org/reference/functions/wp_insert_post/#comment-2164
+                    if( isset($attachment['tax_input']) ){
+                        foreach( $attachment['tax_input'] as $tax => $terms ){
+                            wp_set_object_terms( $attach_id, $terms, $tax );
+                        }
+                    }
+                    
 					return $attach_id;
 				}
 			}
