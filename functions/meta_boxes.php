@@ -143,7 +143,7 @@ class BorosMetaBoxes {
 				// separar entre os valores de coluna de wp_post e wp_postmeta
 				// post_content é renderizado no wp_editor com o name 'content' apenas, mas para o elemento customizado, deverá ser usado o 'post_content'
 				if( in_array($meta_item['name'], $this->core_post_fields) ){
-					$data_value = $post->$meta_item['name'];
+					$data_value = $post->{$meta_item['name']};
 				}
 				else{
 					$data_value = get_post_meta( $post->ID, $meta_item['name'] ); // chamar o valor gravado para o input
