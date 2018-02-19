@@ -26,7 +26,7 @@ function boros_parse_args( $defaults = '', $args ){
 		wp_parse_str( $args, $r );
 	
 	if ( is_array( $defaults ) ){
-		return boros_array_merge_recursive( $defaults, $r );
+		return array_replace_recursive( $defaults, $r );
 	}
 	return $r;
 }
@@ -603,53 +603,6 @@ function multidimensional_array_map( $func, $arr ){
 		$newArr[ $key ] = $nvalue;
 	}
 	return $newArr;
-}
-
-/**
- * ARRAY MERGE RECURSIVE
- * A função core do php, não mescla corretamente os valores em sub arrays.
- * 
- * @link http://www.php.net/manual/en/function.array-merge-recursive.php#104145
- */
-function boros_array_merge_recursive(){
-	if(func_num_args() < 2){
-		trigger_error(__FUNCTION__ .' needs two or more array arguments', E_USER_WARNING);
-		return;
-	}
-	$arrays = func_get_args();
-	$merged = array();
-	while($arrays){
-		$array = array_shift($arrays);
-		if(!is_array($array)){
-			trigger_error(__FUNCTION__ .' encountered a non array argument', E_USER_WARNING);
-			return;
-		}
-		if(!$array){
-			continue;
-		}
-		foreach($array as $key => $value){
-			if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])){
-				$merged[$key] = call_user_func(__FUNCTION__, $merged[$key], $value);
-			}
-			else{
-				$merged[$key] = $value;
-			}
-			/** Versão com append nos arrays numéricos. Revisar para decidir se será mantido ou não *
-			if(is_string($key)){
-				if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])){
-					$merged[$key] = call_user_func(__FUNCTION__, $merged[$key], $value);
-				}
-				else{
-					$merged[$key] = $value;
-				}
-			}
-			else{
-				$merged[] = $value;
-			}
-			/**/
-		}
-	}
-	return $merged;
 }
 
 
