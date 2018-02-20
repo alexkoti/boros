@@ -1289,6 +1289,11 @@ class BorosFrontendForm {
 					if( $config['type'] == 'file' ){
 						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
 						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
+                            
+                            // modificar o filename, para que não seja utilizado o nome original
+                            if( isset($config['options']['hash_filename']) and $config['options']['hash_filename'] == true ){
+                                $meta_value['name'] = $this->hash_filename( $meta_value['name'] );
+                            }
 							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');
 							// não salvar post_meta em caso de erro no upload e registrar o erro
 							if( is_wp_error($attachment_id) ){
@@ -1357,6 +1362,18 @@ class BorosFrontendForm {
 			$this->form_callback( $this->config['callbacks']['error'] );
 		}
 	}
+    
+    function hash_filename( $filename ){
+        // clone wp_unique_filename();
+        $ext = pathinfo( $filename, PATHINFO_EXTENSION );
+        $name = pathinfo( $filename, PATHINFO_BASENAME );
+        if ( $ext ) {
+            $ext = '.' . $ext;
+        }
+        $hash_name = wp_hash( str_replace($ext, '', $filename) );
+        
+        return "{$hash_name}{$ext}";
+    }
 	
 	function validate_taxonomy_terms( $post_data ){
 		foreach( $this->elements_plain as $element ){
@@ -1463,7 +1480,7 @@ class BorosFrontendForm {
                     'post_status',
                     'post_excerpt',
                     'post_date',
-                    'tax_input',
+                    //'tax_input',
                     'meta_input',
                 );
                 if( isset($elem_config['options']['post_data']) ){
@@ -1486,14 +1503,17 @@ class BorosFrontendForm {
 					$attach_data = wp_generate_attachment_metadata( $attach_id, $movefile['file'] );
 					wp_update_attachment_metadata( $attach_id,  $attach_data );
                     
-                    // adicionar taxonomy terms personalizados:
+                    // Adicionar taxonomy terms personalizados:
                     // em wp_insert_post(), que é utilizado pelo wp_insert_attachment(), os termos só são adicionados caso o 
                     // usuário corrente possua permissão 'assign_terms', por isso é necessário aplicar os termos 
                     // separadamente de wp_insert_attachment()
                     // @link https://developer.wordpress.org/reference/functions/wp_insert_post/#comment-2164
-                    if( isset($attachment['tax_input']) ){
-                        foreach( $attachment['tax_input'] as $tax => $terms ){
-                            wp_set_object_terms( $attach_id, $terms, $tax );
+                    // 
+                    // Caso esteja usando o plugin enhanced-media-library, é necessário que o form seja inicializado em 'wp_loaded' 
+                    // prioridade acima de 10, pois em 'init' a taxonomia 'media_category' ainda não foi registrada.
+                    if( isset( $elem_config['options']['post_data']['tax_input'] ) ){
+                        foreach( $elem_config['options']['post_data']['tax_input'] as $tax => $terms ){
+                            $tt = wp_set_object_terms( $attach_id, $terms, $tax );
                         }
                     }
                     
@@ -1622,6 +1642,11 @@ class BorosFrontendForm {
 					if( $config['type'] == 'file' ){
 						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
 						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
+                            
+                            // modificar o filename, para que não seja utilizado o nome original
+                            if( isset($config['options']['hash_filename']) and $config['options']['hash_filename'] == true ){
+                                $meta_value['name'] = $this->hash_filename( $meta_value['name'] );
+                            }
 							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');die();
 							// não salvar post_meta em caso de erro no upload e registrar o erro
 							if( is_wp_error($attachment_id) ){
