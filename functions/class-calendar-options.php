@@ -9,7 +9,7 @@
 
 class Boros_Calendar_Options {
     
-    protected $ver = '0.1.0';
+    protected $ver = '0.1.1';
     
     /**
      * Post type do calendário.
@@ -52,6 +52,12 @@ class Boros_Calendar_Options {
      * 
      */
     protected $num_months = 4;
+
+    /**
+     * Mostrar campo com a string que será salva
+     * 
+     */
+    protected $display_field = false;
     
     protected $nonce_action = 'boros_calendar_save_event_dates';
     
@@ -141,13 +147,17 @@ class Boros_Calendar_Options {
         
         $nonce_field = wp_nonce_field( $this->nonce_action, $this->nonce_name, true, false );
         $value = get_post_meta( $post_id, $this->post_meta_index, true );
+        $display = $this->display_field == true ? 'block' : 'none';
+        $months_placeholder = str_repeat("<div class='calendar' style='display:inline-block'></div>", $this->num_months);
         
         return "
         {$nonce_field}
         <div class='date_picker_multiple_box date_picker_multiple_cols_{$this->num_months}'>
-            <input type='text' style='width:100%' name='{$this->post_meta_index}' value='{$value}' class='date_picker_input' id='date_picker_input_{$this->post_meta_index}'  />
+            <textarea style='width:100%;display:{$display};' name='{$this->post_meta_index}' class='date_picker_input' id='date_picker_input_{$this->post_meta_index}'>{$value}</textarea>
             <div class='date_picker_multiple_calendars' id='date_picker_calendars_{$this->post_meta_index}' data-num-months='{$this->num_months}'></div>
-        </div>";
+            {$months_placeholder}
+        </div>
+        ";
     }
     
     /**
