@@ -20,21 +20,22 @@ jQuery(document).ready(function($){
 
         // início da exibição do calendário
         var start = {
-            year: (new Date()).getFullYear(),
+            year:  (new Date()).getFullYear(),
             month: (new Date()).getMonth() + index,
-            date: 1
+            date:  1
         };
 
         // recuperar datas salvas
-        var selecteds = $(this).closest('.date_picker_multiple_box').find('.date_picker_input').val().split(',').sort();
+        var selecteds_val = $(this).closest('.date_picker_multiple_box').find('.date_picker_input').val();
+        var selecteds     = selecteds_val.split(',').sort();
 
         // caso tenha sido gravado ao menos uma data, definir o início da exibição para a data mais antiga
-        if(typeof selecteds[0] !== 'undefined'){
+        if( selecteds_val != '' ){
             var st = new Date(selecteds[0]);
             start = {
-                year: st.getFullYear(),
+                year:  st.getFullYear(),
                 month: st.getMonth() + index,
-                date: 1
+                date:  1
             };
         }
 
