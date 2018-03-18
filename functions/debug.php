@@ -102,9 +102,11 @@ function current_page_info(){
  * @param mix $var qualquer tipo de variável.
  * @param string $legend legenda para identificar a saida.
  */
+if( !function_exists('pre') ){
 function pre( $var = false, $legend = '', $opened = true, $global_controls = false ){
-	$pre = PRE::init();
-	$pre->pre( $var, $legend, $opened, $global_controls );
+    $pre = PRE::init();
+    $pre->pre( $var, $legend, $opened, $global_controls );
+}
 }
 
 /**
@@ -117,9 +119,11 @@ function pre( $var = false, $legend = '', $opened = true, $global_controls = fal
  * @param mix $message mensagem que deseja exibir
  * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
  */
+if( !function_exists('pal') ){
 function pal( $var = false, $legend = '' ){
 	$pre = PRE::init();
 	$pre->pal( $var, $legend );
+}
 }
 
 /**
@@ -132,6 +136,7 @@ function pal( $var = false, $legend = '' ){
  * @param mix $message mensagem que deseja exibir
  * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
  */
+if( !function_exists('pcm') ){
 function pcm( $var = false, $legend = '', $pad = 0 ){
     if( !empty($legend) ){
         $legend = "{$legend} : ";
@@ -139,13 +144,16 @@ function pcm( $var = false, $legend = '', $pad = 0 ){
     $legend = str_pad($legend, $pad, ' ', STR_PAD_LEFT);
     echo "<!-- {$legend}{$var} -->\n";
 }
+}
 
 /**
  * Separador simples, usar apenas para melhorar a legibilidade em debugs complexos
  * 
  */
+if( !function_exists('sep') ){
 function sep( $message = '' ){
 	echo "<div style='background:red;color:#fff;font:12px normal arial, sans-serif;height:10px;line-height:10px;margin:50px 0;padding:5px;'>{$message}</div>";
+}
 }
 
 /**
@@ -157,6 +165,8 @@ function sep( $message = '' ){
  * 
  * @todo adicionar o método prex(), para exibição de grandes blocos de arrays|objects
  */
+if( !class_exists('PRE') ){
+
 class PRE {
 	var $controls_visible = false;
 	
@@ -309,6 +319,8 @@ class PRE {
 		}
 		echo "\n</div></div>\n";
 	}
+}
+
 }
 
 /**
