@@ -105,7 +105,6 @@ include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'widgets.php' );          
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_form.php');           // class de postagem no frontend, ele precisa ter acesso geral para os controles de admin.
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'email.php');                   // function para todos os emails - as configs deverão ser feitas no plgin do trabalho
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'tests.php');                   // function auxiliares para testes
-include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'third_party_facebook.php');    // integração com facebook
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'security.php' );               // configurações e filtros de segurança
 if( defined('MULTISITE') and MULTISITE == true ){
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'multisite.php');           // functions extras para multisite
