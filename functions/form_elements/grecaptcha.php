@@ -23,7 +23,11 @@ class BFE_grecaptcha extends BorosFormElement {
 			array('google_grecaptcha', 'https://www.google.com/recaptcha/api.js?onload=boros_grecaptcha_onload&render=explicit'),
 			'grecaptcha',
 		),
-	);
+    );
+    
+	function add_defaults(){
+		$this->defaults['options']['defer'] = false; # iniciar o recaptcha apenas ao focar em algum elemento do form parent
+	}
 	
 	/**
 	 * Contador de instâncias, será utilizado para inserir as variáveis de footer e id dos recaptchas
@@ -60,10 +64,13 @@ class BFE_grecaptcha extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
-		$publickey = get_option('recaptcha_publickey');
+        $publickey = get_option('recaptcha_publickey');
+        if( $this->data['options']['defer'] == true ){
+            $class = 'defer-render';
+        }
 		
 		$id = self::$counter;
-		$input = "<div class='grecaptcha_render' id='grecaptcha-{$id}'></div>";
+		$input = "<div class='grecaptcha_render {$class}' id='grecaptcha-{$id}'></div>";
 		return $input;
 	}
 }
