@@ -1,4 +1,8 @@
 <?php
+/**
+ * Lista de países
+ * 
+ */
 function load_countries(){
 	return array(
 		'AF' => 'Afeganistão',
