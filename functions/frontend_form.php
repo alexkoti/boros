@@ -629,7 +629,7 @@ class BorosFrontendForm {
 					'login_message_user_default' => '<strong>ERRO</strong>: Seu registro foi recebido e seu cadastro está em aprovação.',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
-				$custom_messages = boros_parse_args($custom_messages, $custom_default_messages);
+				$custom_messages = apply_filters( 'boros_login_messages', boros_parse_args($custom_messages, $custom_default_messages) );
 				
 				// filtrar as mensagens de erro padrão do wp pelos customizados
 				foreach( $default_messages as $msg_k => $msg_v ){
