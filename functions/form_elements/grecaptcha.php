@@ -64,6 +64,7 @@ class BFE_grecaptcha extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
+        $class = '';
         $publickey = get_option('recaptcha_publickey');
         if( $this->data['options']['defer'] == true ){
             $class = 'defer-render';
