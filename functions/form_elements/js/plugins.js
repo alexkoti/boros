@@ -1,4 +1,108 @@
 
+/**
+ * Botão de adicionar imagem da biblioteca
+ * 
+ * 
+ * @link https://www.tinymce.com/docs/advanced/creating-a-plugin/
+ * @link https://www.sitepoint.com/adding-a-media-button-to-the-content-editor/
+ * @link https://mikejolley.com/2012/12/21/using-the-new-wordpress-3-5-media-uploader-in-plugins/
+ * 
+ */
+jQuery(document).ready(function($){
+
+    tinymce.PluginManager.add('borosmedia', function(editor, url) {
+        // Add a button
+        editor.addButton('borosmedia', {
+            //text: 'Imagem',
+            icon: 'image',
+            onclick: function() {
+
+                /**
+                 * Trigger no modal do media do wp
+                 * 
+                 */
+                var file_frame = wp.media({
+                    title: 'Adicionar imagem',
+                    frame: 'post',
+                    state: 'insert',
+                    library: {type: 'image'},
+                    multiple: false,
+                    details: {display: true},
+                    button: {text: 'Adicionar'}
+                });
+
+                file_frame.on('insert', function() {
+
+                    // pegar os tamanhos registrados de imagem
+                    // @link https://forums.envato.com/t/wordpress-3-5-media-uploader-api/76628/9
+                    //var selection = file_frame.state().get('selection');
+                    //// this will return an object with all the attachment-details
+                    //selection.each(function(a) {
+                    //    console.log( a );
+                    //});
+
+                    // opções selecionada no sidebar direito
+                    var align     = getUserSetting( 'align', 'none' );
+                    var urlbutton = getUserSetting( 'urlbutton', 'file' );
+                    var imgsize   = getUserSetting( 'imgsize', 'medium' );
+                    var linkUrl   = $('.link-to-custom').val();
+
+                    //console.log( align );
+                    //console.log( urlbutton );
+                    //console.log( imgsize );
+                    //console.log( linkUrl );
+
+                    // midia selecionada
+                    var attachment = file_frame.state().get('selection').first().toJSON();
+                    //console.log(attachment);
+
+                    // definir as propriedades do elemento
+                    // várias propriedades só aparecem em props depois de chamar wp.media.string.image()
+                    var args = {
+                        classes: ['img-responsive']
+                    };
+                    var props = wp.media.string.props( args, attachment );
+                    //console.log( props );
+                    var image_tag = wp.media.string.image( props, attachment );
+                    //console.log( image_tag );
+
+                    // criar imagem e atributos
+                    var media_elem = document.createElement('img');
+                    $(media_elem).addClass( props.classes.join(' ') );
+                    $(media_elem).attr('src', props.src);
+                    $(media_elem).attr('alt', props.title);
+
+                    // inserir link caso necessário
+                    if( urlbutton != 'none' ){
+                        var link = document.createElement('a');
+                        $(link).attr('href', linkUrl);
+                        var insert = $(link).append( $(media_elem) );
+                    }
+                    else{
+                        var insert = $(media_elem);
+                    }
+
+                    // enviar para o editor
+                    editor.insertContent( $(insert).prop('outerHTML') );
+                });
+
+                file_frame.open();
+                return false;
+            }
+        });
+
+        return {
+            getMetadata: function () {
+                return  {
+                    name: "Boros WP Media",
+                    url: "http://exampleplugindocsurl.com"
+                };
+            }
+        };
+
+    });
+  
+});
 
 
 

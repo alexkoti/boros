@@ -45,8 +45,8 @@ class BFE_textarea_editor extends BorosFormElement {
 			),
 			'simple' => array(
 				'editor_type' => 'simple',
-				'toolbar' => 'bold italic link bullist numlist pastetext removeformat undo redo code',
-				'buttons' => 'bold,italic,link,bullist,numlist,|,undo,redo,|,code',
+				'toolbar' => 'bold italic link bullist numlist borosmedia pastetext removeformat undo redo code',
+				'buttons' => 'bold,italic,link,bullist,numlist,borosmedia,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
@@ -54,8 +54,8 @@ class BFE_textarea_editor extends BorosFormElement {
 			),
 			'full' => array(
 				'editor_type' => 'full',
-				'toolbar' => 'formatselect bold italic link bullist numlist alignleft aligncenter alignright pastetext removeformat undo redo image code',
-				'buttons' => 'formatselect,bold,italic,link,bullist,numlist,image,|,justifyleft,justifycenter,justifyright,|,undo,redo,|,code',
+				'toolbar' => 'formatselect bold italic link bullist numlist borosmedia alignleft aligncenter alignright pastetext removeformat undo redo code',
+				'buttons' => 'formatselect,bold,italic,link,bullist,numlist,borosmedia,|,justifyleft,justifycenter,justifyright,|,undo,redo,|,code',
 				'buttons2' => '',
 				'buttons3' => '',
 				'height' => 150,
@@ -141,7 +141,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				theme_advanced_buttons2: '<?php echo $editor_attr['buttons2']; ?>', // (*1)
 				theme_advanced_buttons3: '<?php echo $editor_attr['buttons3']; ?>', // (*1)
 				height: <?php echo $editor_attr['height']; ?>, // altura
-				content_css: '<?php echo $editor_attr['css']; ?>', //css interno do editor
+				content_css: '<?php echo $editor_attr['css']; ?>, <?php echo includes_url( 'js/tinymce/skins/wordpress/wp-content.css' ); ?>', //css interno do editor
 				
 				/* Configurações fixas
 				 * 
@@ -176,7 +176,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				wpeditimage_disable_captions: false, 
 				theme_advanced_blockformats: 'p,blockquote,h1,h2,h3,h4,h5,h6',
 				//plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs', <<< verificar se ainda será preciso o 'inlinepopups' e encontrar um substituto
-				plugins: 'paste, wordpress, fullscreen, wpeditimage, wpgallery, tabfocus, wplink, wpdialogs, image, code, textcolor, charmap',
+				plugins: 'paste, wordpress, fullscreen, wpeditimage, wpgallery, tabfocus, wplink, wpdialogs, image, code, textcolor, charmap, borosmedia',
 				formats:{
 					alignleft : [
 						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},
