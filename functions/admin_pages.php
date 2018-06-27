@@ -144,21 +144,23 @@ class BorosAdminPages {
                 $this->set_tabs_capabilities( $page_name, $options );
             }
         }
-	}
-	
-	/**
-	 * Adicionar filtro para aceitar o capability declarado corretamente. Ver arquivo wp-admin/options.php, filtro "option_page_capability_{$option_page}"
-	 * Pular caso seja uma página do core.
-	 * 
-	 * @link http://wordpress.org/support/topic/wordpress-settings-api-cheatin-uh-error#post-2219995
-	 */
-	function set_page_capability( $page_name, $options ){
-		if( !isset($options['type']) or $options['type'] != 'core' ){
-			if( isset($options['capability']) ){
-				add_filter( "option_page_capability_{$page_name}", create_function(NULL, "return '{$options['capability']}';")  );
-			}
-		}
-	}
+    }
+    
+    /**
+     * Adicionar filtro para aceitar o capability declarado corretamente. Ver arquivo wp-admin/options.php, filtro "option_page_capability_{$option_page}"
+     * Pular caso seja uma página do core.
+     * 
+     * @link http://wordpress.org/support/topic/wordpress-settings-api-cheatin-uh-error#post-2219995
+     */
+    function set_page_capability( $page_name, $options ){
+        if( !isset($options['type']) or $options['type'] != 'core' ){
+            if( isset($options['capability']) ){
+                add_filter("option_page_capability_{$page_name}", function(){
+                    return $options['capability'];
+                });
+            }
+        }
+    }
     
     /**
      * Permissões das abas
