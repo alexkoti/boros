@@ -111,7 +111,6 @@ class BorosAdminPages {
 		//if( isset($_POST) ){ pre($_POST); die(); }
 		
 		$this->pages = $config;
-		$this->set_pages_capabilities();
 		$this->folder_base = $folder_base;
 		$this->url_base = $url_base;
 		
@@ -121,57 +120,6 @@ class BorosAdminPages {
 		add_action( 'template_redirect', array($this, 'frontend') );
 		add_filter( 'load_element_config', array($this, 'load_element_config'), 10, 2 );
 	}
-	
-	/**
-	 * Aplica as capabilities de cada página para que se possa aplicar os filtros adequados, ja que a capability padrão de admin_pages é 'manage_options'
-	 */
-	function set_pages_capabilities(){
-        foreach( $this->pages as $page_name => $options ){
-            $this->set_page_capability( $page_name, $options );
-            
-            if( isset($options['subpages']) ){
-                foreach( $options['subpages'] as $subpage_name => $sub_options ){
-                    $this->set_page_capability( $subpage_name, $sub_options );
-                    // subpage tabs permissions
-                    if( isset($sub_options['tabs']) ){
-                        $this->set_tabs_capabilities( $subpage_name, $sub_options );
-                    }
-                }
-            }
-            
-            // page tabs permissions
-            if( isset($options['tabs']) ){
-                $this->set_tabs_capabilities( $page_name, $options );
-            }
-        }
-    }
-    
-    /**
-     * Adicionar filtro para aceitar o capability declarado corretamente. Ver arquivo wp-admin/options.php, filtro "option_page_capability_{$option_page}"
-     * Pular caso seja uma página do core.
-     * 
-     * @link http://wordpress.org/support/topic/wordpress-settings-api-cheatin-uh-error#post-2219995
-     */
-    function set_page_capability( $page_name, $options ){
-        if( !isset($options['type']) or $options['type'] != 'core' ){
-            if( isset($options['capability']) ){
-                add_filter("option_page_capability_{$page_name}", function(){
-                    return $options['capability'];
-                });
-            }
-        }
-    }
-    
-    /**
-     * Permissões das abas
-     * 
-     */
-    function set_tabs_capabilities( $page_name, $options ){
-        foreach( array_slice( $options['tabs'], 1 ) as $tab => $title ){
-            $options['page_title'] = $options['menu_title'] = $title;
-            $this->set_page_capability( "{$page_name}_{$tab}", $options );
-        }
-    }
     
 	/**
 	 * Adicionar as page no admin.
