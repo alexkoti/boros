@@ -495,12 +495,16 @@ class BorosValidation {
         // validar mime
         if( isset($args['mimes']) and !empty($value['name']) ){
             require_once( BOROS_LIBS . '/mime_type_lib.php' );
-            $mime = get_file_mime_type($value['name']);
-            //pre($mime);
-            //pre($args['mimes']);
+            //$mime = get_file_mime_type($value['name']);
+            $mime = wp_check_filetype($value['name']);
+
+            //pre( wp_check_filetype($value['name']), 'wp_check_filetype' );
+            //pre( $value['name'], '$value[name]' );
+            //pre($mime, 'mime');
+            //pre($args['mimes'], 'mimes');
             //pre($this);
             //die();
-            if( !in_array($mime, $args['mimes']) ){
+            if( !in_array($mime['type'], $args['mimes']) ){
                 $error = array(
                     'name' => $name,
                     'message' => $message,
