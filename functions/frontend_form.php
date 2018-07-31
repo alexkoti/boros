@@ -2383,7 +2383,6 @@ class BorosFrontendForm {
 				 * 
 				 */
 				if( !empty( $this->errors ) ){
-                    pre($this->errors);
 					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
 					
 					if( $this->config['show_errors_index'] == true ){
