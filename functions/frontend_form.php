@@ -1456,6 +1456,13 @@ class BorosFrontendForm {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
         
+        /**
+         * Permitir que somente este processo consiga subir qualquer tipo de mime type.
+         * Os tipos de mime types permitidos e erro poderá ser verificado na validação do campo.
+         * 
+         */
+        define('ALLOW_UNFILTERED_UPLOADS', true);
+
         do_action('boros_pre_upload', $this->form_name, $elem_config, $this);
 		
 		$movefile = wp_handle_upload( $file_info, array( 'test_form' => false ) );
@@ -2376,6 +2383,7 @@ class BorosFrontendForm {
 				 * 
 				 */
 				if( !empty( $this->errors ) ){
+                    pre($this->errors);
 					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
 					
 					if( $this->config['show_errors_index'] == true ){
