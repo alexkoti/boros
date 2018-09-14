@@ -469,7 +469,7 @@ function render_columns( $column_name ){
 	preg_match( '/^thumb_(.*)/', $column_name, $image_size );
 	if( isset($image_size[1]) ){
 		if( has_post_thumbnail() ){
-			the_post_thumbnail($image_size[1]);
+			the_post_thumbnail($image_size[1], array('id' => 'wp-image-' . get_post_thumbnail_id($post->ID)));
 		}
 		return;
 	}
@@ -505,7 +505,7 @@ function render_columns( $column_name ){
 			
 		case 'thumb':
 			if ( has_post_thumbnail() and $post->post_type != 'product' ) {
-				the_post_thumbnail('thumbnail');
+				the_post_thumbnail('thumbnail', array('id' => 'wp-image-' . get_post_thumbnail_id($post->ID)));
 			}
 			break;
 		
