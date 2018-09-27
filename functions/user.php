@@ -327,16 +327,17 @@ class BorosUserMeta {
 	}
 	
 	function load_element_config( &$config, $context ){
-		if( $context['type'] != 'user_meta' )
+		if( $context['type'] != 'user_meta' ){
 			return $config;
+        }
 		
-		$config = $this->meta_boxes;
+        $config = $this->meta_boxes;
 		if( isset($context['in_duplicate_group']) and $context['in_duplicate_group'] == true ){
 			$element_config = $config[$context['group']]['itens'][$context['parent']]['group_itens'][$context['name']];
 		}
 		else{
 			$element_config = $config[$context['group']]['itens'][$context['name']];
-		}
+        }
 		return $element_config;
 	}
 }

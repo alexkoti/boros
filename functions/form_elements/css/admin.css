@@ -571,13 +571,6 @@ input[disabled='1']{
 .boros_section_desc {
 	padding:20px 0 0;
 }
-/**
- * Mouseover em cada linha(row) com elementos, para facilitar a vizualização
- */
-#your-profile .boros_options_block > tr > td, 
-#your-profile .boros_options_block > tr > th {
-	border-top:1px solid #DFDFDF;
-}
 
 
 
