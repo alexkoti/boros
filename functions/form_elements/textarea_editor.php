@@ -176,7 +176,7 @@ class BFE_textarea_editor extends BorosFormElement {
 				wpeditimage_disable_captions: false, 
 				theme_advanced_blockformats: 'p,blockquote,h1,h2,h3,h4,h5,h6',
 				//plugins: 'inlinepopups,spellchecker,paste,wordpress,fullscreen,wpeditimage,wpgallery,tabfocus,wplink,wpdialogs', <<< verificar se ainda será preciso o 'inlinepopups' e encontrar um substituto
-				plugins: 'paste, wordpress, fullscreen, wpeditimage, wpgallery, tabfocus, wplink, wpdialogs, image, code, textcolor, charmap, borosmedia',
+				plugins: 'lists, paste, wordpress, fullscreen, wpeditimage, wpgallery, tabfocus, wplink, wpdialogs, image, code, textcolor, charmap, borosmedia',
 				formats:{
 					alignleft : [
 						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},
