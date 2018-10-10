@@ -38,11 +38,13 @@ jQuery(document).ready(function($){
 				
 				// input:hidden com a lista deids a serem gravadas
 				var $search_content_ids = $(target).closest('.search_content_box').find('.search_content_ids');
-				var $query = $(target).closest('.search_content_inputs').find('input[name=search_content_query]');
-				var $show_post_type = $(target).closest('.search_content_inputs').find('input[name=show_post_type]');
-				var $show_thumbnails = $(target).closest('.search_content_inputs').find('input[name=show_thumbnails]');
-				var $show_excerpt = $(target).closest('.search_content_inputs').find('input[name=show_excerpt]');
-				var $excerpt_length = $(target).closest('.search_content_inputs').find('input[name=excerpt_length]');
+				var $ajaxaction         = $(target).closest('.search_content_box').find('input[name=ajaxaction]');
+				var $query              = $(target).closest('.search_content_inputs').find('input[name=search_content_query]');
+				var $show_post_type     = $(target).closest('.search_content_inputs').find('input[name=show_post_type]');
+				var $show_thumbnails    = $(target).closest('.search_content_inputs').find('input[name=show_thumbnails]');
+				var $show_excerpt       = $(target).closest('.search_content_inputs').find('input[name=show_excerpt]');
+				var $excerpt_length     = $(target).closest('.search_content_inputs').find('input[name=excerpt_length]');
+				var $role               = $(target).closest('.search_content_inputs').find('input[name=role]');
 				
 				// iniciar loading
 				var $loading = $(target).closest('.search_content_box').find('.search_content_inputs .waiting');
@@ -52,14 +54,15 @@ jQuery(document).ready(function($){
 					
 					// preparar dados da busca
 					var data = {
-						action: 'search_content',
+						action: $ajaxaction.val(),
 						search_text: search_text,
 						query: $query.val(),
 						show_post_type: $show_post_type.val(),
 						show_thumbnails: $show_thumbnails.val(),
 						show_excerpt: $show_excerpt.val(),
 						excerpt_length: $excerpt_length.val(),
-						remove: $search_content_ids.val()
+						remove: $search_content_ids.val(),
+						role: $role.val()
 					};
 					
 					//console.log(data);//return false;
@@ -77,9 +80,9 @@ jQuery(document).ready(function($){
 		$('.search_content_list_results').delegate('.result_select', 'click', function(){
 			var parent = $(this).closest('.search_content_box');
 			var new_history = $(this).closest('li').hide();
-			parent.find('.search_content_list_selected .related_item_list').append( new_history )
+			parent.find('.search_content_list_selected .related_item_list').append( new_history );
 			parent.find('.no_results_h').hide();
-			new_history.slideDown().yellowFade();
+			new_history.slideDown();
 			set_ordered_histories();
 		});
 		

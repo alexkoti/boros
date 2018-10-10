@@ -17,7 +17,7 @@ class BFE_search_content_list extends BorosFormElement {
 		'name' => '',
 		'value' => '',
 		'id' => '',
-		'class' => 'search_content_ids',
+		'class' => 'search_content_ids',  // não mudar pois o js utiliza essa class
 		'rel' => '',
 		'disabled' => false,
 		'readonly' => false,
@@ -125,6 +125,7 @@ class BFE_search_content_list extends BorosFormElement {
 			<div class="search_content_inputs">
 				<p class="results_h">Buscar:</p>
 				<p>
+					<input type='hidden' name='ajaxaction' value='search_content' />
 					<input type='hidden' name='search_content_query' value='<?php echo $json_query_search; ?>' />
 					<input type='hidden' name='show_post_type' value='<?php echo $this->data['options']['show_post_type']; ?>' />
 					<input type='hidden' name='show_thumbnails' value='<?php echo $this->data['options']['show_thumbnails']; ?>' />

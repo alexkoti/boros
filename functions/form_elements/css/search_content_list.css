@@ -40,8 +40,9 @@
 	height:16px;
 	left:380px;
 	position:absolute;
-	top:4px;
-	width:16px;
+	top:50%;
+    width:16px;
+    margin: -8px 0 0 0;
 }
 
 .inside .search_content_list  {
