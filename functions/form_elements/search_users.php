@@ -8,6 +8,7 @@
  * @todo adicionar option para poder configurar uma query completa nas opções do campo
  * @todo mostrar avatares
  * @todo refatorar os js com o do search_content_list
+ * @todo opção de limitar a quantidade de itens para salvar
  * 
  */
 
@@ -54,10 +55,10 @@ class BFE_search_users extends BorosFormElement {
             
             <div class="search_content_list search_content_list_selected">
             <?php if( empty( $this->data_value ) ){ ?>
-                <p class="no_results_h">Sem conteúdos selecionados</p>
+                <p class="no_results_h">Sem usuários selecionados</p>
                 <ul class="related_item_list"></ul>
             <?php } else { ?>
-                <p class="results_h">Contéudos selecionados:</p>
+                <p class="results_h">Usuários selecionados:</p>
                 <ul class="related_item_list">
                     <?php
                     $related_item = explode( ',', $this->data_value ); // gera o $related_item
