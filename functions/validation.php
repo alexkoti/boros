@@ -189,7 +189,7 @@ class BorosValidation {
 					//pal("Function: {$validation['rule']}");
 					$validation['args']['object'] = $this;
 					$newval = call_user_func( $validation['rule'], $element['name'], $newval, $validation['args'], $validation['message'] );
-				}
+                }
                 unset( $this->validations[$element['name']]['remaining_rules'][$rule]);
 			}
 		}
@@ -931,6 +931,32 @@ class BorosValidation {
         }
         else {
             $value = wp_strip_all_tags($value);
+        }
+        return $value;
+    }
+
+    function akismet( $name, $value, $args, $message ){
+        require_once BOROS_LIBS . '/Akismet.class.php';
+        $is_spam = false;
+        $akismet_key = get_option('wordpress_api_key');
+        $home_url = home_url('/');
+        $akismet = new AkismetValidation( $home_url, $akismet_key);
+        if( $akismet->isKeyValid() ){
+            //$akismet->setCommentAuthor('viagra-test-123'); // test positive spam
+            //$akismet->setCommentAuthor($data['author']);
+            //$akismet->setCommentAuthorEmail($data['email']);
+            $akismet->setCommentContent($value);
+            $akismet->setPermalink( $home_url );
+            $is_spam = $akismet->isCommentSpam();
+        }
+
+        if( $is_spam == true ){
+            $error = array(
+                'name' => $name,
+                'message' => $message,
+                'type' => 'error'
+            );
+            $this->data_errors[$name][$args['rule']] = $error;
         }
         return $value;
     }
