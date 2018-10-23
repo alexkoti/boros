@@ -960,6 +960,28 @@ class BorosValidation {
         }
         return $value;
     }
+
+    /**
+     * Bloquear campos que possuam links
+     * 
+     * @link https://css-tricks.com/snippets/php/find-urls-in-text-make-links/#comment-479580
+     * 
+     */
+    function block_links( $name, $value, $args, $message ){
+
+        // existe algum link na mensagem?
+        $regex = '@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@';
+        if( preg_match($regex, $value, $url) ){
+            $error = array(
+                'name'    => $name,
+                'message' => $message,
+                'type'    => 'error'
+            );
+            $this->data_errors[$name][$args['rule']] = $error;
+        }
+
+        return $value;
+    }
 	
 }
 
