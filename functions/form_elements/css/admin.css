@@ -327,6 +327,26 @@ input[disabled='1']{
 	vertical-align:text-bottom;
 	width:16px;
 }
+.btn-warning {
+    background-color: rgba(255, 140, 0, 0.7) !important;
+    border-color: rgb(255, 140, 0) !important;
+    color: #fff !important;
+}
+.btn-error {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    border-color: rgb(255, 0, 0) !important;
+    color: #fff !important;
+}
+.btn-neutral {
+    background-color: rgba(0, 130, 255, 0.7) !important;
+    border-color: rgb(0, 130, 255) !important;
+    color: #fff !important;
+}
+.btn-success {
+    background-color: rgba(0, 180, 20, 0.7) !important;
+    border-color: rgb(0, 180, 20) !important;
+    color: #fff !important;
+}
 
 
 
