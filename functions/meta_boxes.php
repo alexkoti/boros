@@ -43,7 +43,13 @@ class BorosMetaBoxes {
 		//'tags_input',
 		//'tax_input',
 		//'page_template',
-	);
+    );
+    
+    /**
+     * CSS class adicional do metabox
+     * 
+     */
+    var $css_class = '';
 	
 	/**
 	 * Contexto
@@ -90,7 +96,10 @@ class BorosMetaBoxes {
 			
 			foreach( $apply_to as $apply ){
 				if ( array_key_exists( $apply, $post_types ) ){
-					$this->box_classes( $box, $apply );
+					if( isset($box['class']) ){
+                        $this->css_class = $box['class'];
+                    }
+					add_filter( "postbox_classes_{$apply}_{$box['id']}", array($this, 'box_classes') );
 					//add_meta_box( "metabox_{$box['id']}", $box['title'], array($this, 'output'), $apply, $box['context'], $box['priority'], $args );
 					add_meta_box( $box['id'], $box['title'], array($this, 'output'), $apply, $box['context'], $box['priority'], $args );
 				}
@@ -560,14 +569,8 @@ class BorosMetaBoxes {
     /* Adicionar uma class no meta_box, opcional
      * É aplicado dinamicamente o filtro "postbox_classes_{$page}_{$id}", presente na function postbox_classes() em wp-admin/includes/post.php 
      */
-    function box_classes( $box, $apply ){
-        $class_string = 'boros_meta_box';
-        if( isset($box['class']) ){
-            $class_string .= " {$box['class']}";
-        }
-        add_filter( "postbox_classes_{$apply}_{$box['id']}", function($classes){
-            $classes[] = $class_string;
-            return $classes;
-        }), 10 );
+    function box_classes( $classes ){
+        $classes[] = "boros_meta_box {$this->css_class}";
+        return $classes;
     }
 }
