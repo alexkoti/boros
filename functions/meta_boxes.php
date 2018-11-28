@@ -556,16 +556,18 @@ class BorosMetaBoxes {
 		}
 		return $element_config;
 	}
-	
-	/* Adicionar uma class no meta_box, opcional
-	 * É aplicado dinamicamente o filtro "postbox_classes_{$page}_{$id}", presente na function postbox_classes() em wp-admin/includes/post.php 
-	 */
-	function box_classes( $box, $apply ){
-		$class_string = 'boros_meta_box';
-		if( isset($box['class']) )
-			$class_string .= " {$box['class']}";
-		$function_string = '$classes[] = "'.$class_string.'"; return $classes;';
-		//add_filter( "postbox_classes_{$apply}_metabox_{$box['id']}", create_function('$classes', $function_string), 10 );
-		add_filter( "postbox_classes_{$apply}_{$box['id']}", create_function('$classes', $function_string), 10 );
-	}
+    
+    /* Adicionar uma class no meta_box, opcional
+     * É aplicado dinamicamente o filtro "postbox_classes_{$page}_{$id}", presente na function postbox_classes() em wp-admin/includes/post.php 
+     */
+    function box_classes( $box, $apply ){
+        $class_string = 'boros_meta_box';
+        if( isset($box['class']) ){
+            $class_string .= " {$box['class']}";
+        }
+        add_filter( "postbox_classes_{$apply}_{$box['id']}", function($classes){
+            $classes[] = $class_string;
+            return $classes;
+        }), 10 );
+    }
 }
