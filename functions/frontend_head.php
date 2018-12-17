@@ -412,7 +412,7 @@ function opengraph_tags( $args = false ){
 				$info['description'] = wp_trim_excerpt($post->post_excerpt);
 			}
 			else{
-				$raw_content = wp_trim_excerpt($post->post_content);
+				$raw_content = $post->post_content;
 				$text = strip_shortcodes( $raw_content );
 				$text = str_replace(']]>', ']]&gt;', $text);
 				$text = strip_tags($text);
