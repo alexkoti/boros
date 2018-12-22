@@ -49,7 +49,7 @@ class BFE_grecaptcha extends BorosFormElement {
 	 */
 	function footer(){
 		$vars = array(
-			'sitekey' => get_option('recaptcha_publickey'),
+			'sitekey' => apply_filters( 'boros_recaptcha_publickey', get_option('recaptcha_publickey') ),
 		);
 		$json = json_encode($vars);
 		echo "<script type='text/javascript'>var grecaptcha_keys = {$json};</script>" . PHP_EOL;
