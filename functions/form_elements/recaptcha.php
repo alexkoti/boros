@@ -52,8 +52,8 @@ class BFE_recaptcha extends BorosFormElement {
 	 */
 	function set_input( $value = null ){
 		ob_start();
-		$publickey = get_option('recaptcha_publickey');
-		$privatekey = get_option('recaptcha_privatekey');
+		$publickey  = apply_filters( 'boros_recaptcha_publickey', get_option('recaptcha_publickey') );
+		$privatekey = apply_filters( 'boros_recaptcha_privatekey', get_option('recaptcha_privatekey') );
 		$resp = null;
 		$error = null;
 		
