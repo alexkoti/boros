@@ -67,26 +67,26 @@ function current_screen_info(){
  *  - URL
  *  - template usado(arquivo .php)
  */
-add_action( 'wp_footer', 'boros_current_page_info' );
+//add_action( 'wp_footer', 'boros_current_page_info' );
 function boros_current_page_info(){
-	global $template, $current_user;
-	if( is_user_logged_in() ){
-		wp_get_current_user();
-		$show_debug = get_user_meta($current_user->ID, 'show_debug', true);
-		if(!empty($show_debug)){
-		?>
-		<ul class="header_debug" 
+    global $template, $current_user;
+    if( is_user_logged_in() ){
+        wp_get_current_user();
+        $show_debug = get_user_meta($current_user->ID, 'show_debug', true);
+        if(!empty($show_debug)){
+        ?>
+        <ul class="header_debug" 
             style="position:fixed;width:100%;bottom:0;left:0;opacity:0.3;background:#FFFFE0;border:1px dotted #E6DB55;font-size:11px;margin:0;overflow:hidden;padding:4px;" 
             onMouseOver="this.style.opacity='1'"
             onMouseOut="this.style.opacity='0.3'"
         >
-			<li><span title="Para trabalhar com forms">(?)</span> URL corrente: <code><?php echo self_url(); ?></code></li>
-			<li>Template-name: <code><?php echo basename($template); ?></code></li>
-			<li>Template-path: <code><?php echo $template; ?></code></li>
-		</ul>
-		<?php
-		}
-	}
+            <li><span title="Para trabalhar com forms">(?)</span> URL corrente: <code><?php echo self_url(); ?></code></li>
+            <li>Template-name: <code><?php echo basename($template); ?></code></li>
+            <li>Template-path: <code><?php echo $template; ?></code></li>
+        </ul>
+        <?php
+        }
+    }
 }
 
 function current_page_info(){
