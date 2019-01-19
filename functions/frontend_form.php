@@ -441,7 +441,7 @@ class BorosFrontendForm {
             //pre($this->valid_meta, 'valid_meta');
             
             // acionar callbacks: form->config
-            $this->form_callback( $this->config['callbacks']['success'] );
+            $error = $this->form_callback( $this->config['callbacks']['success'] );
             
             // deprecated: typo error ('sucess')
             if( isset($this->config['callbacks']['sucess']) ){
