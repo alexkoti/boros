@@ -1134,6 +1134,21 @@ class BorosFormElement {
 				}
 				break;
 			
+			case 'bootstrap4':
+				if( $this->data['type'] == 'hidden' ){
+					echo $this->final_input;
+				}
+				else{
+					?>
+					<div class="form-group <?php echo $elem_class; ?>" id="<?php echo $this->data['attr']['id'];?>_control">
+						<?php echo $this->label; ?>
+						<?php echo $this->final_input; ?>
+						<?php echo $this->error_messages; ?>
+					</div>
+					<?php
+				}
+				break;
+			
 			// admin
 			case 'block':
 				$id = isset($this->data['name']) ? " id='box_{$this->data['name']}'" : '';

@@ -196,6 +196,7 @@ class BorosFrontendForm {
 		'user_activation_key' => '',
 		'user_status' => '',
 		'display_name' => '',
+		'rememberme' => '',
 	);
 	
 	// Dados core válidos. Serão usados no reload dos campos.
@@ -266,6 +267,10 @@ class BorosFrontendForm {
 			// usar output fomatado para bootstrap 3
 			case 'bootstrap3':
 				add_action( 'boros_frontend_form_output', array($this, 'bootstrap3_output') );
+				break;
+			// usar output fomatado para bootstrap 3
+			case 'bootstrap4':
+				add_action( 'boros_frontend_form_output', array($this, 'bootstrap4_output') );
 				break;
 			// não usar nada;
 			case false:
@@ -582,9 +587,9 @@ class BorosFrontendForm {
 		$this->valid_data = $this->validate( $this->context, $this->posted_data );
 		
 		$creds = array();
-		$creds['user_login'] = $this->posted_data['user_login'];
+		$creds['user_login']    = $this->posted_data['user_login'];
 		$creds['user_password'] = $this->posted_data['user_pass'];
-		$creds['remember'] = true;
+		$creds['remember']      = isset($this->posted_data['rememberme']) ? true : false;
 		
 		$user = wp_signon( $creds, false );
 		
@@ -629,7 +634,7 @@ class BorosFrontendForm {
 					'login_message_user_default' => '<strong>ERRO</strong>: Seu registro foi recebido e seu cadastro está em aprovação.',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
-				$custom_messages = apply_filters( 'boros_login_messages', boros_parse_args($custom_messages, $custom_default_messages) );
+				$custom_messages = apply_filters( 'boros_login_messages', boros_parse_args($custom_messages, $custom_default_messages), $creds );
 				
 				// filtrar as mensagens de erro padrão do wp pelos customizados
 				foreach( $default_messages as $msg_k => $msg_v ){
@@ -875,11 +880,6 @@ class BorosFrontendForm {
 					// carregar novo usuário
 					$this->new_user = get_user_by('id', $user_id);
 					
-					//pal('user_created');
-					//update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
-					if( $this->config['notification_email'] == true )
-						$this->new_user_notification( $user_id, $this->valid_data, $this->valid_meta );
-					
 					foreach( $this->valid_meta as $meta => $value ){
 						update_user_meta( $user_id, $meta, $value );
 					}
@@ -909,6 +909,16 @@ class BorosFrontendForm {
 					if( isset($this->config['callbacks']['sucess']) ){
 						$this->form_callback( $this->config['callbacks']['sucess'] );
 					}
+                    
+                    /**
+                     * Notificar por email
+                     * 
+                     */
+                    //pal('user_created');
+                    //update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
+                    if( $this->config['notification_email'] == true ){
+                        $this->new_user_notification( $user_id, $this->valid_data, $this->valid_meta );
+                    }
 					
 					/**
 					 * Autologin no novo usuário
@@ -1171,7 +1181,7 @@ class BorosFrontendForm {
 		$user_message = apply_filters( 'BFF_new_user_notification_message', $user_message, $login_url, $user, $user_data, $user_meta );
 		
 		$user_title = sprintf(__('[%s] Your username and password'), $blogname);
-		$user_title = apply_filters( 'BFF_new_user_notification_title', $user_title );
+		$user_title = apply_filters( 'BFF_new_user_notification_title', $user_title, $user, $user_data, $user_meta );
 		
 		//pre($user_title);
 		//pre($user_message);
@@ -2460,6 +2470,127 @@ class BorosFrontendForm {
 	}
 	
 	/**
+	 * output bootstrap4
+	 * 
+	 * 
+	 * @todo fazer o output da lista de errors, com ancoras e opcional
+	 */
+	function bootstrap4_output( $form_name ){
+		if( $this->form_name == $form_name ){
+			$this->create_numeric_username();
+			
+			// class css
+			$class = isset($this->config['class']) ? $this->config['class'] : '';
+			if( !empty( $this->errors ) ){
+				$class .= ' form_error';
+			}
+			if( isset($this->messages['success'])){
+				$class .= ' form_success';
+			}
+			
+			/**
+			 * Mensagem de login requerido
+			 * 
+			 */
+			if( $this->config['login_required'] == true and !is_user_logged_in() ){
+				?>
+				<div class="<?php echo $class; ?>" id="<?php echo $form_name; ?>">
+					<?php echo $this->config['messages']['login_required']['message']; ?>
+				</div>
+				<?php
+				return;
+			}
+			
+			/**
+			 * Formulário liberado
+			 * 
+			 */
+			?>
+			<form action="<?php $this->create_form_action(); ?>" method="post" class="<?php echo $class; ?>" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
+				<?php $this->show_messages(); ?>
+				<?php
+				/**
+				 * Mensagens de erro gerais. Este bloco pode exibir uma mensagem de erro geral, podendo exibir mensagens com âncoras.
+				 * 
+				 */
+				if( !empty( $this->errors ) ){
+					echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
+					
+					if( $this->config['show_errors_index'] == true ){
+						echo '<div class="alert alert-error alert-danger">';
+						foreach( $this->errors as $input_name => $errors ){
+							foreach( $errors as $error ){
+								echo "<p><a href='#{$input_name}'>{$error['message']}</a></p>";
+							}
+						}
+						echo '</div>';
+					}
+					
+					if( $this->config['debug'] == true ){
+						pre($this->errors, 'bootstrap3_output errors');
+					}
+				}
+				?>
+				<input type="hidden" name="form_name" value="<?php echo $this->config['form_name']; ?>" />
+			<?php
+				/**
+				 * Adicionar input:hidden do contexto
+				 * 
+				 */
+				foreach( $this->context as $k => $v ){
+					echo "<input type='hidden' name='{$k}' value='{$v}' />\n";
+				}
+				
+				echo '<div class="row">';
+				foreach( $this->elements as $index => $box ){
+					$parent    = $box['id'];
+					$itens     = $box['itens'];
+					$box_class = isset($box['class']) ? "group_container {$box['class']}" : 'group_container';
+					
+					echo "<fieldset class='{$box_class} fieldset form-fieldset' id='{$parent}-{$index}'><div class='form-row'>";
+					
+						// descrição
+						if( isset($box['title']) ){
+							if( isset($box['title']) and !empty($box['title']) ) echo "<legend>{$box['title']}</legend>";
+							if( isset($box['desc']) and !empty($box['desc']) ) echo "{$box['desc']} <hr />";
+						}
+						
+						foreach( $itens as $item ){
+							$data_value = null;
+							
+							// adicionar os erros guardados
+							if( isset($this->errors[$item['name']]) and $this->config['show_errors'] == true ){
+								$item['errors'] = $this->errors[$item['name']];
+							}
+							
+							// se estiver vazio, usar o valor padrão
+							//if( empty( $data_value ) and isset( $item['std']) ) $data_value = $item['std'];
+							
+							$data_value = $this->reload_input_value( $item );
+							
+							// o parent é a ID do box
+							$this->context['group'] = $box['id'];
+							if( empty($item['layout']) ){
+								$item['layout'] = 'bootstrap3';
+							}
+							create_form_elements( $this->context, $item, $data_value, $this->context['group'] );
+						}
+						
+						// info help de rodapé
+						if( isset($box['help']) and !empty($box['help']) ){
+							echo "<div class='col-md-12'>{$box['help']}</div>";
+						}
+						
+					echo '</div></fieldset>';
+				}
+				echo '</div>';
+			?>
+			</form>
+			<?php
+		}
+	}
+	
+	/**
 	 * ==================================================
 	 * MÉTODOS AUXILIARES ===============================
 	 * ==================================================
@@ -2488,10 +2619,11 @@ class BorosFrontendForm {
 		 * 
 		 */
 		$args = array(
-			'form_name' => $this->form_name,
+			'form_name'   => $this->form_name,
 			'new_post_id' => $this->new_post_id,
-            'valid_data' => $this->valid_data,
-            'valid_meta' => $this->valid_meta,
+			'user_id'     => $this->user_id,
+            'valid_data'  => $this->valid_data,
+            'valid_meta'  => $this->valid_meta,
 		);
 		return apply_filters( 'boros_frontend_form_redirect_url', $url, $args );
 	}
