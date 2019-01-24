@@ -2098,23 +2098,33 @@ class BorosFrontendForm {
 		$users_table = $wpdb->get_results( $query );
 		return $users_table[0]->Auto_increment;
 	}
-	
-	function create_form_action(){
-		$action = self_url();
-		if( isset($this->config['action_append']) ){
-			if( is_array($this->config['action_append']) ){
-				$action = add_query_arg( $this->config['action_append'], $action );
-			}
-			else{
-				$action .= $this->config['action_append'];
-			}
-		}
-		if( isset($this->config['action_anchor']) ){
-			$action .= $this->config['action_anchor'];
-		}
-		echo $action;
-	}
-	
+    
+    /**
+     * Montar a action do formulário
+     * 
+     */
+    function create_form_action(){
+        // URL atual
+        $action = self_url();
+
+        // adicionar queryvars
+        if( isset($this->config['action_append']) ){
+            if( is_array($this->config['action_append']) ){
+                $action = add_query_arg( $this->config['action_append'], $action );
+            }
+            else{
+                $action .= $this->config['action_append'];
+            }
+        }
+
+        // adicionar âncoras
+        if( isset($this->config['action_anchor']) ){
+            $action .= $this->config['action_anchor'];
+        }
+
+        echo apply_filters( 'boros_form_action', $action, $this->form_name, $this->context );
+    }
+    
 	/**
 	 * @todo verificar o $this->create_numeric_username() nesta function
 	 * 
