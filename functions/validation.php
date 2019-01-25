@@ -261,8 +261,76 @@ class BorosValidation {
 			}
 		}
 		return $value;
-	}
-	
+    }
+    
+    /**
+     * Validar radio, se está dentro das opções da configuração
+     * 
+     */
+    function validate_radio( $name, $value, $args, $message ){
+        if( !array_key_exists( $value, $args['options']['values'] ) ){
+            if( $this->context['type'] == 'frontend' ){
+                $error = array(
+                    'name'    => $name,
+                    'message' => 'Valor não permitido',
+                    'type'    => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+        }
+        return $value;
+    }
+    
+    /**
+     * Validar checkbox, se está dentro das opções da configuração
+     * 
+     */
+    function validate_checkbox( $name, $value, $args, $message ){
+        if( !array_key_exists( $value, $args['options']['values'] ) ){
+            if( $this->context['type'] == 'frontend' ){
+                $error = array(
+                    'name'    => $name,
+                    'message' => 'Valor não permitido',
+                    'type'    => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+        }
+        return $value;
+    }
+    
+    /**
+     * Validar select, se está dentro das opções da configuração, considerando a possibilidade ter grupos
+     * 
+     * @link https://stackoverflow.com/a/1320259 - flat multidimensional array
+     * 
+     */
+    function validate_select( $name, $value, $args, $message ){
+
+        // não aceionar erro em caso de valor vazio
+        if( empty($value) ){
+            return $value;
+        }
+
+        $available_options = array( );
+        $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($args['options']['values']));
+        foreach( $iterator as $index => $label ){
+            $available_options[] = $index;
+        }
+
+        if( !in_array( $value, $available_options ) ){
+            if( $this->context['type'] == 'frontend' ){
+                $error = array(
+                    'name'    => $name,
+                    'message' => 'Valor não permitido',
+                    'type'    => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+        }
+        return $value;
+    }
+
 	/**
 	 * É preciso verificar caso o campo possua a extensão outros
 	 * 
