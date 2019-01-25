@@ -64,16 +64,11 @@ class BFE_select extends BorosFormElement {
 			}
 			$attrs = $this->make_attributes($this->data['attr']);
 			$input = "<select {$attrs}>";
-			// adicionar o 'option_none', caso setado
-			if( isset($this->data['options']['option_none']) and $this->data['options']['option_none'] !== false ){
-				$input .= "<option value=''>{$this->data['options']['option_none']}</option>\n";
-			}
-			foreach( $this->data['options']['values'] as $option_value => $option_label ){
-				// verificar defaults/selected, é comparado o option_value, que é a informação gravada
-				$selected = selected( $option_value, $data_value, false );
-				
-				$input .= "<option value='{$option_value}'{$selected}>{$option_label}</option>\n";
-			}
+                // adicionar o 'option_none', caso setado
+                if( isset($this->data['options']['option_none']) and $this->data['options']['option_none'] !== false ){
+                    $input .= "<option value=''>{$this->data['options']['option_none']}</option>\n";
+                }
+                $input .= $this->option_loop( $this->data['options']['values'], $data_value );
 			$input .= "</select>";
 			
 			$input .= $input_other;
@@ -83,7 +78,31 @@ class BFE_select extends BorosFormElement {
 		else{
 			return '<div class="form_element_error">As opções dos select não foram definidas</div>';
 		}
-	}
+    }
+    
+    /**
+     * Output do html dos options, verificando se está separado em grupos
+     * 
+     * 
+     * @param array     $values valores disponíveis
+     * @param string    $data_value valor atual
+     * 
+     */
+    function option_loop( $values, $data_value ){
+        $options = '';
+        foreach( $values as $option_value => $option_label ){
+            if( is_array($option_label) ){
+                $options .= "<optgroup label='{$option_value}'>";
+                $options .= $this->option_loop( $option_label, $data_value );
+                $options .= '</optgroup>';
+            }
+            else{
+                $selected = selected( $option_value, $data_value, false );
+                $options .= "<option value='{$option_value}'{$selected}>{$option_label}</option>\n";
+            }
+        }
+        return $options;
+    }
 }
 
 
