@@ -177,18 +177,26 @@ class BorosValidation {
 				 */
 				//pal($rule, 'RULE');
 				//pre($validation, 'VALIDATION ' . $element['name']);
-				$validation['args']['rule'] = $rule;
-				
-				if( method_exists( $this, $validation['rule'] ) ){
-					//pal("Método da class BorosValidation: {$validation['rule']}");
-					$validation['args']['object'] = $this;
-					$newval = call_user_func( array( $this, $validation['rule']), $element['name'], $newval, $validation['args'], $validation['message'] );
-				}
-				//testar user function. Aceita uma chamada de classe
-				elseif( function_exists( $validation['rule'] ) ){
-					//pal("Function: {$validation['rule']}");
-					$validation['args']['object'] = $this;
-					$newval = call_user_func( $validation['rule'], $element['name'], $newval, $validation['args'], $validation['message'] );
+                $validation['args']['rule'] = $rule;
+                
+                // retornar em caso de skip_validation
+                $skip_validation = false;
+                if( isset($validation['args']['skip_validation']) && $validation['args']['skip_validation'] == true ){
+                    $skip_validation = true;
+                }
+                
+                if( $skip_validation == false ){
+                    if( method_exists( $this, $validation['rule'] ) ){
+                        //pal("Método da class BorosValidation: {$validation['rule']}");
+                        $validation['args']['object'] = $this;
+                        $newval = call_user_func( array( $this, $validation['rule']), $element['name'], $newval, $validation['args'], $validation['message'] );
+                    }
+                    //testar user function. Aceita uma chamada de classe
+                    elseif( function_exists( $validation['rule'] ) ){
+                        //pal("Function: {$validation['rule']}");
+                        $validation['args']['object'] = $this;
+                        $newval = call_user_func( $validation['rule'], $element['name'], $newval, $validation['args'], $validation['message'] );
+                    }
                 }
                 unset( $this->validations[$element['name']]['remaining_rules'][$rule]);
 			}
@@ -307,7 +315,7 @@ class BorosValidation {
      */
     function validate_select( $name, $value, $args, $message ){
 
-        // não aceionar erro em caso de valor vazio
+        // não acionar erro em caso de valor vazio
         if( empty($value) ){
             return $value;
         }
