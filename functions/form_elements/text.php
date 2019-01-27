@@ -57,8 +57,8 @@ class BFE_text extends BorosFormElement {
 			$separator = isset($this->data['options']['separator']) ? $this->data['options']['separator'] : '';
 			foreach( $this->data['options']['split'] as $name => $attr ){
 				$item_value = isset($value[$name]) ? $value[$name] : '';
+				$type = isset($attr['type']) ? $attr['type'] : $type;
 				$item_attr = boros_parse_args($this->data['attr'], $attr);
-				//$item_attr['dataset']['name'] = $this->data['attr']['name'];
 				$item_attr['dataset']['key']  = $name;
 				$item_attr['id']              = "{$this->data['name']}_{$name}";
 				$item_attr['class']           = "{$this->data['attr']['class']} {$item_attr['class']} splitted";
@@ -66,7 +66,7 @@ class BFE_text extends BorosFormElement {
 				$input_helper = isset($attr['input_helper']) ? "<span class='description'>{$attr['input_helper']}</span>" : '';
 				
 				$sattr = $this->make_attributes($item_attr);
-				$input[] = "{$input_helper}<input type='text' value='{$item_value}' {$sattr} /> ";
+				$input[] = "{$input_helper}<input type='{$type}' value='{$item_value}' {$sattr} /> ";
 			}
 			$input = implode( $separator, $input );
 			$input .= $this->input_helper;

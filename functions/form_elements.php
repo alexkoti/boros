@@ -1259,11 +1259,14 @@ class BorosFormElement {
 		$attrs['name'] = $this->set_name($attrs);
 		$out = '';
 		foreach( $attrs as $k => $v ){
-			if( $v !== false and ($k != 'dataset' and $k != 'elem_class') ){
+			if( $v !== false and ($k != 'dataset' && $k != 'elem_class' && $k != 'attr') ){
 				$out .= " {$prefix}{$k}='{$v}'";
 			}
 			elseif( $k == 'dataset' ){
 				$out .= make_attributes( $v, 'data-' );
+			}
+			elseif( $k == 'attr' ){
+				$out .= make_attributes( $v );
 			}
 		}
 		return $out;
