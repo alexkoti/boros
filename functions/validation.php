@@ -276,6 +276,11 @@ class BorosValidation {
      * 
      */
     function validate_radio( $name, $value, $args, $message ){
+
+        if( empty($value) ){
+            return $value;
+        }
+
         if( !array_key_exists( $value, $args['options']['values'] ) ){
             if( $this->context['type'] == 'frontend' ){
                 $error = array(
@@ -293,8 +298,15 @@ class BorosValidation {
      * Validar checkbox, se está dentro das opções da configuração
      * 
      */
-    function validate_checkbox( $name, $value, $args, $message ){
-        if( !array_key_exists( $value, $args['options']['values'] ) ){
+    function validate_checkbox_group( $name, $value, $args, $message ){
+
+        if( empty($value) ){
+            return $value;
+        }
+
+        // @link https://stackoverflow.com/a/7542708 - verificar se todos os itens em $value estão presentes nas opções disponíveis
+        $available = array_keys($args['options']['values']);
+        if( count(array_intersect($value, $available)) != count($value) ){
             if( $this->context['type'] == 'frontend' ){
                 $error = array(
                     'name'    => $name,
