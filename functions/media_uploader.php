@@ -147,37 +147,59 @@ function boros_post_media_column_render( $column_name ){
  * Usado pela coluna e demais controles meta_box e admin_page
  * 
  */
-function boros_drop_upload_box( $post ){
-	// adjust values here
-	$id = "img{$post->ID}"; // this will be the name of form field. Image url(s) will be submitted in $_POST using this key. So if $id == “img1” then $_POST[“img1”] will have all the image urls
-	$svalue = ''; // this will be initial value of the above form field. Image urls.
-	$multiple = false; // allow multiple files upload
-	$width = null; // If you want to automatically resize all uploaded images then provide width here (in pixels)
-	$height = null; // If you want to automatically resize all uploaded images then provide height here (in pixels)
-	?>
-	<div class="plupload-upload-uic hide-if-no-js <?php if ($multiple): ?>plupload-upload-uic-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-upload-ui">
-		<input type="hidden" name="post_parent" value="<?php echo $post->ID; ?>" disabled="disabled" />
-		<?php if ($width && $height): ?>
-				<span class="plupload-resize"></span><span class="plupload-width" id="plupload-width<?php echo $width; ?>"></span>
-				<span class="plupload-height" id="plupload-height<?php echo $height; ?>"></span>
-		<?php endif; ?>
-		<div class="drop_area" id="drop_area_<?php echo $id; ?>">
-			<input id="<?php echo $id; ?>plupload-browse-button" type="button" value="Selecionar imagem" class="button button_select_files" />
-			<span class="ajaxnonceplu" id="ajaxnonceplu<?php echo wp_create_nonce($id . 'pluploadan'); ?>"></span>
-			<div class="filelist"></div>
-			<div class="plupload-thumbs drop_upload_image_view <?php if ($multiple): ?>plupload-thumbs-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-thumbs">
-				<?php if ( '' != get_the_post_thumbnail($post->ID, 'thumbnail') ){ ?>
-				<div class="drop_upload_image">
-					<?php the_post_thumbnail('thumbnail', array('class' => 'the_post_thumbnail')); ?>
-					<div class="hide-if-no-js drop_upload_image_remove"><span class="btn" title="Remover esta imagem">&nbsp;</span></div>
-				</div>
-				<?php } else { ?>
-				<p class="drag-drop-info"><small>ou</small><br /> Solte a imagem aqui</p>
-				<?php } ?>
-			</div>
-		</div>
-	</div>
-	<?php
+function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
+    // adjust values here
+    $id       = "img{$post->ID}"; // this will be the name of form field. Image url(s) will be submitted in $_POST using this key. So if $id == “img1” then $_POST[“img1”] will have all the image urls
+    $svalue   = '';               // this will be initial value of the above form field. Image urls.
+    $multiple = false;            // allow multiple files upload
+    $width    = null;             // If you want to automatically resize all uploaded images then provide width here (in pixels)
+    $height   = null;             // If you want to automatically resize all uploaded images then provide height here (in pixels)
+
+    $default_labels = array(
+        'button_send'  => 'Selecionar imagem',
+        'button_new'   => 'Selecionar uma nova imagem',
+        'drop_message' => 'Solte a imagem aqui',
+    );
+    $label = wp_parse_args( $labels, $default_labels );
+
+    $btn_label = $label['button_send'];
+    $thumbnail = '';
+    $_thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
+    if( !empty($_thumbnail_id) ){
+        $btn_label = $label['button_new'];
+        $scr       = wp_get_attachment_image_src( $_thumbnail_id, $size );
+        $thumbnail = "<img src='{$scr[0]}' class='the_post_thumbnail' />";
+    }
+    ?>
+    <div class="plupload-upload-uic hide-if-no-js <?php if ($multiple): ?>plupload-upload-uic-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-upload-ui">
+
+        <input type="hidden" name="post_parent" value="<?php echo $post->ID; ?>" disabled="disabled" />
+
+        <?php if ($width && $height){ ?>
+            <span class="plupload-resize"></span><span class="plupload-width" id="plupload-width<?php echo $width; ?>"></span>
+            <span class="plupload-height" id="plupload-height<?php echo $height; ?>"></span>
+        <?php } ?>
+
+        <div class="drop_area" id="drop_area_<?php echo $id; ?>">
+            <input id="<?php echo $id; ?>plupload-browse-button" type="button" value="<?php echo $btn_label; ?>" class="button button_select_files" />
+
+            <span class="ajaxnonceplu" id="ajaxnonceplu<?php echo wp_create_nonce($id . 'pluploadan'); ?>"></span>
+
+            <div class="filelist"></div>
+
+            <div class="plupload-thumbs drop_upload_image_view <?php if ($multiple): ?>plupload-thumbs-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-thumbs">
+                <?php if ( '' != $thumbnail ){ ?>
+                <div class="drop_upload_image">
+                    <?php echo $thumbnail; ?>
+                    <div class="hide-if-no-js drop_upload_image_remove"><span class="btn" title="Remover esta imagem">&nbsp;</span></div>
+                </div>
+                <?php } else { ?>
+                <p class="drag-drop-info"><small>ou</small><br /> <?php echo $label['drop_message']; ?></p>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+    <?php
 }
 
 
