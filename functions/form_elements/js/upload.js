@@ -19,6 +19,15 @@ jQuery(document).ready(function($){
  * 
  */
 (function($){
+
+    /**
+     * Iniciar tradução
+     * 
+     * @link https://www.plupload.com/i18n/ 23 Sep, 2017
+     * 
+     */
+    plupload.addI18n({"N\/A":"N\/D","tb":"TB","gb":"GB","mb":"MB","kb":"KB","b":"Bytes","File extension error.":"Tipo de arquivo n\u00e3o permitido.","File size error.":"Tamanho de arquivo n\u00e3o permitido.","Duplicate file error.":"Erro: Arquivo duplicado.","Init error.":"Erro ao iniciar.","HTTP Error.":"Erro HTTP.","%s specified, but cannot be found.":"M\u00e9todo de envio <b>%s<\/b> especificado, mas n\u00e3o p\u00f4de ser encontrado.","You must specify either browse_button or drop_element.":"Voc\u00ea deve especificar o bot\u00e3o para escolher(browse_button) os arquivos ou o elemento para arrastar(drop_element).","Select files":"Selecione os arquivos","Add files to the upload queue and click the start button.":"Adicione os arquivos \u00e0 fila e clique no bot\u00e3o \"Iniciar o envio\".","List":"Listagem","Thumbnails":"Miniaturas","Filename":"Nome do arquivo","Status":"Status","Size":"Tamanho","Drag files here.":"Arraste os arquivos pra c\u00e1","Add Files":"Adicionar arquivo(s)","Start Upload":"Iniciar o envio","Stop Upload":"Parar o envio","File count error.":"Erro na contagem dos arquivos","File: %s":"Arquivo: %s","File: %s, size: %d, max file size: %d":"Arquivo: %s, Tamanho: %d , Tamanho M\u00e1ximo do Arquivo: %d","%s already present in the queue.":"%s j\u00e1 presentes na fila.","Upload element accepts only %d file(s) at a time. Extra files were stripped.":"S\u00f3 s\u00e3o aceitos %d arquivos por vez. O que passou disso foi descartado.","Image format either wrong or not supported.":"Imagem em formato desconhecido ou n\u00e3o permitido.","Runtime ran out of available memory.":"M\u00e9todo de envio ficou sem mem\\u00f3ria.","Resoultion out of boundaries! <b>%s<\/b> runtime supports images only up to %wx%hpx.":"Resolu\u00e7\u00e3o fora de tamanho. O m\u00e9todo de envio <b>%s<\/b> suporta imagens com no m\u00e1ximo %wx%hpx.","Upload URL might be wrong or doesn't exist.":"URL de envio incorreta ou inexistente","Close":"Fechar","Uploaded %d\/%d files":"%d\\\/%d arquivo(s) enviados(s)","%d files queued":"%d arquivo(s)","Error: File too large:":"Erro: Arquivo muito grande:","Error: Invalid file extension:":"Erro: Extens\u00e3o de arquivo inv\u00e1lida:"});
+
 	$.fn.extend({ 
 		initialize_plupload: function(){
 			return this.each(function() {
@@ -79,7 +88,19 @@ jQuery(document).ready(function($){
 				});
 				
 				// iniciar o uploader
-				uploader.init();
+                uploader.init();
+                
+                /**
+                 * Tratar erros
+                 * 
+                 */
+                uploader.bind('Error', function(up, err) {
+                    var limit = base_plupload_config.max_file_size;
+                    if( err.message == 'Tamanho de arquivo não permitido.' ){
+                        err.message = 'Tamanho de arquivo acima do limite, por favor reduza o arquivo ou envie outro menor.';
+                    }
+                    alert(err.message);
+                });
 
 				/**
 				 * Arquivo adicionado à fila. Nesse caso os uploads são iniciados imediatamente em up.start(), após o drop.
