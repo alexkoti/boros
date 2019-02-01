@@ -181,7 +181,9 @@ function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
         <?php } ?>
 
         <div class="drop_area" id="drop_area_<?php echo $id; ?>">
-            <input id="<?php echo $id; ?>plupload-browse-button" type="button" value="<?php echo $btn_label; ?>" class="button button_select_files" />
+            <button id="<?php echo $id; ?>plupload-browse-button" type="button" class="button button_select_files">
+                <?php echo $btn_label; ?>
+            </button>
 
             <span class="ajaxnonceplu" id="ajaxnonceplu<?php echo wp_create_nonce($id . 'pluploadan'); ?>"></span>
 

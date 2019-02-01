@@ -33,11 +33,12 @@ jQuery(document).ready(function($){
 			return this.each(function() {
 				//console.log( this );
 				//console.log( $(this) );
-				var pconfig = false;
-				var $this = $(this);
-				var id1 = $this.attr("id");
-				var imgId = id1.replace("plupload-upload-ui", "");
+				var pconfig     = false;
+				var $this       = $(this);
+				var id1         = $this.attr("id");
+				var imgId       = id1.replace("plupload-upload-ui", "");
 				var post_parent = $this.find('[name = "post_parent"]');
+                var submits     = $this.closest('form').find('[type=submit]');
 
 				//plu_show_thumbs(imgId);
 
@@ -109,6 +110,8 @@ jQuery(document).ready(function($){
 				uploader.bind('FilesAdded', function(up, files){
 					// esconder imagem antiga
 					$this.find('.plupload-thumbs').slideUp('fast', function(){
+                        // impedir submit do form parent
+                        submits.prop('disabled', true).css('color', 'red');
 						// adicionar arquivos na fila e iniciar upload
 						$this.find('.filelist').empty().show();
 						$.each(files, function(i, file) {
@@ -116,7 +119,7 @@ jQuery(document).ready(function($){
 								'<div class="file" id="' + file.id + '"><b>' +
 								file.name + '</b> (<span>' + plupload.formatSize(0) + '</span>/' + plupload.formatSize(file.size) + ') ' +
 								'<div class="fileprogress"></div></div>');
-						});
+                        });
 						up.refresh();
 						up.start();
 					});
@@ -142,7 +145,9 @@ jQuery(document).ready(function($){
 					//console.log(response);
 					$this.find('.filelist').slideUp('fast', function(){
 						$("#" + imgId + "plupload-thumbs").html(response["response"]).slideDown();
-					});
+                    });
+                    // re-habilitar submit do form parent
+                    submits.prop('disabled', false).css('color', 'green');
 				});
 				
 				uploader.bind('Refresh', function(up){
