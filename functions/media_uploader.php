@@ -90,6 +90,7 @@ var base_plupload_config = <?php echo json_encode($plupload_init); ?>;
  * 
  */
 add_action( 'wp_ajax_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
+add_action( 'wp_ajax_nopriv_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
 function boros_drop_upload_add_ajax() {
 	// check ajax nonce
 	$imgid = $_POST["imgid"];
@@ -113,6 +114,7 @@ function boros_drop_upload_add_ajax() {
  * 
  */
 add_action( 'wp_ajax_boros_drop_upload_remove', 'boros_drop_upload_remove_ajax' );
+add_action( 'wp_ajax_nopriv_boros_drop_upload_remove', 'boros_drop_upload_remove_ajax' );
 function boros_drop_upload_remove_ajax() {
 	$post_id = (int)$_POST['post_id'];
 	delete_post_meta( $post_id, '_thumbnail_id' );
