@@ -33,13 +33,13 @@ jQuery(document).ready(function($){
 			return this.each(function() {
 				//console.log( this );
 				//console.log( $(this) );
-				var pconfig       = false;
-				var $this         = $(this);
-				var id1           = $this.attr("id");
-				var imgId         = id1.replace("plupload-upload-ui", "");
-				var post_parent   = $this.find('[name = "post_parent"]');
-				var thumnail_size = $this.find('[name = "thumnail_size"]');
-                var submits       = $this.closest('form').find('[type=submit]');
+				var pconfig        = false;
+				var $this          = $(this);
+				var id1            = $this.attr("id");
+				var imgId          = id1.replace("plupload-upload-ui", "");
+				var post_parent    = $this.find('[name="post_parent"]');
+				var thumbnail_size = $this.find('[name="thumbnail_size"]');
+                var submits        = $this.closest('form').find('[type=submit]');
 
 				//plu_show_thumbs(imgId);
 
@@ -54,7 +54,7 @@ jQuery(document).ready(function($){
 				pconfig["file_data_name"]                  = imgId + pconfig["file_data_name"];
 				pconfig["multipart_params"]["imgid"]       = imgId;
 				pconfig["multipart_params"]["post_parent"] = post_parent.val();
-				pconfig["multipart_params"]["size"]        = thumnail_size.val();
+				pconfig["multipart_params"]["size"]        = thumbnail_size.val();
 				pconfig["multipart_params"]["_ajax_nonce"] = $this.find(".ajaxnonceplu").attr("id").replace("ajaxnonceplu", "");
 				
 				/**
