@@ -69,9 +69,10 @@ function boros_upload_admin_head(){
 		 // additional post data to send to our ajax hook
 		'multipart_params' => array(
 			'_ajax_nonce' => '', // will be added per uploader
-			'action' => 'boros_drop_upload_add', // the ajax action name
-			'imgid' => 0, // will be added per uploader
-			'post_parent' => 0 // post para quem adicionar a imagem e também o _thumbnail_id
+			'action'      => 'boros_drop_upload_add', // the ajax action name
+			'imgid'       => 0, // will be added per uploader
+			'post_parent' => 0, // post para quem adicionar a imagem e também o _thumbnail_id
+			'size'        => 0, // tamanho do thumbanil
 		)
 	);
 ?>
@@ -92,12 +93,13 @@ add_action( 'wp_ajax_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
 function boros_drop_upload_add_ajax() {
 	// check ajax nonce
 	$imgid = $_POST["imgid"];
+	$size  = $_POST["size"];
 	check_ajax_referer($imgid . 'pluploadan');
 	$tmp = new MediaUpload;
 	$attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'] );
 	//pre($attachment);
 	update_post_meta( $_POST['post_parent'], '_thumbnail_id', $attachment['attachment_id'] );
-	$img = wp_get_attachment_image_src( $attachment['attachment_id'], 'thumbnail' );
+	$img = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
 	echo "<div class='drop_upload_image'><img src='{$img[0]}' alt='' class='the_post_thumbnail' /><div class='hide-if-no-js drop_upload_image_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div></div>";
 	
 	exit;
@@ -174,6 +176,7 @@ function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
     <div class="plupload-upload-uic hide-if-no-js <?php if ($multiple): ?>plupload-upload-uic-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-upload-ui">
 
         <input type="hidden" name="post_parent" value="<?php echo $post->ID; ?>" disabled="disabled" />
+        <input type="hidden" name="thumbnail_size" value="<?php echo $size; ?>" disabled="disabled" />
 
         <?php if ($width && $height){ ?>
             <span class="plupload-resize"></span><span class="plupload-width" id="plupload-width<?php echo $width; ?>"></span>

@@ -33,12 +33,13 @@ jQuery(document).ready(function($){
 			return this.each(function() {
 				//console.log( this );
 				//console.log( $(this) );
-				var pconfig     = false;
-				var $this       = $(this);
-				var id1         = $this.attr("id");
-				var imgId       = id1.replace("plupload-upload-ui", "");
-				var post_parent = $this.find('[name = "post_parent"]');
-                var submits     = $this.closest('form').find('[type=submit]');
+				var pconfig       = false;
+				var $this         = $(this);
+				var id1           = $this.attr("id");
+				var imgId         = id1.replace("plupload-upload-ui", "");
+				var post_parent   = $this.find('[name = "post_parent"]');
+				var thumnail_size = $this.find('[name = "thumnail_size"]');
+                var submits       = $this.closest('form').find('[type=submit]');
 
 				//plu_show_thumbs(imgId);
 
@@ -47,12 +48,13 @@ jQuery(document).ready(function($){
 				 * 
 				 */
 				pconfig=JSON.parse(JSON.stringify(base_plupload_config));
-				pconfig["browse_button"] = imgId + pconfig["browse_button"];
-				pconfig["container"] = imgId + pconfig["container"];
-				pconfig["drop_element"] = $this.find('.drop_area').attr('id'); //imgId + pconfig["drop_element"];
-				pconfig["file_data_name"] = imgId + pconfig["file_data_name"];
-				pconfig["multipart_params"]["imgid"] = imgId;
+				pconfig["browse_button"]                   = imgId + pconfig["browse_button"];
+				pconfig["container"]                       = imgId + pconfig["container"];
+				pconfig["drop_element"]                    = $this.find('.drop_area').attr('id'); //imgId + pconfig["drop_element"];
+				pconfig["file_data_name"]                  = imgId + pconfig["file_data_name"];
+				pconfig["multipart_params"]["imgid"]       = imgId;
 				pconfig["multipart_params"]["post_parent"] = post_parent.val();
+				pconfig["multipart_params"]["size"]        = thumnail_size.val();
 				pconfig["multipart_params"]["_ajax_nonce"] = $this.find(".ajaxnonceplu").attr("id").replace("ajaxnonceplu", "");
 				
 				/**
@@ -71,8 +73,8 @@ jQuery(document).ready(function($){
 					var w=parseInt($this.find(".plupload-width").attr("id").replace("plupload-width", ""));
 					var h=parseInt($this.find(".plupload-height").attr("id").replace("plupload-height", ""));
 					pconfig["resize"] = {
-						width : w,
-						height : h,
+						width   : w,
+						height  : h,
 						quality : 90
 					};
 				}
@@ -111,7 +113,7 @@ jQuery(document).ready(function($){
 					// esconder imagem antiga
 					$this.find('.plupload-thumbs').slideUp('fast', function(){
                         // impedir submit do form parent
-                        submits.prop('disabled', true).css('color', 'red');
+                        submits.prop('disabled', true).css('opacity', 0.5);
 						// adicionar arquivos na fila e iniciar upload
 						$this.find('.filelist').empty().show();
 						$.each(files, function(i, file) {
@@ -147,7 +149,7 @@ jQuery(document).ready(function($){
 						$("#" + imgId + "plupload-thumbs").html(response["response"]).slideDown();
                     });
                     // re-habilitar submit do form parent
-                    submits.prop('disabled', false).css('color', 'green');
+                    submits.prop('disabled', false).css('opacity', 1);
 				});
 				
 				uploader.bind('Refresh', function(up){
@@ -163,7 +165,7 @@ jQuery(document).ready(function($){
 					var $view = $button.closest('.drop_upload_image_view');
 					var data = {
 						action: 'boros_drop_upload_remove',
-						post_id: post_parent.val()
+						post_id: post_parent.val(),
 					};
 					
 					//console.log(data);
