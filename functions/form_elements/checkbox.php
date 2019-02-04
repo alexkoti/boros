@@ -29,21 +29,22 @@ class BFE_checkbox extends BorosFormElement {
 		$attrs = make_attributes($this->data['attr']);
 		$input = '';
 		$for = $this->data['attr']['id'];
+        $required = isset($this->data['attr']['required']) ? " required='{$this->data['attr']['required']}'" : '';
 		
 		// caso seja layout normal, usando label de texto + input helper ao lado do checkbox
 		if( !empty($this->data['input_helper']) ){
-			$input = "<span class='checkbox_single_item'><input type='checkbox' {$attrs} value='1'{$checked} /><label for='{$for}' class='label_checkbox iptw_{$this->data['size']}'>{$this->input_helper}</label></span>";
+			$input = "<span class='checkbox_single_item'><input type='checkbox' {$attrs} value='1'{$checked}{$required} /><label for='{$for}' class='label_checkbox iptw_{$this->data['size']}'>{$this->input_helper}</label></span>";
 		}
 		
 		// separar os layouts :: bootstrap
 		if( $this->data['layout'] == 'bootstrap' ){
-			$input = "<label for='{$name}' class='checkbox'><input type='checkbox' {$attrs} value='1'{$checked} /> {$this->input_helper}</label>";
+			$input = "<label for='{$name}' class='checkbox'><input type='checkbox' {$attrs} value='1'{$checked}{$required} /> {$this->input_helper}</label>";
 		}
 		elseif( $this->data['layout'] == 'bootstrap3' ){
-			$input = "<div class='checkbox'><label><input type='checkbox' {$attrs} value='1'{$checked} /> {$this->input_helper}</label></div>";
+			$input = "<div class='checkbox'><label><input type='checkbox' {$attrs} value='1'{$checked}{$required} /> {$this->input_helper}</label></div>";
 		}
 		elseif( $this->data['layout'] == 'bootstrap4' ){
-			$input = "<div class='form-check'><input type='checkbox' {$attrs} value='1' {$checked} id='{$for}' class='form-check-input' /><label clas='form-check-label' for='{$for}'>{$this->input_helper}</label></div>";
+			$input = "<div class='form-check'><input type='checkbox' {$attrs} value='1' {$checked}{$required} id='{$for}' class='form-check-input' /><label clas='form-check-label' for='{$for}'>{$this->input_helper}</label></div>";
 		}
 		
 		return $input;

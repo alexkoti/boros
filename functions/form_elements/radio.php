@@ -51,18 +51,19 @@ class BFE_radio extends BorosFormElement {
 			$radios = array();
 			foreach( $this->data['options']['values'] as $option_value => $option_label ){
 				// verificar defaults/checked, é comparado o option_value, que é a informação gravada
-				$checked = checked( $option_value, $this->data_value, false );
-				$dataset = isset($this->data['attr']['dataset']['name']) ? "data-name='{$this->data['attr']['dataset']['name']}'" : '';
+				$checked  = checked( $option_value, $this->data_value, false );
+				$dataset  = isset($this->data['attr']['dataset']['name']) ? "data-name='{$this->data['attr']['dataset']['name']}'" : '';
+				$required = isset($this->data['attr']['required']) ? " required='{$this->data['attr']['required']}'" : '';
 				
 				// separar os layouts :: bootstrap
 				if( $this->data['layout'] == 'bootstrap' ){
 					$radios[] = "<label for='{$this->data['attr']['id']}_{$option_value}' class='radio'><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='input_radio' /> {$option_label}</label>";
 				}
 				elseif( $this->data['layout'] == 'bootstrap3' ){
-					$radios[] = "<span class='item_radio radio-inline'><label for='{$this->data['attr']['id']}_{$option_value}' class=''><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='radio-inline' /> {$option_label}</label></span>";
+					$radios[] = "<span class='item_radio radio-inline'><label for='{$this->data['attr']['id']}_{$option_value}' class=''><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked}{$required} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='radio-inline' /> {$option_label}</label></span>";
 				}
 				elseif( $this->data['layout'] == 'bootstrap4' ){
-					$radios[] = "<div class='form-check'><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='boros_form_input input_radio form-check-input' /><label for='{$this->data['attr']['id']}_{$option_value}' class='label_radio iptw_{$this->data['size']} form-check-label'>{$option_label}</label></div>";
+					$radios[] = "<div class='form-check'><input type='radio' name='{$this->data['attr']['name']}' value='{$option_value}'{$checked}{$required} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='boros_form_input input_radio form-check-input' /><label for='{$this->data['attr']['id']}_{$option_value}' class='label_radio iptw_{$this->data['size']} form-check-label'>{$option_label}</label></div>";
 				}
 				// layout normal
 				else{
