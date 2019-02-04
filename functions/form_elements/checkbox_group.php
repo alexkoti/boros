@@ -58,6 +58,9 @@ class BFE_checkbox_group extends BorosFormElement {
 				if( $this->data['layout'] == 'bootstrap' ){
 					$checkboxes[] = "<label class='checkbox'><input type='checkbox' name='{$this->data['attr']['name']}[]' id='{$this->data['attr']['id']}_{$option_value}' value='{$option_value}'{$checked} rel='{$option_value}_checkbox'> {$option_label}</label>";
 				}
+				if( $this->data['layout'] == 'bootstrap4' ){
+					$checkboxes[] = "<div class='form-check'><input type='checkbox' name='{$this->data['attr']['name']}[]' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='boros_form_input input_checkbox form-check-input' rel='{$option_value}_checkbox' /><label for='{$this->data['attr']['id']}_{$option_value}' class='label_checkbox iptw_{$this->data['size']} form-check-label'>{$option_label}</label></div>";
+				}
 				else{
 					//$checkboxes[] = "<span class='item_checkbox'><input type='checkbox' name='{$this->data['attr']['name']}[{$option_value}]' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' class='boros_form_input input_checkbox' rel='{$option_value}_checkbox' /><label for='{$this->data['attr']['id']}_{$option_value}' class='label_checkbox iptw_{$this->data['size']}'>{$option_label}</label></span>";
 					$checkboxes[] = "<span class='item_checkbox'><input type='checkbox' name='{$this->data['attr']['name']}[]' value='{$option_value}'{$checked} id='{$this->data['attr']['id']}_{$option_value}' {$dataset} class='boros_form_input input_checkbox' rel='{$option_value}_checkbox' /><label for='{$this->data['attr']['id']}_{$option_value}' class='label_checkbox iptw_{$this->data['size']}'>{$option_label}</label></span>";
