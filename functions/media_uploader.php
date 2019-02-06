@@ -250,10 +250,15 @@ Class MediaUpload {
 		if ( is_null( $field_name ) )
 			die('Need field_name');
 
-		// Move the file to the uploads directory, returns an array
-		// of information from $_FILES
-		//pre($_FILES[ $field_name ]);
+		/**
+         * Move the file to the uploads directory, returns an array of information from $_FILES
+         * Neste momento o arquivo é enviado ao servidor na forma original, porém ainda não existe no banco nem os recortes
+         * 
+         */
 		$uploaded_file = $this->handleUpload( $_FILES[ $field_name ] );
+
+        // corrigir orientação de imagens, caso necessário
+        $this->fix_image_orientation( $uploaded_file );
 		
 		//pre($uploaded_file, 'uploaded_file');
 
@@ -333,6 +338,49 @@ Class MediaUpload {
 	public function mediaTitle( $file ){
 		return addslashes( preg_replace('/\.[^.]+$/', '', basename( $file ) ) );
 	}
+    
+    /**
+     * Corrigir orientação de imagens
+     * 
+     * @link https://stackoverflow.com/a/13963783 - identificar a rotação correta a ser aplicada à imagem
+     * @link https://wordpress.stackexchange.com/a/283531 - editar a imagem no momento correto
+     * 
+     */
+    public function fix_image_orientation( $image_data ){
+
+        // apenas mime image
+        if( substr( $image_data['type'], 0, 5 ) == 'image' ){
+            // ler dados do exif
+            $exif = exif_read_data( $image_data['file'] );
+
+            // caso Orientation esteja declarado
+            if (!empty($exif['Orientation'])) {
+                // definir a rotação a ser aplicada
+                switch ($exif['Orientation']) {
+                    case 3:
+                        $rotation = 180;
+                        break;
+        
+                    case 6:
+                        $rotation = -90;
+                        break;
+        
+                    case 8:
+                        $rotation = 90;
+                        break;
+                }
+
+                // iniciar editor
+                $image_editor = wp_get_image_editor( $image_data['file'] );
+                if( !is_wp_error($image_editor) ){
+                    // rotacionar
+                    $image_editor->rotate( $rotation );
+                    // salvar
+                    $image_editor->save( $image_data['file'] );
+                }
+            }
+        }
+    }
 
 	/**
 	 * Adds the enctype for file upload, used with the hook

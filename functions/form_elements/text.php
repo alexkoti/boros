@@ -3,7 +3,7 @@
  * TEXT
  * input text comum
  * 
- * 
+ * @todo aplicar o for no label apontando para o primeiro campo do split
  * 
  */
 
