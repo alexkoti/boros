@@ -50,7 +50,7 @@ if( !function_exists('wp_new_user_notification') ){
  * 
  */
 if ( !function_exists('wp_password_change_notification') ) :
-	function wp_password_change_notification(&$user) {
+	function wp_password_change_notification($user) {
 		if ( $user->user_email != get_option('admin_email') ) {
 			$name = "{$user->display_name} (username: {$user->user_login})";
 			$message = sprintf(__('Password Lost and Changed for user: %s'), $name) . "\r\n";
