@@ -73,7 +73,10 @@ function boros_upload_admin_head(){
 			'imgid'       => 0, // will be added per uploader
 			'post_parent' => 0, // post para quem adicionar a imagem e também o _thumbnail_id
 			'size'        => 0, // tamanho do thumbanil
-		)
+        ),
+        'filters' => array(
+            'mime_types' => 'image/*',
+        ),
 	);
 ?>
 <script type="text/javascript">
@@ -92,18 +95,48 @@ var base_plupload_config = <?php echo json_encode($plupload_init); ?>;
 add_action( 'wp_ajax_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
 add_action( 'wp_ajax_nopriv_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
 function boros_drop_upload_add_ajax() {
-	// check ajax nonce
-	$imgid = $_POST["imgid"];
-	$size  = $_POST["size"];
-	check_ajax_referer($imgid . 'pluploadan');
-	$tmp = new MediaUpload;
-	$attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'] );
-	//pre($attachment);
-	update_post_meta( $_POST['post_parent'], '_thumbnail_id', $attachment['attachment_id'] );
-	$img = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
-	echo "<div class='drop_upload_image'><img src='{$img[0]}' alt='' class='the_post_thumbnail' /><div class='hide-if-no-js drop_upload_image_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div></div>";
-	
-	exit;
+    // check ajax nonce
+    $imgid = $_POST["imgid"];
+    $size  = $_POST["size"];
+    check_ajax_referer($imgid . 'pluploadan');
+
+    /**
+     * Carregar opções via filter
+     * 
+     */
+    $elem_options = apply_filters('boros_post_thumbnail_drop_ajax_options', array(
+        'size_limit' => wp_max_upload_size(),
+    ));
+
+    // arquivo temporário
+    $temp_file = $_FILES["{$imgid}quick_upload"];
+
+    // validar imagem
+    $valid_image = getimagesize( $temp_file['tmp_name'] );
+    if( $valid_image == false ){
+        wp_send_json_error(array(
+            'message' => 'Permitido apenas imagens',
+        ));
+    }
+
+    // validar tamanho
+    if( $temp_file['size'] > $elem_options['size_limit'] ){
+        wp_send_json_error(array(
+            'message' => 'Tamanho de arquivo excedido',
+        ));
+    }
+
+    // salvar imagem
+    $tmp = new MediaUpload;
+    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'] );
+    //pre($attachment);
+    update_post_meta( $_POST['post_parent'], '_thumbnail_id', $attachment['attachment_id'] );
+    $img = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
+    $html = "<div class='drop_upload_image'><img src='{$img[0]}' alt='' class='the_post_thumbnail' /><div class='hide-if-no-js drop_upload_image_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div></div>";
+    wp_send_json_success(array(
+        'html' => $html,
+    ));
+    die();
 }
 
 
@@ -205,6 +238,8 @@ function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
                 <?php } ?>
             </div>
         </div>
+
+        <div class="messages"></div>
     </div>
     <?php
 }

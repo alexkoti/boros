@@ -6,7 +6,11 @@ jQuery(document).ready(function($){
 	 * 
 	 */
 	if( $(".plupload-upload-uic").length > 0 ){
-		$(".plupload-upload-uic").initialize_plupload();
+        // array global para todos os pluploaders para permitir acesso aos plugins
+        window.boros_uploaders = [];
+
+        // iniciar uploaders
+        $(".plupload-upload-uic").initialize_plupload();
 	}
 	
 });
@@ -55,7 +59,8 @@ jQuery(document).ready(function($){
 				pconfig["multipart_params"]["imgid"]       = imgId;
 				pconfig["multipart_params"]["post_parent"] = post_parent.val();
 				pconfig["multipart_params"]["size"]        = thumbnail_size.val();
-				pconfig["multipart_params"]["_ajax_nonce"] = $this.find(".ajaxnonceplu").attr("id").replace("ajaxnonceplu", "");
+                pconfig["multipart_params"]["_ajax_nonce"] = $this.find(".ajaxnonceplu").attr("id").replace("ajaxnonceplu", "");
+                pconfig['filters']['mime_types'] = [{ title : "Image files", extensions : "jpg,gif,png" }];
 				
 				/**
 				 * Apenas para múltiplos
@@ -70,8 +75,8 @@ jQuery(document).ready(function($){
 				 * 
 				 */
 				if( $this.find(".plupload-resize").length > 0 ){
-					var w=parseInt($this.find(".plupload-width").attr("id").replace("plupload-width", ""));
-					var h=parseInt($this.find(".plupload-height").attr("id").replace("plupload-height", ""));
+					var w = parseInt($this.find(".plupload-width").attr("id").replace("plupload-width", ""));
+					var h = parseInt($this.find(".plupload-height").attr("id").replace("plupload-height", ""));
 					pconfig["resize"] = {
 						width   : w,
 						height  : h,
@@ -79,8 +84,9 @@ jQuery(document).ready(function($){
 					};
 				}
 
-				// instanciar o uploader
+                // instanciar o uploader
 				var uploader = new plupload.Uploader(pconfig);
+                window.boros_uploaders.push( uploader );
 				
 				/**
 				 * Uploader iniciado!
@@ -141,13 +147,24 @@ jQuery(document).ready(function($){
 				 * do arquivo poderá ter falhado em algum momento, e a url enviará uma mensagem de erro.
 				 * 
 				 */
-				uploader.bind('FileUploaded', function(up, file, response) {
+				uploader.bind('FileUploaded', function(up, file, server_resp) {
 					//console.log(up);
 					//console.log(file);
-					//console.log(response);
-					$this.find('.filelist').slideUp('fast', function(){
-						$("#" + imgId + "plupload-thumbs").html(response["response"]).slideDown();
-                    });
+                    //console.log( server_resp );
+
+                    var json = JSON.parse(server_resp.response);
+                    console.log(json);
+
+                    if( json.success == true ){
+                        $this.find('.filelist').slideUp('fast', function(){
+                            console.log($("#" + imgId + "plupload-thumbs"));
+                        	$("#" + imgId + "plupload-thumbs").html( json.data.html ).slideDown();
+                        });
+                    }
+                    else{
+                        alert( json.data.message );
+                    }
+
                     // re-habilitar submit do form parent
                     submits.prop('disabled', false).css('opacity', 1);
 				});
