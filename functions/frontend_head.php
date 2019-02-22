@@ -11,13 +11,18 @@
  * @todo: trocar ou adicionar setar a configuração via array único
  */
 class BorosJs {
+
     var $js_dir      = '';
+
     var $vendors_dir = '';
+
     var $current     = '';
+
     var $options     = array(
-        'src' => '/wp-includes/js/jquery/jquery.js',
-        'ver' => null,
+        'src'       => '/wp-includes/js/jquery/jquery.js',
+        'ver'       => null,
         'in_footer' => true,
+        'priority'  => 10,
     );
     var $queue = array();
     
@@ -33,8 +38,8 @@ class BorosJs {
      */
     function __construct( $args = array() ){
         if( !is_admin() and !in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) ){
-            add_action( 'wp_head', array($this, 'cond_head') );
-            add_action( 'wp_footer', array($this, 'cond_footer') );
+            add_action( 'wp_head', array($this, 'cond_head'), $this->options['priority'] );
+            add_action( 'wp_footer', array($this, 'cond_footer'), $this->options['priority'] );
             $this->options = boros_parse_args( $this->options, $args );
             
             $this->js_dir      = get_bloginfo('template_url') . '/js/';
@@ -56,7 +61,7 @@ class BorosJs {
                 $this->queue[] = 'comment-reply';
             }
             
-            add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'), $this->options['priority']);
         }
     }
     
