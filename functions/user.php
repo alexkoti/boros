@@ -213,13 +213,19 @@ class BorosUserMeta {
 	var $context = array(
 		'type' => 'user_meta',
 	);
-	
+    
+    /**
+     * É preciso acionar o hook 'edit_user_profile_update' e 'personal_options_update' para o save() que acontece no (re)load da página,
+     * pois o 'profile_update' pode ser acionado por qualquer function que rode o wp_update_user()
+     * 
+     */
 	function __construct( $config ){
 		$this->meta_boxes = update_element_config($config);
 		
 		add_action( 'show_user_profile', array( $this, 'edit' ) );
 		add_action( 'edit_user_profile', array( $this, 'edit' ) );
-		add_action( 'profile_update', array( $this, 'save' ) );
+		add_action( 'personal_options_update', array( $this, 'save' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'save' ) );
 		add_filter( 'load_element_config', array($this, 'load_element_config'), 10, 2 );
 	}
 	
