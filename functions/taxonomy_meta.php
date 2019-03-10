@@ -297,7 +297,19 @@ class BorosTaxonomyColumns {
 				echo "<span class='form_element_error'>A function {$function[1]}() não existe.</span>";
 			}
 			return;
-		}
+        }
+        
+        /**
+         * Imagem
+         * 
+         */
+        if( $column_name == 'image' ){
+            $image_id = get_term_meta( $term_id, 'image', true );
+            if( !empty($image_id) ){
+                $image_src = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+                echo "<img src='{$image_src[0]}' width='150' />";
+            }
+        }
 		
 		switch( $column_name ){
 			/**
