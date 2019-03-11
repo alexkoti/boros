@@ -1,14 +1,15 @@
 
 jQuery(document).ready(function($){
+
 	/**
 	 * .plupload-upload-uic = box de upload estáticos, nas páginas de listagens
 	 * #mass_add_produto_results = página de adição em lote
 	 * 
 	 */
-	if( $(".plupload-upload-uic").length > 0 ){
-        // array global para todos os pluploaders para permitir acesso aos plugins
-        window.boros_uploaders = [];
+    // array global para todos os pluploaders para permitir acesso aos plugins, manter sempre declarado caso sejam adicionados uploaders dinamicamente
+    window.boros_uploaders = [];
 
+	if( $(".plupload-upload-uic").length > 0 ){
         // iniciar uploaders
         $(".plupload-upload-uic").initialize_plupload();
 	}
