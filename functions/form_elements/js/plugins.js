@@ -59,7 +59,7 @@ jQuery(document).ready(function($){
                     // definir as propriedades do elemento
                     // várias propriedades só aparecem em props depois de chamar wp.media.string.image()
                     var args = {
-                        classes: ['img-responsive']
+                        classes: ['img-responsive', 'img-fluid']
                     };
                     var props = wp.media.string.props( args, attachment );
                     //console.log( props );

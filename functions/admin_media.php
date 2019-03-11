@@ -328,7 +328,7 @@ function search_media_query_args( $type_links ){
  */
 add_filter( 'media_send_to_editor', 'boros_media_send_to_editor', 9, 3 );
 function boros_media_send_to_editor( $html, $id, $attachment ){
-	$html = str_replace('class="', 'class="img-responsive ', $html);
+	$html = str_replace('class="', 'class="img-responsive img-fluid ', $html);
 	
 	// Caso seja uma imagem, cancelar este filtro de media comum, pois o hook 'image_send_to_editor' sempre roda depois deste.
 	if( isset($_POST['attachments'][$id]['file_type']) and $_POST['attachments'][$id]['file_type'] == 'image' )
