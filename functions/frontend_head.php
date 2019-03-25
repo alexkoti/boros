@@ -414,7 +414,7 @@ function opengraph_tags( $args = false ){
 		if( !isset($args['description']) ){
 			//criar novo description. Fallback para o excerpt em caso de content vazio.
 			if( !empty($post->post_excerpt) ){
-				$info['description'] = wp_trim_excerpt($post->post_excerpt);
+				$info['description'] = wp_trim_words($post->post_excerpt);
 			}
 			else{
 				$raw_content = $post->post_content;
@@ -515,10 +515,10 @@ function gplus_tags( $args = false ){
 		//criar novo description. Fallback para o content em caso de content vazio.
 		if( !isset($args['description']) ){
 			if( !empty($post->post_excerpt) ){
-				$info['description'] = wp_trim_excerpt($post->post_excerpt);
+				$info['description'] = wp_trim_words($post->post_excerpt);
 			}
 			else{
-				$raw_content = wp_trim_excerpt($post->post_content);
+				$raw_content = wp_trim_words($post->post_content);
 				$text = strip_shortcodes( $raw_content );
 				$text = str_replace(']]>', ']]&gt;', $text);
 				$text = strip_tags($text);
