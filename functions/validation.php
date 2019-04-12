@@ -324,6 +324,9 @@ class BorosValidation {
      * 
      * @link https://stackoverflow.com/a/1320259 - flat multidimensional array
      * 
+     * 
+     * @todo @bug caso de 'measurement_chart' em asbaratas, que não é passado $args para esta validação
+     * 
      */
     function validate_select( $name, $value, $args, $message ){
 
@@ -332,20 +335,22 @@ class BorosValidation {
             return $value;
         }
 
-        $available_options = array( );
-        $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($args['options']['values']));
-        foreach( $iterator as $index => $label ){
-            $available_options[] = $index;
-        }
-
-        if( !in_array( $value, $available_options ) ){
-            if( $this->context['type'] == 'frontend' ){
-                $error = array(
-                    'name'    => $name,
-                    'message' => 'Valor não permitido',
-                    'type'    => 'error'
-                );
-                $this->data_errors[$name][$args['rule']] = $error;
+        if( isset($args['options']['values']) ){
+            $available_options = array( );
+            $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($args['options']['values']));
+            foreach( $iterator as $index => $label ){
+                $available_options[] = $index;
+            }
+    
+            if( !in_array( $value, $available_options ) ){
+                if( $this->context['type'] == 'frontend' ){
+                    $error = array(
+                        'name'    => $name,
+                        'message' => 'Valor não permitido',
+                        'type'    => 'error'
+                    );
+                    $this->data_errors[$name][$args['rule']] = $error;
+                }
             }
         }
         return $value;
