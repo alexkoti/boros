@@ -153,17 +153,22 @@ jQuery(document).ready(function($){
 					//console.log(file);
                     //console.log( server_resp );
 
-                    var json = JSON.parse(server_resp.response);
+                    var json = borosTryParseJSON(server_resp.response);
                     console.log(json);
 
-                    if( json.success == true ){
-                        $this.find('.filelist').slideUp('fast', function(){
-                            console.log($("#" + imgId + "plupload-thumbs"));
-                        	$("#" + imgId + "plupload-thumbs").html( json.data.html ).slideDown();
-                        });
+                    if( json != false ){
+                        if( json.success == true ){
+                            $this.find('.filelist').slideUp('fast', function(){
+                                console.log($("#" + imgId + "plupload-thumbs"));
+                                $("#" + imgId + "plupload-thumbs").html( json.data.html ).slideDown();
+                            });
+                        }
+                        else{
+                            alert( json.data.message );
+                        }
                     }
                     else{
-                        alert( json.data.message );
+                        alert( 'O servidor não conseguiu processar a imagem, por favor tente novamente' );
                     }
 
                     // re-habilitar submit do form parent
@@ -206,4 +211,26 @@ jQuery(document).ready(function($){
 		}
 	});
 })(jQuery);
+
+/**
+ * Verificar se a string é um JSON válido, em caso de banco de dados offline, onde será retornado uma página html comum
+ * 
+ * @link https://stackoverflow.com/a/20392392
+ * 
+ */
+function borosTryParseJSON(jsonString){
+    try {
+        var o = JSON.parse(jsonString);
+        // Handle non-exception-throwing cases:
+        // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+        // but... JSON.parse(null) returns null, and typeof null === "object", 
+        // so we must check for that, too. Thankfully, null is falsey, so this suffices:
+        if (o && typeof o === "object") {
+            return o;
+        }
+    }
+    catch (e) { }
+
+    return false;
+};
 
