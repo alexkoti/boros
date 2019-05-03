@@ -179,6 +179,20 @@ class free_box extends WP_Widget {
                             ],
                             strikethrough : {inline : 'del'}
                         }
+                        // reativar botão de salvar widget, caso hover
+                        ,init_instance_callback: function (editor) {
+                            editor.on('Dirty', function (e) {
+                                var widget = $(editor.container).closest('div.widget');
+                                if( widget.length ){
+                                    var inside = widget.children('.widget-inside');
+                                    var saveButton = inside.find( '.widget-control-save' );
+                                    saveButton.prop( 'disabled', true ).val( wpWidgets.l10n.saved );
+                                    widget.addClass( 'widget-dirty' );
+                                    saveButton.prop( 'disabled', false ).val( wpWidgets.l10n.save );
+                                    widget.data( 'dirty-state-initialized', true );
+                                }
+                            });
+                        }
                     };
                     
                     /**
