@@ -5,6 +5,10 @@
  * 
  */
 
+/**
+ * @todo permitir que salve taxonomia como post_meta, quando em metabox de post
+ * 
+ */
 class BFE_taxonomy_select extends BorosFormElement {
 	var $valid_attrs = array(
 		'name' => '',
