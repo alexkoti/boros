@@ -573,8 +573,10 @@ class BorosAdminPages {
 	function output_page_header( $block ){
 		echo "<div class='icon32' id='icon-options-general'><br></div>";
 		
-		if( empty( $this->tabs ) ){
-			echo "<h2 class='section_title'>{$block['title']}</h2>";
+		if( empty($this->tabs) ){
+            if( !empty($block['title']) ){
+                echo "<h2 class='section_title'>{$block['title']}</h2>";
+            }
 		}
 		else{
 			echo '<h2 class="nav-tab-wrapper">';
@@ -603,8 +605,9 @@ class BorosAdminPages {
 	 * 
 	 */
 	function output_page_section( $block ){
-		if( isset($block['title']) )
-			echo "<h3>{$block['title']}</h3>";
+		if( isset($block['title']) && !empty($block['title']) ){
+            echo "<h3>{$block['title']}</h3>";
+        }
 		?>
 		
 		<!-- .form-table adicionado para herdar formatações do css do core -->
