@@ -104,8 +104,10 @@ function boros_drop_upload_add_ajax() {
      * Carregar opções via filter
      * 
      */
-    $elem_options = apply_filters('boros_post_thumbnail_drop_ajax_options', array(
-        'size_limit' => wp_max_upload_size(),
+    $elem_options = apply_filters('boros_post_thumbnail_drop_ajax_options', array());
+    $elem_options = wp_parse_args($elem_options, array(
+        'size_limit'    => wp_max_upload_size(),
+        'hash_filename' => false,
     ));
 
     // arquivo temporário
@@ -128,7 +130,7 @@ function boros_drop_upload_add_ajax() {
 
     // salvar imagem
     $tmp = new MediaUpload;
-    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'] );
+    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'], null, $elem_options );
     //pre($attachment);
     update_post_meta( $_POST['post_parent'], '_thumbnail_id', $attachment['attachment_id'] );
     $img = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
@@ -280,17 +282,23 @@ Class MediaUpload {
 	 * $final_file['file'] = $uploaded_file['file'];
 	 * $final_file['file_info'] = $file_info[];
 	 */
-	public function saveUpload( $field_name = null, $post_parent = 0, $user_id = null ) {
+	public function saveUpload( $field_name = null, $post_parent = 0, $user_id = null, $elem_options ) {
 
-		if ( is_null( $field_name ) )
-			die('Need field_name');
+        if ( is_null( $field_name ) ){
+            die('Need field_name');
+        }
 
-		/**
+        /**
          * Move the file to the uploads directory, returns an array of information from $_FILES
          * Neste momento o arquivo é enviado ao servidor na forma original, porém ainda não existe no banco nem os recortes
          * 
          */
-		$uploaded_file = $this->handleUpload( $_FILES[ $field_name ] );
+        $file_info = $_FILES[ $field_name ];
+        // modificar o filename, para que não seja utilizado o nome original
+        if( $elem_options['hash_filename'] == true ){
+            $file_info['name'] = boros_hash_filename( $file_info['name'] );
+        }
+        $uploaded_file = $this->handleUpload( $file_info );
 
         // corrigir orientação de imagens, caso necessário
         $this->fix_image_orientation( $uploaded_file );
@@ -351,7 +359,7 @@ Class MediaUpload {
 	/**
 	 * Do some set-up before calling the wp_handle_upload function
 	 */
-	public function handleUpload( $file=array() ){
+	public function handleUpload( $file = array() ){
 		require_once( ABSPATH . "wp-admin" . '/includes/file.php' );
 		return wp_handle_upload( $file, array( 'test_form' => false ), date('Y/m') );
 	}

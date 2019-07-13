@@ -57,6 +57,22 @@ function boros_frontend_form_data( $form_name ){
 	return apply_filters( 'boros_frontend_form_data', $form_name );
 }
 
+/**
+ * Modificar nome de arquivo para hash
+ * 
+ */ 
+function boros_hash_filename( $filename ){
+    // clone wp_unique_filename();
+    $ext  = pathinfo( $filename, PATHINFO_EXTENSION );
+    $name = pathinfo( $filename, PATHINFO_BASENAME );
+    if( $ext ){
+        $ext = '.' . $ext;
+    }
+    $hash_name = wp_hash( str_replace($ext, '', $filename) );
+    
+    return "{$hash_name}{$ext}";
+}
+
 class BorosFrontendForm {
 	// dados postados pelo usuário, unificando $_POST e $_FILES
 	var $posted_data;
@@ -1300,10 +1316,6 @@ class BorosFrontendForm {
 						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
 						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
                             
-                            // modificar o filename, para que não seja utilizado o nome original
-                            if( isset($config['options']['hash_filename']) and $config['options']['hash_filename'] == true ){
-                                $meta_value['name'] = $this->hash_filename( $meta_value['name'] );
-                            }
 							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');
 							// não salvar post_meta em caso de erro no upload e registrar o erro
 							if( is_wp_error($attachment_id) ){
@@ -1372,18 +1384,6 @@ class BorosFrontendForm {
 			$this->form_callback( $this->config['callbacks']['error'] );
 		}
 	}
-    
-    function hash_filename( $filename ){
-        // clone wp_unique_filename();
-        $ext = pathinfo( $filename, PATHINFO_EXTENSION );
-        $name = pathinfo( $filename, PATHINFO_BASENAME );
-        if ( $ext ) {
-            $ext = '.' . $ext;
-        }
-        $hash_name = wp_hash( str_replace($ext, '', $filename) );
-        
-        return "{$hash_name}{$ext}";
-    }
 	
 	function validate_taxonomy_terms( $post_data ){
 		foreach( $this->elements_plain as $element ){
@@ -1474,6 +1474,11 @@ class BorosFrontendForm {
         define('ALLOW_UNFILTERED_UPLOADS', true);
 
         do_action('boros_pre_upload', $this->form_name, $elem_config, $this);
+
+        // modificar o filename, para que não seja utilizado o nome original
+        if( isset($elem_config['options']['hash_filename']) and $elem_config['options']['hash_filename'] == true ){
+            $file_info['name'] = boros_hash_filename( $file_info['name'] );
+        }
 		
 		$movefile = wp_handle_upload( $file_info, array( 'test_form' => false ) );
 		if( $movefile ){
@@ -1660,10 +1665,6 @@ class BorosFrontendForm {
 						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
 						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
                             
-                            // modificar o filename, para que não seja utilizado o nome original
-                            if( isset($config['options']['hash_filename']) and $config['options']['hash_filename'] == true ){
-                                $meta_value['name'] = $this->hash_filename( $meta_value['name'] );
-                            }
 							$attachment_id = $this->save_file( $meta_value, $this->new_post_id, $config ); //pre($attachment_id, 'attachment_id');die();
 							// não salvar post_meta em caso de erro no upload e registrar o erro
 							if( is_wp_error($attachment_id) ){
