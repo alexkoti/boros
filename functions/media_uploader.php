@@ -312,14 +312,14 @@ Class MediaUpload {
 		// Build our array of data to be inserted as a post
 		$attachment = array(
 			'post_mime_type' => $_FILES[ $field_name ]['type'],
-			'guid' => $guid,
-			'post_title' => 'Uploaded : ' . $this->mediaTitle( $uploaded_file['file'] ),
-			'post_content' => '',
-			'post_author' => $user_id,
-			'post_status' => 'inherit',
-			'post_date' => date( 'Y-m-d H:i:s' ),
-			'post_date_gmt' => date( 'Y-m-d H:i:s' ),
-			'post_parent' => $post_parent,
+			'guid'           => $guid,
+			'post_title'     => $this->mediaTitle( $uploaded_file['file'] ),
+			'post_content'   => '',
+			'post_author'    => $user_id,
+			'post_status'    => 'inherit',
+			'post_date'      => date( 'Y-m-d H:i:s' ),
+			'post_date_gmt'  => date( 'Y-m-d H:i:s' ),
+			'post_parent'    => $post_parent,
 		);
 
 		// Add the file to the media library and generate thumbnail.
