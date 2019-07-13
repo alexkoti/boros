@@ -68,7 +68,7 @@ function boros_hash_filename( $filename ){
     if( $ext ){
         $ext = '.' . $ext;
     }
-    $hash_name = wp_hash( str_replace($ext, '', $filename) );
+    $hash_name = wp_hash( str_replace($ext, '', $filename) . time() );
     
     return "{$hash_name}{$ext}";
 }
