@@ -1475,11 +1475,17 @@ class BorosFrontendForm {
 
         do_action('boros_pre_upload', $this->form_name, $elem_config, $this);
 
+        // If we were to have a unique user account for uploading
+        $current_user = wp_get_current_user();
+        $user_id = $current_user->ID;
+
         // modificar o filename, para que não seja utilizado o nome original
         if( isset($elem_config['options']['hash_filename']) and $elem_config['options']['hash_filename'] == true ){
             $file_info['name'] = boros_hash_filename( $file_info['name'] );
         }
-		
+        // filtrar informações do arquivo
+        $file_info = apply_filters( 'boros_filter_uploaded_file_data', $file_info, $parent_id, $user_id );
+        // salvar o arquivo no local correto
 		$movefile = wp_handle_upload( $file_info, array( 'test_form' => false ) );
 		if( $movefile ){
 			// erro no upload, registrar erro

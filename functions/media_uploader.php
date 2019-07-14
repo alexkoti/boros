@@ -288,6 +288,12 @@ Class MediaUpload {
             die('Need field_name');
         }
 
+        // If we were to have a unique user account for uploading
+        if ( is_null( $user_id ) ) {
+            $current_user = wp_get_current_user();
+            $user_id = $current_user->ID;
+        }
+
         /**
          * Move the file to the uploads directory, returns an array of information from $_FILES
          * Neste momento o arquivo é enviado ao servidor na forma original, porém ainda não existe no banco nem os recortes
@@ -298,6 +304,9 @@ Class MediaUpload {
         if( $elem_options['hash_filename'] == true ){
             $file_info['name'] = boros_hash_filename( $file_info['name'] );
         }
+        // filtrar informações do arquivo
+        $file_info = apply_filters( 'boros_filter_uploaded_file_data', $file_info, $post_parent, $user_id );
+        // salvar o arquivo no local correto
         $uploaded_file = $this->handleUpload( $file_info );
 
         // corrigir orientação de imagens, caso necessário
@@ -307,12 +316,6 @@ Class MediaUpload {
 
 		if ( ! isset( $uploaded_file['file'] ) )
 			return false;
-
-		// If we were to have a unique user account for uploading
-		if ( is_null( $user_id ) ) {
-			$current_user = wp_get_current_user();
-			$user_id = $current_user->ID;
-		}
 
 		// Build the Global Unique Identifier
 		$guid = $this->buildGuid( $uploaded_file['file'] );
@@ -395,6 +398,7 @@ Class MediaUpload {
         if( substr( $image_data['type'], 0, 5 ) == 'image' ){
             // ler dados do exif
             $exif = exif_read_data( $image_data['file'] );
+            $rotation = 0;
 
             // caso Orientation esteja declarado
             if (!empty($exif['Orientation'])) {
@@ -414,12 +418,14 @@ Class MediaUpload {
                 }
 
                 // iniciar editor
-                $image_editor = wp_get_image_editor( $image_data['file'] );
-                if( !is_wp_error($image_editor) ){
-                    // rotacionar
-                    $image_editor->rotate( $rotation );
-                    // salvar
-                    $image_editor->save( $image_data['file'] );
+                if( $rotation > 0 ){
+                    $image_editor = wp_get_image_editor( $image_data['file'] );
+                    if( !is_wp_error($image_editor) ){
+                        // rotacionar
+                        $image_editor->rotate( $rotation );
+                        // salvar
+                        $image_editor->save( $image_data['file'] );
+                    }
                 }
             }
         }
