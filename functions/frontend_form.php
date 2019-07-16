@@ -599,13 +599,25 @@ class BorosFrontendForm {
 	 * @todo melhorar a filtro das mensagens> Atualmente as strings se repetem nos arquivos boros/functions/user.php e página de opções section_users.php do plugin child
 	 */
 	function login(){
-		// é preciso para pode recarregar os inputs no reload
-		$this->valid_data = $this->validate( $this->context, $this->posted_data );
+        //pre($this->posted_data);
+        // é preciso para pode recarregar os inputs no reload
+        $this->valid_data = $this->validate( $this->context, $this->posted_data );
+        
+        /**
+         * Retornar em caso de erro na pré-validação, ex recaptcha
+         * 
+         */
+        $this->errors = array_merge( $this->errors, $this->validation->data_errors );
+        if( !empty( $this->validation->data_errors ) || !empty( $this->errors ) ){
+            return;
+        }
+        //pre($this->errors);
+        //die();
 		
 		$creds = array();
 		$creds['user_login']    = $this->posted_data['user_login'];
 		$creds['user_password'] = $this->posted_data['user_pass'];
-		$creds['remember']      = isset($this->posted_data['rememberme']) ? true : false;
+        $creds['remember']      = isset($this->posted_data['rememberme']) ? true : false;
 		
 		$user = wp_signon( $creds, false );
 		
@@ -622,10 +634,10 @@ class BorosFrontendForm {
 				// mensagens padrão do WordPress
 				$default_messages = array(
 					'login_message_user_login_empty' => '<strong>ERRO</strong>: O campo do nome de usuário está vazio.',
-					'login_message_user_pass_empty' => '<strong>ERRO</strong>: O campo da senha está vazio.',
-					'login_message_invalid_user' => '<strong>ERRO</strong>: Nome de usuário inválido.',
-					'login_message_invalid_pass' => '<strong>ERRO</strong>: A senha que você forneceu para o usuário',
-					'login_message_user_default' => '<strong>ERRO</strong>: Sua conta precisa ser aprovada antes poder fazer o login no site',
+					'login_message_user_pass_empty'  => '<strong>ERRO</strong>: O campo da senha está vazio.',
+					'login_message_invalid_user'     => '<strong>ERRO</strong>: Nome de usuário inválido.',
+					'login_message_invalid_pass'     => '<strong>ERRO</strong>: A senha que você forneceu para o usuário',
+					'login_message_user_default'     => '<strong>ERRO</strong>: Sua conta precisa ser aprovada antes poder fazer o login no site',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
 				
@@ -636,18 +648,18 @@ class BorosFrontendForm {
 				 */
 				$custom_messages = array(
 					'login_message_user_login_empty' => get_option('login_message_user_login_empty'),
-					'login_message_user_pass_empty' => get_option('login_message_user_pass_empty'),
-					'login_message_invalid_user' => get_option('login_message_invalid_user'),
-					'login_message_invalid_pass' => get_option('login_message_invalid_pass'),
-					'login_message_user_default' => get_option('login_message_user_default'),
+					'login_message_user_pass_empty'  => get_option('login_message_user_pass_empty'),
+					'login_message_invalid_user'     => get_option('login_message_invalid_user'),
+					'login_message_invalid_pass'     => get_option('login_message_invalid_pass'),
+					'login_message_user_default'     => get_option('login_message_user_default'),
 					'login_message_user_disapproved' => get_option('login_message_user_disapproved'),
 				);
 				$custom_default_messages = array(
 					'login_message_user_login_empty' => '<strong>ERRO</strong>: Email vazio!',
-					'login_message_user_pass_empty' => '<strong>ERRO</strong>: Senha vazia!',
-					'login_message_invalid_user' => '<strong>ERRO</strong>: Não existe uma conta com este email',
-					'login_message_invalid_pass' => '<strong>ERRO</strong>: A senha que você forneceu está incorreta.',
-					'login_message_user_default' => '<strong>ERRO</strong>: Seu registro foi recebido e seu cadastro está em aprovação.',
+					'login_message_user_pass_empty'  => '<strong>ERRO</strong>: Senha vazia!',
+					'login_message_invalid_user'     => '<strong>ERRO</strong>: Não existe uma conta com este email',
+					'login_message_invalid_pass'     => '<strong>ERRO</strong>: A senha que você forneceu está incorreta.',
+					'login_message_user_default'     => '<strong>ERRO</strong>: Seu registro foi recebido e seu cadastro está em aprovação.',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
 				$custom_messages = apply_filters( 'boros_login_messages', boros_parse_args($custom_messages, $custom_default_messages), $creds );
@@ -672,54 +684,54 @@ class BorosFrontendForm {
 				switch( $code ){
 					case 'empty_password':
 						$error = array(
-							'name' => $code,
+							'name'    => $code,
 							'message' => $msg,
-							'type' => 'error'
+							'type'    => 'error',
 						);
 						$this->errors['user_pass']['empty_password'] = $error;
 						break;
                         
 					case 'incorrect_password':
 						$error = array(
-							'name' => $code,
+							'name'    => $code,
 							'message' => $msg,
-							'type' => 'error'
+							'type'    => 'error',
 						);
 						$this->errors['user_pass']['incorrect_password'] = $error;
 						break;
 					
 					case 'invalid_username':
 						$error = array(
-							'name' => $code,
+							'name'    => $code,
 							'message' => $msg,
-							'type' => 'error'
+							'type'    => 'error',
 						);
 						$this->errors['user_login']['invalid_username'] = $error;
 						break;
 					
 					case 'verify_approved_user_default':
 						$error = array(
-							'name' => $code,
+							'name'    => $code,
 							'message' => $msg,
-							'type' => 'error'
+							'type'    => 'error',
 						);
 						$this->errors['user_login']['verify_approved_user_default'] = $error;
 						break;
 					
 					case 'verify_approved_user_disapproved':
 						$error = array(
-							'name' => $code,
+							'name'    => $code,
 							'message' => $msg,
-							'type' => 'error'
+							'type'    => 'error',
 						);
 						$this->errors['user_login']['verify_approved_user_disapproved'] = $error;
 						break;
 					
 					default:
 						$error = array(
-							'name' => $code,
+							'name'    => $code,
 							'message' => $msg,
-							'type' => 'error'
+							'type'    => 'error',
 						);
 						$this->errors['user_login'][$code] = $error;
 						break;

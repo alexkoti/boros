@@ -493,7 +493,7 @@ class BorosValidation {
 			else{
 				$reCaptcha = new ReCaptcha($privatekey);
 				$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
-				$message = issetor($args['options']['error_message'], 'O captcha está incorreto');
+				$message = issetor($args['options']['error_message'], 'O captcha não passou no teste, por favor tente novamente');
 				if($resp != null && $resp->success){
 					
 				}
