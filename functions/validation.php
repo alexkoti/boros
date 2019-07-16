@@ -484,9 +484,9 @@ class BorosValidation {
 		if( isset($_POST["g-recaptcha-response"]) ){
 			if( empty($_POST["g-recaptcha-response"]) ){
 				$error = array(
-					'name' => $name,
-					'message' => $message,
-					'type' => 'error'
+					'name'    => $name,
+					'message' => 'É preciso marcar a caixa "Não sou um robô"',
+					'type'    => 'error',
 				);
 				$this->data_errors[$name][$args['rule']] = $error;
 			}
@@ -499,9 +499,9 @@ class BorosValidation {
 				}
 				else{
 					$error = array(
-						'name' => $name,
+						'name'    => $name,
 						'message' => $message,
-						'type' => 'error'
+						'type'    => 'error',
 					);
 					$this->data_errors[$name][$args['rule']] = $error;
 				}
