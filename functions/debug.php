@@ -295,14 +295,17 @@ class PRE {
 			else{
 				print_r( $var );
 			}
-			echo "\n</pre>\n";
-			echo "<p class='pre_box_footer'>TOTAL: <strong>" . count($var) . '</strong></p>';
+            echo "\n</pre>\n";
+            if( is_array($var) ){
+                echo "<p class='pre_box_footer'>TOTAL: <strong>" . count($var) . '</strong></p>';
+            }
 		}
 		else{
 			$size = '';
 			$type = gettype($var);
-			if( $type == 'boolean' )
-				$var = ($var == false) ? 'FALSE' : 'TRUE';
+			if( $type == 'boolean' ){
+                $var = ($var == false) ? 'FALSE' : 'TRUE';
+            }
 			if( $type == 'string' ){
 				$len = strlen($var);
 				$size = " ({$len})";
