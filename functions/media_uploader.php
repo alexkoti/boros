@@ -387,6 +387,7 @@ Class MediaUpload {
     
     /**
      * Corrigir orientação de imagens
+     * Aparelhos da Samsung possuem uma tag proprietária para determinar a rotação das fotos
      * 
      * @link https://stackoverflow.com/a/13963783 - identificar a rotação correta a ser aplicada à imagem
      * @link https://wordpress.stackexchange.com/a/283531 - editar a imagem no momento correto
