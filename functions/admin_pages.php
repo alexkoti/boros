@@ -637,9 +637,14 @@ class BorosAdminPages {
 				if( !boros_check_empty_var($data_value) and isset($element['std']) ){
 					$data_value = $element['std'];
 				}
-				
+                
+                // definir grupo
+                $this->context['group'] = $block['id'];
+                
+                // filtrar o elemento
+                $element = apply_filters( 'boros_filter_element_config', $element, $data_value );
+
 				// renderizar o elemento
-				$this->context['group'] = $block['id'];
 				create_form_elements( $this->context, $element, $data_value );
 			}
 			?>
