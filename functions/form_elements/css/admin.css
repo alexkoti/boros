@@ -351,6 +351,34 @@ input[disabled='1']{
 
 
 /**
+ * Thickbox
+ * 
+ */
+/* esconder form de galeria */
+body#media-upload #gallery-settings {
+    display: none !important;
+}
+/* esconder infos de edição */
+body#media-upload .media-types-required-info,
+body#media-upload .A1B1 p + p {
+    display:none;
+}
+/* esconder thumbnail duplicado */
+body#media-upload .pinkynail + .pinkynail {
+    display: none;
+}
+/* aumentar tamanho dos thumbs */
+body#media-upload .media-upload-form .media-item {
+    min-height: 54px;
+}
+body#media-upload .media-upload-form .media-item .pinkynail {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+
+
+/**
  * Botão de action para aprovar/desaprovar usuários
  * 
  */

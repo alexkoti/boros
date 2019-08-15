@@ -285,8 +285,29 @@ jQuery(document).ready(function($){
 	 */
 	$('.autoselect').click(function(){
 		$(this).focus().select();
-	});
-	
+    });
+    
+
+    /**
+     * Forçar a exibição de miniaturas em todos os thickboxes
+     * 
+     */
+    if( $('#media-items').length > 0 ){
+        $('#media-items .media-item').each(function(){
+            var row = $(this);
+            var thumb = $(this).find('.thumbnail');
+            if( row.find('img.pinkynail').length ){
+                console.log( 1 );
+            }
+            else{
+                console.log( 22 );
+            }
+            var img = $('<img>');
+            img.attr( 'src', thumb.attr('src') ).addClass('pinkynail toggle');
+            row.prepend( img );
+        });
+    }
+    
 });
 
 
