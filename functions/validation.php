@@ -281,7 +281,7 @@ class BorosValidation {
             return $value;
         }
 
-        if( !array_key_exists( $value, $args['options']['values'] ) ){
+        if( isset($args['options']['values']) && !array_key_exists( $value, $args['options']['values'] ) ){
             if( $this->context['type'] == 'frontend' ){
                 $error = array(
                     'name'    => $name,
