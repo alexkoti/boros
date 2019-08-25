@@ -419,7 +419,7 @@ Class MediaUpload {
                 }
 
                 // iniciar editor
-                if( $rotation > 0 ){
+                if( $rotation != 0 ){
                     $image_editor = wp_get_image_editor( $image_data['file'] );
                     if( !is_wp_error($image_editor) ){
                         // rotacionar
