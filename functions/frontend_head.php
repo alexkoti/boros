@@ -637,7 +637,6 @@ class Boros_Share_Tags {
 
     function __construct( $args = array() ){
 
-        pre( $args );
         // aplicar valores customizados
         foreach( $this->info as $key => $value ){
             if( isset($args[$key]) ){
