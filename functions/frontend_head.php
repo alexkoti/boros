@@ -354,104 +354,104 @@ class BorosCss {
  * 
  */
 function opengraph_tags( $args = false ){
-	
-	// post type archive
-	if( is_post_type_archive() ){
-		global $wp_query;
-		if( isset($wp_query->query['post_type']) ){
-			$pt = $wp_query->query['post_type'];
-			$pt_image = get_option("{$pt}_image");
-			if( !empty($pt_image) ){
-				$thumb = wp_get_attachment_image_src( $pt_image, 'full' );
-				$info['image_url'] = $thumb[0];
-			}
-		}
-		
-		$post_type_obj = get_queried_object();
-		if( !isset($post_type_obj->labels->name) ){
-			add_filter( 'post_type_archive_title', 'fix_title_tag', 1 );
-		};
-	}
-	
-	// imagem padrão
-	$og_image = get_option('og_image');
-	if( !empty($og_image) ){
-		$image = wp_get_attachment_image_src( get_option('og_image'), 'full' );
-		$default_image = $image[0];
-	}
-	else{
-		$default_image = '';
-	}
-	
-	$defaults = array(
-		'title'       => wp_title( '', false, 'right' ),
-		'site_name'   => get_bloginfo('name'),
-		'separator'   => ' | ',
-		'image_url'   => $default_image,
-		'description' => get_bloginfo('description'),
-		'og_type'     => 'blog',
-		'url'         => home_url( '/' ),
-		'p'           => false,
-	);
-	$info = boros_parse_args( $defaults, $args );
-	
-	if( is_singular() ){
-		global $post;
-		$info['p'] = $post;
-		
-		if( !isset($args['og_type']) ){
-			$info['og_type'] = 'article';
-		}
-		
-		// refazer title apenas se não tiver no args
-		if( !isset($args['title']) ){
-			$info['title'] = get_the_title( $post->ID );
-		}
-		
-		//url
-		$info['url'] = get_permalink($post->ID);
-		
-		if( !isset($args['description']) ){
-			//criar novo description. Fallback para o excerpt em caso de content vazio.
-			if( !empty($post->post_excerpt) ){
-				$info['description'] = wp_trim_words($post->post_excerpt);
-			}
-			else{
-				$raw_content = $post->post_content;
-				$text = strip_shortcodes( $raw_content );
-				$text = str_replace(']]>', ']]&gt;', $text);
-				$text = strip_tags($text);
-				$excerpt_length = apply_filters('excerpt_length', 55);
-				$words = preg_split("/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
-				if ( count($words) > $excerpt_length ) {
-					array_pop($words);
-					$info['description'] = wptexturize(implode(' ', $words));
-				} else {
-					$info['description'] = wptexturize(implode(' ', $words));
-				}
-			}
-		}
-		
-		// criar novo thumb
-		// custom meta name?
-		if( isset($args['thumbnail_meta_name']) ){
-			$thumb_id = get_post_meta($post->ID, $args['thumbnail_meta_name'], true);
-			// fallback de volta para o _thumbnail_id
-			if( empty($thumb_id) ){
-				$thumb_id = get_post_thumbnail_id($post->ID);
-			}
-		}
-		else{
-			$thumb_id = get_post_thumbnail_id($post->ID);
-		}
-		$thumb = wp_get_attachment_image_src( $thumb_id, 'full' );
-		if( $thumb ){
-			$info['image_url'] = $thumb['0'];
-		}
-	}
-	
-	//pre($info);
-	$info = apply_filters('opengraph_items', $info);
+    
+    // post type archive
+    if( is_post_type_archive() ){
+        global $wp_query;
+        if( isset($wp_query->query['post_type']) ){
+            $pt = $wp_query->query['post_type'];
+            $pt_image = get_option("{$pt}_image");
+            if( !empty($pt_image) ){
+                $thumb = wp_get_attachment_image_src( $pt_image, 'full' );
+                $info['image_url'] = $thumb[0];
+            }
+        }
+        
+        $post_type_obj = get_queried_object();
+        if( !isset($post_type_obj->labels->name) ){
+            add_filter( 'post_type_archive_title', 'fix_title_tag', 1 );
+        };
+    }
+    
+    // imagem padrão
+    $og_image = get_option('og_image');
+    if( !empty($og_image) ){
+        $image = wp_get_attachment_image_src( get_option('og_image'), 'full' );
+        $default_image = $image[0];
+    }
+    else{
+        $default_image = '';
+    }
+    
+    $defaults = array(
+        'title'       => wp_title( '', false, 'right' ),
+        'site_name'   => get_bloginfo('name'),
+        'separator'   => ' | ',
+        'image_url'   => $default_image,
+        'description' => get_bloginfo('description'),
+        'og_type'     => 'blog',
+        'url'         => home_url( '/' ),
+        'p'           => false,
+    );
+    $info = boros_parse_args( $defaults, $args );
+    
+    if( is_singular() ){
+        global $post;
+        $info['p'] = $post;
+        
+        if( !isset($args['og_type']) ){
+            $info['og_type'] = 'article';
+        }
+        
+        // refazer title apenas se não tiver no args
+        if( !isset($args['title']) ){
+            $info['title'] = get_the_title( $post->ID );
+        }
+        
+        //url
+        $info['url'] = get_permalink($post->ID);
+        
+        if( !isset($args['description']) ){
+            //criar novo description. Fallback para o excerpt em caso de content vazio.
+            if( !empty($post->post_excerpt) ){
+                $info['description'] = wp_trim_words($post->post_excerpt);
+            }
+            else{
+                $raw_content = $post->post_content;
+                $text = strip_shortcodes( $raw_content );
+                $text = str_replace(']]>', ']]&gt;', $text);
+                $text = strip_tags($text);
+                $excerpt_length = apply_filters('excerpt_length', 55);
+                $words = preg_split("/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
+                if ( count($words) > $excerpt_length ) {
+                    array_pop($words);
+                    $info['description'] = wptexturize(implode(' ', $words));
+                } else {
+                    $info['description'] = wptexturize(implode(' ', $words));
+                }
+            }
+        }
+        
+        // criar novo thumb
+        // custom meta name?
+        if( isset($args['thumbnail_meta_name']) ){
+            $thumb_id = get_post_meta($post->ID, $args['thumbnail_meta_name'], true);
+            // fallback de volta para o _thumbnail_id
+            if( empty($thumb_id) ){
+                $thumb_id = get_post_thumbnail_id($post->ID);
+            }
+        }
+        else{
+            $thumb_id = get_post_thumbnail_id($post->ID);
+        }
+        $thumb = wp_get_attachment_image_src( $thumb_id, 'full' );
+        if( $thumb ){
+            $info['image_url'] = $thumb['0'];
+        }
+    }
+    
+    //pre($info);
+    $info = apply_filters('opengraph_items', $info);
 ?>
 
 <meta property="og:title"        content="<?php echo $info['title']; ?>"/>
@@ -464,106 +464,106 @@ function opengraph_tags( $args = false ){
 }
 
 function gplus_tags( $args = false ){
-	
-	// post type archive
-	if( is_post_type_archive() ){
-		global $wp_query;
-		if( isset($wp_query->query['post_type']) ){
-			$pt = $wp_query->query['post_type'];
-			$pt_image = get_option("{$pt}_image");
-			if( !empty($pt_image) ){
-				$thumb = wp_get_attachment_image_src( $pt_image, 'full' );
-				$info['image_url'] = $thumb[0];
-			}
-		}
-		
-		$post_type_obj = get_queried_object();
-		if( !isset($post_type_obj->labels->name) ){
-			add_filter( 'post_type_archive_title', 'fix_title_tag', 1 );
-		};
-	}
-	
-	// imagem padrão
-	$og_image = get_option('og_image');
-	if( !empty($og_image) ){
-		$image = wp_get_attachment_image_src( get_option('og_image'), 'full' );
-		$default_image = $image[0];
-	}
-	else{
-		$default_image = '';
-	}
-	
-	$defaults = array(
-		'title'       => wp_title( '', false, 'right' ),
-		'separator'   => ' | ',
-		'image_url'   => $default_image,
-		'description' => get_bloginfo('description'),
-		'url'         => home_url( '/' ),
-		'p'           => false,
-	);
-	$info = boros_parse_args( $defaults, $args );
-	
-	if( is_singular() ){
-		global $post;
-		$info['p'] = $post;
-		
-		// refazer title apenas se não tiver no args
-		if( !isset($args['title']) ){
-			$info['title'] = get_the_title( $post->ID ) . $info['separator'] . get_bloginfo('name');
-		}
-		
-		//criar novo description. Fallback para o content em caso de content vazio.
-		if( !isset($args['description']) ){
-			if( !empty($post->post_excerpt) ){
-				$info['description'] = wp_trim_words($post->post_excerpt);
-			}
-			else{
-				$raw_content = wp_trim_words($post->post_content);
-				$text = strip_shortcodes( $raw_content );
-				$text = str_replace(']]>', ']]&gt;', $text);
-				$text = strip_tags($text);
-				$excerpt_length = apply_filters('excerpt_length', 55);
-				$words = preg_split("/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
-				if ( count($words) > $excerpt_length ) {
-					array_pop($words);
-					$info['description'] = wptexturize(implode(' ', $words));
-				} else {
-					$info['description'] = wptexturize(implode(' ', $words));
-				}
-			}
-		}
-		
-		// criar novo thumb
-		// custom meta name?
-		if( isset($args['thumbnail_meta_name']) ){
-			$thumb_id = get_post_meta($post->ID, $args['thumbnail_meta_name'], true);
-			// fallback de volta para o _thumbnail_id
-			if( empty($thumb_id) ){
-				$thumb_id = get_post_thumbnail_id($post->ID);
-			}
-		}
-		else{
-			$thumb_id = get_post_thumbnail_id($post->ID);
-		}
-		$thumb = wp_get_attachment_image_src( $thumb_id, 'full' );
-		if( $thumb ){
-			$info['image_url'] = $thumb['0'];
-		}
-	}
-	elseif( is_post_type_archive() ){
-		global $wp_query;
-		if( isset($wp_query->query['post_type']) ){
-			$pt = $wp_query->query['post_type'];
-			$pt_image = get_option("{$pt}_image");
-			if( !empty($pt_image) ){
-				$thumb = wp_get_attachment_image_src( $pt_image, 'full' );
-				$info['image_url'] = $thumb[0];
-			}
-		}
-	}
-	
-	//pre($info);
-	$gplus = apply_filters('gplus_items', $info);
+    
+    // post type archive
+    if( is_post_type_archive() ){
+        global $wp_query;
+        if( isset($wp_query->query['post_type']) ){
+            $pt = $wp_query->query['post_type'];
+            $pt_image = get_option("{$pt}_image");
+            if( !empty($pt_image) ){
+                $thumb = wp_get_attachment_image_src( $pt_image, 'full' );
+                $info['image_url'] = $thumb[0];
+            }
+        }
+        
+        $post_type_obj = get_queried_object();
+        if( !isset($post_type_obj->labels->name) ){
+            add_filter( 'post_type_archive_title', 'fix_title_tag', 1 );
+        };
+    }
+    
+    // imagem padrão
+    $og_image = get_option('og_image');
+    if( !empty($og_image) ){
+        $image = wp_get_attachment_image_src( get_option('og_image'), 'full' );
+        $default_image = $image[0];
+    }
+    else{
+        $default_image = '';
+    }
+    
+    $defaults = array(
+        'title'       => wp_title( '', false, 'right' ),
+        'separator'   => ' | ',
+        'image_url'   => $default_image,
+        'description' => get_bloginfo('description'),
+        'url'         => home_url( '/' ),
+        'p'           => false,
+    );
+    $info = boros_parse_args( $defaults, $args );
+    
+    if( is_singular() ){
+        global $post;
+        $info['p'] = $post;
+        
+        // refazer title apenas se não tiver no args
+        if( !isset($args['title']) ){
+            $info['title'] = get_the_title( $post->ID ) . $info['separator'] . get_bloginfo('name');
+        }
+        
+        //criar novo description. Fallback para o content em caso de content vazio.
+        if( !isset($args['description']) ){
+            if( !empty($post->post_excerpt) ){
+                $info['description'] = wp_trim_words($post->post_excerpt);
+            }
+            else{
+                $raw_content = wp_trim_words($post->post_content);
+                $text = strip_shortcodes( $raw_content );
+                $text = str_replace(']]>', ']]&gt;', $text);
+                $text = strip_tags($text);
+                $excerpt_length = apply_filters('excerpt_length', 55);
+                $words = preg_split("/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
+                if ( count($words) > $excerpt_length ) {
+                    array_pop($words);
+                    $info['description'] = wptexturize(implode(' ', $words));
+                } else {
+                    $info['description'] = wptexturize(implode(' ', $words));
+                }
+            }
+        }
+        
+        // criar novo thumb
+        // custom meta name?
+        if( isset($args['thumbnail_meta_name']) ){
+            $thumb_id = get_post_meta($post->ID, $args['thumbnail_meta_name'], true);
+            // fallback de volta para o _thumbnail_id
+            if( empty($thumb_id) ){
+                $thumb_id = get_post_thumbnail_id($post->ID);
+            }
+        }
+        else{
+            $thumb_id = get_post_thumbnail_id($post->ID);
+        }
+        $thumb = wp_get_attachment_image_src( $thumb_id, 'full' );
+        if( $thumb ){
+            $info['image_url'] = $thumb['0'];
+        }
+    }
+    elseif( is_post_type_archive() ){
+        global $wp_query;
+        if( isset($wp_query->query['post_type']) ){
+            $pt = $wp_query->query['post_type'];
+            $pt_image = get_option("{$pt}_image");
+            if( !empty($pt_image) ){
+                $thumb = wp_get_attachment_image_src( $pt_image, 'full' );
+                $info['image_url'] = $thumb[0];
+            }
+        }
+    }
+    
+    //pre($info);
+    $gplus = apply_filters('gplus_items', $info);
 ?>
 <meta itemprop="name"            content="<?php echo $info['title']; ?>" />
 <meta itemprop="description"     content="<?php echo $info['description']; ?>" />
@@ -572,7 +572,7 @@ function gplus_tags( $args = false ){
 }
 
 function fix_title_tag( $name ){
-	global $wp_query;
-	$post_type_obj = get_post_type_object( $wp_query->query_vars['post_type'] );
-	return " - {$post_type_obj->labels->name}";
+    global $wp_query;
+    $post_type_obj = get_post_type_object( $wp_query->query_vars['post_type'] );
+    return " - {$post_type_obj->labels->name}";
 }
