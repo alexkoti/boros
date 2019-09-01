@@ -384,14 +384,18 @@ function opengraph_tags( $args = false ){
     }
     
     $defaults = array(
-        'title'       => wp_title( '', false, 'right' ),
-        'site_name'   => get_bloginfo('name'),
-        'separator'   => ' | ',
-        'image_url'   => $default_image,
-        'description' => get_bloginfo('description'),
-        'og_type'     => 'blog',
-        'url'         => home_url( '/' ),
-        'p'           => false,
+        'title'        => wp_title( '', false, 'right' ),
+        'site_name'    => get_bloginfo('name'),
+        'separator'    => ' | ',
+        'image_url'    => $default_image,
+        'image_type'   => false,
+        'image_width'  => false,
+        'image_height' => false,
+        'description'  => get_bloginfo('description'),
+        'og_type'      => 'blog',
+        'url'          => home_url( '/' ),
+        'p'            => false,
+        'locale'       => 'pt_BR',
     );
     $info = boros_parse_args( $defaults, $args );
     
@@ -434,6 +438,7 @@ function opengraph_tags( $args = false ){
         
         // criar novo thumb
         // custom meta name?
+        $thumb_id = false;
         if( isset($args['thumbnail_meta_name']) ){
             $thumb_id = get_post_meta($post->ID, $args['thumbnail_meta_name'], true);
             // fallback de volta para o _thumbnail_id
@@ -445,8 +450,11 @@ function opengraph_tags( $args = false ){
             $thumb_id = get_post_thumbnail_id($post->ID);
         }
         $thumb = wp_get_attachment_image_src( $thumb_id, 'full' );
-        if( $thumb ){
-            $info['image_url'] = $thumb['0'];
+        if( $thumb != false ){
+            $info['image_url']    = $thumb[0];
+            $info['image_width']  = $thumb[1];
+            $info['image_height'] = $thumb[2];
+            $info['image_mime']   = get_post_mime_type($thumb_id );
         }
     }
     
@@ -454,12 +462,18 @@ function opengraph_tags( $args = false ){
     $info = apply_filters('opengraph_items', $info);
 ?>
 
+<!-- share opengraph -->
 <meta property="og:title"        content="<?php echo $info['title']; ?>"/>
 <meta property="og:type"         content="<?php echo $info['og_type']; ?>"/>
 <meta property="og:url"          content="<?php echo $info['url']; ?>"/>
 <meta property="og:image"        content="<?php echo $info['image_url']; ?>"/>
+<meta property="og:image:type"   content="<?php echo $info['image_mime']; ?>"/>
+<meta property="og:image:width"  content="<?php echo $info['image_width']; ?>"/>
+<meta property="og:image:height" content="<?php echo $info['image_height']; ?>"/>
 <meta property="og:site_name"    content="<?php echo $info['site_name']; ?>"/>
 <meta property="og:description"  content="<?php echo $info['description']; ?>"/>
+<meta property="og:locale"       content="<?php echo $info['locale']; ?>"/>
+
 <?php
 }
 
@@ -565,9 +579,11 @@ function gplus_tags( $args = false ){
     //pre($info);
     $gplus = apply_filters('gplus_items', $info);
 ?>
+<!-- share gplus -->
 <meta itemprop="name"            content="<?php echo $info['title']; ?>" />
 <meta itemprop="description"     content="<?php echo $info['description']; ?>" />
 <meta itemprop="image"           content="<?php echo $info['image_url']; ?>" />
+
 <?php
 }
 
