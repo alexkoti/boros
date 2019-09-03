@@ -610,6 +610,8 @@ class Boros_Share_Tags {
 
     var $is_singular = false;
 
+    var $is_wc_product = false;
+
     var $is_post_type_archive = false;
 
     var $is_term_archive = false;
@@ -625,6 +627,7 @@ class Boros_Share_Tags {
         'append_sitename' => false,     // adicionar nome do site após o título
         'separator'       => false,
         'site'            => false,
+        'creator'         => false,
         'title'           => false,
         'description'     => false,
         'image_size'      => false,     // wp image size
@@ -635,12 +638,28 @@ class Boros_Share_Tags {
         'language'        => false,
     );
 
+    var $product_info = array(
+        'product_price'           => false,
+        'product_formatted_price' => false,
+        'product_currency'        => false,
+        'product_sku'             => false,
+    );
+
     function __construct( $args = array() ){
+
+        //pre($args, 'Boros_Share_Tags args');
 
         // aplicar valores customizados
         foreach( $this->info as $key => $value ){
             if( isset($args[$key]) ){
                 $this->info[$key] = $args[$key];
+            }
+        }
+
+        // aplicar valores customizados para produto
+        foreach( $this->product_info as $key => $value ){
+            if( isset($args[$key]) ){
+                $this->product_info[$key] = $args[$key];
             }
         }
 
@@ -671,7 +690,20 @@ class Boros_Share_Tags {
             }
         }
 
+        // verificar se é single de produto WooCommerce
+        if( $this->is_singular && $this->post->post_type == 'product' && class_exists('WooCommerce') ){
+            $this->is_wc_product = true;
+            $this->info['type'] = 'product';
+        }
+
+        // definir informações de produto, caso necessário
+        if( $this->is_wc_product ){
+            $this->set_product_info();
+        }
+
         $this->info = apply_filters( 'boros_share_info', $this->info, $this );
+        //pre($this->info, 'Boros_Share_Tags info');
+        //pre($this->product_info, 'Boros_Share_Tags info');
     }
 
     function set_title(){
@@ -773,6 +805,10 @@ class Boros_Share_Tags {
         $this->info['site'] = get_bloginfo('name');
     }
 
+    function set_creator(){
+        $this->info['creator'] = false;
+    }
+
     function set_type(){
         $this->info['type'] = 'blog';
     }
@@ -833,6 +869,23 @@ class Boros_Share_Tags {
         return $text;
     }
 
+    function set_product_info(){
+
+        $this->product = new WC_Product( $this->post->ID );
+        if( $this->product_info['product_currency'] === false ){
+            $this->product_info['product_currency'] = get_woocommerce_currency();
+        }
+        if( $this->product_info['product_price'] === false ){
+            $this->product_info['product_price'] = $this->product->get_price();
+        }
+        if( $this->product_info['product_formatted_price'] === false ){
+            $this->product_info['product_formatted_price'] = strip_tags( wc_price( $this->product_info['product_price'] ) );
+        }
+        if( $this->product_info['product_sku'] === false ){
+            $this->product_info['product_sku'] = $this->product->get_sku();
+        }
+    }
+
     function tags_opengraph(){
         $tags = array(
             'og:title'        => $this->info['title'],
@@ -846,6 +899,11 @@ class Boros_Share_Tags {
             'og:description'  => $this->info['description'],
             'og:locale'       => $this->info['language'],
         );
+
+        if( $this->is_wc_product ){
+            $tags['product:price:currency'] = $this->product_info['product_currency'];
+            $tags['product:price:amount']   = $this->product_info['product_price'];
+        }
 
         echo "\n<!-- opengraph share -->\n";
         foreach( $tags as $key => $value ){
@@ -872,13 +930,25 @@ class Boros_Share_Tags {
 
     function tags_twitter(){
         $tags = array(
-            'twitter:card'        => 'summary',
-            'twitter:site'        => $this->info['site'],
-            'twitter:title'       => $this->info['title'],
-            'twitter:description' => $this->info['description'],
-            'twitter:image'       => $this->info['image']['src'],
-            'twitter:image:alt'   => $this->info['image']['alt'],
+            'twitter:card'         => 'summary',
+            'twitter:site'         => $this->info['site'],
+            'twitter:creator'      => $this->info['creator'],
+            'twitter:title'        => $this->info['title'],
+            'twitter:description'  => $this->info['description'],
+            'twitter:image'        => $this->info['image']['src'],
+            'twitter:image:alt'    => $this->info['image']['alt'],
+            'twitter:image:width'  => $this->info['image']['width'],
+            'twitter:image:height' => $this->info['image']['height'],
         );
+
+        if( $this->is_wc_product ){
+            $tags['twitter:label1'] = 'Preço';
+            $tags['twitter:data1']  = $this->product_info['product_formatted_price'];
+            if( !empty($this->product_info['product_sku']) ){
+                $tags['twitter:label2'] = 'SKU';
+                $tags['twitter:data2']  = $this->product_info['product_sku'];
+            }
+        }
 
         echo "<!-- twitter card share -->\n";
         foreach( $tags as $key => $value ){
