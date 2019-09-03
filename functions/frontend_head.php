@@ -930,7 +930,7 @@ class Boros_Share_Tags {
 
     function tags_twitter(){
         $tags = array(
-            'twitter:card'         => 'summary',
+            'twitter:card'         => ($this->info['type'] == 'product') ? 'product' : 'summary',
             'twitter:site'         => $this->info['site'],
             'twitter:creator'      => $this->info['creator'],
             'twitter:title'        => $this->info['title'],
