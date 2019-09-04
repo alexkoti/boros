@@ -623,11 +623,16 @@ class Boros_Share_Tags {
      */
     var $default_image = array();
 
+    /**
+     * Todas as informações possíveis que poderão ser usadas.
+     * O ordem dos items é importante pois os elementos posteriores dependem dos primeiros items definidos
+     * 
+     */
     var $info = array(
         'append_sitename' => false,     // adicionar nome do site após o título
         'separator'       => false,
         'site'            => false,
-        'creator'         => false,
+        'creator'         => false,     // conta twitter
         'title'           => false,
         'description'     => false,
         'image_size'      => false,     // wp image size
@@ -638,6 +643,10 @@ class Boros_Share_Tags {
         'language'        => false,
     );
 
+    /**
+     * Dados de produto
+     * 
+     */
     var $product_info = array(
         'product_price'           => false,
         'product_formatted_price' => false,
@@ -708,7 +717,7 @@ class Boros_Share_Tags {
 
     function set_title(){
         if( $this->is_home ){
-            $this->info['title'] = get_bloginfo('name');
+            $this->info['title'] = $this->info['site'];
         }
         elseif( $this->is_singular ){
             $this->info['title'] = apply_filters( 'the_title', $this->post->post_title );
@@ -723,6 +732,7 @@ class Boros_Share_Tags {
             $this->info['title'] = wp_title( '', false, 'right' );
         }
 
+        // adicionar o nome do site após o título
         if( $this->is_home === false && $this->info['append_sitename'] == true ){
             $this->info['title'] .= $this->info['separator'] . $this->info['site'];
         }
@@ -816,15 +826,24 @@ class Boros_Share_Tags {
     function set_language(){
         $this->info['language'] = str_replace( '-', '_', get_bloginfo('language') );
     }
-
+    
     function set_separator(){
         $this->info['separator'] = ' | ';
     }
 
+    /**
+     * Determinar se será aplicado o nome do site após o título da página.
+     * Utiliza $this->info['separator'] como separador
+     * 
+     */
     function set_append_sitename(){
         $this->info['append_sitename'] = false;
     }
 
+    /**
+     * Recuperar informações de uma imagem
+     * 
+     */
     function set_image_data( $image_id ){
         $image = wp_get_attachment_image_src( $image_id, $this->info['image_size'] );
         $alt   = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
@@ -840,6 +859,10 @@ class Boros_Share_Tags {
         );
     }
 
+    /**
+     * Recuperar imagem padrão, conforme padrão salvo na option 'og_image'
+     * 
+     */
     function get_default_image(){
         if( $this->default_image === false ){
             return false;
@@ -869,6 +892,10 @@ class Boros_Share_Tags {
         return $text;
     }
 
+    /**
+     * Definir dados de produto, caso estjam false
+     * 
+     */
     function set_product_info(){
 
         $this->product = new WC_Product( $this->post->ID );
@@ -886,6 +913,10 @@ class Boros_Share_Tags {
         }
     }
 
+    /**
+     * Output tags OpenGraph
+     * 
+     */
     function tags_opengraph(){
         $tags = array(
             'og:title'        => $this->info['title'],
@@ -913,6 +944,10 @@ class Boros_Share_Tags {
         }
     }
 
+    /**
+     * Output tags GPlus
+     * 
+     */
     function tags_gplus(){
         $tags = array(
             'name'        => $this->info['title'],
@@ -928,6 +963,10 @@ class Boros_Share_Tags {
         }
     }
 
+    /**
+     * Output tags Twitter
+     * 
+     */
     function tags_twitter(){
         $tags = array(
             'twitter:card'         => ($this->info['type'] == 'product') ? 'product' : 'summary',
