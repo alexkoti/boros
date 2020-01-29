@@ -108,7 +108,7 @@ class Boros_Instagram_Public_Feed {
         $profile_html = $this->check_userpage( $this->username );
 
         if( !$profile_html ){
-            $this->errors['user']['error'] = $this->error_message[5];
+            $this->errors['user']['error'] = $this->error_message['user-not-found'];
             return;
         }
         else{
@@ -121,7 +121,7 @@ class Boros_Instagram_Public_Feed {
                 // perfil privado
                 if( $this->user_data['private'] == true ){
                     // retornar ao formulário inicial, alertando perfil privado
-                    $this->errors['user']['error'] = $this->error_message[7];
+                    $this->errors['user']['error'] = $this->error_message['private-profile'];
                     return;
                 }
     
@@ -134,7 +134,7 @@ class Boros_Instagram_Public_Feed {
             }
             else{
                 // retornar ao formulário inicial, alertando a falha de requisição
-                $this->errors['user']['error'] = $this->error_message[6];
+                $this->errors['user']['error'] = $this->error_message['feed-not-found'];
                 return;
             }
         }
@@ -310,6 +310,10 @@ class Boros_Instagram_Public_Feed {
     
     public function is_cached(){
         return $this->is_cached;
+    }
+
+    public function get_errors(){
+        return $this->errors;
     }
 
 }
