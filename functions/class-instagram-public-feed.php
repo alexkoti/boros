@@ -69,7 +69,7 @@ class Boros_Instagram_Public_Feed {
 
     }
 
-    public function init( $username, $cache = 60, $transient_name = false ){
+    public function init( $username, $cache = 3600, $transient_name = false ){
 
         if( $transient_name == false ){
             $transient_name = "instagram_public_feed_{$username}";
@@ -80,6 +80,7 @@ class Boros_Instagram_Public_Feed {
             if( $cached != false ){
                 $this->user_data   = $cached['user_data'];
                 $this->user_medias = $cached['user_medias'];
+                $this->username    = $this->user_data['username'];
                 $this->is_cached   = true;
                 return;
             }
@@ -229,12 +230,16 @@ class Boros_Instagram_Public_Feed {
         $user = $this->profile_feed->entry_data->ProfilePage[0]->graphql->user;
         return array(
             'username'  => $this->username,
+            'id'        => $user->id,
+            'full_name' => $user->full_name,
             'bio'       => $user->biography,
             'link'      => $user->external_url,
             'avatar'    => $user->profile_pic_url,
+            'avatar_hd' => $user->profile_pic_url_hd,
             'followers' => $user->edge_followed_by->count,
             'business'  => $user->is_business_account,
             'private'   => $user->is_private,
+            'facebook'  => $user->connected_fb_page,
         );
     }
 
