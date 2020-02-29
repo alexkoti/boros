@@ -27,7 +27,7 @@ class BorosJs {
     var $queue = array();
     
     private $conditionals = array(
-        'head' => array(),
+        'head'   => array(),
         'footer' => array(),
     );
     
@@ -38,9 +38,14 @@ class BorosJs {
      */
     function __construct( $args = array() ){
         if( !is_admin() and !in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) ){
+            
+            $this->options = boros_parse_args( $this->options, $args );
+            if( $this->options['ver'] == null ){
+                $this->options['ver'] = version_id();
+            }
+
             add_action( 'wp_head', array($this, 'cond_head'), $this->options['priority'] );
             add_action( 'wp_footer', array($this, 'cond_footer'), $this->options['priority'] );
-            $this->options = boros_parse_args( $this->options, $args );
             
             $this->js_dir      = get_bloginfo('template_url') . '/js/';
             $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
@@ -95,12 +100,12 @@ class BorosJs {
             $pos = ($in_footer == true) ? 'footer' : 'head';
             $this->conditionals[$pos][] = array(
                 'name' => $name,
-                'src' => $src,
+                'src'  => $src,
                 'cond' => $cond,
             );
         }
         else{
-            $this->queue[] = array( $name, $src, $deps, version_id(), $in_footer );
+            $this->queue[] = array( $name, $src, $deps, $this->options['ver'], $in_footer );
         }
         return $this;
     }
@@ -127,7 +132,7 @@ class BorosJs {
             $in_footer = false;
         }
         
-        $this->queue[] = array( $name, $src, $deps, version_id(), $in_footer );
+        $this->queue[] = array( $name, $src, $deps, $this->options['ver'], $in_footer );
         return $this;
     }
     
@@ -215,11 +220,23 @@ class BorosJs {
  * @todo ESCREVER UMA DESCRIÇÃO DETALHADA
  */
 class BorosCss {
+
     var $css_dir = '';
+
     var $vendors_dir = '';
+
     var $current = '';
+
+    var $options = array(
+        'ver' => null,
+    );
     
-    function __construct(){
+    function __construct( $args = array() ){
+
+        $this->options = boros_parse_args( $this->options, $args );
+        if( $this->options['ver'] == null ){
+            $this->options['ver'] = version_id();
+        }
         
         // Adicionar mensagem de aviso de hook deprecated
         if( current_filter() == 'wp_print_styles' ){
@@ -241,7 +258,7 @@ class BorosCss {
         $dir = ($folder) ? $folder . '/' : '';
         $src = $this->css_dir . $dir . $name . '.css';
         $this->current = $name;
-        wp_enqueue_style($name, $src, $parent, version_id(), $media);
+        wp_enqueue_style($name, $src, $parent, $this->options['ver'], $media);
         return $this;
     }
     
@@ -253,7 +270,7 @@ class BorosCss {
         $dir = ($folder) ? $folder . '/' : '';
         $src = $this->vendors_dir . $dir . $name . '.css';
         $this->current = $name;
-        wp_enqueue_style($name, $src, $parent, version_id(), $media);
+        wp_enqueue_style($name, $src, $parent, $this->options['ver'], $media);
         return $this;
     }
     
