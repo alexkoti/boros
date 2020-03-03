@@ -203,6 +203,7 @@ else{
 			convert_urls: false, 							// converter urls para o caminho relativo se estiver aplicado(*a)
 			apply_source_formatting: true, 					// indentar o código
 			remove_linebreaks: false, 						// remover <br>s
+			branding: false,
 			remove_script_host: false, 
 			gecko_spellcheck: true,
 			entities: '38,amp,60,lt,62,gt', 
