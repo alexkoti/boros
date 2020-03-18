@@ -830,10 +830,12 @@ function boros_pagination( $args ){
  * 
  */
 class Boros_Pagination {
-	private $current = 1;
-	private $total = 1;
+	private $current        = 1;
+	private $total          = 1;
 	private $posts_per_page = 10;
-	private $total_pages = 1;
+	private $total_pages    = 1;
+	private $query_type     = 'normal';
+	private $page_query_arg = 'pg';
 	
 	/**
 	 * Array com as páginas numéricas
@@ -848,20 +850,22 @@ class Boros_Pagination {
 	private $items;
 	
 	private $options = array(
-		'always_show'   => false,
-		'num_pages'     => 5,
-		'ul_class'      => '',
-		'li_class'      => ' ',
-		'link_class'    => 'btn',
-		'pages_text'    => '',
-		'first_text'    => '«',
-		'dotleft_text'  => '',
-		'last_text'     => '»',
-		'dotright_text' => '',
-		'prev_text'     => '‹',
-		'next_text'     => '›',
-		'page_text'     => '%PAGE_NUMBER%',
-		'current_text'  => '%PAGE_NUMBER%',
+		'query_type'     => 'normal',
+		'page_query_arg' => 'pg',
+		'always_show'    => false,
+		'num_pages'      => 5,
+		'ul_class'       => '',
+		'li_class'       => ' ',
+		'link_class'     => 'btn',
+		'pages_text'     => '',
+		'first_text'     => '«',
+		'dotleft_text'   => '',
+		'last_text'      => '»',
+		'dotright_text'  => '',
+		'prev_text'      => '‹',
+		'next_text'      => '›',
+		'page_text'      => '%PAGE_NUMBER%',
+		'current_text'   => '%PAGE_NUMBER%',
 	);
 	private $output = '';
 	
@@ -870,11 +874,19 @@ class Boros_Pagination {
      * 
      */
 	function __construct( $args ){
-		$this->current = (int)$args['current'];
-		$this->total = (int)$args['total'];
+		$this->current        = (int)$args['current'];
+		$this->total          = (int)$args['total'];
 		$this->posts_per_page = (int)$args['posts_per_page'];
-		$this->total_pages = ceil( $this->total / $this->posts_per_page );
-		$this->query_type = (isset($args['query_type'])) ? $args['query_type'] : 'wpdb';
+		$this->total_pages    = ceil( $this->total / $this->posts_per_page );
+
+		if( isset($args['query_type']) ){
+			$this->query_type = $args['query_type'];
+		}
+
+		if( isset($args['page_query_arg']) ){
+			$this->page_query_arg = $args['page_query_arg'];
+		}
+
 		if( !isset($args['options']) ){
 			$args['options'] = array();
 		}
@@ -986,7 +998,7 @@ class Boros_Pagination {
 	
 	function set_item( $page, $type, $class, $text, $link, $tag, $attr = array() ){
 		if( $this->query_type == 'wpdb' ){
-			$url = ($link == true) ? add_query_arg( 'pg', $page ) : false;
+			$url = ($link == true) ? add_query_arg( $this->page_query_arg, $page ) : false;
 		}
 		elseif( $this->query_type == 'normal' ){
 			$url = ($link == true) ? get_pagenum_link($page) : false;
