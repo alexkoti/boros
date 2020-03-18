@@ -41,7 +41,7 @@ class BFE_date_picker_multiple extends BorosFormElement {
 	 * 
 	 */
 	function set_input( $value = null ){
-		$input = "<div class='date_picker_multiple_box date_picker_multiple_cols_{$this->data['options']['num_months']}'><input type='hidden' style='width:100%' name='{$this->data['attr']['name']}' value='{$value}' class='date_picker_input' id='date_picker_input_{$this->data['attr']['name']}'  /><div class='date_picker_multiple_calendars' id='date_picker_calendars_{$this->data['attr']['name']}' data-num-months='{$this->data['options']['num_months']}'></div></div>";
+		$input = "<div class='date_picker_multiple_box date_picker_multiple_cols_{$this->data['options']['num_months']}'><input type='hidden' style='width:100%' name='{$this->data['attr']['name']}' value='{$value}' class='date_picker_input' id='date_picker_input_{$this->data['attr']['name']}' autocomplete='off' /><div class='date_picker_multiple_calendars' id='date_picker_calendars_{$this->data['attr']['name']}' data-num-months='{$this->data['options']['num_months']}'></div></div>";
 		return $input;
 	}
 }

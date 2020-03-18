@@ -120,6 +120,7 @@ class BFE_date_picker extends BorosFormElement {
 		$this->data['attr']['dataset']['show_second']   = $this->data['options']['show_second'];
 		$this->data['attr']['dataset']['months_number'] = $this->data['options']['months_number'];
 		$this->data['attr']['dataset']['date_range']    = $this->data['options']['date_range'];
+		$this->data['attr']['autocomplete']             = 'off';
 		$this->data['attr']['class'] .= ' iptw_100';
 		//pre($this->data['attr']['dataset']);
 		
