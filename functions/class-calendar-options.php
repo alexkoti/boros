@@ -174,7 +174,7 @@ class Boros_Calendar_Options {
         $css_url = BOROS_CSS . 'date_picker_multiple.css';
         $js_url  = BOROS_JS . 'date_picker_multiple.js';
         wp_enqueue_style( 'boros-calendar-css', $css_url, false, version_id(), 'screen', true );
-        wp_enqueue_script( 'boros-calendar-js', $js_url, array('jquery'), true );
+        wp_enqueue_script( 'boros-calendar-js', $js_url, array('jquery'), version_id(), true );
     }
     
     public function save( $post_id, $post ) {

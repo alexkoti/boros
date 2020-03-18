@@ -1232,11 +1232,11 @@ class BorosFormElement {
 			foreach( $files_array as $js ){
 				// enqueue absoluto
 				if( is_array($js) ){
-					wp_enqueue_script( $js[0], $js[1], NULL, true );
+					wp_enqueue_script( $js[0], $js[1], NULL, version_id(), true );
 				}
 				else{
 					$js_url = $folder . $js . '.js';
-					wp_enqueue_script( "form_element_{$this->data['type']}_{$js}", $js_url, array('jquery'), true );
+					wp_enqueue_script( "form_element_{$this->data['type']}_{$js}", $js_url, array('jquery'), version_id(), true );
 				}
 			}
 		}
