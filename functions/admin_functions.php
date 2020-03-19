@@ -35,9 +35,9 @@ function admin_styles(){
 	wp_enqueue_style( 'jquery-ui-core' );
 	wp_enqueue_style( 'wp-jquery-ui-dialog' );
 	//CUSTOM STYLES
-	wp_enqueue_style( 'custom_admin_css', BOROS_CSS . 'admin.css' , false, '1.0', 'screen' );
-	wp_enqueue_style( 'events', BOROS_CSS . 'events.css' , false, '1.0', 'screen' );
-	wp_enqueue_style( 'form_elements', BOROS_CSS . 'form_elements.css' , false, '1.0', 'screen' );
+	wp_enqueue_style( 'custom_admin_css', BOROS_CSS . 'admin.css' , array(), version_id(), 'screen' );
+	wp_enqueue_style( 'events', BOROS_CSS . 'events.css' , array(), version_id(), 'screen' );
+	wp_enqueue_style( 'form_elements', BOROS_CSS . 'form_elements.css' , array(), version_id(), 'screen' );
 }
 
 
@@ -86,7 +86,7 @@ function add_custom_admin_scripts(){
 	);
 	
 	foreach( $scripts as $script ){
-		wp_enqueue_script( $script, BOROS_JS . $script . '.js', array('jquery'), NULL );
+		wp_enqueue_script( $script, BOROS_JS . $script . '.js', array('jquery'), version_id(), true );
 	}
 	
 	/**

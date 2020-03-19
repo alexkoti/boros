@@ -82,7 +82,7 @@ function boros_dashboard_notifications_widget_output(){
 add_action('admin_enqueue_scripts', 'boros_dashboard_admin_enqueue_scripts');
 function boros_dashboard_admin_enqueue_scripts( $hook ){
 	if( $hook == 'index.php' ){
-		wp_enqueue_script( 'boros-dashboard-script', BOROS_JS . 'boros-dashboard-script.js', 'jquery', null, true );
+		wp_enqueue_script( 'boros-dashboard-script', BOROS_JS . 'boros-dashboard-script.js', 'jquery', version_id(), true );
 	}
 }
 
