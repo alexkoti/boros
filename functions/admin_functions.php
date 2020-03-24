@@ -86,7 +86,7 @@ function add_custom_admin_scripts(){
 	);
 	
 	foreach( $scripts as $script ){
-		wp_enqueue_script( $script, BOROS_JS . $script . '.js', array('jquery'), version_id(), true );
+		wp_enqueue_script( $script, BOROS_JS . $script . '.js', array('jquery'), version_id() );
 	}
 	
 	/**
