@@ -299,7 +299,7 @@ input[disabled='1']{
  */
 .btn_item_new {
 	background:url(img/btn_add.gif) no-repeat 0 0;
-	color:#21759B;
+	color:#0073aa;
 	cursor:pointer;
 	padding:1px 0 1px 20px;
 }
@@ -309,7 +309,7 @@ input[disabled='1']{
 }
 .btn_item_select {
 	background:url(img/btn_select_images.png) no-repeat 0 0;
-	color:#21759B;
+	color:#0073aa;
 	cursor:pointer;
 	padding:0 0 0 20px;
 }
