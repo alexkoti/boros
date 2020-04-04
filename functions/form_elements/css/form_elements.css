@@ -33,11 +33,18 @@
 	bottom: -1px;
 	left: 0;
 }
+.boros-media-selector .media-selector-btn:focus {
+	outline: none;
+	box-shadow: none;
+}
 .boros-media-selector .media-selector-add:before {
 	content: "\f132";
 }
 .boros-media-selector .media-selector-remove:before {
 	content: "\f158";
+}
+.media-selector-actions {
+	text-align: center;
 }
 .boros-media-selector .media-item {
 	background-color: #f5f5f5;
@@ -67,9 +74,6 @@
 .boros-media-selector.image-not-set .media-item .remove {
 	display: none;
 }
-.boros-media-selector.image-not-set .media-item img {
-	cursor: auto;
-}
 .boros-media-selector .media-item .remove {
 	cursor: pointer;
 	position: absolute;
@@ -87,7 +91,10 @@
 	content: "\f153";
 	font-family: dashicons;
 	font-size: 20px;
-    line-height: 20px;
+	line-height: 20px;
+	position: absolute;
+    top: 0px;
+    left: 0.5px;
 }
 .boros-media-selector .media-item:hover .remove {
 	opacity: 0.7;

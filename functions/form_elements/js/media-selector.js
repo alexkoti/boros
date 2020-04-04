@@ -1,48 +1,36 @@
 jQuery(function($){
 
+    var media_selector = {};
+
+    var current_opt = {};
+
     /**
      * Botão de selecionar nova midia
      * 
      */
     $('.boros-media-selector').on('click', '.media-selector-add, .media-item img', function(e){
         e.preventDefault();
+
         var btn      = $(this);
         var box      = btn.closest('.boros-media-selector');
-        var selected = box.find('.media-selector-img');
-        var options  = box.data('options');
-        var input    = box.find('input[type="hidden"]');
+        var index    = box.attr('id');
+        var mindex   = box.attr('data-query-id');
+        current_opt  = box.data('options');
+        current_opt['box'] = box;
 
-        /**
-         * Configurar modal de midia
-         * 
-         */
-        var media_selector = new wp.media.view.MediaFrame.Select({
-            title    : options.modal_title,
-            multiple : false,
-            button   : {text : options.confirm_button},
-            library: {
-                order: 'DESC',
-                // [ 'name', 'author', 'date', 'title', 'modified', 'uploadedTo', 'id', 'post__in', 'menuOrder' ]
-                orderby: 'date',
-                // mime type. e.g. 'image', 'image/jpeg'
-                type: 'image',
-                // Searches the attachment title.
-                search: null,
-                // Attached to a specific post (ID).
-                uploadedTo: null
-            },
-        });
+        //console.log(current_opt);
+        //console.log('mindex: ' + mindex);
 
-        /**
-         * Atualizar midia e input:hidden com o novo conteúdo
-         * 
-         */
-        media_selector.on('select', function(){
-            var attachs = media_selector.state().get('selection').first().toJSON();
-            media_selector_update( btn, attachs.sizes[ options.image_size ]['url'], attachs.id );
-        });
+        if( media_selector[mindex] ){
+            //console.log('reabrir wp.media');
+            media_selector[mindex].open();
+        }
+        else{
+            //console.log('criar wp.media');
+            media_selector_create(mindex);
+        }
         
-        media_selector.open();
+        media_selector[mindex].open();
     });
 
     /**
@@ -51,8 +39,70 @@ jQuery(function($){
      */
     $('.boros-media-selector').on('click', '.media-selector-remove, .media-item .remove', function(e){
         e.preventDefault();
-        media_selector_update( $(this), 'default', 0 );
+        var box = $(this).closest('.boros-media-selector');
+        media_selector_update( box, 'default', 0 );
     });
+
+
+    function media_selector_create( mindex ){
+
+        /**
+         * Configurar modal de midia
+         * 
+         */
+        media_selector[mindex] = new wp.media.view.MediaFrame.Select({
+            title    : current_opt.modal_title,
+            multiple : false,
+            button   : {text : current_opt.confirm_button},
+            library: {
+                order: current_opt.file_order,
+                // [ 'name', 'author', 'date', 'title', 'modified', 'uploadedTo', 'id', 'post__in', 'menuOrder' ]
+                orderby: current_opt.file_orderby,
+                // mime type. e.g. 'image', 'image/jpeg'
+                type: current_opt.file_type,
+                // Searches the attachment title.
+                //search: null,
+                // Attached to a specific post (ID).
+                //uploadedTo: null,
+                // É possível escolher a quantidade de itens por requisição
+                //posts_per_page: 50
+            },
+        });
+
+        /**
+         * Atualizar midia e input:hidden com o novo conteúdo
+         * 
+         */
+        media_selector[mindex].on('select', function(){
+            var attachs = media_selector[mindex].state().get('selection').first().toJSON();
+            var library = media_selector[mindex].state().get( 'library' );
+            //console.log( attachs );
+            //console.log( current_opt.image_size );
+            media_selector_update( current_opt.box, attachs.sizes[ current_opt.image_size ]['url'], attachs.id );
+            
+            attachment = wp.media.attachment(attachs.id);
+            library.add( attachment );
+        });
+
+        /**
+         * Deixar selecionado os arquivos previsamente escolhidos
+         * 
+         */
+        media_selector[mindex].on('open', function(){
+            var selection = media_selector[mindex].state().get('selection');
+            var library = media_selector[mindex].state().get( 'library' );
+            //console.log(selection);
+            //console.log(library);
+            var selected = current_opt.box.find('input[type="hidden"]').val();
+            console.log( selected );
+            if( selected > 0 ){
+                attachment = wp.media.attachment(selected);
+                attachment.fetch();
+                selection.add(attachment ? [attachment] : []);
+                library.add( attachment ? [ attachment ] : [] );
+            }
+        });
+    }
 
     /**
      * Atualizar imagem conforme template
@@ -62,10 +112,8 @@ jQuery(function($){
      * var new_val - novo valor para ser salvo(image post_ID)
      * 
      */
-    function media_selector_update( obj, new_src, new_val ){
-        var btn      = obj;
-        var box      = btn.closest('.boros-media-selector');
-        var selected = box.find('.media-selector-img');
+    function media_selector_update( box, new_src, new_val ){
+        var selected = box.find('.selected-medias');
         var options  = box.data('options');
         var input    = box.find('input[type="hidden"]');
 
@@ -85,7 +133,7 @@ jQuery(function($){
             alt    : '',
             width  : options.width,
             height : options.height,
-            remove : options.remove_button,
+            remove : options.remove_text,
         };
         // carregar template
         var image_html = get_template(data);
