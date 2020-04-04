@@ -405,7 +405,7 @@ function opengraph_tags( $args = false ){
         'site_name'    => get_bloginfo('name'),
         'separator'    => ' | ',
         'image_url'    => $default_image,
-        'image_type'   => false,
+        'image_mime'   => false,
         'image_width'  => false,
         'image_height' => false,
         'description'  => get_bloginfo('description'),
@@ -612,6 +612,8 @@ function fix_title_tag( $name ){
 
 /**
  * Class para geração de tags de compartilhamento
+ * 
+ * @todo: mover class para arquivo próprio para autoload
  * 
  */
 
