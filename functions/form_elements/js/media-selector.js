@@ -76,9 +76,9 @@ jQuery(function($){
         media_selector[mindex].on('select', function(){
             var attachs = media_selector[mindex].state().get('selection').first().toJSON();
             var library = media_selector[mindex].state().get( 'library' );
-            //console.log( attachs );
-            //console.log( current_opt.image_size );
-            media_selector_update( current_opt.box, attachs.sizes[ current_opt.image_size ]['url'], attachs.id );
+            console.log( attachs );
+            console.log( current_opt );
+            media_selector_update( current_opt.box, attachs, attachs.id );
             
             attachment = wp.media.attachment(attachs.id);
             library.add( attachment );
@@ -90,7 +90,7 @@ jQuery(function($){
          */
         media_selector[mindex].on('open', function(){
             var selection = media_selector[mindex].state().get('selection');
-            var library = media_selector[mindex].state().get( 'library' );
+            var library   = media_selector[mindex].state().get( 'library' );
             //console.log(selection);
             //console.log(library);
             var selected = current_opt.box.find('input[type="hidden"]').val();
@@ -112,29 +112,51 @@ jQuery(function($){
      * var new_val - novo valor para ser salvo(image post_ID)
      * 
      */
-    function media_selector_update( box, new_src, new_val ){
+    function media_selector_update( box, attachs, new_val ){
         var selected = box.find('.selected-medias');
         var options  = box.data('options');
         var input    = box.find('input[type="hidden"]');
+        
+        // default data
+        var data = {
+            src    : options.default_image,
+            alt    : '',
+            width  : options.width,
+            height : options.height,
+            remove : options.remove_text,
+            title  : '',
+            type   : '',
+            dims   : '',
+            size   : '',
+            hthumb : '',
+        };
 
         // caso seja default, carregar imagem padrão e mudar class para esconder botões de remoção
-        if( new_src == 'default' ){
-            new_src = options.default_image;
+        if( attachs == 'default' ){
             box.addClass('image-not-set');
         }
         else{
+            // para arquivos de imagem, deverá apontar para o tamanho correto de wp-image-size
+            if( attachs.sizes ){
+                data.src    = attachs.sizes[ current_opt.image_size ]['url'];
+                data.hthumb = 'has-thumb';
+            }
+            // para demias tipos, apontar para o ícone
+            else{
+                data.src = attachs.icon;
+            }
+            // alguns tipos de vídeo possuem dimensões
+            if( typeof(attachs.width) !== 'undefined' ){
+                data.dims = attachs.width + ' × ' + attachs.height;
+            }
+            data.title = attachs.title;
+            data.type  = attachs.mime;
+            data.size  = attachs.filesizeHumanReadable;
             box.removeClass('image-not-set');
         }
         
         // template definido no form_element
         var get_template = wp.template('boros-media-selector-image');
-        var data = {
-            src    : new_src,
-            alt    : '',
-            width  : options.width,
-            height : options.height,
-            remove : options.remove_text,
-        };
         // carregar template
         var image_html = get_template(data);
         selected.html(image_html);
