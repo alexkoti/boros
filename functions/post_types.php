@@ -461,6 +461,19 @@ function render_columns( $column_name ){
 		}
 		return;
 	}
+
+	/**
+	 * Thumbnail alternativo
+	 * 
+	 */
+	if( $column_name == 'thumb_alt' ){
+		$img = get_post_meta($post->ID, '_thumbnail_alt', true);
+		if( !empty($img) ){
+			$img_src = wp_get_attachment_image_src( $img, 'thumbnail');
+			echo "<img src='{$img_src[0]}' class='attachment-thumbnail size-thumbnail wp-post-image' alt=''>";
+		}
+		return;
+	}
 	
 	/**
 	 * Thumbnail sizes
@@ -503,6 +516,7 @@ function render_columns( $column_name ){
 			echo $post->menu_order;
 			break;
 			
+		// woocommerce também declara uma coluna chamada 'thumb'
 		case 'thumb':
 			if ( has_post_thumbnail() and $post->post_type != 'product' ) {
 				the_post_thumbnail('thumbnail', array('id' => 'wp-image-' . get_post_thumbnail_id($post->ID)));
