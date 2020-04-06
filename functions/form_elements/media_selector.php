@@ -80,7 +80,7 @@ class BFE_media_selector extends BorosFormElement {
         $opt       = htmlspecialchars(json_encode($this->options));
         $attrs     = make_attributes($this->data['attr']);
         $query_id  = $this->set_query_id();
-        $img_set   = ( $value > 0 ) ? 'vale-set' : 'vale-not-set';
+        $img_set   = ( $value > 0 ) ? 'vale-set' : 'value-not-set';
         $align     = ' align-' . $this->options['align'];
         $classes   = "{$img_set} {$align} {$this->options['select_type']} {$show_info}";
 

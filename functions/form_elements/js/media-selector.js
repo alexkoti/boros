@@ -8,7 +8,7 @@ jQuery(function($){
      * Botão de selecionar nova midia
      * 
      */
-    $('.boros-media-selector').on('click', '.media-selector-add, .media-item img', function(e){
+    $('.boros_form_block').on('click', '.boros-media-selector .media-selector-add, .boros-media-selector .media-item img', function(e){
         e.preventDefault();
 
         var btn      = $(this);
@@ -37,7 +37,7 @@ jQuery(function($){
      * Botão de remover midia
      * 
      */
-    $('.boros-media-selector').on('click', '.media-selector-remove, .media-item .remove', function(e){
+    $('.boros_form_block').on('click', '.boros-media-selector .media-selector-remove, .boros-media-selector .media-item .remove', function(e){
         e.preventDefault();
         var box = $(this).closest('.boros-media-selector');
         media_selector_update( box, 'default', 0 );
@@ -133,7 +133,7 @@ jQuery(function($){
 
         // caso seja default, carregar imagem padrão e mudar class para esconder botões de remoção
         if( attachs == 'default' ){
-            box.addClass('image-not-set');
+            box.addClass('value-not-set');
         }
         else{
             // para arquivos de imagem, deverá apontar para o tamanho correto de wp-image-size
@@ -152,7 +152,7 @@ jQuery(function($){
             data.title = attachs.title;
             data.type  = attachs.mime;
             data.size  = attachs.filesizeHumanReadable;
-            box.removeClass('image-not-set');
+            box.removeClass('value-not-set');
         }
         
         // template definido no form_element

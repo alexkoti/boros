@@ -97,8 +97,8 @@
     height: 50px;
     margin: -25px 0 0 -25px;
 }
-.boros-media-selector.image-not-set .media-selector-remove, 
-.boros-media-selector.image-not-set .media-item .remove {
+.boros-media-selector.value-not-set .media-selector-remove, 
+.boros-media-selector.value-not-set .media-item .remove {
 	display: none;
 }
 .boros-media-selector .media-item .remove {
@@ -148,7 +148,7 @@
 .boros-media-selector.type-file .media-item .media-icon:before {
 	visibility: hidden;
 }
-.boros-media-selector.image-not-set .media-item .media-icon:before {
+.boros-media-selector.value-not-set .media-item .media-icon:before {
 	visibility: visible;
 }
 .boros-media-selector.type-file .media-item .remove {
