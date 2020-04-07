@@ -27,11 +27,11 @@ class BFE_media_selector extends BorosFormElement {
         'add_text'       => 'selecionar',           // texto do botão de selecionar midia
         'remove_text'    => 'remover',              // texto do botão de remover mídia, é usado no title do (X) na midia selecionada
         'remove_button'  => true,                   // exibir o botão de remover mídia, o 'remove_text' aidna é usado no (x)
-        'confirm_button' => 'confirmar',            // texto de confirmação no modal
-        'modal_title'    => 'Selecionar',           // tpitulo do modal
-        'file_type'      => 'image',                // ''(tudo), 'image', 'audio', 'video', 'application/pdf', '*/pdf', '*/xls'
-        'file_orderby'   => 'date',                 // modal, critério de ordenação
-        'file_order'     => 'DESC',                 // ordenação
+        'confirm_button' => 'confirmar',            // modal: texto de confirmação no modal
+        'modal_title'    => 'Selecionar',           // modal: título
+        'file_type'      => 'image',                // modal: midia ''(tudo), 'image', 'audio', 'video', 'application/pdf', '*/pdf', '*/xls'
+        'file_orderby'   => 'date',                 // modal: critério de ordenação
+        'file_order'     => 'DESC',                 // modal: ordenação
         'select_type'    => 'image',                // tipo de controle: 'image'(mostra thumbnail) ou 'file'(mostra ícone + info)
         'image_size'     => 'thumbnail',            // tamanho da imagem conforme wp_image_sizes, em caso de 'file_type' diferente de 'image', será forçado para 'thumbnail'
         'width'          => 150,                    // largura do thumbnail/ícone
@@ -55,9 +55,13 @@ class BFE_media_selector extends BorosFormElement {
 
     private static $counter = 0;
     
+    /**
+     * Adicionar apenas uma vez o template js do controle.
+     * wp_enqueue_media() faz a requisição de todos os enqueues necessários para o modal de mídia
+     * 
+     */
     function init(){
         wp_enqueue_media();
-        //wp_enqueue_script( 'custom-header' );
 
 		// acionar apenas na primeira instância
 		if( self::$counter == 0 ){
@@ -106,21 +110,26 @@ class BFE_media_selector extends BorosFormElement {
         return $input;
     }
 
+    /**
+     * Definir a query_id, que será utilizada pelo js para agrupar os modais que utilizam da mesma query de busca de mídias
+     * 
+     */
     function set_query_id(){
         $file_type = str_replace( array('/', '/*', '*/'), '-', $this->options['file_type'] );
         return "{$file_type}-{$this->options['file_orderby']}-{$this->options['file_order']}";
     }
 
+    /**
+     * Retornar HTML da mídia, com informações opcionais
+     * 
+     */
     function current_media( $id ){
 
         $info = $this->media_info( $id );
-        $has_thumb = '';
 
-        //$value = 71;
         if( $id > 0 ){
             $src = wp_get_attachment_image_src( $id, $this->options['image_size'], true );
             $img_src = $src[0];
-            $has_thumb = 'has-thumb';
         }
         else{
             $img_src = $this->options['default_image'];
@@ -137,11 +146,11 @@ class BFE_media_selector extends BorosFormElement {
         <?php
     }
 
+    /**
+     * Retornar todas as informações da mídia
+     * 
+     */
     function media_info( $id ){
-
-        if( $this->options['show_info'] == false ){
-            return false;
-        }
 
         $info = array(
             'title' => 'Arquivo não definido',
@@ -185,11 +194,15 @@ class BFE_media_selector extends BorosFormElement {
         return "<div class='media-info'>{$info['title']}{$info['type']}{$info['size']}{$info['dims']}</div>";
     }
 
+    /**
+     * Output do template js para a atualização dinâmica ao adicionar/trocar imagens
+     * 
+     */
     function footer(){
         ?>
         <script type="text/template" id="tmpl-boros-media-selector-image">
             <div class="media-item">
-                <div class="media-icon {{{data.hthumb}}}" style="width:{{{data.width}}}px;height:{{{data.height}}}px;">
+                <div class="media-icon {{data.hthumb}}" style="width:{{data.width}}px;height:{{data.height}}px;">
                     <div class="remove" title="{{{data.remove}}}"></div>
                     <img src="{{{data.src}}}" alt="{{{data.alt}}}">
                 </div>

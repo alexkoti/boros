@@ -1,11 +1,25 @@
 jQuery(function($){
 
+    /**
+     * Todos os modais de mídia iniciados na página
+     * 
+     */
     var media_selector = {};
 
+    /**
+     * Opções de modal(title, botões, query, etc)
+     * Sempre é preenchido com as opções do controle acionado.
+     * 
+     */
     var current_opt = {};
 
     /**
      * Botão de selecionar nova midia
+     * 
+     * Ao acionar o botão:
+     * - as opções em 'current_opt' serão preenchidas com os valores armazenados em data-options
+     * - é verificado se o modal da query 'data-query-id' já foi criado, retornando o modal pré-existente ou criando um novo, 
+     * armazenando no índice 'mindex'
      * 
      */
     $('.boros_form_block').on('click', '.boros-media-selector .media-selector-add, .boros-media-selector .media-item img', function(e){
@@ -17,16 +31,13 @@ jQuery(function($){
         var mindex   = box.attr('data-query-id');
         current_opt  = box.data('options');
         current_opt['box'] = box;
-
         //console.log(current_opt);
         //console.log('mindex: ' + mindex);
 
         if( media_selector[mindex] ){
-            //console.log('reabrir wp.media');
             media_selector[mindex].open();
         }
         else{
-            //console.log('criar wp.media');
             media_selector_create(mindex);
         }
         
@@ -43,7 +54,17 @@ jQuery(function($){
         media_selector_update( box, 'default', 0 );
     });
 
-
+    /**
+     * Registrar modal de mídia
+     * 
+     * Cada modal de mídia, gera uma query das mídias, definida em 'library'. Caso dois controles precisem da mesma query, o modal 
+     * poderá ser reutilizado para os mesmos controles. Por ex todos os controles que buscam as imagens mais recentes podem usar o 
+     * mesmo modal. Já outro modal que busque apenas os pdfs, deverá ser único.
+     * 
+     * Todos os modais presentes na página são armazenados em 'media_selector' e cada tipo de requisição no índice 'mindex', por ex
+     * 'image-date-DESC' ou 'application-pdf-date-DESC'
+     * 
+     */
     function media_selector_create( mindex ){
 
         /**
@@ -60,11 +81,11 @@ jQuery(function($){
                 orderby: current_opt.file_orderby,
                 // mime type. e.g. 'image', 'image/jpeg'
                 type: current_opt.file_type,
-                // Searches the attachment title.
+                //// searches the attachment title.
                 //search: null,
-                // Attached to a specific post (ID).
+                //// attached to a specific post (ID).
                 //uploadedTo: null,
-                // É possível escolher a quantidade de itens por requisição
+                //// é possível escolher a quantidade de itens por requisição
                 //posts_per_page: 50
             },
         });
@@ -76,8 +97,8 @@ jQuery(function($){
         media_selector[mindex].on('select', function(){
             var attachs = media_selector[mindex].state().get('selection').first().toJSON();
             var library = media_selector[mindex].state().get( 'library' );
-            console.log( attachs );
-            console.log( current_opt );
+            //console.log( attachs );
+            //console.log( current_opt );
             media_selector_update( current_opt.box, attachs, attachs.id );
             
             attachment = wp.media.attachment(attachs.id);
@@ -85,7 +106,7 @@ jQuery(function($){
         });
 
         /**
-         * Deixar selecionado os arquivos previsamente escolhidos
+         * Deixar selecionado os arquivos previamente escolhidos
          * 
          */
         media_selector[mindex].on('open', function(){
@@ -131,7 +152,7 @@ jQuery(function($){
             hthumb : '',
         };
 
-        // caso seja default, carregar imagem padrão e mudar class para esconder botões de remoção
+        // caso seja a string 'default' em vez do objeto attachs, carregar imagem padrão e mudar class para esconder botões de remoção
         if( attachs == 'default' ){
             box.addClass('value-not-set');
         }
@@ -145,7 +166,7 @@ jQuery(function($){
             else{
                 data.src = attachs.icon;
             }
-            // alguns tipos de vídeo possuem dimensões
+            // além de imagem, alguns tipos de vídeo possuem dimensões
             if( typeof(attachs.width) !== 'undefined' ){
                 data.dims = attachs.width + ' × ' + attachs.height;
             }
