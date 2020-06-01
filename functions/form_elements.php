@@ -399,6 +399,7 @@ function boros_duplicate_element( $context ){
  * 
  * @todo revisar o set_attributes(), para evitar incompatibilidades de classes extendidas que não usem atributos(ex HTML)
  * @todo revisar o $parent - talvez usar/mudar para controle de unique name(multiplos controles com um único name, para gravar o option em array)
+ * @todo adicionar contador de instâncias, e alguma forma de algum método que execute apenas uma vez
  * 
  */
 class BorosFormElement {

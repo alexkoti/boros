@@ -20,6 +20,7 @@ License: GPL2
 define( 'BOROS', dirname(__FILE__) );
 define( 'BOROS_FUNCTIONS',    BOROS . DIRECTORY_SEPARATOR . 'functions' );
 define( 'BOROS_ELEMENTS',     BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'form_elements' );
+define( 'BOROS_CUSTOMIZER',   BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'customizer' );
 define( 'BOROS_LIBS',         BOROS . DIRECTORY_SEPARATOR . 'vendors' );
 
 // URLS
