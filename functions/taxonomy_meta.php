@@ -46,7 +46,6 @@ class BorosTermMeta {
 		
 		add_action( 'edit_category_form_pre', array($this, 'pre_formatt_term_core_data'), 10, 1 ); // prepara dados para exibir no form
 		add_action( 'edit_link_category_form_pre', array($this, 'pre_formatt_term_core_data'), 10, 1 ); // prepara dados para exibir no form
-		add_action( 'edit_tag_form_pre', array($this, 'pre_formatt_term_core_data'), 10, 1 ); // prepara dados para exibir no form
 		
 		foreach( $this->config as $taxonomy => $itens ){
 			add_action( "{$taxonomy}_pre_edit_form", array($this, 'pre_formatt_term_core_data'), 10, 2 ); // prepara dados para exibir no form
