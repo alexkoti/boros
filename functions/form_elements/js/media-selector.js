@@ -159,8 +159,10 @@ jQuery(function($){
         else{
             // para arquivos de imagem, deverá apontar para o tamanho correto de wp-image-size
             if( attachs.sizes ){
-                data.src    = attachs.sizes[ current_opt.image_size ]['url'];
-                data.hthumb = 'has-thumb';
+                // pode acontecer do tamanho da imagem requisitada não ter sido registrada, usar 'thumbnail'
+                var image_size = ( attachs.sizes[ current_opt.image_size ] === undefined ) ? 'thumbnail' : current_opt.image_size;
+                data.src       = attachs.sizes[ image_size ]['url'];
+                data.hthumb    = 'has-thumb';
             }
             // para demias tipos, apontar para o ícone
             else{

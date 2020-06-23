@@ -3,7 +3,7 @@
  * MEDIA SELECTOR
  * 
  * @todo ajustes para outros tipos de arquivos além de imagem: file-icon, file-details
- * @todo múltiplos medias, com drag-drop
+ * @todo múltiplos medias, com drag-drop - mostrar várias mídias por linha
  * 
  */
 
@@ -128,7 +128,8 @@ class BFE_media_selector extends BorosFormElement {
         $info = $this->media_info( $id );
 
         if( $id > 0 ){
-            $src = wp_get_attachment_image_src( $id, $this->options['image_size'], true );
+            $image_size = has_image_size($this->options['image_size']) ? $this->options['image_size'] : 'thumbnail';
+            $src = wp_get_attachment_image_src( $id, $image_size, true );
             $img_src = $src[0];
         }
         else{

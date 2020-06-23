@@ -2,9 +2,6 @@
 /**
  * FORM ELEMENT: DUPLICABLE_GROUP
  * 
- * @todo adicionar botão(checkbox?) de collapse, exibindo apenas o primeiro elemento do grupo
- * 
- * 
  * WARNING: SUPER BUG DA MORTE [here be dragons, this is sparta, deixem a esperança do lado fora ] >>>>>>>>>>>>>>>>>>>>>>>>>> duplicação de elementos em option_page:
  * 		Ao duplicar os elementos em uma option page(em meta_box funciona normalmente) os inputs perdem o 'registro' no DOM, e não enviam informações ao $_POST, inclusive 
  *		perdendo a capacidade de envio pela tecla ENTER.
