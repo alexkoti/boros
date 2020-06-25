@@ -572,13 +572,15 @@ class BorosAdminPages {
 	
 	function output_page_header( $block ){
 		echo "<div class='icon32' id='icon-options-general'><br></div>";
-		
-		if( empty($this->tabs) ){
-            if( !empty($block['title']) ){
-                echo "<h2 class='section_title'>{$block['title']}</h2>";
-            }
+		if( !empty($block['title']) ){
+			echo "<h2 class='section_title'>{$block['title']}</h2>";
 		}
-		else{
+		
+		if( isset($block['desc']) and !empty($block['desc']) ){
+			echo "<div class='boros_section_desc'>{$block['desc']}</div>";
+		}
+		
+		if( !empty($this->tabs) ){
 			echo '<h2 class="nav-tab-wrapper">';
 			$first_tab = key( $this->tabs );
 			foreach( $this->tabs as $tab => $name ){
@@ -593,9 +595,6 @@ class BorosAdminPages {
 			}
 			echo '</h2>';
 		}
-		
-		if( isset($block['desc']) and !empty($block['desc']) )
-			echo "<div class='boros_section_desc'>{$block['desc']}</div>";
 	}
 	
 	/**
