@@ -30,6 +30,9 @@
  * ==================================================
  * 
  * Listar functions adicionadas a determinado hook
+ * List all filters
+ * List all actions
+ * Todos os filtros
  * 
  * @link https://wordpress.stackexchange.com/a/223736
  * 
