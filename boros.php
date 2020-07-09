@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Boros Elements
-Plugin URI: https://github.com/alexkoti/boros
-Description: Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets e form_elements
-Version: 1.5.2
-Author: Alex Koti
-Author URI: http://alexkoti.com
-License: GPL2
+Plugin URI:  https://github.com/alexkoti/boros
+Description: Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets, form_elements e frontend forms
+Version:     1.5.4
+Author:      Alex Koti
+Author URI:  http://alexkoti.com
+License:     GPL2
 */
 
 /** 
