@@ -344,7 +344,19 @@ class BorosMetaBoxes {
 				 * Aplicar correçoes dependendo do type do elemento
 				 *
 				 */
-				if( boros_check_empty_var($value) !== false ){
+                $can_save    = true;
+                $allow_empty = isset($element['allow_empty']) ? $element['allow_empty'] : false;
+                $is_empty    = boros_check_empty_var($value) === false;
+                if( $is_empty && $allow_empty === false ){
+                    $can_save = false;
+                }
+
+                //pel($allow_empty, "allow empty: {$element['name']}");
+                //pel($is_empty, $element['name'], 50);
+                //pel($can_save, 'cansave: ' . $element['name'], 50);
+
+				if( $can_save == true ){
+                    //pel($element['name'], 'salvar', 50);
 					
 					switch( $element['type'] ){
 						// duplicate group: reindexar o array numérico, para que seja perfeitamente sequencial
@@ -399,9 +411,10 @@ class BorosMetaBoxes {
 					/**/
 					
 				}
-				// remover postmeta, se existir
+				// Remover postmeta, se existir. Manter se a opção 'allow_empty' estiver true
 				else{
-					if( isset($element['name']) and get_post_meta($post_id, $element['name'], true) ){
+					if( isset($element['name']) && get_post_meta($post_id, $element['name'], true) ){
+                        //pel($element['name'], 'delete');
 						delete_post_meta($post_id, $element['name'], get_post_meta($post_id, $element['name'], true));
 					}
 				}
@@ -421,22 +434,28 @@ class BorosMetaBoxes {
 		//pre($_POST, '$_POST'); die();
 		//pal('DEBUG!!!');
 	}
-	
+    
+    /**
+     * A verificação de valor vazio já está sendo feita em save(), quando o valor chegar
+     * neste método já estará validado.
+     * 
+     */
 	function save_single( $post_id, $name, $value ){
+        update_post_meta( $post_id, $name, $value );
 		//pal('save_single', $name);
-		$original = get_post_meta( $post_id, $name );
-		$value_status = boros_check_empty_var($value);
-		
-		// valor postado vazio
-		if( $value_status === false ){
-			//pal("deleted {$name}");
-			delete_post_meta( $post_id, $name, $original );
-		}
-		// não vazio, salvar
-		else{
-			//pal("saved {$name}");
-			update_post_meta( $post_id, $name, $value );
-		}
+		//$original = get_post_meta( $post_id, $name );
+		//$value_status = boros_check_empty_var($value);
+		//
+		//// valor postado vazio
+		//if( $value_status === false ){
+		//	//pal("deleted {$name}");
+		//	delete_post_meta( $post_id, $name, $original );
+		//}
+		//// não vazio, salvar
+		//else{
+		//	//pal("saved {$name}");
+		//	update_post_meta( $post_id, $name, $value );
+		//}
 	}
 	
 	/**
