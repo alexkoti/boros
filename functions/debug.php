@@ -150,9 +150,9 @@ function pre( $var = false, $legend = '', $opened = true, $global_controls = fal
  * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
  */
 if( !function_exists('pal') ){
-function pal( $var = false, $legend = '' ){
+function pal( $var = false, $legend = '', $pad = 0 ){
 	$pre = PRE::init();
-	$pre->pal( $var, $legend );
+	$pre->pal( $var, $legend, $pad );
 }
 }
 
@@ -333,11 +333,26 @@ class PRE {
 			}
 			return $newArr;
 		}
-	}
+    }
+    
+    /**
+     * String Pad str_pad() para multi-byte characters
+     * 
+     */
+    function mb_str_pad( $input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT){
+        $diff = strlen( $input ) - mb_strlen( $input );
+        return str_pad( $input, $pad_length + $diff, $pad_string, $pad_type );
+    }
 	
-	function pal( $message, $var_name = false ){
-		$var = ( $var_name != false) ? "<strong>{$var_name}</strong> &gt; &gt; &gt; " : '';
-		echo "<div class='pal_box'>" . $var . $this->esc_html($message) . "</div>\n";
+	function pal( $message, $var_name = false, $pad = 0  ){
+        $legend = '';
+        if( !empty($var_name) ){
+            $legend = $this->mb_str_pad("{$var_name} ", $pad, '-', STR_PAD_RIGHT);
+            $legend = "<strong>{$legend}</strong>&gt; ";
+        }
+        //$var = str_replace('~', '&nbsp;', $var);
+        //$var = str_replace('~', '-', $var);
+		echo "<div class='pal_box'>" . $legend . $this->esc_html($message) . "</div>\n";
 	}
 	
 	public function pre( $var = false, $legend = '', $opened = true, $global_controls = false ){
