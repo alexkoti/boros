@@ -195,6 +195,30 @@ function pel( $var = false, $legend = '', $pad = 0 ){
 }
 }
 
+/**    
+ * ==================================================
+ * MENSAGEM HTML ====================================
+ * ==================================================
+ * {P}rint {A}lert {H}TML
+ * Aceita tags HTML
+ * Está utilizando classes do bootstrap
+ * 
+ * @todo: embutir css
+ */
+if( !function_exists('pam') ){
+    function pam( $message = '', $type = 'primary', $legend = '', $close_button = false ){
+        if( !empty($legend) ){
+            $legend = "<mark>{$legend}:</mark> ";
+        }
+        $button = '';
+        if( $close_button == true ){
+            $button = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+        }
+        echo "<div class='alert alert-{$type}' role='alert'>{$legend}{$message}{$button}</div>";
+    }
+}
+
+
 /**
  * Separador simples, usar apenas para melhorar a legibilidade em debugs complexos
  * 
