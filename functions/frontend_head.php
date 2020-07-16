@@ -25,6 +25,7 @@ class BorosJs {
         'in_footer' => true,
         'priority'  => 10,
     );
+
     var $queue = array();
     
     private $conditionals = array(
@@ -229,8 +230,11 @@ class BorosCss {
     var $current = '';
 
     var $options = array(
-        'ver' => null,
+        'ver'      => null,
+        'priority' => 10,
     );
+
+    var $queue = array();
     
     function __construct( $args = array() ){
 
@@ -245,6 +249,18 @@ class BorosCss {
         }
         $this->css_dir     = get_bloginfo('template_url') . '/css/';
         $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
+
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'), $this->options['priority']);
+    }
+    
+    /**
+     * Run enqueues
+     * 
+     */
+    function enqueue_styles(){
+        foreach( $this->queue as $args ){
+            wp_enqueue_style( $args[0], $args[1], $args[2], $args[3], $args[4] );
+        }
     }
     
     /**
@@ -259,8 +275,7 @@ class BorosCss {
         $dir = ($folder) ? $folder . '/' : '';
         $src = $this->css_dir . $dir . $name . '.css';
         $this->current = $name;
-        wp_enqueue_style($name, $src, $parent, $this->options['ver'], $media);
-        return $this;
+        $this->queue[] = array($name, $src, $parent, $this->options['ver'], $media);
     }
     
     /**
@@ -271,8 +286,7 @@ class BorosCss {
         $dir = ($folder) ? $folder . '/' : '';
         $src = $this->vendors_dir . $dir . $name . '.css';
         $this->current = $name;
-        wp_enqueue_style($name, $src, $parent, $this->options['ver'], $media);
-        return $this;
+        $this->queue[] = array($name, $src, $parent, $this->options['ver'], $media);
     }
     
     /**
@@ -354,8 +368,7 @@ class BorosCss {
             'media' => 'screen',
         );
         $config = boros_parse_args($defaults, $config);
-        wp_enqueue_style($config['name'], $config['src'], $config['parent'], $config['version'], $config['media']);
-        return $this;
+        $this->queue[] = array($config['name'], $config['src'], $config['parent'], $config['version'], $config['media']);
     }
 }
 
