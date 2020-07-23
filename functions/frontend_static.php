@@ -36,6 +36,7 @@ var theme_url = '<?php if( defined('THEME') ){ echo THEME; } else { echo get_tem
  * ==================================================
  * 
  * Adicionar novas classes à função original
+ * 
  */
 add_filter( 'post_class', 'new_post_class', 10, 3 );
 function new_post_class( $classes, $class, $post_id ){
@@ -84,6 +85,37 @@ function new_body_class( $classes ){
 	return $classes;
 }
 
+
+
+/**
+ * Aplicar cor do tema no admin bar no frontend
+ * Aplicação simplificada, apenas utiliza a cor $base-color e $text-color da barra inicial, sem
+ * aplicação nos sub-itens e hovers.
+ * 
+ */
+add_action('wp_head', function(){
+    if( is_user_logged_in() && is_admin_bar_showing() ){
+        $colors = array(
+            'fresh'     => array('#333333', '#ffffff'),
+            'blue'      => array('#52accc', '#ffffff'),
+            'light'     => array('#e5e5e5', '#999999'),
+            'coffee'    => array('#59524c', '#ffffff'),
+            'ectoplasm' => array('#523f6d', '#ffffff'),
+            'midnight'  => array('#363b3f', '#ffffff'),
+            'ocean'     => array('#738e96', '#ffffff'),
+            'sunrise'   => array('#cf4944', '#ffffff'),
+        );
+        $color = get_user_meta( wp_get_current_user()->ID, 'admin_color', true);
+        echo "<style>#wpadminbar{background-color:{$colors[$color][0]};color:{$colors[$color][1]}}#wpadminbar *, #wpadminbar *:before{color:{$colors[$color][1]};}</style>";
+    }
+});
+
+
+
+/**
+ * @todo @deprecated @remover
+ * 
+ */
 function old_browser_alert(){
 ?>
 <!--[if lte IE 8]>
