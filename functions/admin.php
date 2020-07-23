@@ -13,6 +13,7 @@
 /**
  * Adicionar classes ao <body> do admin
  * Filtro localizado em "wp-admin/admin-header.php"
+ * 
  */
 add_action('admin_body_class', 'custom_admin_body_class');
 function custom_admin_body_class( $a ){
@@ -27,6 +28,8 @@ function custom_admin_body_class( $a ){
  * 
  * @link https://core.trac.wordpress.org/ticket/20996
  * @link https://developer.wordpress.org/reference/functions/set_url_scheme/
+ * 
+ * @todo @revisar-remover
  * 
  */
 add_filter( 'wp_get_attachment_url', 'set_url_scheme', 10, 2 );

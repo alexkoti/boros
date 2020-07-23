@@ -113,7 +113,7 @@ function add_custom_admin_scripts(){
  * Styles e scripts inline/footer
  * Irão rodar em todas as páginas do admin
  * 
- * 
+ * @todo fazer enqueue apenas uma vez, quando tiver diversos editores na página
  * 
  */
 function admin_footer_scripts(){

@@ -4,6 +4,7 @@
  * CUSTOMIZAÇÃO DO PAINEL DE MENUS ==================
  * ==================================================
  * 
+ * @todo @revisar-remover se ainda é necessário u já tem no core
  * 
  */
 
