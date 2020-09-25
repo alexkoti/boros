@@ -9,7 +9,7 @@
 
 function _get_subsites_list(){
     global $wpdb;
-    $sites = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->blogs} ORDER BY blog_id" ) );
+    $sites = $wpdb->get_results( "SELECT * FROM {$wpdb->blogs} ORDER BY blog_id" );
     
     // remover sites desativados da lista
     foreach( $sites as $key => $val ){
