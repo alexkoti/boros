@@ -132,7 +132,7 @@ class Boros_Share_Tags {
             $this->info['title'] = $this->info['site'];
         }
         elseif( $this->is_singular ){
-            $this->info['title'] = apply_filters( 'the_title', $this->post->post_title );
+            $this->info['title'] = apply_filters( 'the_title', $this->post->post_title, $this->post->ID );
         }
         elseif( $this->is_term_archive ){
             $this->info['title'] = $this->term->name;
