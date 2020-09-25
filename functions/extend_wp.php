@@ -133,14 +133,15 @@ function pmeta( $meta, $filter_or_echo = true, $wrapper = '%s' ){
 function opt_post_meta( $post_id, $post_meta, $wrapper = '%s', $echo = true, $filters = false ){
 	$meta = get_post_meta( $post_id, $post_meta, true );
 	if( $meta != '' ){
-		if( $wrapper != '' ){
-			$meta = sprintf( $wrapper . "\n", $meta );
-		}
 		
 		if( $filters !== false ){
 			foreach( (array)$filters as $filter ){
 				$meta = apply_filters( $filter, $meta );
 			}
+		}
+		
+		if( $wrapper != '' ){
+			$meta = sprintf( $wrapper . "\n", $meta );
 		}
 		
 		if($echo == true)
@@ -288,6 +289,19 @@ function direct_insert_options( $options_to_save ){
 function plugin_is_active( $plugin_path ) {
 	$return_var = in_array( $plugin_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 	return $return_var;
+}
+
+/**
+ * Verificar se a página de login
+ * 
+ * As páginas de login não disparam o is_admin()
+ * 
+ * @link https://wordpress.stackexchange.com/a/237285
+ * 
+ */
+function boros_is_wplogin(){
+    $ABSPATH_MY = str_replace(array('\\','/'), DIRECTORY_SEPARATOR, ABSPATH);
+    return ((in_array($ABSPATH_MY.'wp-login.php', get_included_files()) || in_array($ABSPATH_MY.'wp-register.php', get_included_files()) ) || (isset($_GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php') || $_SERVER['PHP_SELF']== '/wp-login.php');
 }
 
 
