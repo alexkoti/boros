@@ -415,6 +415,8 @@ class BorosPostTypeColumns {
  * Primeiro os 'names' core(cb, title, author, etc) são processados primeiros, caso não esteja no core é ativado a função render_columns( $column_name ), enviando
  * o 'name' da coluna para ser processada. Por conta do switch pode-se usar a mesma função para as colunas customizadas de todas as telas.
  * 
+ * @todo revisar quantidade de atributos, pois o hook envia $column_name e $post_id
+ * 
  */
 add_action('manage_posts_custom_column', 'render_columns');
 add_action('manage_pages_custom_column', 'render_columns');

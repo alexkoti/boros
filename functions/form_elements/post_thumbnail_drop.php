@@ -6,6 +6,8 @@
  * VÁLIDO APENAS PARA POST THUMBNAIL
  * Necessário a presença de um $post para aplicação de postmeta _thumbnail_id
  * 
+ * @todo permitir outros post_meta além do '_thumbnail_id'
+ * 
  */
 
 class BFE_post_thumbnail_drop extends BorosFormElement {

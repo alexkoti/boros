@@ -129,11 +129,32 @@ function boros_drop_upload_add_ajax() {
     }
 
     // salvar imagem
-    $tmp = new MediaUpload;
+    $tmp        = new MediaUpload;
     $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'], null, $elem_options );
-    //pre($attachment);
+    //error_log(print_r($attachment, true));
+
+    // atualizar meta _thumbnail_id
     update_post_meta( $_POST['post_parent'], '_thumbnail_id', $attachment['attachment_id'] );
-    $img = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
+
+    /**
+     * hook callback da ação
+     * 
+     * Modelo para $attachment
+     * [attachment_id] => 55
+     * [file]          => /mnt/d/site/wp-content/uploads/2020/09/689cd6ca88c40701756df0ea69ad11ab.jpg
+     * [file_info]     => Array
+     * (
+     *     [dirname]   => /mnt/d/site/wp-content/uploads/2020/09
+     *     [basename]  => 689cd6ca88c40701756df0ea69ad11ab.jpg
+     *     [extension] => jpg
+     *     [filename]  => 689cd6ca88c40701756df0ea69ad11ab
+     * )
+     * 
+     */
+    do_action( 'boros_drop_upload_update_image', $_POST['post_parent'], '_thumbnail_id', $attachment );
+
+    // HTML do retorno
+    $img  = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
     $html = "<div class='drop_upload_image'><img src='{$img[0]}' alt='' class='the_post_thumbnail' /><div class='hide-if-no-js drop_upload_image_remove'><span class='btn' title='Remover esta imagem'>&nbsp;</span></div></div>";
     wp_send_json_success(array(
         'html' => $html,
