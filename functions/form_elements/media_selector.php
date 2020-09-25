@@ -36,7 +36,7 @@ class BFE_media_selector extends BorosFormElement {
         'image_size'     => 'thumbnail',            // tamanho da imagem conforme wp_image_sizes, em caso de 'file_type' diferente de 'image', será forçado para 'thumbnail'
         'width'          => 150,                    // largura do thumbnail/ícone
         'height'         => 150,                    // altura do thumbnail/ícone
-        'default_image'  => BOROS_IMG . 'x.gif',    // imagem padrão, mesmo para outros tipos não-imagem
+        'default_image'  => '',    // imagem padrão, mesmo para outros tipos não-imagem
         'align'          => 'left',                 // alinhamento do controle
         'show_info'      => false,                  // mostrar a caixa de informações, obrigatório para tipos não-imagem, estabelece largura mínima de 200px
     );
@@ -61,6 +61,9 @@ class BFE_media_selector extends BorosFormElement {
      * 
      */
     function init(){
+
+        $this->default_options['default_image'] = BOROS_IMG . 'x.gif';
+
         wp_enqueue_media();
 
 		// acionar apenas na primeira instância
