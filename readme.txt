@@ -15,6 +15,9 @@ Funções para o admin do WordPress, páginas personalizadas de administração(
 
 == Changelog ==
 
+= 1.5.6 (2020.09.28)
+* Correção para wp.media em 'textarea_editor', para campo normal e duplicável.
+
 = 1.5.0 (2017.01.16) =
 * Novo branch para unificar as melhorias propostas para a versão 2
 
