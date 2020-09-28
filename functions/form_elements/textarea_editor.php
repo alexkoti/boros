@@ -22,7 +22,11 @@ class BFE_textarea_editor extends BorosFormElement {
 		'readonly' => false,
 		'cols' => 60,
 		'rows' => 20,
-	);
+    );
+    
+    function init(){
+        wp_enqueue_media();
+    }
 	
 	function set_input( $value = null ){
 		global $post;
