@@ -178,9 +178,9 @@
 	float:left;
 }
 .duplicate_element_compact .boros_options_block tr td,
-.duplicate_element_compact .boros_options_block tr th{display:none;}
+.duplicate_element_compact .boros_options_block tr th{display:none !important;}
 .duplicate_element_compact .boros_options_block tr:first-child td,
-.duplicate_element_compact .boros_options_block tr:first-child th{display:table-cell;}
+.duplicate_element_compact .boros_options_block tr:first-child th{display:table-cell !important;}
 
 /**
  * Elemento fantasma que é exibido enquanto se arrasta um elemento na lista.
