@@ -1,0 +1,16 @@
+.select2-container {
+    height: 35px;
+}
+.select2-container--default .select2-search--inline .select2-search__field{
+    margin: 0;
+    min-height: auto;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+    margin: 2.5px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    padding: 0 5px 0 0;
+}
+.select2-dropdown--below {
+    margin-top: -3px;
+}
