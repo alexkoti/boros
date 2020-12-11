@@ -245,7 +245,26 @@ class BorosValidation {
 		}
 		//pre( $newval, "{$element['name']} FINAL");
 		return $newval;
-	}
+    }
+    
+    /**
+     * Validar nonce
+     * Apenas para frontend, pois para admin os campos ja possuem nonces individuais
+     * 
+     */
+    function validate_nonce( $name, $value, $args, $message ){
+
+        if( $this->context['type'] == 'frontend' && !wp_verify_nonce($value, "{$name}_nonce") ){
+                $reload = self_url();
+                $error = array(
+                    'name'    => $name,
+                    'message' => "Identificador de validade do formulário expirado, por favor <a href='{$reload}'>clique aqui para recarregar a página</a>",
+                    'type'    => 'error',
+                );
+            $this->data_errors[$name][$args['rule']] = $error;
+        }
+        return $value;
+    }
 	
 	/**
 	 * Caso seja split text, é preciso manter os valores em array
@@ -708,7 +727,10 @@ class BorosValidation {
 		if( !empty($value) ){
 			$query_args = array(
 				'search' => $value,
-			);
+            );
+            if( is_multisite() ){
+                $query_args['blog_id'] = '0';
+            }
 			$users_with_email = new WP_User_Query( $query_args );
 			$count = count($users_with_email->results);
 			if( $count > 0 ){
