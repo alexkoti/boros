@@ -443,8 +443,12 @@ class BorosFrontendForm {
 	 * 
 	 */
     function generic_form(){
-        //$this->valid_data = $this->validate( $this->context, $this->posted_data );
         $this->valid_infos();
+        //pre($_POST, '_POST');
+        //pre($this->valid_data, 'valid_data');
+        //pre($this->valid_meta, 'valid_meta');
+        //pre($this->validation->data_errors);
+        //die();
         
         if( empty( $this->validation->data_errors ) ){
             $error = false;
@@ -898,7 +902,12 @@ class BorosFrontendForm {
 				// em caso de erro, adicionar log de erros
 				if( is_wp_error( $user_id ) ){
 					//pal('$user_id is_wp_error');
-					$this->errors[] = $user_id;
+                    //$this->errors[] = $user_id;
+                    $this->validation->data_errors['user_login']['user_already_exists'] = array(
+                        'name'    => 'user_login',
+                        'message' => $user_id->get_error_message(),
+                        'type'    => 'error',
+                    );
 				}
 				// usuário criado!!! adicionar metas e mensagem
 				else{
@@ -984,6 +993,7 @@ class BorosFrontendForm {
 						exit();
 					}
 				}
+                $this->errors = array_merge( $this->errors, $this->validation->data_errors );
 			}
 			// user já existe, adicionar erro
 			else{
