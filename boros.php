@@ -3,7 +3,7 @@
 Plugin Name: Boros Elements
 Plugin URI:  https://github.com/alexkoti/boros
 Description: Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets, form_elements e frontend forms
-Version:     1.5.7
+Version:     1.5.8
 Author:      Alex Koti
 Author URI:  http://alexkoti.com
 License:     GPL2
@@ -107,6 +107,7 @@ include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'frontend_form.php');     
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'email.php');                   // function para todos os emails - as configs deverão ser feitas no plgin do trabalho
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'tests.php');                   // function auxiliares para testes
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'security.php' );               // configurações e filtros de segurança
+include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'temp-fixes.php' );             // correções temporárias para o core
 if( defined('MULTISITE') and MULTISITE == true ){
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'multisite.php');           // functions extras para multisite
 }

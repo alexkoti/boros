@@ -3,7 +3,7 @@ Contributors: alexkoti
 Tags: admin, library
 Requires at least: 4.0.0
 Tested up to: 4.4.1
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,9 @@ Biblioteca de classes e funções para auxiliar a criação de painéis, control
 Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets e form_elements
 
 == Changelog ==
+
+= 1.5.8 (2021.02.12)
+* correção para alerta javascript em pages/cpt (trac 52440)
 
 = 1.5.7 (2021.01.19)
 * Atualização datepicker
