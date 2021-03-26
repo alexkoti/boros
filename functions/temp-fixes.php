@@ -76,3 +76,20 @@ if( !function_exists('wp_561_window_unload_error_final_fix') ){
         <?php
     }
 }
+
+
+
+/**
+ * By default, cURL sends the "Expect" header all the time which severely impacts
+ * performance. Instead, we'll send it if the body is larger than 1 mb like
+ * Guzzle does.
+ * 
+ * @link https://gist.github.com/carlalexander/c779b473f62dcd1a4ca26fcaa637ec59
+ */
+add_filter('http_request_args', 'add_expect_header');
+function add_expect_header(array $arguments){
+    $arguments['headers']['expect'] = !empty($arguments['body']) && strlen($arguments['body']) > 1048576 ? '100-Continue' : '';
+    return $arguments;
+}
+
+

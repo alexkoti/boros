@@ -15,6 +15,9 @@ Funções para o admin do WordPress, páginas personalizadas de administração(
 
 == Changelog ==
 
+= 1.5.8 (2021.03.26)
+* correção para header do curl
+
 = 1.5.8 (2021.02.12)
 * correção para alerta javascript em pages/cpt (trac 52440)
 
