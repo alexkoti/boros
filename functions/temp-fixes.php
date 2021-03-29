@@ -88,7 +88,7 @@ if( !function_exists('wp_561_window_unload_error_final_fix') ){
  */
 add_filter('http_request_args', 'add_expect_header');
 function add_expect_header(array $arguments){
-    $arguments['headers']['expect'] = !empty($arguments['body']) && strlen($arguments['body']) > 1048576 ? '100-Continue' : '';
+    $arguments['headers']['expect'] = !empty($arguments['body']) && (!is_array($arguments['body']) && strlen($arguments['body']) > 1048576) ? '100-Continue' : '';
     return $arguments;
 }
 
