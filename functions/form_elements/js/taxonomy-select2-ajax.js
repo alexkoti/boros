@@ -5,7 +5,7 @@ jQuery(document).ready(function($){
         var select = $(this);
         select.select2({
             ajax: {
-                delay: 250,
+                delay: 200,
                 url: ajaxurl,
                 data: function(params){
                     return {
@@ -18,7 +18,7 @@ jQuery(document).ready(function($){
                 },
                 dataType: 'json',
             },
-            minimumInputLength: 3,
+            minimumInputLength: select.attr('data-input_min_len'),
             language: {
                 errorLoading: function () {
                     return 'Os resultados não puderam ser carregados.';

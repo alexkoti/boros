@@ -10,7 +10,9 @@
  *         'type'    => 'taxonomy_select2',
  *         'size'    => 'large',
  *         'attr'    => array(
+ *             'number' => 10,
  *             'multiple' => 'multiple',
+ *             'input_min_len' => 4,
  *         ),
  *         'options' => array(
  *             'taxonomy' => 'pleocroismo-x',
@@ -40,6 +42,7 @@ class BFE_taxonomy_select2_ajax extends BorosFormElement {
     function add_defaults(){
         $this->defaults['options']['number']   = 6;
         $this->defaults['options']['multiple'] = false;
+        $this->defaults['options']['input_min_len'] = 3;
     }
     
     function set_input( $value = null ){
@@ -52,8 +55,9 @@ class BFE_taxonomy_select2_ajax extends BorosFormElement {
         $selected_terms = wp_get_object_terms( $post->ID, $taxonomy );
 
         // usado pelo ajax, para identificar a taoxnomia
-        $this->data['attr']['dataset']['taxonomy'] = $taxonomy;
-        $this->data['attr']['dataset']['number']   = $options['number'];
+        $this->data['attr']['dataset']['taxonomy']      = $taxonomy;
+        $this->data['attr']['dataset']['number']        = $options['number'];
+        $this->data['attr']['dataset']['input_min_len'] = $options['input_min_len'];
         if( $options['multiple'] == true ){
             $this->data['attr']['multiple'] = 'multiple';
         }
