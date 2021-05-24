@@ -131,7 +131,7 @@ class BFE_media_selector extends BorosFormElement {
         $info = $this->media_info( $id );
 
         if( $id > 0 ){
-            $image_size = array_key_exists( $this->options['image_size'], _get_all_image_sizes() );
+            $image_size = array_key_exists( $this->options['image_size'], _get_all_image_sizes() ) ? $this->options['image_size'] : 'thumbnail';
             $src        = wp_get_attachment_image_src( $id, $image_size, true );
             $img_src    = $src[0];
         }
