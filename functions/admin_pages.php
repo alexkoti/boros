@@ -391,7 +391,8 @@ class BorosAdminPages {
 						}
 						else{
 							// sanitize separado de register_setting()
-							register_setting( $settings_name, $element['name'] );
+                            $args = isset($element['option_args']) ? $element['option_args'] : array();
+							register_setting( $settings_name, $element['name'], $args );
 						}
 						
 						// enfileirar validação - ambas validações(fixo do elemento e config) serão setadas apartir do array $element, que irá buscar o 'type' e o 'validate'
