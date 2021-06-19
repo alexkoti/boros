@@ -1,9 +1,15 @@
 .select2-container {
-    height: 35px;
+    display: inline-block;
+    min-height: 35px;
+    width: 100%;
 }
-.select2-container--default .select2-search--inline .select2-search__field{
+.select2-container--default .select2-search--inline .select2-search__field {
     margin: 0;
     min-height: auto;
+}
+.select2-container--default .select2-selection--multiple {
+    display: inline-block;
+    padding: 0;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
     margin: 2.5px;
@@ -11,6 +17,11 @@
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     padding: 0 5px 0 0;
 }
+.select2-container--default .select2-selection--multiple .select2-search.select2-search--inline {
+    margin: 0;
+}
 .select2-dropdown--below {
     margin-top: -3px;
 }
+
+
