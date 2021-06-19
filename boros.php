@@ -61,7 +61,7 @@ function version_id(){
     if( defined('BOROS_VERSION_ID') ){
         return BOROS_VERSION_ID;
     }
-    return apply_filters('boros_version_id', '1.0');
+    return apply_filters('boros_version_id', '2021.06.18.1');
 }
 
 
