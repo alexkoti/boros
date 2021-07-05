@@ -143,7 +143,12 @@ jQuery(document).ready(function($){
 			var duplicate = $item_first.clone();
 			duplicate.find('.boros_options_block').html( response );
 			duplicate.hide().addClass('loading');
-			$group.append(duplicate);
+            if( obj.attr('data-pos') == 'prepend' ){
+                $group.prepend(duplicate);
+            }
+            else{
+                $group.append(duplicate);
+            }
 			duplicate.slideDown(400, function(){
 				// remove o loading
 				$box.removeClass('loading');

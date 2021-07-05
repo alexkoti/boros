@@ -16,6 +16,12 @@ class BFE_duplicate_group extends BorosFormElement {
 		'id' => '',
 		'class' => '',
 	);
+
+    function add_defaults(){
+        $this->defaults['options']['compact_button'] = true;
+        $this->defaults['options']['button_prepend'] = false;
+        $this->defaults['options']['button_append']  = true;
+    }
 	
 	var $enqueues = array(
 		'js' => 'duplicate_group',
@@ -24,15 +30,18 @@ class BFE_duplicate_group extends BorosFormElement {
 	
 	var $compact_buttom = '<div class="duplicate_compact"><label><input type="checkbox" /> visualização compacta</label> <span class="btn_help" title="Exibe apenas um item de cada grupo, facilitando a tarefa de arrastar para organizar os itens."></span></div>';
 	
-	function set_label(){
-		if( isset($this->data['options']['compact_button']) and ($this->data['options']['compact_button'] == false) )
-			$this->compact_buttom = '';
-		
-		if( !empty($this->data['label']) )
-			$this->label = "<div class='duplicate_group_header'><div class='duplicate_group_label'>{$this->data['label']}{$this->label_helper}</div>{$this->compact_buttom}</div>";
-		elseif( $this->data['layout'] == 'table' )
-			$this->label = "<div class='duplicate_group_header'>{$this->compact_buttom}</div>";
-	}
+    function set_label(){
+        if( $this->data['options']['compact_button'] == false ){
+            $this->compact_buttom = '';
+        }
+        
+        if( !empty($this->data['label']) ){
+            $this->label = "<div class='duplicate_group_header'><div class='duplicate_group_label'>{$this->data['label']}{$this->label_helper}</div>{$this->compact_buttom}</div>";
+        }
+        elseif( $this->data['layout'] == 'table' ){
+            $this->label = "<div class='duplicate_group_header'>{$this->compact_buttom}</div>";
+        }
+    }
 	
 	function set_input( $value = null ){
 		/**
@@ -50,6 +59,9 @@ class BFE_duplicate_group extends BorosFormElement {
 		}
 		?>
 		<div class="duplicate_box">
+            <?php if( $this->data['options']['button_prepend'] == true ){ ?>
+            <p class="dup_btn"><span data-pos="prepend">Adicionar novo item</span></p>
+            <?php } ?>
 			<ul class="duplicate_group">
 			<?php
 				$data_length = count($this->data['group_itens']);
@@ -77,7 +89,7 @@ class BFE_duplicate_group extends BorosFormElement {
 					}
 				?>
 				<li class="boros_form_element duplicate_element" id="<?php echo $this->data['name'] . '_' . $u; ?>" data-name="<?php echo $this->data['name']; ?>" <?php echo $context_dataset; ?>>
-					<div class="btn_remove" title="Remover"><div class="btn"></div></div>
+					<div class="btn_remove" title="Remover grupo"><div class="btn"></div></div>
 					<div class="btn_move" title="Arraste para organizar"><div class="grip"></div></div>
 					
 					<table class="form-table boros_options_block">
@@ -122,7 +134,9 @@ class BFE_duplicate_group extends BorosFormElement {
 				} // .foreach
 			?>
 			</ul>
-			<p class="dup_btn"><span>Adicionar novo item</span></p>
+            <?php if( $this->data['options']['button_append'] == true ){ ?>
+            <p class="dup_btn"><span data-pos="append">Adicionar novo item</span></p>
+            <?php } ?>
 		</div>
 		<?php
 		// guardar o output em variável
