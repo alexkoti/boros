@@ -43,7 +43,7 @@ class BorosJs {
             
             $this->options = boros_parse_args( $this->options, $args );
             if( $this->options['ver'] == null ){
-                $this->options['ver'] = version_id();
+                $this->options['ver'] = BOROS_VERSION;
             }
 
             add_action( 'wp_head', array($this, 'cond_head'), $this->options['priority'] );
@@ -240,7 +240,7 @@ class BorosCss {
 
         $this->options = boros_parse_args( $this->options, $args );
         if( $this->options['ver'] == null ){
-            $this->options['ver'] = version_id();
+            $this->options['ver'] = BOROS_VERSION;
         }
         
         // Adicionar mensagem de aviso de hook deprecated

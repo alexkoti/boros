@@ -702,14 +702,14 @@ class BorosAdminPages {
 	function enqueue_css( $files, $url_base ){
 		foreach( $files as $css ){
 			$css_url = $url_base . $css . '.css';
-			wp_enqueue_style( "admin_page_{$this->current_page}_{$css}", $css_url, false, version_id(), 'screen' );
+			wp_enqueue_style( "admin_page_{$this->current_page}_{$css}", $css_url, false, BOROS_VERSION, 'screen' );
 		}
 	}
 	
 	function enqueue_js( $files, $url_base ){
 		foreach( $files as $js ){
 			$js_url = $url_base . $js . '.js';
-			wp_enqueue_script( "admin_page_{$this->current_page}_{$js}", $js_url, array('jquery'), version_id(), true );
+			wp_enqueue_script( "admin_page_{$this->current_page}_{$js}", $js_url, array('jquery'), BOROS_VERSION, true );
 		}
 	}
 	

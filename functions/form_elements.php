@@ -1222,7 +1222,7 @@ class BorosFormElement {
 			$folder = isset($this->enqueues['folder']) ? $this->enqueues['folder'] . 'css/' : BOROS_CSS;
 			foreach( $files_array as $css ){
 				$css_url = $folder . $css . '.css';
-				wp_enqueue_style( "form_element_{$this->data['type']}_{$css}", $css_url, false, version_id(), 'screen' );
+				wp_enqueue_style( "form_element_{$this->data['type']}_{$css}", $css_url, false, BOROS_VERSION, 'screen' );
 			}
 		}
 		
@@ -1233,11 +1233,11 @@ class BorosFormElement {
 			foreach( $files_array as $js ){
 				// enqueue absoluto
 				if( is_array($js) ){
-					wp_enqueue_script( $js[0], $js[1], NULL, version_id(), true );
+					wp_enqueue_script( $js[0], $js[1], NULL, BOROS_VERSION, true );
 				}
 				else{
 					$js_url = $folder . $js . '.js';
-					wp_enqueue_script( "form_element_{$this->data['type']}_{$js}", $js_url, array('jquery'), version_id(), true );
+					wp_enqueue_script( "form_element_{$this->data['type']}_{$js}", $js_url, array('jquery'), BOROS_VERSION, true );
 				}
 			}
 		}

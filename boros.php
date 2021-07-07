@@ -9,60 +9,27 @@ Author URI:  http://alexkoti.com
 License:     GPL2
 */
 
-/** 
- * =====================================================================================================================
- * CONSTANTS ===========================================================================================================
- * =====================================================================================================================
- * 
- */
-
-// CAMINHOS ABSOLUTOS - para includes
-define( 'BOROS', dirname(__FILE__) );
-define( 'BOROS_FUNCTIONS',    BOROS . DIRECTORY_SEPARATOR . 'functions' );
-define( 'BOROS_ELEMENTS',     BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'form_elements' );
-define( 'BOROS_CUSTOMIZER',   BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'customizer' );
-define( 'BOROS_LIBS',         BOROS . DIRECTORY_SEPARATOR . 'vendors' );
-
-// URLS
-define( 'BOROS_URL',          plugins_url( '/', __FILE__ ) );
-define( 'BOROS_CSS',          plugins_url( 'functions/form_elements/css/', __FILE__ ) );
-define( 'BOROS_IMG',          plugins_url( 'functions/form_elements/css/img/', __FILE__ ) );
-define( 'BOROS_JS',           plugins_url( 'functions/form_elements/js/', __FILE__ ) );
-
 /**
- * DEBUG CONSTANTS
+ * ==================================================
+ * CONSTANTS ========================================
+ * ==================================================
+ * 
  * 
  */
-//print_r(BOROS);echo "\n";
-//print_r(BOROS_FUNCTIONS);echo "\n";
-//print_r(BOROS_ELEMENTS);echo "\n";
-//print_r(BOROS_LIBS);echo "\n";
-//print_r(BOROS_URL);echo "\n";
-//print_r(BOROS_CSS);echo "\n";
-//print_r(BOROS_IMG);echo "\n";
-//print_r(BOROS_JS);echo "\n";
-//$const = get_defined_constants(true);  
-//print_r($const['user']);  
 
+// Paths
+define( 'BOROS',            dirname(__FILE__) );
+define( 'BOROS_FUNCTIONS',  BOROS . DIRECTORY_SEPARATOR . 'functions' );
+define( 'BOROS_ELEMENTS',   BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'form_elements' );
+define( 'BOROS_CUSTOMIZER', BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'customizer' );
+define( 'BOROS_LIBS',       BOROS . DIRECTORY_SEPARATOR . 'vendors' );
 
-/**
- * Constante para versão de CSS/JS
- * A constante BOROS_VERSION_ID deverá indicar a versão desejada para o site final. Ao pedir a versão do script/css a ser utilizada, será retornado este valor, mas
- * caso o BOROS_NO_SCRIPT_CACHE esteja habilitado, será retornado a versão temporária, que poderá ser valor hardcoded ou time(), que removerá o cache.
- *
- * @todo: rever este trecho e passar para o plugin do job ou tema, para definir o cache de enqueue conforme a necessidade
- * 
- * @link http://wpengineer.com/2292/force-reload-of-scripts-and-stylesheets-in-your-plugin-or-theme/
- */
-function version_id(){
-    if( defined('BOROS_NO_SCRIPT_CACHE') && BOROS_NO_SCRIPT_CACHE == true ){
-        return time(); //para remover totalmente o cache;
-    }
-    if( defined('BOROS_VERSION_ID') ){
-        return BOROS_VERSION_ID;
-    }
-    return apply_filters('boros_version_id', '2021.07.05.1');
-}
+// URLs
+define( 'BOROS_URL',        plugins_url( '/', __FILE__ ) );
+define( 'BOROS_CSS',        plugins_url( 'functions/form_elements/css/', __FILE__ ) );
+define( 'BOROS_IMG',        plugins_url( 'functions/form_elements/css/img/', __FILE__ ) );
+define( 'BOROS_JS',         plugins_url( 'functions/form_elements/js/', __FILE__ ) );
+define( 'BOROS_VERSION',    '2021.07.05.1' );
 
 
 
@@ -79,7 +46,6 @@ function version_id(){
  * Válidos para admin e frontend
  * Alguns includes, como admin_pages, metaboxes, frontend_form precisam de include global, pois necessitam estar acessíveis no admin e frontend
  * 
- * @TODO deixar o include de thirdparty(facebook e afins) a cargo de uma função que verificará a real necessidade de chamá-lo
  * 
  */
 if( defined('LOCALHOST') and LOCALHOST === true ){

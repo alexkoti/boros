@@ -13,7 +13,7 @@ class Boros_Customizer_WP_Editor extends WP_Customize_Control {
     public $type = 'boros_wp_editor';
 
     public function enqueue(){
-        wp_enqueue_script( 'skyrocket-custom-controls-js', BOROS_URL . '/functions/customizer/js/wp-editor.js', array( 'jquery' ), BOROS_VERSION_ID, true );
+        wp_enqueue_script( 'skyrocket-custom-controls-js', BOROS_URL . '/functions/customizer/js/wp-editor.js', array( 'jquery' ), BOROS_VERSION, true );
         wp_enqueue_editor();
     }
 
