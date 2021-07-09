@@ -13,6 +13,19 @@
  */
 
 
+
+/**
+ * Corrigir erro de query monitor no frontend.
+ * O query monitor espera que jquery seja carregado no header, o que causa erro na exibição do painel.
+ * 
+ */
+add_action( 'wp_default_scripts', 'fix_query_monitor_frontend', 101 );
+function fix_query_monitor_frontend($wp_scripts){
+    $wp_scripts->add_data( 'query-monitor', 'group', 1 );
+}
+
+
+
 /**
  * ALERTA DE JAVASCRIPT AO SAIR DE QUALQUER PÁGINA ou CPT
  * O navegador exibe mensagem "tem  certeza que deseja sair, modificações foram feitas", mesmo sem o 
