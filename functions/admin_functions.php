@@ -80,7 +80,7 @@ function add_custom_admin_scripts(){
 		'admin_ajax',
 		'admin_scripts',
 		'form_elements',
-		'plugins',
+		'boros-plugins',
 		'events',
 		//'current_work',
 	);
