@@ -123,7 +123,7 @@ function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
         }
         else{
             $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
-            $legend = "{$legend}:> "; // dois pontos para não acionar fim de comentário
+            $legend = "{$legend}˃ "; // dois pontos para não acionar fim de comentário
         }
     }
     echo "\n<!-- {$legend}{$var} -->";
