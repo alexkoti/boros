@@ -3,11 +3,10 @@
  * DEBUG FUNCTIONS
  * Funções para debug
  * 
- * @todo adicionar bam() [Bootstrap Alert HTML] e modificar pam() para utilizar css próprio sem dependância de bootstrap
- * @todo em pam() verificar o enqueue de boostrap e apontar para bam()
  * @todo mover todas as chamadas de functions para métodos da class principal
  * 
  * VERSÃO PARA APLICAÇÃO RÁPIDA
+ * 
  * 
  * 
  * 
@@ -173,7 +172,7 @@ if( !function_exists('pam') ){
         if( !empty($legend) ){
             $legend = "<strong>{$legend}:</strong> ";
         }
-        echo "<div style='background-color:{$color[$type][1]};border:1px solid;border-color:{$color[$type][0]}30;border-radius:4px;color:{$color[$type][0]};line-height:24px;margin:5px;position:relative;padding:12px 18px;'>{$legend}{$message}</div>";
+        echo PHP_EOL . "<div style='background-color:{$color[$type][1]};border:1px solid;border-color:{$color[$type][0]}30;border-radius:4px;color:{$color[$type][0]};line-height:24px;margin:5px;position:relative;padding:12px 18px;'>{$legend}{$message}</div>" . PHP_EOL;
     }
 }
 
@@ -196,7 +195,7 @@ if( !function_exists('bam') ){
             $extra_class = ' alert-dismissible';
             $button = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
         }
-        echo "<div class='alert alert-{$type}{$extra_class}' role='alert'>{$legend}{$message}{$button}</div>";
+        echo PHP_EOL . "<div class='alert alert-{$type}{$extra_class}' role='alert'>{$legend}{$message}{$button}</div>" . PHP_EOL;
     }
 }
 
@@ -214,7 +213,7 @@ function sep( $message = '', $level = 'danger' ){
         'warning' => '#ffae00',
         'neutral' => '#6c757d',
     ];
-    echo "<div style='background:{$color[$level]};border-radius:3px;color:#fff;font:12px fira code, monospace;height:11px;line-height:13px;margin:40px 5px;padding:10px;'>{$message}</div>";
+    echo PHP_EOL . "<div style='background:{$color[$level]};border-radius:3px;color:#fff;font:12px fira code, monospace;height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;'>{$message}</div>" . PHP_EOL;
 }
 }
 
@@ -268,7 +267,7 @@ class PRE {
             $legend = $this->mb_str_pad("{$var_name} ", $pad, '-', STR_PAD_RIGHT);
             $legend = "<strong style='font-weight:600;'>{$legend}-&gt;</strong> ";
         }
-        echo PHP_EOL . "<div style='{$this->css['pal']};background-color:{$color[$level][0]};border-color:{$color[$level][1]}'>" . $legend . $this->esc_html($message) . "</div>\n";
+        echo PHP_EOL . "<div style='{$this->css['pal']};background-color:{$color[$level][0]};border-color:{$color[$level][1]}'>" . $legend . $this->esc_html($message) . PHP_EOL . '</div>' . PHP_EOL;
     }
     
     public function pre( $var = false, $legend = '', $opened = true ){
