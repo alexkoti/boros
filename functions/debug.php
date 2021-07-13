@@ -9,23 +9,10 @@
  * @todo mover todas as chamadas de functions para métodos da class principal
  * 
  * VERSÃO PARA APLICAÇÃO RÁPIDA
- if( !function_exists('pre') ){function pre( $var = false, $legend = '', $opened = true, $global_controls = false ){ $pre = PRE::init(); $pre->pre( $var, $legend, $opened, $global_controls ); } function pal( $var = false, $legend = '' ){ $pre = PRE::init(); $pre->pal( $var, $legend ); } class PRE { var $controls_visible = false; private static $instance; public static function init(){ if( empty( self::$instance ) ){ self::$instance = new PRE(); } return self::$instance; } private function __construct(){ $this->do_css(); $this->do_js(); } private function do_css(){ echo " <style type='text/css'> #pre_box_controls {background:#fefcf5;border:1px solid #333;clear:both;color:#333;cursor:pointer;font:12px monospace;line-height:130%;margin:5px;padding:5px;text-align:left;} .pre_box {background:#fefcf5;border:1px solid #333;clear:both;color:#333;font:12px monospace;line-height:130%;margin:5px;position:relative;text-align:left;} .boros_element_duplicate_group.layout_block .pre_box {max-width:750px;overflow:hidden;} .boros_element_duplicate_group.layout_table .pre_box {max-width:450px;overflow:hidden;} .pre_box_head {background:#ededed;color:#da1c23;cursor:pointer;font-size:14px;font-weight:normal;margin:0 !important;padding:5px;} .pre_box_footer {font-size:11px;background:#ededed;color:#999;margin:0;padding:5px;} .pre_box_bool {font-size:12px;color:#333;margin:0;padding:5px;} .pre_box_footer strong, .pre_box_bool span {color:#6B7688;} .pre_box pre {border:none;color:#6B7688;font-size:12px;white-space:pre !important;margin:0;padding:5px;word-wrap:normal !important;} .pal_box {background:#F0F0BB;border:1px solid #666;border-left:10px groove #E08B8B;clear:both;color:#666;font:normal 14px monospace;line-height:130%;margin:5px;padding:5px;text-align:left;} .pre_box_content {overflow:auto;} .pre_box_content_opened {display:block;} .pre_box_content_closed {display:none;} #wpwrap #debug_admin_vars {padding:0 20px 10px 165px;} .pre_box {background:#f4f4f4;border:1px solid #dfdfdf;border-radius:3px;} </style>"; } private function do_js(){ echo " <script type='text/javascript'> function toggle_pre( el ){ el.className = ( el.className != 'pre_box_content pre_box_content_closed' ? 'pre_box_content pre_box_content_closed' : 'pre_box_content pre_box_content_opened' ); } function pre_box_toggle( ctrl ){ if( ctrl.className == 'pre_box_control_opened' ){ ctrl.className = 'pre_box_control_closed'; var content_class = 'pre_box_content pre_box_content_closed'; } else{ ctrl.className = 'pre_box_control_opened'; var content_class = 'pre_box_content pre_box_content_opened'; } var elems = document.getElementsByTagName('div'), i; for (i in elems){ if((' ' + elems[i].className + ' ').indexOf(' ' + 'pre_box_content' + ' ') > -1){ elems[i].className = content_class; } } } </script>"; } function esc_html( $var ){ if( function_exists('esc_html') ){ return esc_html( $var ); } else{ return htmlentities( $var, ENT_QUOTES, 'UTF-8', false ); } } function multidimensional_array_map( $func, $arr ){ if( function_exists('multidimensional_array_map') ){ return multidimensional_array_map( $func, $arr ); } else{ if( !is_array($arr) ) return $arr; $newArr = array(); foreach( $arr as $key => $value ){ if( is_scalar( $value ) ){ $nvalue = call_user_func( $func, $value ); } else{ $nvalue = $this->multidimensional_array_map( $func, $value ); } $newArr[ $key ] = $nvalue; } return $newArr; } } function pal( $message, $var_name = false ){ $var = ( $var_name != false) ? "<strong>{$var_name}</strong> &gt; &gt; &gt; " : ''; echo "<div class='pal_box'>" . $var . $this->esc_html($message) . "</div>\n"; } public function pre( $var = false, $legend = '', $opened = true, $global_controls = false ){ $id = uniqid('pre_'); $js = "toggle_pre(document.getElementById('{$id}'));"; $click = 'onclick="' . $js . '";'; if( $opened === true ){ $content_class = 'pre_box_content pre_box_content_opened'; } else{ $content_class = 'pre_box_content pre_box_content_closed'; } if( $global_controls == true and $this->controls_visible == false ){ echo '<div id="pre_box_controls" class="pre_box_control_opened" onclick="pre_box_toggle(this)">abrir/fechar todos</div>'; $this->controls_visible = true; } echo "<div class='pre_box'>\n"; echo ( $legend == '' ) ? '' : "<p class='pre_box_head' {$click}>{$legend}</p>\n"; echo "<div id='{$id}' class='{$content_class}'>\n"; if( is_object($var) || is_array($var) ){ echo "<pre>\n"; if( is_array($var) ){ print_r( $this->multidimensional_array_map( array($this, 'esc_html'), $var ) ); } else{ print_r( $var ); } echo "\n</pre>\n"; if( is_array($var) ){ echo "<p class='pre_box_footer'>TOTAL: <strong>" . count($var) . '</strong></p>'; } } else{ $size = ''; $type = gettype($var); if( $type == 'boolean' ){ $var = ($var == false) ? 'FALSE' : 'TRUE'; } if( $type == 'string' ){ $len = strlen($var); $size = " ({$len})"; } if(strpos($var, "\n") !== FALSE) { $var = "<pre>\n\t\t" . $this->esc_html($var) . "\n\t</pre>"; } else { $var = "<span>\n\t\t" . $this->esc_html($var) . "\n\t</span>"; } echo "<p class='pre_box_bool'>\n\t<em>" . $type . "</em> : \n\t{$var}". $size . "\n</p>\n"; } echo "\n</div></div>\n"; } } }
  * 
  * 
- */
-
-/**
- * ==================================================
- * VARIÁVEIS DEFINIDAS ==============================
- * ==================================================
- * Listar todas as variáveis globais definidas até o momento.
- * 
- * @link http://stackoverflow.com/a/13629899
  * 
  */
-//$ignore = array('GLOBALS', '_FILES', '_COOKIE', '_POST', '_GET', '_SERVER', '_ENV', 'ignore');
-//$vars   = array_diff_key(get_defined_vars($GLOBALS) + array_flip($ignore), array_flip($ignore));
-//pre($vars);
 
 
 
@@ -49,7 +36,7 @@ function boros_hooked_functions( $hook = '' ) {
     $ret = '';
     foreach( $wp_filter[$hook] as $priority => $realhook ){
         foreach( $realhook as $hook_k => $hook_v ){
-            $hook_echo = (is_array($hook_v['function']) ? get_class($hook_v['function'][0]) . ':' . $hook_v['function'][1] : $hook_v['function']);
+            $hook_echo = (is_array($hook_v['function']) ? get_class($hook_v['function'][0]) . ':' . $hook_v['function'][1] :$hook_v['function']);
             $ret .= "\n$priority $hook_echo";
         }
 
@@ -65,31 +52,23 @@ function boros_hooked_functions( $hook = '' ) {
  * ==================================================
  * 
  */
-add_action( 'admin_footer', 'boros_current_screen_info' );
+//add_action( 'admin_footer', 'boros_current_screen_info' );
 function boros_current_screen_info() {
-	global $current_user;
-	wp_get_current_user();
-	$show_debug = get_user_meta($current_user->ID, 'show_debug', true);
-	if(!empty($show_debug)){
-		global $plugin_page, $page_hook, $admin_page_hooks, $hook_suffix, $pagenow, $typenow, $current_screen;
-		$vars = array(
-			'plugin_page'      => $plugin_page,
-			'page_hook'        => $page_hook,
-			'hook_suffix'      => $hook_suffix,
-			'pagenow'          => $pagenow,
-			'typenow'          => $typenow,
-			'admin_page_hooks' => $admin_page_hooks,
-			'current_screen'   => $current_screen,
-		);
-		echo '<div id="debug_admin_vars">';
-		pre( $vars, 'debug: variáveis de admin', $opened = false );
-		echo '</div>';
-	}
+    global $plugin_page, $page_hook, $admin_page_hooks, $hook_suffix, $pagenow, $typenow, $current_screen;
+    $vars = array(
+        'plugin_page'      => $plugin_page,
+        'page_hook'        => $page_hook,
+        'hook_suffix'      => $hook_suffix,
+        'pagenow'          => $pagenow,
+        'typenow'          => $typenow,
+        'admin_page_hooks' => $admin_page_hooks,
+        'current_screen'   => $current_screen,
+    );
+    echo '<div id="debug_admin_vars">';
+    pre( $vars, 'debug:variáveis de admin', $opened = false );
+    echo '</div>';
 }
 
-function current_screen_info(){
-	boros_current_screen_info();
-}
 
 
 /**
@@ -122,9 +101,7 @@ function boros_current_page_info(){
     }
 }
 
-function current_page_info(){
-	boros_current_page_info();
-}
+
 
 /**
  * ==================================================
@@ -136,9 +113,9 @@ function current_page_info(){
  * @param string $legend legenda para identificar a saida.
  */
 if( !function_exists('pre') ){
-function pre( $var = false, $legend = '', $opened = true, $global_controls = false ){
+function pre( $var = false, $legend = '', $opened = true ){
     $pre = PRE::init();
-    $pre->pre( $var, $legend, $opened, $global_controls );
+    $pre->pre( $var, $legend, $opened );
 }
 }
 
@@ -256,98 +233,91 @@ function sep( $message = '' ){
 if( !class_exists('PRE') ){
 
 class PRE {
-	var $controls_visible = false;
-	
-	private static $instance;
-	
-	public static function init(){
-		if( empty( self::$instance ) ){
-			self::$instance = new PRE();
-		}
-		return self::$instance;
-	}
-	
-	// imprimir js e css
-	private function __construct(){
-		$this->do_css();
-		$this->do_js();
-	}
-	
-	private function do_css(){
-		echo "
-		<style type='text/css'>
-		#pre_box_controls {background:#fefcf5;border:1px solid #333;clear:both;color:#333;cursor:pointer;font:12px monospace;line-height:130%;margin:5px;padding:5px;text-align:left;}
-		.pre_box {background:#fefcf5;border:1px solid #333;clear:both;color:#333;font:12px monospace;line-height:130%;margin:5px;position:relative;text-align:left;}
-		.boros_element_duplicate_group.layout_block .pre_box {max-width:750px;overflow:hidden;}
-		.boros_element_duplicate_group.layout_table .pre_box {max-width:450px;overflow:hidden;}
-		.pre_box_head {background:#ededed;color:#da1c23;cursor:pointer;font-size:14px;font-weight:normal;margin:0 !important;padding:5px;}
-		.pre_box_footer {font-size:11px;background:#ededed;color:#999;margin:0;padding:5px;}
-		.pre_box_bool {font-size:12px;color:#333;margin:0;padding:5px;}
-		.pre_box_footer strong, .pre_box_bool span {color:#6B7688;}
-		.pre_box pre {border:none;color:#6B7688;font-size:12px;white-space:pre !important;margin:0;padding:5px;word-wrap:normal !important;}
-		.pal_box {background:#F0F0BB;border:1px solid #666;border-left:10px groove #E08B8B;clear:both;color:#666;font:normal 14px monospace;line-height:130%;margin:5px;padding:5px;text-align:left;}
-		.pre_box_content {overflow:auto;}
-		.pre_box_content_opened {display:block;}
-		.pre_box_content_closed {display:none;}
-		/* apenas para admin */
-		#wpwrap #debug_admin_vars {padding:0 20px 10px 165px;}
-		.pre_box {background:#f4f4f4;border:1px solid #dfdfdf;border-radius:3px;}
-		</style>";
-	}
-	
-	private function do_js(){
-		echo "
-		<script type='text/javascript'>
-		function toggle_pre( el ){
-			el.className = ( el.className != 'pre_box_content pre_box_content_closed' ? 'pre_box_content pre_box_content_closed' : 'pre_box_content pre_box_content_opened' );
-		}
-		function pre_box_toggle( ctrl ){
-			if( ctrl.className == 'pre_box_control_opened' ){
-				ctrl.className = 'pre_box_control_closed';
-				var content_class = 'pre_box_content pre_box_content_closed';
-			}
-			else{
-				ctrl.className = 'pre_box_control_opened';
-				var content_class = 'pre_box_content pre_box_content_opened';
-			}
-			var elems = document.getElementsByTagName('div'), i;
-			for (i in elems){
-				if((' ' + elems[i].className + ' ').indexOf(' ' + 'pre_box_content' + ' ') > -1){
-					elems[i].className = content_class;
-				}
-			}
-		}
-		</script>";
-	}
-	
-	function esc_html( $var ){
-		if( function_exists('esc_html') ){
-			return esc_html( $var );
-		}
-		else{
-			return htmlentities( $var, ENT_QUOTES, 'UTF-8', false );
-		}
-	}
-	
-	function multidimensional_array_map( $func, $arr ){
-		if( function_exists('multidimensional_array_map') ){
-			return multidimensional_array_map( $func, $arr );
-		}
-		else{
-			if( !is_array($arr) )
-				return $arr;
-			$newArr = array();
-			foreach( $arr as $key => $value ){
-				if( is_scalar( $value ) ){
-					$nvalue = call_user_func( $func, $value );
-				}
-				else{
-					$nvalue = $this->multidimensional_array_map( $func, $value );
-				}
-				$newArr[ $key ] = $nvalue;
-			}
-			return $newArr;
-		}
+
+    private $css = [
+        'pal'       => 'background:#F0F0BB;border:1px solid #666;border-left:10px groove #E08B8B;clear:both;color:#666;font:normal 12px fira code,monospace;line-height:130%;margin:5px;padding:5px;text-align:left;',
+        'pre'       => 'background:#f4f4f4;border:1px solid #dfdfdf;border-radius:3px;clear:both;color:#333;font:10px fira code,monospace;line-height:130%;margin:5px;position:relative;text-align:left;',
+        'pre_head'  => 'background:#ededed;color:#da1c23;cursor:pointer;font-size:12px;font-weight:normal;margin:0 !important;padding:5px;',
+        'pre_value' => 'font-size:12px;color:#333;margin:0;padding:5px;',
+        'pre_tag'   => 'border:none;color:#6B7688;font-size:12px;white-space:pre-wrap !important;margin:0;padding:5px;',
+        'pre_foot'  => 'font-size:11px;background:#ededed;color:#999;margin:0;padding:5px;',
+    ];
+
+    var $controls_visible = false;
+    
+    private static $instance;
+
+    private static $index = 1;
+    
+    public static function init(){
+        if( empty( self::$instance ) ){
+            self::$instance = new PRE();
+        }
+        return self::$instance;
+    }
+    
+    private function __construct(){
+
+    }
+    
+    function pal( $message, $var_name = false, $pad = 0  ){
+        $legend = '';
+        if( !empty($var_name) ){
+            $legend = $this->mb_str_pad("{$var_name} ", $pad, '-', STR_PAD_RIGHT);
+            $legend = "<strong style='font-weight:600;'>{$legend}-&gt;</strong> ";
+        }
+        echo PHP_EOL . "<div style='{$this->css['pal']}'>" . $legend . $this->esc_html($message) . "</div>\n";
+    }
+    
+    public function pre( $var = false, $legend = '', $opened = true ){
+        self::$index++;
+        $id            = 'd' . self::$index;
+        $js            = "var div=document.getElementById('{$id}');div.style.display=div.style.display=='none'?'block':'none';";
+        $click         = 'onclick="' . $js . '";';
+        $content_class = ($opened === true) ? 'block' :'none';
+        
+        echo PHP_EOL . "<div style='{$this->css['pre']}'>" . PHP_EOL;
+        echo ( $legend == '' ) ? '' :"<div style='{$this->css['pre_head']}' {$click}>{$legend}</div>" . PHP_EOL;
+        echo "<div id='{$id}' style='display:{$content_class};'>" . PHP_EOL;
+        if( is_object($var) || is_array($var) ){
+            echo "<pre style='{$this->css['pre_tag']}'>" . PHP_EOL;
+            $v = print_r( $var, true );
+            echo str_replace('  ', ' ', $this->esc_html($v));
+            echo  "</pre>" . PHP_EOL;
+            if( is_array($var) ){
+                echo "<div style='{$this->css['pre_foot']}'>TOTAL:<strong style='font-weight:600;'>" . count($var) . '</strong></div>';
+            }
+        }
+        else{
+            $size = '';
+            $type = gettype($var);
+            if( $type == 'boolean' ){
+                $var = ($var == false) ? 'FALSE' :'TRUE';
+            }
+            if( $type == 'string' ){
+                $len = strlen($var);
+                $size = " ({$len})";
+            }
+            
+            /* verificar se a variável é multilinha e trocar para <pre>*/
+            if(strpos($var, "\n") !== FALSE) {
+                $var = "<pre style='{$this->css['pre_tag']}'>" . $this->esc_html($var) . "</pre>";
+            }
+            else {
+                $var = "<span style='color:#6B7688;'>" . $this->esc_html($var) . "</span>";
+            }
+            echo "<div style='{$this->css['pre_value']}'><em>{$type}</em> :{$var}{$size}</div>" . PHP_EOL;
+        }
+        echo "</div></div>" . PHP_EOL;
+    }
+    
+    function esc_html( $var ){
+        if( function_exists('esc_html') ){
+            return esc_html( $var );
+        }
+        else{
+            return htmlentities( $var, ENT_QUOTES, 'UTF-8', false );
+        }
     }
     
     /**
@@ -358,73 +328,6 @@ class PRE {
         $diff = strlen( $input ) - mb_strlen( $input );
         return str_pad( $input, $pad_length + $diff, $pad_string, $pad_type );
     }
-	
-	function pal( $message, $var_name = false, $pad = 0  ){
-        $legend = '';
-        if( !empty($var_name) ){
-            $legend = $this->mb_str_pad("{$var_name} ", $pad, '-', STR_PAD_RIGHT);
-            $legend = "<strong>{$legend}</strong>&gt; ";
-        }
-        //$var = str_replace('~', '&nbsp;', $var);
-        //$var = str_replace('~', '-', $var);
-		echo "<div class='pal_box'>" . $legend . $this->esc_html($message) . "</div>\n";
-	}
-	
-	public function pre( $var = false, $legend = '', $opened = true, $global_controls = false ){
-		$id = uniqid('pre_');
-		$js = "toggle_pre(document.getElementById('{$id}'));";
-		$click = 'onclick="' . $js . '";';
-		if( $opened === true ){
-			$content_class = 'pre_box_content pre_box_content_opened';
-		}
-		else{
-			$content_class = 'pre_box_content pre_box_content_closed';
-		}
-		
-		// adicionar toggle global
-		if( $global_controls == true and $this->controls_visible == false ){
-			echo '<div id="pre_box_controls" class="pre_box_control_opened" onclick="pre_box_toggle(this)">abrir/fechar todos</div>';
-			$this->controls_visible = true;
-		}
-		
-		echo "<div class='pre_box'>\n";
-		echo ( $legend == '' ) ? '' : "<p class='pre_box_head' {$click}>{$legend}</p>\n";
-		echo "<div id='{$id}' class='{$content_class}'>\n";
-		if( is_object($var) || is_array($var) ){
-			echo "<pre>\n";
-			if( is_array($var) ){
-				print_r( $this->multidimensional_array_map( array($this, 'esc_html'), $var ) );
-			}
-			else{
-				print_r( $var );
-			}
-            echo "\n</pre>\n";
-            if( is_array($var) ){
-                echo "<p class='pre_box_footer'>TOTAL: <strong>" . count($var) . '</strong></p>';
-            }
-		}
-		else{
-			$size = '';
-			$type = gettype($var);
-			if( $type == 'boolean' ){
-                $var = ($var == false) ? 'FALSE' : 'TRUE';
-            }
-			if( $type == 'string' ){
-				$len = strlen($var);
-				$size = " ({$len})";
-			}
-			
-			// verificar se a variável é multilinha e trocar para <pre>
-			if(strpos($var, "\n") !== FALSE) {
-				$var = "<pre>\n\t\t" . $this->esc_html($var) . "\n\t</pre>";
-			}
-			else {
-				$var = "<span>\n\t\t" . $this->esc_html($var) . "\n\t</span>";
-			}
-			echo "<p class='pre_box_bool'>\n\t<em>" . $type . "</em> : \n\t{$var}". $size . "\n</p>\n";
-		}
-		echo "\n</div></div>\n";
-	}
 }
 
 }
