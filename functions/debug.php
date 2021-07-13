@@ -163,6 +163,7 @@ function pel( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
 if( !function_exists('pam') ){
     function pam( $message = '', $type = 'info', $legend = '' ){
         $color = [
+            'none'    => ['#888','#fff'],
             'neutral' => ['#383d41','#e2e3e5'],
             'danger'  => ['#721c24','#f8d7da'],
             'success' => ['#155724','#d4edda'],
@@ -170,9 +171,9 @@ if( !function_exists('pam') ){
             'warning' => ['#856404','#fff3cd'],
         ];
         if( !empty($legend) ){
-            $legend = "<strong>{$legend}:</strong> ";
+            $legend = "<strong style='clear:both;display:block;'>{$legend}</strong> ";
         }
-        echo PHP_EOL . "<div style='background-color:{$color[$type][1]};border:1px solid;border-color:{$color[$type][0]}30;border-radius:4px;color:{$color[$type][0]};line-height:24px;margin:5px;position:relative;padding:12px 18px;'>{$legend}{$message}</div>" . PHP_EOL;
+        echo PHP_EOL . "<div style='background-color:{$color[$type][1]};border:1px solid;border-color:{$color[$type][0]}30;border-radius:4px;color:{$color[$type][0]};font-size:12px;font-family:sans-serif;line-height:24px;margin:5px;position:relative;padding:12px 18px;'>{$legend}{$message}</div>" . PHP_EOL;
     }
 }
 
@@ -187,7 +188,7 @@ if( !function_exists('pam') ){
 if( !function_exists('bam') ){
     function bam( $message = '', $type = 'primary', $legend = '', $close_button = false ){
         if( !empty($legend) ){
-            $legend = "<strong>{$legend}:</strong> ";
+            $legend = "<h4 class='alert-heading'>{$legend}</h4>";
         }
         $extra_class = '';
         $button      = '';
@@ -207,13 +208,14 @@ if( !function_exists('bam') ){
 if( !function_exists('sep') ){
 function sep( $message = '', $level = 'danger' ){
     $color = [
+        'none'    => '#ddd',
         'danger'  => '#dc3545',
         'success' => '#28a745',
         'info'    => '#17a2b8',
         'warning' => '#ffae00',
         'neutral' => '#6c757d',
     ];
-    echo PHP_EOL . "<div style='background:{$color[$level]};border-radius:3px;color:#fff;font:12px fira code, monospace;height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;'>{$message}</div>" . PHP_EOL;
+    echo PHP_EOL . "<div style='background:{$color[$level]};border-radius:3px;box-sizing:content-box;color:#fff;font:12px fira code, monospace;height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;'>{$message}</div>" . PHP_EOL;
 }
 }
 
@@ -257,6 +259,7 @@ class PRE {
     function pal( $message, $var_name = false, $pad = 0, $level = 'warning' ){
         $legend = '';
         $color = [
+            'none'    => ['#fff','#ccc'],
             'danger'  => ['#f8d7da','#d65661'],
             'success' => ['#d4edda','#6ac580'],
             'info'    => ['#d1ecf1','#59b6c7'],
