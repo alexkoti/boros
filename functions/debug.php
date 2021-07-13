@@ -138,16 +138,18 @@ function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
  * 
  */
 if( !function_exists('pel') ){
-function pel( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
-    if( $pad_pos == 'left' ){
-        $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
-        $legend = "{$legend}: ";
+function pel( $var = false, $legend = '', $pad = 0, $pad_pos = 'right' ){
+    if( !empty($legend) ){
+        if( $pad_pos == 'left' ){
+            $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
+            $legend = "{$legend}: ";
+        }
+        else{
+            $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
+            $legend = "{$legend}-> ";
+        }
     }
-    else{
-        $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
-        $legend = "{$legend}> ";
-    }
-    $var    = print_r($var, true);
+    $var = print_r($var, true);
     error_log( "{$legend}{$var}" );
 }
 }
@@ -215,7 +217,7 @@ function sep( $message = '', $level = 'danger' ){
         'warning' => '#ffae00',
         'neutral' => '#6c757d',
     ];
-    echo PHP_EOL . "<div style='background:{$color[$level]};border-radius:3px;box-sizing:content-box;color:#fff;font:12px fira code, monospace;height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;'>{$message}</div>" . PHP_EOL;
+    echo PHP_EOL . "<div style='background:{$color[$level]};border-radius:3px;box-sizing:content-box;color:#fff;font:12px fira code, monospace;min-height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;'>{$message}</div>" . PHP_EOL;
 }
 }
 
