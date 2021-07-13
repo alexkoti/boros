@@ -29,7 +29,7 @@ define( 'BOROS_URL',        plugins_url( '/', __FILE__ ) );
 define( 'BOROS_CSS',        plugins_url( 'functions/form_elements/css/', __FILE__ ) );
 define( 'BOROS_IMG',        plugins_url( 'functions/form_elements/css/img/', __FILE__ ) );
 define( 'BOROS_JS',         plugins_url( 'functions/form_elements/js/', __FILE__ ) );
-define( 'BOROS_VERSION',    '2021.07.05.1' );
+define( 'BOROS_VERSION',    '2021.07.13.1' );
 
 
 

@@ -224,6 +224,14 @@
 }
 
 
+/**
+ * Box debug de variáveis de admin pages
+ * 
+ */
+#debug_admin_vars {margin: 0 0 65px 180px;}
+.folded #debug_admin_vars {margin-left: 56px;}
+
+
 
 /**
  * CLASSES GLOBAIS

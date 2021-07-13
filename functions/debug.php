@@ -31,11 +31,11 @@ function boros_hooked_functions( $hook = '' ) {
     global $wp_filter;
     if( empty( $hook ) || !isset( $wp_filter[$hook] ) ) return;
 
-    $ret = '';
+    $ret = [];
     foreach( $wp_filter[$hook] as $priority => $realhook ){
         foreach( $realhook as $hook_k => $hook_v ){
             $hook_echo = (is_array($hook_v['function']) ? get_class($hook_v['function'][0]) . ':' . $hook_v['function'][1] :$hook_v['function']);
-            $ret .= "\n$priority $hook_echo";
+            $ret[$priority] = $hook_echo;
         }
 
     }
@@ -150,12 +150,14 @@ function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'rig
     $lvl = '';
     if( !empty($level) && array_key_exists($level, $levels) ){
         $lvl = $levels[$level];
+        $pad = $pad - 6;
+        if( $pad < 0 ){$pad = 0;}
     }
 
     if( !empty($legend) ){
         if( $pad_pos == 'left' ){
             $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
-            $legend = "{$legend}: ";
+            $legend = "{$legend} : ";
         }
         else{
             $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
@@ -210,9 +212,9 @@ if( !function_exists('bam') ){
         $button      = '';
         if( $close_button == true ){
             $extra_class = ' alert-dismissible';
-            $button = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+            $button = '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
         }
-        echo PHP_EOL . "<div class='alert alert-{$type}{$extra_class}' role='alert'>{$legend}{$message}{$button}</div>" . PHP_EOL;
+        echo PHP_EOL . "<div class='alert alert-{$type}{$extra_class} fade show' role='alert'>{$legend}{$message}{$button}</div>" . PHP_EOL;
     }
 }
 
