@@ -138,7 +138,20 @@ function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
  * 
  */
 if( !function_exists('pel') ){
-function pel( $var = false, $legend = '', $pad = 0, $pad_pos = 'right' ){
+function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'right' ){
+    $levels = [
+        'danger'  => 'ERROR ',
+        'error'   => 'ERROR ',
+        'warn'    => ' WARN ',
+        'warning' => ' WARN ',
+        'info'    => ' INFO ',
+        'debug'   => 'DEBUG ',
+    ];
+    $lvl = '';
+    if( !empty($level) && array_key_exists($level, $levels) ){
+        $lvl = $levels[$level];
+    }
+
     if( !empty($legend) ){
         if( $pad_pos == 'left' ){
             $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
@@ -149,8 +162,9 @@ function pel( $var = false, $legend = '', $pad = 0, $pad_pos = 'right' ){
             $legend = "{$legend}-> ";
         }
     }
+
     $var = print_r($var, true);
-    error_log( "{$legend}{$var}" );
+    error_log( "{$lvl}{$legend}{$var}" );
 }
 }
 
