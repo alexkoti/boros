@@ -75,8 +75,9 @@ function boros_current_screen_info() {
  * ==================================================
  * Listar valores de um array ou objetct com <pre>
  *
- * @param mix $var qualquer tipo de variável.
- * @param string $legend legenda para identificar a saida.
+ * @param mix    $var       Qualquer tipo de variável.
+ * @param string $legend    Legenda para identificar a saida.
+ * @param bool   $opened    Determinar se o box iniciará aberto ou fechado.
  */
 if( !function_exists('pre') ){
 function pre( $var = false, $legend = '', $opened = true ){
@@ -92,8 +93,11 @@ function pre( $var = false, $legend = '', $opened = true ){
  * {P}rint {AL}ert
  * Exibir string mensagem na página.
  *
- * @param mix $message mensagem que deseja exibir
- * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
+ * @param string $var         String que deseja exibir.
+ * @param string $var_name    Exibir prefixo com o nome da variável, ou texto de introdução.
+ * @param int    $pad         Padding para alinhar as strings. Será preenchido com traço formando seta.
+ * @param string $level       Nível da mensagem, determina as cores de exibição. Padrão 'warning'.
+ *                            Valores: ('none','danger','success','info','warning','neutral')
  */
 if( !function_exists('pal') ){
 function pal( $var = false, $legend = '', $pad = 0, $level = 'warning' ){
@@ -109,14 +113,27 @@ function pal( $var = false, $legend = '', $pad = 0, $level = 'warning' ){
  * {P}rint {C}o{M}ment
  * Exibir string em comentário HTML
  *
- * @param mix $message mensagem que deseja exibir
- * @param mix $var_name exibir prefixo com o nome da variável, ou texto de introdução
+ * @param mix    $var        Mensagem que deseja exibir.
+ * @param string $legend     Exibir prefixo com o nome da variável, ou texto de introdução.
+ * @param int    $pad        Padding para alinhar as strings. Será preenchido com traço formando seta ou :, conforme o $pad_pos
+ * @param int    $pad_pos    Alinhamento da variável. Padrão 'left' onde o espaço restante será preenchido com ->, 'right' 
+ *                           onde será prefixado com espaços e dividido com ':'.
+ * 
+ * @example
+ * <code>
+ * pcm('ipsum', 'lorem', 10, 'left');
+ * <!-- lorem ----˃ ipsum -->
+ * 
+ * pcm('ipsum', 'lorem', 10, 'right');
+ * <!--     lorem : ipsum -->
+ * </code>
+ * 
  */
 if( !function_exists('pcm') ){
 function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
     $var = (string)$var;
     if( !empty($legend) ){
-        if( $pad_pos == 'left' ){
+        if( $pad_pos == 'right' ){
             $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
             $legend = "{$legend}: ";
         }
@@ -125,7 +142,7 @@ function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
             $legend = "{$legend}˃ "; // dois pontos para não acionar fim de comentário
         }
     }
-    echo "\n<!-- {$legend}{$var} -->";
+    echo PHP_EOL . "<!-- {$legend}{$var} -->";
 }
 }
 
@@ -134,11 +151,34 @@ function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
  * ERROR LOG ========================================
  * ==================================================
  * {P}rint {E}rror {L}og
- * Adicionar error_log, ajustando arrays e objects para string
+ * Adicionar error_log, ajustando arrays e objects para string.
+ * 
+ * @param mix    $var        Mensagem que deseja salvar.
+ * @param string $legend     Exibir prefixo com o nome da variável, ou texto de introdução.
+ * @param string $level      Nível da mensagem que será prefixado. Opcional.
+ *                           Valores: ('danger','error','warn','warning','info','debug')
+ * @param int    $pad        Padding para alinhar as strings. Será preenchido com traço formando seta ou :, conforme o $pad_pos
+ * @param int    $pad_pos    Alinhamento da variável. Padrão 'left' onde o espaço restante será preenchido com ->, 'right' 
+ *                           onde será prefixado com espaços e dividido com ':'.
+ * 
+ * @example
+ * <code>
+ * pel('ipsum', 'lorem', '', 20, 'right');
+ * [13-Jul-2021 23:39:13 UTC]     lorem  : ipsum
+ * 
+ * pel('ipsum', 'lorem', '', 10, 'left');
+ * [13-Jul-2021 23:39:45 UTC] lorem -----> ipsum
+ * 
+ * pel('ipsum', 'lorem', 'warn', 10, 'left');
+ * [13-Jul-2021 23:39:45 UTC]  WARN lorem -> ipsum
+ * 
+ * pel('ipsum', 'lorem', 'error', 10, 'left');
+ * [13-Jul-2021 23:39:45 UTC] ERROR lorem -> ipsum
+ * </code>
  * 
  */
 if( !function_exists('pel') ){
-function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'right' ){
+function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'left' ){
     $levels = [
         'danger'  => 'ERROR ',
         'error'   => 'ERROR ',
@@ -155,7 +195,7 @@ function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'rig
     }
 
     if( !empty($legend) ){
-        if( $pad_pos == 'left' ){
+        if( $pad_pos == 'right' ){
             $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
             $legend = "{$legend} : ";
         }
@@ -176,6 +216,11 @@ function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'rig
  * ==================================================
  * {P}rint {A}lert {M}essage
  * Aceita tags HTML
+ * 
+ * @param mix    $message    Mensagem que deseja exibir.
+ * @param string $type       Nível da mensagem. Padrão 'info'.
+ *                           Valores: ('none','neutral','danger','danger','info','warning')
+ * @param string $legend     Exibir title com texto de introdução.
  * 
  */
 if( !function_exists('pam') ){
@@ -202,6 +247,12 @@ if( !function_exists('pam') ){
  * {B}ootstrap {A}lert {M}essage
  * Aceita tags HTML
  * 
+ * @param mix    $message         Mensagem que deseja exibir.
+ * @param string $type            Nível da mensagem. Padrão 'info'.
+ *                                Valores: ('primary','secondary','success','danger','warning','info','light','dark')
+ * @param string $legend          Exibir title com texto de introdução.
+ * @param bool   $close_button    Exibir botão de fechar.
+ * 
  */
 if( !function_exists('bam') ){
     function bam( $message = '', $type = 'primary', $legend = '', $close_button = false ){
@@ -218,9 +269,15 @@ if( !function_exists('bam') ){
     }
 }
 
-
 /**
- * Separador simples, usar apenas para melhorar a legibilidade em debugs complexos
+ * ==================================================
+ * SEPARADOR ========================================
+ * ==================================================
+ * Separador simples, usar apenas para melhorar a legibilidade em debugs complexos.
+ * 
+ * @param mix    $message         Mensagem que deseja exibir. Opcional
+ * @param string $level           Nível da mensagem. Determina as cores do separador. Padrão 'danger'.
+ *                                Valores: ('none','danger','success','info','warning','neutral')
  * 
  */
 if( !function_exists('sep') ){
