@@ -80,10 +80,10 @@ function boros_current_screen_info() {
  * @param bool   $opened    Determinar se o box iniciará aberto ou fechado.
  */
 if( !function_exists('pre') ){
-function pre( $var = false, $legend = '', $opened = true ){
-    $pre = PRE::init();
-    $pre->pre( $var, $legend, $opened );
-}
+    function pre( $var = false, $legend = '', $opened = true ){
+        $pre = PRE::init();
+        $pre->pre( $var, $legend, $opened );
+    }
 }
 
 /**
@@ -100,10 +100,10 @@ function pre( $var = false, $legend = '', $opened = true ){
  *                            Valores: ('none','danger','success','info','warning','neutral')
  */
 if( !function_exists('pal') ){
-function pal( $var = false, $legend = '', $pad = 0, $level = 'warning' ){
-	$pre = PRE::init();
-	$pre->pal( $var, $legend, $pad, $level );
-}
+    function pal( $var = false, $legend = '', $pad = 0, $level = 'warning' ){
+        $pre = PRE::init();
+        $pre->pal( $var, $legend, $pad, $level );
+    }
 }
 
 /**
@@ -130,20 +130,10 @@ function pal( $var = false, $legend = '', $pad = 0, $level = 'warning' ){
  * 
  */
 if( !function_exists('pcm') ){
-function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
-    $var = (string)$var;
-    if( !empty($legend) ){
-        if( $pad_pos == 'right' ){
-            $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
-            $legend = "{$legend}: ";
-        }
-        else{
-            $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
-            $legend = "{$legend}˃ "; // dois pontos para não acionar fim de comentário
-        }
+    function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
+        $pre = PRE::init();
+        $pre->pcm( $var, $legend, $pad, $pad_pos );
     }
-    echo PHP_EOL . "<!-- {$legend}{$var} -->";
-}
 }
 
 /**
@@ -178,36 +168,10 @@ function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
  * 
  */
 if( !function_exists('pel') ){
-function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'left' ){
-    $levels = [
-        'danger'  => 'ERROR ',
-        'error'   => 'ERROR ',
-        'warn'    => ' WARN ',
-        'warning' => ' WARN ',
-        'info'    => ' INFO ',
-        'debug'   => 'DEBUG ',
-    ];
-    $lvl = '';
-    if( !empty($level) && array_key_exists($level, $levels) ){
-        $lvl = $levels[$level];
-        $pad = $pad - 6;
-        if( $pad < 0 ){$pad = 0;}
+    function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'left' ){
+        $pre = PRE::init();
+        $pre->pel( $var, $legend, $level, $pad, $pad_pos );
     }
-
-    if( !empty($legend) ){
-        if( $pad_pos == 'right' ){
-            $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
-            $legend = "{$legend} : ";
-        }
-        else{
-            $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
-            $legend = "{$legend}-> ";
-        }
-    }
-
-    $var = print_r($var, true);
-    error_log( "{$lvl}{$legend}{$var}" );
-}
 }
 
 /**
@@ -225,18 +189,8 @@ function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'lef
  */
 if( !function_exists('pam') ){
     function pam( $message = '', $type = 'info', $legend = '' ){
-        $color = [
-            'none'    => ['#888','#fff'],
-            'neutral' => ['#383d41','#e2e3e5'],
-            'danger'  => ['#721c24','#f8d7da'],
-            'success' => ['#155724','#d4edda'],
-            'info'    => ['#004085','#cce5ff'],
-            'warning' => ['#856404','#fff3cd'],
-        ];
-        if( !empty($legend) ){
-            $legend = "<strong style='clear:both;display:block;'>{$legend}</strong> ";
-        }
-        echo PHP_EOL . "<div style='background-color:{$color[$type][1]};border:1px solid;border-color:{$color[$type][0]}30;border-radius:4px;color:{$color[$type][0]};font-size:12px;font-family:sans-serif;line-height:24px;margin:5px;position:relative;padding:12px 18px;'>{$legend}{$message}</div>" . PHP_EOL;
+        $pre = PRE::init();
+        $pre->pam( $message, $type, $legend );
     }
 }
 
@@ -256,16 +210,8 @@ if( !function_exists('pam') ){
  */
 if( !function_exists('bam') ){
     function bam( $message = '', $type = 'primary', $legend = '', $close_button = false ){
-        if( !empty($legend) ){
-            $legend = "<h4 class='alert-heading'>{$legend}</h4>";
-        }
-        $extra_class = '';
-        $button      = '';
-        if( $close_button == true ){
-            $extra_class = ' alert-dismissible';
-            $button = '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
-        }
-        echo PHP_EOL . "<div class='alert alert-{$type}{$extra_class} fade show' role='alert'>{$legend}{$message}{$button}</div>" . PHP_EOL;
+        $pre = PRE::init();
+        $pre->bam( $message, $type, $legend, $close_button );
     }
 }
 
@@ -275,33 +221,26 @@ if( !function_exists('bam') ){
  * ==================================================
  * Separador simples, usar apenas para melhorar a legibilidade em debugs complexos.
  * 
- * @param mix    $message         Mensagem que deseja exibir. Opcional
+ * @param mix    $message         Mensagem que deseja exibir, aceita HTML. Opcional
  * @param string $level           Nível da mensagem. Determina as cores do separador. Padrão 'danger'.
  *                                Valores: ('none','danger','success','info','warning','neutral')
  * 
  */
 if( !function_exists('sep') ){
-function sep( $message = '', $level = 'danger' ){
-    $color = [
-        'none'    => '#ddd',
-        'danger'  => '#dc3545',
-        'success' => '#28a745',
-        'info'    => '#17a2b8',
-        'warning' => '#ffae00',
-        'neutral' => '#6c757d',
-    ];
-    echo PHP_EOL . "<div style='background:{$color[$level]};border-radius:3px;box-sizing:content-box;color:#fff;font:12px fira code, monospace;min-height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;'>{$message}</div>" . PHP_EOL;
-}
+    function sep( $message = '', $level = 'danger' ){
+        $pre = PRE::init();
+        $pre->sep( $message, $level );
+    }
 }
 
 /**
  * ==================================================
  * CLASS PRE ========================================
  * ==================================================
- * Classe construtora para debug de variáveis. Foi usado singleton para deixar o output do css e js únicos.
- * Usar as functions wrapper: pre(), pal()
+ * Classe construtora para debug de variáveis.
+ * Usar as functions wrapper: pre(), pal(), pel(), pcm(), pam(), bam(), sep()
  * 
- * @todo adicionar o método prex(), para exibição de grandes blocos de arrays|objects
+ * 
  */
 if( !class_exists('PRE') ){
 
@@ -314,6 +253,8 @@ class PRE {
         'pre_value' => 'font-size:12px;color:#333;margin:0;padding:5px;',
         'pre_tag'   => 'border:none;color:#6B7688;font-size:12px;white-space:pre-wrap !important;margin:0;padding:5px;',
         'pre_foot'  => 'font-size:11px;background:#ededed;color:#999;margin:0;padding:5px;',
+        'pam'       => 'border-radius:4px;border:1px solid;font-size:12px;font-family:sans-serif;line-height:24px;margin:5px;position:relative;padding:12px 18px;',
+        'sep'       => 'border-radius:3px;box-sizing:content-box;color:#fff;font:12px fira code, monospace;min-height:11px;line-height:13px;margin:50px 5px;padding:10px;text-align:center;',
     ];
     
     private static $instance;
@@ -331,6 +272,10 @@ class PRE {
 
     }
     
+    /**
+     * Mensagem simples com formatação de cores indicativas
+     * 
+     */
     function pal( $message, $var_name = false, $pad = 0, $level = 'warning' ){
         $legend = '';
         $color = [
@@ -348,6 +293,10 @@ class PRE {
         echo PHP_EOL . "<div style='{$this->css['pal']};background-color:{$color[$level][0]};border-color:{$color[$level][1]}'>" . $legend . $this->esc_html($message) . PHP_EOL . '</div>' . PHP_EOL;
     }
     
+    /**
+     * Mensagem com toggle de exibição
+     * 
+     */
     public function pre( $var = false, $legend = '', $opened = true ){
         self::$index++;
         $id            = 'd' . self::$index;
@@ -389,8 +338,114 @@ class PRE {
         }
         echo "</div></div>" . PHP_EOL;
     }
+
+    /**
+     * Error Log
+     * 
+     */
+    function pel( $var = false, $legend = '', $level = '', $pad = 0, $pad_pos = 'left' ){
+        $levels = [
+            'danger'  => 'ERROR ',
+            'error'   => 'ERROR ',
+            'warn'    => ' WARN ',
+            'warning' => ' WARN ',
+            'info'    => ' INFO ',
+            'debug'   => 'DEBUG ',
+        ];
+        $lvl = '';
+        if( !empty($level) && array_key_exists($level, $levels) ){
+            $lvl = $levels[$level];
+            $pad = $pad - 6;
+            if( $pad < 0 ){$pad = 0;}
+        }
+
+        if( !empty($legend) ){
+            if( $pad_pos == 'right' ){
+                $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
+                $legend = "{$legend} : ";
+            }
+            else{
+                $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
+                $legend = "{$legend}-> ";
+            }
+        }
+
+        $var = print_r($var, true);
+        error_log( "{$lvl}{$legend}{$var}" );
+    }
     
-    function esc_html( $var ){
+    /**
+     * Comentário HTML
+     * 
+     */
+    function pcm( $var = false, $legend = '', $pad = 0, $pad_pos = 'left' ){
+        $var = (string)$var;
+        if( !empty($legend) ){
+            if( $pad_pos == 'right' ){
+                $legend = str_pad("{$legend} ", $pad, ' ', STR_PAD_LEFT);
+                $legend = "{$legend}: ";
+            }
+            else{
+                $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
+                $legend = "{$legend}˃ "; // dois pontos para não acionar fim de comentário
+            }
+        }
+        echo PHP_EOL . "<!-- {$legend}{$var} -->";
+    }
+
+    /**
+     * Alert HTML
+     * 
+     */
+    public function pam( $message = '', $type = 'info', $legend = '' ){
+        $color = [
+            'none'    => ['#888','#fff'],
+            'neutral' => ['#383d41','#e2e3e5'],
+            'danger'  => ['#721c24','#f8d7da'],
+            'success' => ['#155724','#d4edda'],
+            'info'    => ['#004085','#cce5ff'],
+            'warning' => ['#856404','#fff3cd'],
+        ];
+        if( !empty($legend) ){
+            $legend = "<strong style='clear:both;display:block;'>{$legend}</strong> ";
+        }
+        echo PHP_EOL . "<div style='{$this->css['pam']};background-color:{$color[$type][1]};border-color:{$color[$type][0]}30;color:{$color[$type][0]};'>{$legend}{$message}</div>" . PHP_EOL;
+    }
+
+    /**
+     * Bootstrap Alert
+     * 
+     */
+    public function bam( $message = '', $type = 'primary', $legend = '', $close_button = false ){
+        if( !empty($legend) ){
+            $legend = "<h4 class='alert-heading'>{$legend}</h4>";
+        }
+        $extra_class = '';
+        $button      = '';
+        if( $close_button == true ){
+            $extra_class = ' alert-dismissible';
+            $button = '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+        }
+        echo PHP_EOL . "<div class='alert alert-{$type}{$extra_class} fade show' role='alert'>{$legend}{$message}{$button}</div>" . PHP_EOL;
+    }
+
+    /**
+     * Separador
+     * 
+     */
+    public function sep( $message = '', $level = 'danger' ){
+        $color = [
+            'none'    => '#ddd',
+            'danger'  => '#dc3545',
+            'success' => '#28a745',
+            'info'    => '#17a2b8',
+            'warning' => '#ffae00',
+            'neutral' => '#6c757d',
+        ];
+        echo PHP_EOL . "<div style='background:{$color[$level]};{$this->css['sep']}'>{$message}</div>" . PHP_EOL;
+    }
+    
+    public function esc_html( $var ){
         if( function_exists('esc_html') ){
             return esc_html( $var );
         }
@@ -403,7 +458,7 @@ class PRE {
      * String Pad str_pad() para multi-byte characters
      * 
      */
-    function mb_str_pad( $input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT){
+    public function mb_str_pad( $input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT){
         $diff = strlen( $input ) - mb_strlen( $input );
         return str_pad( $input, $pad_length + $diff, $pad_string, $pad_type );
     }
