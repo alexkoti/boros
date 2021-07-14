@@ -1,18 +1,4 @@
 <?php
-/**
- * DEBUG FUNCTIONS
- * Funções para debug
- * 
- * @todo mover todas as chamadas de functions para métodos da class principal
- * 
- * VERSÃO PARA APLICAÇÃO RÁPIDA
- * 
- * 
- * 
- * 
- */
-
-
 
 /**
  * ==================================================
@@ -290,7 +276,8 @@ class PRE {
             $legend = $this->mb_str_pad("{$var_name} ", $pad, '-', STR_PAD_RIGHT);
             $legend = "<strong style='font-weight:600;'>{$legend}-&gt;</strong> ";
         }
-        echo PHP_EOL . "<div style='{$this->css['pal']};background-color:{$color[$level][0]};border-color:{$color[$level][1]}'>" . $legend . $this->esc_html($message) . PHP_EOL . '</div>' . PHP_EOL;
+        $style = "{$this->css['pal']};background-color:{$color[$level][0]};border-color:{$color[$level][1]}";
+        echo PHP_EOL . "<div style='{$style}'>" . $legend . $this->esc_html($message) . PHP_EOL . '</div>' . PHP_EOL;
     }
     
     /**
@@ -387,7 +374,7 @@ class PRE {
             }
             else{
                 $legend = str_pad("{$legend} ", $pad, '-', STR_PAD_RIGHT);
-                $legend = "{$legend}˃ "; // dois pontos para não acionar fim de comentário
+                $legend = "{$legend}˃ "; /* dois pontos para não acionar fim de comentário */
             }
         }
         echo PHP_EOL . "<!-- {$legend}{$var} -->";
@@ -409,7 +396,8 @@ class PRE {
         if( !empty($legend) ){
             $legend = "<strong style='clear:both;display:block;'>{$legend}</strong> ";
         }
-        echo PHP_EOL . "<div style='{$this->css['pam']};background-color:{$color[$type][1]};border-color:{$color[$type][0]}30;color:{$color[$type][0]};'>{$legend}{$message}</div>" . PHP_EOL;
+        $style = "{$this->css['pam']};background-color:{$color[$type][1]};border-color:{$color[$type][0]}30;color:{$color[$type][0]};";
+        echo PHP_EOL . "<div style='{$style}'>{$legend}{$message}</div>" . PHP_EOL;
     }
 
     /**
