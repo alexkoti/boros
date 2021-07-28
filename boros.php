@@ -3,7 +3,7 @@
 Plugin Name: Boros Elements
 Plugin URI:  https://github.com/alexkoti/boros
 Description: Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets, form_elements e frontend forms
-Version:     1.5.92
+Version:     1.5.93
 Author:      Alex Koti
 Author URI:  http://alexkoti.com
 License:     GPL2
@@ -20,6 +20,7 @@ License:     GPL2
 // Paths
 define( 'BOROS',            dirname(__FILE__) );
 define( 'BOROS_FUNCTIONS',  BOROS . DIRECTORY_SEPARATOR . 'functions' );
+define( 'BOROS_INCLUDES',   BOROS . DIRECTORY_SEPARATOR . 'includes' );
 define( 'BOROS_ELEMENTS',   BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'form_elements' );
 define( 'BOROS_CUSTOMIZER', BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'customizer' );
 define( 'BOROS_LIBS',       BOROS . DIRECTORY_SEPARATOR . 'vendors' );
@@ -31,15 +32,16 @@ define( 'BOROS_IMG',        plugins_url( 'functions/form_elements/css/img/', __F
 define( 'BOROS_JS',         plugins_url( 'functions/form_elements/js/', __FILE__ ) );
 define( 'BOROS_VERSION',    '2021.07.13.1' );
 
-
+// debug geral
+include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'debug.php' );
 
 /**
- * ==================================================
- * INCLUDES =========================================
- * ==================================================
- * 
+ * Nova estrutura de arquivos
  * 
  */
+include_once( BOROS_INCLUDES . DIRECTORY_SEPARATOR . 'autoload.php' ); // autoload
+
+
 
 /**
  * INCLUDES FUNCTIONS GERAIS
@@ -51,7 +53,6 @@ define( 'BOROS_VERSION',    '2021.07.13.1' );
 if( defined('LOCALHOST') and LOCALHOST === true ){
     include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'localhost.php' );          // functions restritas ao desenvolvimento localhost
 }
-include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'debug.php' );                  // functions de debug(pre, pal, prex)
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'autoload.php' );               // autoload
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'extend_php.php' );             // functions extras de PHP
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'extend_array.php' );           // functions extras para manipulação de arrays

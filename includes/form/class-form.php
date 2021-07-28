@@ -1,7 +1,9 @@
 <?php
 
+namespace Boros\Form;
+
 /**
- * Classes que deverão extender BOros_Form
+ * Classes que deverão extender Boros_Form
  * 
  * Boros_Form_Post
  * Boros_Form_User

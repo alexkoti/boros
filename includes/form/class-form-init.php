@@ -1,5 +1,7 @@
 <?php
 
+namespace Boros\Form;
+
 /**
  * Timeline de forms
  * 
