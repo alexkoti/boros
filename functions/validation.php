@@ -1057,10 +1057,16 @@ class BorosValidation {
         $home_url = home_url('/');
         $akismet = new AkismetValidation( $home_url, $akismet_key);
         if( $akismet->isKeyValid() ){
-            //$akismet->setCommentAuthor('viagra-test-123'); // test positive spam
-            //$akismet->setCommentAuthor($data['author']);
-            //$akismet->setCommentAuthorEmail($data['email']);
-            $akismet->setCommentContent($value);
+            // verificar se a string é email
+            if( filter_var($value, FILTER_VALIDATE_EMAIL) ){
+                $akismet->setCommentAuthorEmail($value);
+            }
+            else{
+                //$akismet->setCommentAuthor('viagra-test-123'); // test positive spam
+                //$akismet->setCommentAuthor($data['author']);
+                //$akismet->setCommentAuthorEmail($data['email']);
+                $akismet->setCommentContent($value);
+            }
             $akismet->setPermalink( $home_url );
             $is_spam = $akismet->isCommentSpam();
         }
