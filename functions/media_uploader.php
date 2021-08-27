@@ -52,20 +52,20 @@ function boros_upload_admin_head(){
 	
 	// place js config array for plupload
 	$plupload_init = array(
-		'runtimes' => 'html5,silverlight,flash,html4',
-		'browse_button' => 'plupload-browse-button', // will be adjusted per uploader
-		'container' => 'plupload-upload-ui', // will be adjusted per uploader
-		'drop_element' => 'drop_area', // will be adjusted per uploader
-		'file_data_name' => 'quick_upload', // will be adjusted per uploader
-		'multiple_queues' => true,
-		'max_file_size' => wp_max_upload_size() . 'b',
-		'url' => admin_url('admin-ajax.php'),
-		'flash_swf_url' => includes_url('js/plupload/plupload.flash.swf'),
+		'runtimes'            => 'html5,silverlight,flash,html4',
+		'browse_button'       => 'plupload-browse-button', // will be adjusted per uploader
+		'container'           => 'plupload-upload-ui', // will be adjusted per uploader
+		'drop_element'        => 'drop_area', // will be adjusted per uploader
+		'file_data_name'      => 'quick_upload', // will be adjusted per uploader
+		'multiple_queues'     => true,
+		'max_file_size'       => wp_max_upload_size() . 'b',
+		'url'                 => admin_url('admin-ajax.php'),
+		'flash_swf_url'       => includes_url('js/plupload/plupload.flash.swf'),
 		'silverlight_xap_url' => includes_url('js/plupload/plupload.silverlight.xap'),
-		'filters' => array(array('title' => __('Allowed Files'), 'extensions' => '*')),
-		'multipart' => true,
-		'urlstream_upload' => true,
-		'multi_selection' => false, // will be added per uploader
+		'filters'             => array(array('title' => __('Allowed Files'), 'extensions' => '*')),
+		'multipart'           => true,
+		'urlstream_upload'    => true,
+		'multi_selection'     => false, // will be added per uploader
 		 // additional post data to send to our ajax hook
 		'multipart_params' => array(
 			'_ajax_nonce' => '', // will be added per uploader
@@ -78,6 +78,8 @@ function boros_upload_admin_head(){
             'mime_types' => 'image/*',
         ),
 	);
+
+    $plupload_init = apply_filters( 'boros_plupload_config', $plupload_init );
 ?>
 <script type="text/javascript">
 var base_plupload_config = <?php echo json_encode($plupload_init); ?>;
@@ -96,8 +98,9 @@ add_action( 'wp_ajax_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
 add_action( 'wp_ajax_nopriv_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
 function boros_drop_upload_add_ajax() {
     // check ajax nonce
-    $imgid = $_POST["imgid"];
-    $size  = $_POST["size"];
+    $imgid       = $_POST["imgid"];
+    $size        = $_POST["size"];
+    $post_parent = (int)$_POST['post_parent'];
     check_ajax_referer($imgid . 'pluploadan');
 
     /**
@@ -130,11 +133,11 @@ function boros_drop_upload_add_ajax() {
 
     // salvar imagem
     $tmp        = new MediaUpload;
-    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent = $_POST['post_parent'], null, $elem_options );
+    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent, null, $elem_options );
     //error_log(print_r($attachment, true));
 
     // atualizar meta _thumbnail_id
-    update_post_meta( $_POST['post_parent'], '_thumbnail_id', $attachment['attachment_id'] );
+    update_post_meta( $post_parent, '_thumbnail_id', $attachment['attachment_id'] );
 
     /**
      * hook callback da ação
@@ -151,7 +154,7 @@ function boros_drop_upload_add_ajax() {
      * )
      * 
      */
-    do_action( 'boros_drop_upload_update_image', $_POST['post_parent'], '_thumbnail_id', $attachment );
+    do_action( 'boros_drop_upload_update_image', $post_parent, '_thumbnail_id', $attachment );
 
     // HTML do retorno
     $img  = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
