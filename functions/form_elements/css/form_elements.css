@@ -76,30 +76,31 @@
 .boros-media-selector .media-item .media-icon:before {
 	font-family: dashicons;
 	position: absolute;
-	font-size: 50px;
+	font-size: 30px;
 	color: rgba(68, 68, 68, 0.5);
 	z-index: 1;
 	top: 50%;
     left: 50%;
+    line-height: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
 }
 .boros-media-selector .media-item .media-icon img {
 	border: none;
+    object-fit: cover;
 }
 .boros-media-selector.type-image .media-item .media-icon:before {
-	content: "\f128";
-    line-height: 50px;
-    height: 50px;
-    margin: -25px 0 0 -25px;
+    content: "\f128";
 }
 .boros-media-selector.type-file .media-item .media-icon:before {
-	content: "\f498";
-    line-height: 50px;
-    height: 50px;
-    margin: -25px 0 0 -25px;
+    content: "\f498";
 }
 .boros-media-selector.value-not-set .media-selector-remove, 
 .boros-media-selector.value-not-set .media-item .remove {
 	display: none;
+}
+.boros-media-selector.value-not-set .media-item .media-icon img {
+    max-height: 100px;
 }
 .boros-media-selector .media-item .remove {
 	cursor: pointer;
@@ -113,15 +114,15 @@
 	border: 1px solid #fff;
 	z-index: 3;
 	opacity: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .boros-media-selector .media-item .remove:after {
 	content: "\f153";
 	font-family: dashicons;
 	font-size: 20px;
 	line-height: 20px;
-	position: absolute;
-    top: 0px;
-    left: 0.5px;
 }
 .boros-media-selector .media-item:hover .remove {
 	opacity: 0.7;
@@ -224,7 +225,11 @@
  * 
  */
 .item_radio, .item_checkbox {
-	display:inline-block;
+	display:inline-flex;
+    align-items: center;
+}
+.item_radio input, .item_checkbox input {
+    margin: 0;
 }
 .label_radio, .label_checkbox {
 	padding:3px;

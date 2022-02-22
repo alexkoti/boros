@@ -138,7 +138,10 @@ class BFE_media_selector extends BorosFormElement {
         else{
             $img_src = $this->options['default_image'];
         }
-        $dim = "width:{$this->options['width']}px;height:{$this->options['height']}px";
+
+        $height = ( empty($this->options['height']) || $this->options['height'] == 'auto' ) ? '' : "height:{$this->options['height']}px";
+        $dim = "width:{$this->options['width']}px;{$height}";
+
         ?>
         <div class="media-item">
             <div class="media-icon <?php echo $this->has_thumb; ?>" style="<?php echo $dim; ?>">
