@@ -2595,6 +2595,11 @@ class BorosFrontendForm {
 						}
 						
 						foreach( $itens as $item ){
+
+                            if( isset($item['skip_output']) && $item['skip_output'] == true ){
+                                continue;
+                            }
+
 							$data_value = null;
 							
 							// adicionar os erros guardados
