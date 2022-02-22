@@ -100,6 +100,11 @@ class BorosAdminPages {
 		'type' => 'option',
 	);
 	
+    /**
+     * Callbacks para serem executados após salvamento
+     * 
+     */
+    var $callbacks = array();
 	
 	/**
 	 * Registrar os actions e filters
@@ -368,7 +373,12 @@ class BorosAdminPages {
 						 */
 						// configs
 						if( isset( $element['callback'] ) ){
-							$this->callbacks[ $element['name'] ][] = $element['callback'];
+                            if( !isset($this->callbacks[ $element['name'] ]) ){
+                                $this->callbacks[ $element['name'] ][] = $element['callback'];
+                            }
+                            elseif( !in_array($element['callback'], $this->callbacks[ $element['name'] ]) ){
+                                $this->callbacks[ $element['name'] ][] = $element['callback'];
+                            }
 						}
 						// fixos do elemento
 						if( method_exists( "BFE_{$element['type']}", 'set_callback_functions' ) ){
