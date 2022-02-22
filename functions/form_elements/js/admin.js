@@ -119,7 +119,7 @@ jQuery(document).ready(function($){
 	$('.boros_form_element').delegate('input[type="checkbox"].provider_input:checked, input[type="radio"].provider_input:checked', 'change', function(){
 		reload_dependent_input( $(this) );
 	});
-	$('.boros_form_element').delegate('select.provider_input', 'change', function(e){
+	$('.boros_form_element').delegate('select.provider_input', 'change', function(event){
 		// ver http://api.jquery.com/event.stopImmediatePropagation/
 		event.stopPropagation();
 		reload_dependent_input( $(this) );
