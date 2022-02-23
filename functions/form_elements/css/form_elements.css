@@ -232,7 +232,8 @@
     margin: 0;
 }
 .label_radio, .label_checkbox {
-	padding:3px;
+	padding: 3px;
+    flex: 1;
 }
 .label_checkbox img,
 .label_radio img {
