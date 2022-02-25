@@ -139,12 +139,17 @@ class BFE_media_selector extends BorosFormElement {
             $img_src = $this->options['default_image'];
         }
 
-        $height = ( empty($this->options['height']) || $this->options['height'] == 'auto' ) ? '' : "height:{$this->options['height']}px";
+        $height = "height:{$this->options['height']}px";
+        $icon_class = ' height-fixed';
+        if( empty($this->options['height']) || $this->options['height'] == 'auto' ){
+            $height = '';
+            $icon_class = ' height-auto';
+        }
         $dim = "width:{$this->options['width']}px;{$height}";
 
         ?>
         <div class="media-item">
-            <div class="media-icon <?php echo $this->has_thumb; ?>" style="<?php echo $dim; ?>">
+            <div class="media-icon <?php echo $this->has_thumb . $icon_class; ?>" style="<?php echo $dim; ?>">
                 <div class="remove" title="<?php echo $this->options['remove_text']; ?>"></div>
                 <img src="<?php echo $img_src; ?>" alt="">
             </div>
@@ -209,7 +214,7 @@ class BFE_media_selector extends BorosFormElement {
         ?>
         <script type="text/template" id="tmpl-boros-media-selector-image">
             <div class="media-item">
-                <div class="media-icon {{data.hthumb}}" style="width:{{data.width}}px;height:{{data.height}}px;">
+                <div class="media-icon {{data.hthumb}} {{data.hclass}}" style="{{data.style.width}}{{data.style.height}}">
                     <div class="remove" title="{{{data.remove}}}"></div>
                     <img src="{{{data.src}}}" alt="{{{data.alt}}}">
                 </div>

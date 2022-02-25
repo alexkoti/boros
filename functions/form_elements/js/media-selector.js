@@ -144,13 +144,24 @@ jQuery(function($){
             alt    : '',
             width  : options.width,
             height : options.height,
+            style  : {
+                width  : `width:${options.width}px;`,
+                height : `height:${options.height}px;`,
+            },
             remove : options.remove_text,
             title  : '',
             type   : '',
             dims   : '',
             size   : '',
             hthumb : '',
+            hclass : 'height-fixed',
         };
+
+        // remover o px caso seja 'auto'
+        if( data.height == 'auto' ){
+            data.style.height = `height:${options.height};`;
+            data.hclass = 'height-auto';
+        }
 
         // caso seja a string 'default' em vez do objeto attachs, carregar imagem padrão e mudar class para esconder botões de remoção
         if( attachs == 'default' ){
