@@ -49,7 +49,13 @@ class Boros_Share_Tags {
         'description'     => false,
         'image_size'      => false,     // wp image size
         'fallback_image'  => true,      // caso não exista imagem definida, usar imagem padrão 
-        'image'           => false,
+        'image'           => array(
+            'src'    => false,
+            'width'  => false,
+            'height' => false,
+            'mime'   => false,
+            'alt'    => false,
+        ),
         'url'             => false,
         'type'            => false,
         'language'        => false,
