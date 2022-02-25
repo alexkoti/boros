@@ -129,7 +129,7 @@ if( !function_exists('pal') ){
 if( !function_exists('pcm') ){
     function pcm( $var = false, $legend = '', $pad = 0 ){
         $pre = PRE::init();
-        $pre->pcm( $var, $legend, $pad, $pad_pos );
+        $pre->pcm( $var, $legend, $pad );
     }
 }
 
