@@ -843,6 +843,15 @@ function _get_all_image_sizes(){
 
     $default_image_sizes = get_intermediate_image_sizes();
 
+    // full não faz parte de $_wp_additional_image_sizes nem de get_intermediate_image_sizes() 
+    $image_sizes = array(
+        'full' => array(
+            'width'  => '',
+            'height' => '',
+            'crop'   => 0,
+        ),
+    );
+
     foreach ( $default_image_sizes as $size ) {
         $image_sizes[ $size ][ 'width' ] = intval( get_option( "{$size}_size_w" ) );
         $image_sizes[ $size ][ 'height' ] = intval( get_option( "{$size}_size_h" ) );
