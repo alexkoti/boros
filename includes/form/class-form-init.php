@@ -61,7 +61,7 @@ class Boros_Form_Init {
 
     /**
      * Enfileirar ação para inicializar os forms apenas todos terem sido registrados
-     * Nas requisições ajax não é executado o hook 'wp', pois não é iniciadoo $wp_query, sendo necessário 
+     * Nas requisições ajax não é executado o hook 'wp', pois não é iniciado o $wp_query, sendo necessário 
      * utilizar o hook wp_loaded
      * 
      */
@@ -93,7 +93,7 @@ class Boros_Form_Init {
             }
 
             if( $init_form == true ){
-                pal('included and instantiated: '.$args['class_name'], '>>', 30);
+                pal('INCLUDED and instantiated', $args['class_name'], 30);
                 include_once($args['class_file']);
                 $class_name = $args['class_name'];
                 $form_name  = $args['form_name'];
@@ -136,6 +136,7 @@ class Boros_Form_Init {
             $args['allow_ajax'] = false;
         }
 
+        // adicionar apenas uma vez
         if( !isset($this->forms[ $args['form_name'] ]) ){
             $this->registered_forms[ $args['form_name'] ] = $args;
         }

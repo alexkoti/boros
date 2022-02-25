@@ -28,6 +28,12 @@ abstract class Boros_Form {
      */
     private $post_identifier = 'form_name';
 
+    private $form_config = [
+        'object_id'   => 0,
+        'object_type' => 'generic',
+        'form_name'   => 'test',
+    ];
+
     /**
      * Dados de $_POST
      * Irá ser normalizado, sanitizado e validado
@@ -52,6 +58,8 @@ abstract class Boros_Form {
     final private function setup_form(){
         $this->form_config();
         $this->form_fields();
+
+        $this->set_form_fields();
     }
 
     /**
@@ -61,6 +69,19 @@ abstract class Boros_Form {
      * 
      */
     final private function set_form_data(){
+
+        // @todo 1) CHECK POST- reload data on error
+        if( isset($_POST[$this->post_identifier]) ){
+            pal('enviado', 'POST', 50);
+        }
+        // @todo 2) ELSE LOAD PREVIOUS DATA IF EDITING
+        elseif( $this->form_config['object_id'] != 0 ){
+
+        }
+        // @todo OR LOAD DEFAULTS
+        else{
+
+        }
 
         $this->form_data = [
             'name' => 'Jose',
