@@ -128,6 +128,9 @@ jQuery(function($){
     /**
      * Atualizar imagem conforme template
      * 
+     * Após selecionar a imagem no modal de midia do WordPress, enviar os dados para o 
+     * template js 'tmpl-boros-media-selector-image', presente em media_Selecotr.php:footer()
+     * 
      * var obj     - botão
      * var new_src - novo src da imagem
      * var new_val - novo valor para ser salvo(image post_ID)

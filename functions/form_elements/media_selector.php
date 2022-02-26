@@ -2,6 +2,48 @@
 /**
  * MEDIA SELECTOR
  * 
+ * Exemplo resumido, imagem
+ * <code>
+ * array(
+ *     'name'    => 'my_custom_image',
+ *     'label'   => 'Imagem especial',
+ *     'type'    => 'media_selector',
+ *     'options' => array(
+ *          'image_size'    => 'medium',
+ *          'align'         => 'left',
+ *          'width'         => 300,
+ *          'height'        => 200,
+ *     ),
+ * ),
+ * </code>
+ * 
+ * Exemplo completo
+ * <code>
+ * array(
+ *     'name'    => 'my_custom_image',
+ *     'label'   => 'Imagem',
+ *     'type'    => 'media_selector',
+ *     'options' => array(
+ *         'multiple'       => false,       
+ *         'add_text'       => 'selecionar',
+ *         'remove_text'    => 'remover',
+ *         'remove_button'  => true,
+ *         'confirm_button' => 'confirmar',
+ *         'modal_title'    => 'Selecionar',
+ *         'file_type'      => 'image',
+ *         'file_orderby'   => 'date',
+ *         'file_order'     => 'DESC',
+ *         'select_type'    => 'image',
+ *         'image_size'     => 'thumbnail', 
+ *         'width'          => 150,
+ *         'height'         => 150,
+ *         'default_image'  => '',
+ *         'align'          => 'left',      
+ *         'show_info'      => false,
+ *     ),
+ * ),
+ * </code>
+ * 
  * @todo ajustes para outros tipos de arquivos além de imagem: file-icon, file-details
  * @todo múltiplos medias, com drag-drop - mostrar várias mídias por linha
  * 
@@ -23,22 +65,22 @@ class BFE_media_selector extends BorosFormElement {
     );
 
     var $default_options = array(
-        'multiple'       => false,                  // em caso de multiple, salvar as ids separada por vírgula
-        'add_text'       => 'selecionar',           // texto do botão de selecionar midia
-        'remove_text'    => 'remover',              // texto do botão de remover mídia, é usado no title do (X) na midia selecionada
-        'remove_button'  => true,                   // exibir o botão de remover mídia, o 'remove_text' aidna é usado no (x)
-        'confirm_button' => 'confirmar',            // modal: texto de confirmação no modal
-        'modal_title'    => 'Selecionar',           // modal: título
-        'file_type'      => 'image',                // modal: midia ''(tudo), 'image', 'audio', 'video', 'application/pdf', '*/pdf', '*/xls'
-        'file_orderby'   => 'date',                 // modal: critério de ordenação
-        'file_order'     => 'DESC',                 // modal: ordenação
-        'select_type'    => 'image',                // tipo de controle: 'image'(mostra thumbnail) ou 'file'(mostra ícone + info)
-        'image_size'     => 'thumbnail',            // tamanho da imagem conforme wp_image_sizes, em caso de 'file_type' diferente de 'image', será forçado para 'thumbnail'
-        'width'          => 150,                    // largura do thumbnail/ícone
-        'height'         => 150,                    // altura do thumbnail/ícone
-        'default_image'  => '',    // imagem padrão, mesmo para outros tipos não-imagem
-        'align'          => 'left',                 // alinhamento do controle
-        'show_info'      => false,                  // mostrar a caixa de informações, obrigatório para tipos não-imagem, estabelece largura mínima de 200px
+        'multiple'       => false,           // em caso de multiple, salvar as ids separada por vírgula
+        'add_text'       => 'selecionar',    // texto do botão de selecionar midia
+        'remove_text'    => 'remover',       // texto do botão de remover mídia, é usado no title do (X) na midia selecionada
+        'remove_button'  => true,            // exibir o botão de remover mídia, o 'remove_text' aidna é usado no (x)
+        'confirm_button' => 'confirmar',     // modal: texto de confirmação no modal
+        'modal_title'    => 'Selecionar',    // modal: título
+        'file_type'      => 'image',         // modal: midia ''(tudo), 'image', 'audio', 'video', 'txt', 'pdf', 'xls', 'csv' - aceita array para múltiplos filetypes
+        'file_orderby'   => 'date',          // modal: critério de ordenação
+        'file_order'     => 'DESC',          // modal: ordenação
+        'select_type'    => 'image',         // tipo de controle: 'image'(mostra thumbnail) ou 'file'(mostra ícone + info)
+        'image_size'     => 'thumbnail',     // tamanho da imagem conforme wp_image_sizes, em caso de 'file_type' diferente de 'image', será forçado para 'thumbnail'
+        'width'          => 150,             // largura do thumbnail/ícone
+        'height'         => 150,             // altura do thumbnail/ícone em (int) ou 'auto'
+        'default_image'  => '',              // src da imagem padrão, mesmo para outros tipos não-imagem
+        'align'          => 'left',          // alinhamento do controle
+        'show_info'      => false,           // mostrar a caixa de informações, obrigatório para tipos não-imagem, estabelece largura mínima de 200px
     );
 
     var $options = array();
@@ -53,7 +95,75 @@ class BFE_media_selector extends BorosFormElement {
      */
     var $has_thumb = '';
 
+    /**
+     * Contador de instâncias na página
+     * 
+     */
     private static $counter = 0;
+
+    /**
+     * Lista de mimes para converter para o modal js
+     * 
+     */
+    var $mimes = array(
+        'image'  => 'image',
+        'txt'    => 'text',
+        'text'   => 'text',
+        'pdf'    => 'application/pdf',
+        'xls'    => array(
+            'application/vnd.apple.numbers',
+            'application/vnd.oasis.opendocument.spreadsheet',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel.sheet.macroEnabled.12',
+            'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+        ),
+        'office' => array(
+            'application/vnd*', 
+            'application/msword'
+        ),
+        'zip'    => 'application/zip',
+        'audio'  => 'audio',
+        'video'  => 'video',
+        'mp4'    => 'video/mp4',
+        'avi'    => 'video/avi',
+        'mpg'    => 'video/mpg',
+        'webm'   => 'video/webm',
+    );
+
+    //application/msword
+    //application/vnd.openxmlformats-officedocument.wordprocessingml.document
+    //application/vnd.ms-word.document.macroEnabled.12
+    //application/vnd.ms-word.template.macroEnabled.12
+    //application/vnd.oasis.opendocument.text
+    //application/vnd.apple.pages
+    //application/pdf
+    //application/vnd.ms-xpsdocument
+    //application/oxps
+    //application/rtf
+    //application/wordperfect
+    //application/octet-stream
+    //
+    //application/x-gzip
+    //application/rar
+    //application/x-tar
+    //application/zip
+    //application/x-7z-compressed
+    //
+    //application/vnd.apple.numbers
+    //application/vnd.oasis.opendocument.spreadsheet
+    //application/vnd.ms-excel
+    //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    //application/vnd.ms-excel.sheet.macroEnabled.12
+    //application/vnd.ms-excel.sheet.binary.macroEnabled.12
+
+    /**
+     * Identificador para cada tipo de modal
+     * Quando um modal de imagem é aberto(criado) ele pode ser imediatamente reutilizado por outro controle que utilize
+     * as mesmas configurações de mime e ordenação
+     * 
+     */
+    var $query_id = '';
     
     /**
      * Adicionar apenas uma vez o template js do controle.
@@ -77,23 +187,18 @@ class BFE_media_selector extends BorosFormElement {
 
         $this->options = wp_parse_args( $this->data['options'], $this->default_options );
 
-        $this->options['select_type'] = (strpos($this->options['file_type'], 'image') === false) ? 'type-file' : 'type-image';
-        // forçar para que o wp-image-size em caso de 'type-file' seja thumbnail
-        if( $this->options['select_type'] == 'type-file' ){
-            $this->options['image_size'] = 'thumbnail';
-        }
+        $this->set_mimes();
 
         $show_info = ($this->options['show_info'] == true) ? ' show-info' : '';
         $opt       = htmlspecialchars(json_encode($this->options));
         $attrs     = make_attributes($this->data['attr']);
-        $query_id  = $this->set_query_id();
         $img_set   = ( $value > 0 ) ? 'vale-set' : 'value-not-set';
         $align     = ' align-' . $this->options['align'];
         $classes   = "{$img_set} {$align} {$this->options['select_type']} {$show_info}";
 
         ob_start();
         ?>
-        <div class="boros-media-selector <?php echo $classes; ?>" data-options="<?php echo $opt; ?>" id="boros-media-selector-<?php echo self::$counter; ?>" data-query-id="<?php echo $query_id; ?>">
+        <div class="boros-media-selector <?php echo $classes; ?>" data-options="<?php echo $opt; ?>" id="boros-media-selector-<?php echo self::$counter; ?>" data-query-id="<?php echo $this->query_id; ?>">
             <div class="inner">
                 <div class="selected-medias">
                     <?php $this->current_media( $value ); ?>
@@ -114,12 +219,39 @@ class BFE_media_selector extends BorosFormElement {
     }
 
     /**
-     * Definir a query_id, que será utilizada pelo js para agrupar os modais que utilizam da mesma query de busca de mídias
+     * Ajustar configuração js para mimes
+     * Permitir múltiplos mimes
      * 
      */
-    function set_query_id(){
-        $file_type = str_replace( array('/', '/*', '*/'), '-', $this->options['file_type'] );
-        return "{$file_type}-{$this->options['file_orderby']}-{$this->options['file_order']}";
+    function set_mimes(){
+        $this->options['file_type'] = (array)$this->options['file_type'];
+
+        // forçar para que o wp-image-size em caso de 'type-file' seja thumbnail
+        if( $this->options['select_type'] == 'file' ){
+            $this->options['image_size'] = 'thumbnail';
+        }
+
+        // Definir a query_id, que será utilizada pelo js para agrupar os modais que utilizam da mesma query de busca de mídias
+        $file_type = implode('-', $this->options['file_type']);
+        $this->query_id = "{$file_type}-{$this->options['file_orderby']}-{$this->options['file_order']}";
+
+        // ajustar o mime(s) para o js
+        $converted = array();
+        $force_file_input = false;
+        foreach( $this->options['file_type'] as $file_type ){
+            $mimecvt = (array)$this->mimes[ $file_type ];
+            foreach( $mimecvt as $mime ){
+                $converted[] = $mime;
+            }
+            
+            if( $file_type != 'image' ){
+                $force_file_input = true;
+            }
+        }
+        $this->options['file_type'] = $converted;
+
+        // forçar o controle de 'file' caso não seja imagem
+        $this->options['select_type'] = ($force_file_input == true) ? 'type-file' : 'type-image';
     }
 
     /**
