@@ -123,6 +123,7 @@ class BFE_media_selector extends BorosFormElement {
             'application/msword'
         ),
         'zip'    => 'application/zip',
+        'rar'    => 'application/x-rar',
         'audio'  => 'audio',
         'video'  => 'video',
         'mp4'    => 'video/mp4',
