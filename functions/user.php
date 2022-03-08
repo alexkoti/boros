@@ -65,7 +65,7 @@ function boros_verify_approved_user( $user_id ){
  * ==================================================
  * Substitui o plugin wp-email-login
  * 
- * @http://premium.wpmudev.org/blog/email-login/
+ * @link http://premium.wpmudev.org/blog/email-login/
  */
 //if( !function_exists('dr_email_login_authenticate') ){
 //	remove_filter( 'authenticate', 'wp_authenticate_username_password', 20 );
