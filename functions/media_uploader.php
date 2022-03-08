@@ -92,6 +92,7 @@ var base_plupload_config = <?php echo json_encode($plupload_init); ?>;
 /**
  * RETORNO DO AJAX :: ADICIONAR IMAGEM
  * 
+ * @todo gerenciar erro em saveUpload()
  * 
  */
 add_action( 'wp_ajax_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
@@ -333,13 +334,15 @@ Class MediaUpload {
         // salvar o arquivo no local correto
         $uploaded_file = $this->handleUpload( $file_info );
 
+        // retornar erro
+        //pel( is_wp_error( $uploaded_file ), 'is_wp_error' );
+		//pel($uploaded_file, 'uploaded_file');
+        if( !isset($uploaded_file['file']) ){
+            return $uploaded_file;
+        }
+
         // corrigir orientação de imagens, caso necessário
         $this->fix_image_orientation( $uploaded_file );
-		
-		//pre($uploaded_file, 'uploaded_file');
-
-		if ( ! isset( $uploaded_file['file'] ) )
-			return false;
 
 		// Build the Global Unique Identifier
 		$guid = $this->buildGuid( $uploaded_file['file'] );
