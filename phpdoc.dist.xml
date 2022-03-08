@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor configVersion="3.0">
+  <paths>
+    <output>../../docs/boros</output>
+    <cache>../../docs/cache/boros</cache>
+  </paths>
+  <version number="3.0">
+    <api>
+      <ignore hidden="true" symlinks="true">
+        <path>plugin-update-checker</path>
+        <path>vendors</path>
+      </ignore>
+    </api>
+  </version>
+  <template name="xml"></template>
+</phpdocumentor>
