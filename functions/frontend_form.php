@@ -14,25 +14,25 @@
  *       - onde for usado 'redirect_on_sucess', revisar para usar um método para a filtragem da url caso exista o 'success_code'. Atualmente está se repetindo diversas vezes pelo código
  *       - modificar a config de mensagens, permitindo que seja buscado as mensagens corretas usando o relaod ou usando redirect, através do código das mensagens.
  *         Assim é possível configurar o k => v das mensagens, e a function de mensagens poderá usar tanto as variáveis de $_GET em um redirect ou puxar do config quando for reload.
- <code>
- $messages = array(
-	'success' => array(
-		'name' => 'mensagem',
-		'value' => 'sucesso',
-	),
-	'error' => array(
-		'name' => 'error_message',
-		'value' => 'freaking_error',
-	),
-	// este erro só será disparado quando um form que necessita de usuário logado está aberto, e este desloga do site através de outra aba, e em seguida dá o submit no form.
-	// normalmente esse form não seria exibido para o usuário deslogado, o que permite um submit não autorizado.
-	'login_required' => array(
-		'name' => 'alert',
-		'value' => 'login_required',
-	)
-	// possibilitar adicionar novas chaves de erro
- );
- </code>
+ * <code>
+ * $messages = array(
+ *	'success' => array(
+ *		'name' => 'mensagem',
+ *		'value' => 'sucesso',
+ *	),
+ *	'error' => array(
+ *		'name' => 'error_message',
+ *		'value' => 'freaking_error',
+ *	),
+ *	// este erro só será disparado quando um form que necessita de usuário logado está aberto, e este desloga do site através de outra aba, e em seguida dá o submit no form.
+ *	// normalmente esse form não seria exibido para o usuário deslogado, o que permite um submit não autorizado.
+ *	'login_required' => array(
+ *		'name' => 'alert',
+ *		'value' => 'login_required',
+ *	)
+ *	// possibilitar adicionar novas chaves de erro
+ * );
+ * </code>
  *  - GRANDE MUDANÇA: modificar o processamento da maioria dos métodos para o action 'boros_frontend_form_output', quando realmente será utilizado. Dessa forma no __construct será apenas registrado de forma mais simples os diversos forms, sem grandes adições na memória.
  * - modificar a aplicação do 'action_append' para utilizar o add_query_arg() nativo do wordpress, deixando a string simples como opção
  * 
@@ -2181,7 +2181,7 @@ class BorosFrontendForm {
 			/**
 			 * Formulário liberado
 			 * 
-			 * @ATENÇÃO :  foi removido a class do <form> e mantido apenas o do parent
+			 * @WARNING :  foi removido a class do <form> e mantido apenas o do parent
 			 */
 			$class = isset($this->config['class']) ? "boros_frontend_form {$this->config['class']}" : 'boros_frontend_form';
 			
