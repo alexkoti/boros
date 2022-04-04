@@ -233,6 +233,9 @@ function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
         $btn_label = $label['button_new'];
         $scr       = wp_get_attachment_image_src( $_thumbnail_id, $size );
         $thumbnail = "<img src='{$scr[0]}' class='the_post_thumbnail' />";
+        if( !isset($scr[0]) ){
+            pel("SRC não encontrado para ARQUIVO: {$_thumbnail_id}:{$size}");
+        }
     }
     ?>
     <div class="plupload-upload-uic hide-if-no-js <?php if ($multiple): ?>plupload-upload-uic-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-upload-ui">
