@@ -421,6 +421,8 @@ Class MediaUpload {
      * 
      * @link https://stackoverflow.com/a/13963783 - identificar a rotação correta a ser aplicada à imagem
      * @link https://wordpress.stackexchange.com/a/283531 - editar a imagem no momento correto
+     * @link https://stackoverflow.com/questions/8106683/exif-read-data-incorrect-app1-exif-identifier-code - remover 
+     * erro de leitura de exif
      * 
      */
     public function fix_image_orientation( $image_data ){
@@ -428,7 +430,7 @@ Class MediaUpload {
         // apenas mime image
         if( substr( $image_data['type'], 0, 5 ) == 'image' ){
             // ler dados do exif
-            $exif = exif_read_data( $image_data['file'] );
+            $exif = @exif_read_data( $image_data['file'] );
             $rotation = 0;
 
             // caso Orientation esteja declarado
