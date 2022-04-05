@@ -421,43 +421,52 @@ Class MediaUpload {
      * 
      * @link https://stackoverflow.com/a/13963783 - identificar a rotação correta a ser aplicada à imagem
      * @link https://wordpress.stackexchange.com/a/283531 - editar a imagem no momento correto
-     * @link https://stackoverflow.com/questions/8106683/exif-read-data-incorrect-app1-exif-identifier-code - remover 
-     * erro de leitura de exif
      * 
      */
     public function fix_image_orientation( $image_data ){
 
-        // apenas mime image
-        if( substr( $image_data['type'], 0, 5 ) == 'image' ){
+        $mime = explode('/', $image_data['type']);
+
+        // apenas images jpg/jpeg
+        if( $mime[0] == 'image' && in_array($mime[1], array('jpg', 'jpeg')) ){
+
+            try {
+                $exif = exif_read_data( $image_data['file'] );
+            }
+            catch (Exception $exp) {
+                $exif = false;
+            }
+
             // ler dados do exif
-            $exif = @exif_read_data( $image_data['file'] );
-            $rotation = 0;
-
-            // caso Orientation esteja declarado
-            if (!empty($exif['Orientation'])) {
-                // definir a rotação a ser aplicada
-                switch ($exif['Orientation']) {
-                    case 3:
-                        $rotation = 180;
-                        break;
-        
-                    case 6:
-                        $rotation = -90;
-                        break;
-        
-                    case 8:
-                        $rotation = 90;
-                        break;
-                }
-
-                // iniciar editor
-                if( $rotation != 0 ){
-                    $image_editor = wp_get_image_editor( $image_data['file'] );
-                    if( !is_wp_error($image_editor) ){
-                        // rotacionar
-                        $image_editor->rotate( $rotation );
-                        // salvar
-                        $image_editor->save( $image_data['file'] );
+            if( $exif ){
+                $rotation = 0;
+    
+                // caso Orientation esteja declarado
+                if (!empty($exif['Orientation'])) {
+                    // definir a rotação a ser aplicada
+                    switch ($exif['Orientation']) {
+                        case 3:
+                            $rotation = 180;
+                            break;
+            
+                        case 6:
+                            $rotation = -90;
+                            break;
+            
+                        case 8:
+                            $rotation = 90;
+                            break;
+                    }
+    
+                    // iniciar editor
+                    if( $rotation != 0 ){
+                        $image_editor = wp_get_image_editor( $image_data['file'] );
+                        if( !is_wp_error($image_editor) ){
+                            // rotacionar
+                            $image_editor->rotate( $rotation );
+                            // salvar
+                            $image_editor->save( $image_data['file'] );
+                        }
                     }
                 }
             }
