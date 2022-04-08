@@ -20,7 +20,7 @@ class BorosJs {
     var $current     = '';
 
     var $options     = array(
-        'src'       => '/wp-includes/js/jquery/jquery.js',
+        'src'       => '/wp-includes/js/jquery/jquery.min.js',
         'ver'       => null,
         'in_footer' => true,
         'priority'  => 10,
