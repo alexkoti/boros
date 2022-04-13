@@ -30,7 +30,7 @@ define( 'BOROS_URL',        plugins_url( '/', __FILE__ ) );
 define( 'BOROS_CSS',        plugins_url( 'functions/form_elements/css/', __FILE__ ) );
 define( 'BOROS_IMG',        plugins_url( 'functions/form_elements/css/img/', __FILE__ ) );
 define( 'BOROS_JS',         plugins_url( 'functions/form_elements/js/', __FILE__ ) );
-define( 'BOROS_VERSION',    '2022.02.26.1' );
+define( 'BOROS_VERSION',    '2022.04.13.1' );
 
 // debug geral
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'debug.php' );
