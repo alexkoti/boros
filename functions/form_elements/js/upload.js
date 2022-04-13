@@ -61,7 +61,7 @@ jQuery(document).ready(function($){
 				pconfig["multipart_params"]["post_parent"] = post_parent.val();
 				pconfig["multipart_params"]["size"]        = thumbnail_size.val();
                 pconfig["multipart_params"]["_ajax_nonce"] = $this.find(".ajaxnonceplu").attr("id").replace("ajaxnonceplu", "");
-                pconfig['filters']['mime_types'] = [{ title : "Image files", extensions : "jpg,jpeg,gif,png" }];
+                pconfig['filters']['mime_types']           = [{ title : "Image files", extensions : "jpg,JPG,jpeg,JPEG,gif,png,PNG" }];
 				
 				/**
 				 * Apenas para múltiplos
