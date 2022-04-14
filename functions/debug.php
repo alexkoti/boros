@@ -31,8 +31,21 @@ function boros_hooked_functions( $hook = '' ) {
     $ret = [];
     foreach( $wp_filter[$hook] as $priority => $realhook ){
         foreach( $realhook as $hook_k => $hook_v ){
-            $hook_echo = (is_array($hook_v['function']) ? get_class($hook_v['function'][0]) . ':' . $hook_v['function'][1] :$hook_v['function']);
-            $ret[$priority] = $hook_echo;
+            if( is_array($hook_v['function']) ){
+                $name = get_class($hook_v['function'][0]);
+                $ret[$priority][$name] = array(
+                    'priority' => $priority,
+                    'object'   => $hook_v['function'][0],
+                    'method'   => $hook_v['function'][1],
+                );
+            }
+            else{
+                $name = $hook_v['function'];
+                $ret[$priority][$name] = array(
+                    'priority' => $priority,
+                    'function' => $name,
+                );
+            }
         }
 
     }
