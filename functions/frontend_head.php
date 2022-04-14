@@ -382,6 +382,7 @@ class BorosCss {
  * 
  * $args['thumbnail_meta_name'] - escolher outro post_meta para buscar a imagem
  * 
+ * @deprecated
  * 
  */
 function opengraph_tags( $args = false ){
