@@ -111,7 +111,7 @@ class Boros_Share_Tags {
         // buscar valores padrão em caso de false
         // valores vazios são desconsiderados, pois pode ser um valor intencional
         foreach( $this->info as $key => $value ){
-            if( $value === false ){
+            if( $value === false || ($key == 'image' && empty($value['src'])) ){
                 $func = "set_{$key}";
                 $this->$func();
             }
