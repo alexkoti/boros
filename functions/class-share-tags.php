@@ -29,8 +29,7 @@ class Boros_Share_Tags {
     var $is_term_archive = false;
 
     /**
-     * Imagem padrão. O estado inicial é um array vazio,
-     * caso não exista, será modificado para false
+     * Dados padrão para imagem, caso os índices sejam false, serão ignorados na renderização
      * 
      */
     var $default_image = array();
@@ -294,7 +293,13 @@ class Boros_Share_Tags {
                 $this->default_image = $this->set_image_data( $image_id );
             }
             else{
-                $this->default_image = false;
+                $this->default_image = array(
+                    'src'    => false,
+                    'width'  => false,
+                    'height' => false,
+                    'mime'   => false,
+                    'alt'    => false,
+                );
             }
             return $this->default_image;
         }
