@@ -35,9 +35,24 @@ function fix_query_monitor_frontend($wp_scripts){
  */
 add_filter('http_request_args', 'add_expect_header');
 function add_expect_header(array $arguments){
-    if( is_array($arguments['headers']) ){
-        $arguments['headers']['expect'] = !empty($arguments['body']) && (!is_array($arguments['body']) && strlen($arguments['body']) > 1048576) ? '100-Continue' : '';
+    $arguments['headers']['expect'] = '';
+    
+    if (is_array($arguments['body'])) {
+        $bytesize = 0;
+        $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($arguments['body']));
+
+        foreach ($iterator as $datum) {
+            $bytesize += strlen((string) $datum);
+
+            if ($bytesize >= 1048576) {
+                $arguments['headers']['expect'] = '100-Continue';
+                break;
+            }
+        }
+    } elseif (!empty($arguments['body']) && strlen((string) $arguments['body']) > 1048576) {
+        $arguments['headers']['expect'] = '100-Continue';
     }
+
     return $arguments;
 }
 
