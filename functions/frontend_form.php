@@ -1334,7 +1334,7 @@ class BorosFrontendForm {
 					$config = array_search_kv( 'name', $meta_key, $this->elements );
 					
 					// Salvar upload. Mesmo que esteja configurado para 'skip_save', o arquivo será enviado para o Mídia do WordPress, e o ID do attachment será salvo como post_meta
-					if( $config['type'] == 'file' ){
+					if( isset($config['type']) && $config['type'] == 'file' ){
 						// apenas caso tenha sido enviado de fato algum arquivo, caso contrário pular, ou salvará o array de upload com dados vazios
 						if( isset($meta_value['size']) and $meta_value['size'] > 0 ){
                             
