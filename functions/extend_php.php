@@ -188,30 +188,14 @@ function IMAGE( $args, $echo = true ){
  * SELF URL =========================================
  * ==================================================
  * Retornar a url atual. Ideal para actions de forms, e retornos.
+ * Adiciona o domíno do site, que não é incluso no add_query_arg() 
  * 
- * @return string - a url atual pedida no navegador
+ * @return string - a url atual pedida no navegador, com filtros e args aplicados
  */
 function self_url( $args = array() ){
-    $server_name = '';
-    $request_uri = '';
-    
-    if ( (! empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') || (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (! empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ){
-        $scheme = 'https';
-    } else {
-        $scheme = 'http';
-    }
-    
-    // No contexto de WP-CLI, não existem os índices SERVER_NAME e REQUEST_URI, já que a requisição não é via HTTP
-    if( isset($_SERVER['SERVER_NAME']) ){
-        $server_name = $_SERVER['SERVER_NAME'];
-    }
-    if( isset($_SERVER['REQUEST_URI']) ){
-        $request_uri = $_SERVER['REQUEST_URI'];
-    }
-    
-    $url = "{$scheme}://{$server_name}{$request_uri}";
-    $url = add_query_arg( $args, $url );
-    $url = apply_filters( 'boros_self_url', $url, $args );
+    $url  = add_query_arg( $args );
+    $home = is_multisite() ? network_site_url($url) : home_url($url);
+    $url  = apply_filters( 'boros_self_url', $home, $args );
     return $url;
 }
 
