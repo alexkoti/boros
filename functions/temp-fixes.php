@@ -19,8 +19,7 @@
  * O query monitor espera que jquery seja carregado no header, o que causa erro na exibição do painel.
  * 
  */
-add_action('wp_default_scripts', function(){
-    global $wp_scripts;
+add_action('wp_default_scripts', function( $wp_scripts ){
 
     // não precisa verificar a declaração de 'query-monitor', pois o método WP_Dependencies->add_data() já faz essa verificação
     $wp_scripts->add_data( 'query-monitor', 'group', 1 );
