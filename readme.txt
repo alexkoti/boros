@@ -15,7 +15,13 @@ Funções para o admin do WordPress, páginas personalizadas de administração(
 
 == Changelog ==
 
-= 1.5.8 (2021.03.26)
+= 1.5.94 (2022.09.19)
+* melhorias uploads
+* melhoria self_url()
+* nova função auxiliar boros_remove_filters_with_method_name()
+* ajuste ogtags imagens
+
+= 1.5.9 (2021.03.26)
 * correção para header do curl
 
 = 1.5.8 (2021.02.12)
