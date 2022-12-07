@@ -310,7 +310,7 @@ Class MediaUpload {
 	 * $final_file['file'] = $uploaded_file['file'];
 	 * $final_file['file_info'] = $file_info[];
 	 */
-	public function saveUpload( $field_name = null, $post_parent = 0, $user_id = null, $elem_options ) {
+	public function saveUpload( $field_name = null, $post_parent = 0, $user_id = null, $elem_options = array() ) {
 
         if ( is_null( $field_name ) ){
             die('Need field_name');

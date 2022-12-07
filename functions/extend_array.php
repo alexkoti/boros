@@ -17,7 +17,7 @@
  * IMPORTANTE: a declaração de argumentos é inversa da função original
  * 
  */
-function boros_parse_args( $defaults = '', $args ){
+function boros_parse_args( $defaults = '', $args = array() ){
 	if ( is_object( $args ) )
 		$r = get_object_vars( $args );
 	elseif ( is_array( $args ) )
