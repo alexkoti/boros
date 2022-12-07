@@ -112,12 +112,13 @@ class BorosAdminPages {
 	 * 1* a prioridade 9 é necessária ao 'admin_menu' para as situações onde um post_type ficará como sub-menu de uma options-page. Assim a page será registrada antes do post_type, fazendo com que
 	 * o primeiro level do menu aponte para a option-page, caso contrário será apontado para o post_type
 	 */
-	function __construct( $config, $folder_base, $url_base ){
+	function __construct( $config, $folder_base, $url_base, $config_dir = 'admin_pages' ){
 		//if( isset($_POST) ){ pre($_POST); die(); }
 		
-		$this->pages = $config;
+		$this->pages       = $config;
 		$this->folder_base = $folder_base;
-		$this->url_base = $url_base;
+		$this->url_base    = $url_base;
+		$this->config_dir  = $config_dir;
 		
 		//add_action( 'init', array($this, 'includes') );
 		add_action( 'admin_init', array($this, 'frontend') );
@@ -149,7 +150,7 @@ class BorosAdminPages {
 				);
 				
 				// include do arquivo ou armazena as informações de arquivo não encontrado
-				$admin_page_file = $this->folder_base . "admin_pages/{$page_name}.php";
+				$admin_page_file = $this->folder_base . "{$this->config_dir}/{$page_name}.php";
 				if( file_exists($admin_page_file) ){
 					include_once( $admin_page_file );
 					// Separar as abas, register settings e armazenar os names($views) das páginas
@@ -176,7 +177,7 @@ class BorosAdminPages {
 					);
 					
 					// include do arquivo ou armazena as informações de arquivo não encontrado
-					$sub_page_file = $this->folder_base . "admin_pages/{$subpage_name}.php";
+					$sub_page_file = $this->folder_base . "{$this->config_dir}/{$subpage_name}.php";
 					if( file_exists($sub_page_file) ){
 						include_once( $sub_page_file );
 						// Separar as abas, register settings e aramazenar os names($views) das páginas
@@ -214,17 +215,17 @@ class BorosAdminPages {
 		$page_or_sub_page = array_key_search_r( $page_name, $this->pages );
 		if( isset($page_or_sub_page['tabs']) ){
 			// include arquivo principal
-			include_once( $this->folder_base . "admin_pages/{$page_name}.php" );
+			include_once( $this->folder_base . "{$this->config_dir}/{$page_name}.php" );
 			// include tabs
 			foreach( $page_or_sub_page['tabs'] as $tab => $title ){
-				$tab_file = $this->folder_base . "admin_pages/{$page_name}_{$tab}.php";
+				$tab_file = $this->folder_base . "{$this->config_dir}/{$page_name}_{$tab}.php";
 				if( file_exists($tab_file) )
 					include_once( $tab_file );
 			}
 		}
 		// include arquivo principal
 		else{
-			$admin_page_file = $this->folder_base . "admin_pages/{$page_name}.php";
+			$admin_page_file = $this->folder_base . "{$this->config_dir}/{$page_name}.php";
 			if( file_exists($admin_page_file) )
 				include_once( $admin_page_file );
 		}
@@ -310,9 +311,9 @@ class BorosAdminPages {
 			foreach( $tabs as $tab => $title ){
 				// considerar apenas a partir da segunda aba, pois a primeira já carregada antes
 				if( $tab != key($tabs) ){
-					//pre($this->folder_base . "admin_pages/{$page_name}_{$tab}.php");
+					//pre($this->folder_base . "{$this->config_dir}/{$page_name}_{$tab}.php");
 					if( array_key_exists( $tab, $tabs ) ){
-						$filename = $this->folder_base . "admin_pages/{$page_name}_{$tab}.php";
+						$filename = $this->folder_base . "{$this->config_dir}/{$page_name}_{$tab}.php";
 						if( file_exists( $filename ) ){
 							include_once( $filename );
 							$config = $this->load_config( "{$page_name}_{$tab}" );
