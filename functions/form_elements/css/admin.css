@@ -599,19 +599,15 @@ body#media-upload .media-upload-form .media-item .pinkynail {
 }
 
 /**
- * Resetar margins e paddings dos meta_boxes para possibilitar controles que ocupem todo a área interna do meta_box, como wp_editor|tiny_mce e rodapé de help.
+ * Resetar margins e paddings dos meta_boxes para possibilitar controles que ocupem todo a área interna do meta_box, 
+ * como wp_editor|tiny_mce e rodapé de help. #post não existe em telas gutenberg, portanto só será aplicado em classic editor
+ *
  */
-.boros_meta_block td.mceIframeContainer, 
-#poststuff .boros_meta_box .inside,
-#poststuff .boros_meta_box .inside .form-table {
-	margin:0;
-	padding:0;
-}
-.boros_meta_block .label_radio,
-.boros_meta_block .label_checkbox,
-.label_radio, 
-.label_checkbox {
-	
+#post .boros_meta_block td.mceIframeContainer, 
+#post .boros_meta_box .inside,
+#post .boros_meta_box .inside .form-table {
+    margin:0;
+    padding:0;
 }
 
 
