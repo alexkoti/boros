@@ -587,15 +587,22 @@ body#media-upload .media-upload-form .media-item .pinkynail {
 }
 .boros_meta_block th {
 	font-weight:normal;
-	padding:5px 7px;
 	text-align:left;
 	vertical-align:top;
 	width:25%;
 	overflow:visible;
 }
 .boros_meta_block td {
-	padding:5px 7px;
 	overflow:visible;
+}
+.boros_meta_block th,
+.boros_meta_block td {
+    padding: 5px 0;
+}
+/* Classic editor */
+#post .boros_meta_block th,
+#post .boros_meta_block td {
+    padding: 5px 7px;
 }
 
 /**
