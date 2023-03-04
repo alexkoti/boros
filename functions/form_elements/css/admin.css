@@ -606,6 +606,17 @@ body#media-upload .media-upload-form .media-item .pinkynail {
 }
 
 /**
+ * Correção de padding interno ara metabox gutenberg de sidebar
+ * 
+ */
+.interface-interface-skeleton__sidebar .edit-post-meta-boxes-area .postbox > .inside {
+    padding: 0 16px 16px;
+}
+.interface-interface-skeleton__sidebar .edit-post-meta-boxes-area #poststuff h2.hndle {
+    padding: 0 16px;
+}
+
+/**
  * Resetar margins e paddings dos meta_boxes para possibilitar controles que ocupem todo a área interna do meta_box, 
  * como wp_editor|tiny_mce e rodapé de help. #post não existe em telas gutenberg, portanto só será aplicado em classic editor
  *
