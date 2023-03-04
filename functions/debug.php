@@ -32,12 +32,23 @@ function boros_hooked_functions( $hook = '' ) {
     foreach( $wp_filter[$hook] as $priority => $realhook ){
         foreach( $realhook as $hook_k => $hook_v ){
             if( is_array($hook_v['function']) ){
-                $name = get_class($hook_v['function'][0]);
-                $ret[$priority][$name] = array(
-                    'priority' => $priority,
-                    'object'   => $hook_v['function'][0],
-                    'method'   => $hook_v['function'][1],
-                );
+                // $hook_v['function'] pode vir apenas como chamada do namespace, ex 'Automattic\Jetpack\Stats\Tracking_Pixel'
+                // Tratar quando é retornado apenas o caminho de namespace da class usada no hook, em vez do objeto
+                if( is_object($hook_v['function'][0]) ){
+                    $name = get_class($hook_v['function'][0]);
+                    $ret[$priority][$name] = array(
+                        'priority' => $priority,
+                        'object'   => $hook_v['function'][0],
+                        'method'   => $hook_v['function'][1],
+                    );
+                }
+                else{
+                    $name = $hook_v['function'][0];
+                    $ret[$priority][$name] = array(
+                        'priority' => $priority,
+                        'class'    => $name,
+                    );
+                }
             }
             else{
                 $name = $hook_v['function'];
