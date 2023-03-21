@@ -92,7 +92,12 @@ var base_plupload_config = <?php echo json_encode($plupload_init); ?>;
 /**
  * RETORNO DO AJAX :: ADICIONAR IMAGEM
  * 
- * @todo gerenciar erro em saveUpload()
+ * @todo Gerenciar erro em saveUpload()
+ * 
+ * @todo Verificar permissão do usuário para o post parent
+ *       A princípio o perigo é um pouco menor, pois o 'initialize_plupload' no js é executado já no onload, associando
+ *       correntamente o post_parent declarado no html original, então o usuário precisará modificar as configurações do
+ *       plupload já inicializado.
  * 
  */
 add_action( 'wp_ajax_boros_drop_upload_add', 'boros_drop_upload_add_ajax' );
