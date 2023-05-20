@@ -161,6 +161,7 @@ class Boros_Share_Tags {
         }
         elseif( $this->is_singular ){
             $text = !empty($this->post->post_excerpt) ? $this->post->post_excerpt : $this->post->post_content;
+            $text = apply_filters('the_content', $text);
             $this->info['description'] = $this->plain_text( $text );
         }
         elseif( $this->is_term_archive ){
