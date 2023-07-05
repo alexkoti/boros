@@ -20,10 +20,11 @@ class BorosJs {
     var $current     = '';
 
     var $options     = array(
-        'src'       => '/wp-includes/js/jquery/jquery.min.js',
-        'ver'       => null,
-        'in_footer' => true,
-        'priority'  => 10,
+        'src'        => '/wp-includes/js/jquery/jquery.min.js',
+        'ver'        => null,
+        'in_footer'  => true,
+        'priority'   => 10,
+        'vendor_dir' => '/vendors/',
     );
 
     var $queue = array();
@@ -50,7 +51,7 @@ class BorosJs {
             add_action( 'wp_footer', array($this, 'cond_footer'), $this->options['priority'] );
             
             $this->js_dir      = get_bloginfo('template_url') . '/js/';
-            $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
+            $this->vendors_dir = get_bloginfo('template_url') . $this->options['vendor_dir'];
             
             wp_deregister_script( 'jquery' );
             $this->queue[] = array(
@@ -230,8 +231,9 @@ class BorosCss {
     var $current = '';
 
     var $options = array(
-        'ver'      => null,
-        'priority' => 10,
+        'ver'        => null,
+        'priority'   => 10,
+        'vendor_dir' => '/vendors/',
     );
 
     var $queue = array();
@@ -248,7 +250,7 @@ class BorosCss {
             boros_add_dashboard_notification('old_enqueue_css_hook', 'É necessário registrar os CSS no hook "init", em vez do atual "wp_print_styles"');
         }
         $this->css_dir     = get_bloginfo('template_url') . '/css/';
-        $this->vendors_dir = get_bloginfo('template_url') . '/vendors/';
+        $this->vendors_dir = get_bloginfo('template_url') . $this->options['vendor_dir'];
 
         add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'), $this->options['priority']);
     }
