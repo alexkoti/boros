@@ -812,7 +812,7 @@ class BorosFormElement {
 			}
 		}
 		else{
-			$this->label = "<label for='{$for}'>{$this->data['label']}</label>{$this->label_helper}<br class='label_divider' />";
+			$this->label = "<label for='{$for}'>{$this->data['label']}</label>{$this->label_helper}";
 		}
 		
 		// @todo deprecated : aplicar filtros - formato antigo que envia apenas o $this->data
@@ -831,8 +831,9 @@ class BorosFormElement {
 		$this->label = apply_filters( "boros_form_element_{$this->data['attr']['id']}_label", $this->label, $this );
 		
 		// remover caso o label resultante seja vazio
-		if( $this->label == "<label for='{$for}'></label><br class='label_divider' />" )
+		if( $this->label == "<label for='{$for}'></label>" ){
 			$this->label = '';
+        }
 	}
 	
 	/**
