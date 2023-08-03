@@ -8,17 +8,20 @@
 
 
 /**
- * Applicar term_order caso seja requerido.
+ * Aplicar term_order caso seja requerido.
  * Inspirado no plugin my-category-order
  * 
+ * Necessário para o taxonomy_term_order() e o form element content_order
+ * 
  */
-//add_filter( 'get_terms_orderby', 'custom_terms_orderby', 10, 2 );
-function custom_terms_orderby( $orderby, $args ){
-	if($args['orderby'] == 'term_order')
-		return 't.term_order';
-	else
-		return $orderby;
-}
+add_filter( 'get_terms_orderby', function( $orderby, $args ){
+    if($args['orderby'] == 'term_order'){
+        return 't.term_order';
+    }
+    else{
+        return $orderby;
+    }
+}, 10, 2 );
 
 /**
  * ==================================================
