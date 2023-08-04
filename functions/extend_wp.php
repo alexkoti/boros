@@ -922,6 +922,7 @@ class Boros_Pagination {
 		'next_text'      => '›',
 		'page_text'      => '%PAGE_NUMBER%',
 		'current_text'   => '%PAGE_NUMBER%',
+        'extra_query_args' => false,
 	);
 	private $output = '';
 	
@@ -1059,6 +1060,12 @@ class Boros_Pagination {
 		elseif( $this->query_type == 'normal' ){
 			$url = ($link == true) ? get_pagenum_link($page) : false;
 		}
+
+        // query args adicionais, pode remover itens em caso de valor 'false'
+        if( !empty($this->options['extra_query_args']) ){
+            $url = add_query_arg($this->options['extra_query_args'], $url);
+        }
+
 		$item = array(
 			'page' => $page,
 			'type' => $type,
