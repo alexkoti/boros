@@ -10,6 +10,17 @@
  * @todo rever o methodo $this->jquery(), para adicionar scripts já registrados
  * @todo: rever a forma de usar o js do google, definir via option ou constante de wp-config para diferenciar localhost do server
  * @todo: trocar ou adicionar setar a configuração via array único
+ * 
+ * 
+ * .htaccess para utilizar o revv
+ * @link http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
+ * 
+ * <IfModule mod_rewrite.c>
+ *     RewriteEngine On
+ *     RewriteCond %{REQUEST_FILENAME} !-f
+ *     RewriteRule ^(.+)\.(\d+)\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest)$ $1.$3 [L]
+ * </IfModule>
+ * 
  */
 class BorosJs {
 
@@ -54,11 +65,15 @@ class BorosJs {
             $this->vendors_dir = get_bloginfo('template_url') . $this->options['vendor_dir'];
             
             wp_deregister_script( 'jquery' );
+            
+            $revv = ($this->options['revv'] == true) ? ".{$this->options['ver']}" : '';
+            $ver  = ($this->options['revv'] == true) ? NULL : $this->options['ver'];
+            $src  = ($this->options['revv'] == true) ? str_replace('.js', "{$revv}.js", $this->options['src']) : $this->options['src'];
             $this->queue[] = array(
                 'jquery',
-                $this->options['src'],
+                $src,
                 false,
-                $this->options['ver'],
+                $ver,
                 $this->options['in_footer']
             );
             
@@ -92,8 +107,10 @@ class BorosJs {
      * 
      */
     function add( $name, $folder = false, $deps = false, $in_footer = true, $cond = false ){
-        $dir = ($folder) ? $folder . '/' : '';
-        $src = $this->js_dir . $dir . $name . '.js';
+        $dir  = ($folder) ? $folder . '/' : '';
+        $revv = ($this->options['revv'] == true) ? ".{$this->options['ver']}" : '';
+        $ver  = ($this->options['revv'] == true) ? NULL : $this->options['ver'];
+        $src  = "{$this->js_dir}{$dir}{$name}{$revv}.js";
         $this->current = $name;
         if( is_null($in_footer) ){
             $in_footer = false;
@@ -108,7 +125,7 @@ class BorosJs {
             );
         }
         else{
-            $this->queue[] = array( $name, $src, $deps, $this->options['ver'], $in_footer );
+            $this->queue[] = array( $name, $src, $deps, $ver, $in_footer );
         }
         return $this;
     }
@@ -128,14 +145,16 @@ class BorosJs {
      * 
      */
     function vendor( $name, $folder = false, $deps = false, $in_footer = true ){
-        $dir = ($folder) ? $folder . '/' : '';
-        $src = $this->vendors_dir . $dir . $name . '.js';
+        $dir  = ($folder) ? $folder . '/' : '';
+        $revv = ($this->options['revv'] == true) ? ".{$this->options['ver']}" : '';
+        $ver  = ($this->options['revv'] == true) ? NULL : $this->options['ver'];
+        $src  = "{$this->vendors_dir}{$dir}{$name}{$revv}.js";
         $this->current = $name;
         if( is_null($in_footer) ){
             $in_footer = false;
         }
         
-        $this->queue[] = array( $name, $src, $deps, $this->options['ver'], $in_footer );
+        $this->queue[] = array( $name, $src, $deps, $ver, $in_footer );
         return $this;
     }
     
@@ -186,19 +205,19 @@ class BorosJs {
             $config = array('src' => $config);
         }
         $defaults = array(
-            'name' => 'abs',
-            'src' => '',
-            'parent' => false,
-            'ver' => 1,
+            'name'      => 'abs',
+            'src'       => '',
+            'parent'    => false,
+            'ver'       => 1,
             'in_footer' => true,
-            'cond' => false,
+            'cond'      => false,
         );
         $config = boros_parse_args( $defaults, $config );
         if( $config['cond'] == true ){
             $pos = ($config['in_footer'] == true) ? 'footer' : 'head';
             $this->conditionals[$pos][] = array(
                 'name' => $config['name'],
-                'src' => $config['src'],
+                'src'  => $config['src'],
                 'cond' => $config['cond'],
             );
         }
@@ -233,7 +252,8 @@ class BorosCss {
     var $options = array(
         'ver'        => null,
         'priority'   => 10,
-        'vendor_dir' => '/vendors/',
+        'vendor_dir' => '/vendors/',    // definir local da pasta vendor
+        'revv'       => false,          // aplicar versão no nome do arquivo, ex "format.2023.01.01.css", necessário regra htaccess para revving
     );
 
     var $queue = array();
@@ -274,10 +294,12 @@ class BorosCss {
      * @return o próprio objeto, para que seja possível o encadeamento.
      */
     function add( $name, $folder = false, $media = 'screen', $parent = false ){
-        $dir = ($folder) ? $folder . '/' : '';
-        $src = $this->css_dir . $dir . $name . '.css';
+        $dir  = ($folder) ? $folder . '/' : '';
+        $revv = ($this->options['revv'] == true) ? ".{$this->options['ver']}" : '';
+        $ver  = ($this->options['revv'] == true) ? NULL : $this->options['ver'];
+        $src  = "{$this->css_dir}{$dir}{$name}{$revv}.css";
         $this->current = $name;
-        $this->queue[] = array($name, $src, $parent, $this->options['ver'], $media);
+        $this->queue[] = array($name, $src, $parent, $ver, $media);
     }
     
     /**
@@ -285,10 +307,12 @@ class BorosCss {
      * 
      */
     function vendor( $name, $folder = false, $media = 'screen', $parent = false ){
-        $dir = ($folder) ? $folder . '/' : '';
-        $src = $this->vendors_dir . $dir . $name . '.css';
+        $dir  = ($folder) ? $folder . '/' : '';
+        $revv = ($this->options['revv'] == true) ? ".{$this->options['ver']}" : '';
+        $ver  = ($this->options['revv'] == true) ? NULL : $this->options['ver'];
+        $src  = "{$this->vendors_dir}{$dir}{$name}{$revv}.css";
         $this->current = $name;
-        $this->queue[] = array($name, $src, $parent, $this->options['ver'], $media);
+        $this->queue[] = array($name, $src, $parent, $ver, $media);
     }
     
     /**
