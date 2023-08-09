@@ -2,20 +2,99 @@
 /**
  * FORM ELEMENT: DUPLICABLE_GROUP
  * 
- * WARNING: SUPER BUG DA MORTE [here be dragons, this is sparta, deixem a esperança do lado fora ] >>>>>>>>>>>>>>>>>>>>>>>>>> duplicação de elementos em option_page:
- * 		Ao duplicar os elementos em uma option page(em meta_box funciona normalmente) os inputs perdem o 'registro' no DOM, e não enviam informações ao $_POST, inclusive 
- *		perdendo a capacidade de envio pela tecla ENTER.
- * 		Isso se aplica a qualquer navegador.
+ * WARNING: duplicação de elementos em option_page:
+ *          Ao duplicar os elementos em uma option page(em meta_box funciona normalmente) os inputs perdem o 'registro' no DOM, 
+ *          e não enviam informações ao $_POST, inclusive perdendo a capacidade de envio pela tecla ENTER.
+ *          Isso se aplica a qualquer navegador.
+ * 
+ * @button_prepend e $button_append - botão de adicionar item no começo e fim da lista
+ * 
+ * @compact_button - Mostrar checkbox para esconder elementos nos itens e deixar mais fácil o drag-drop
+ * Por padrão o controle irá manter o primeiro campo visível e esconder os demais
+ * Para escolher um mais campos para sempre serem visíveis no modo compacto, utilizar a class 'compact-show' no [attr][elem_class]
+ * 
+ * Para mostrar campos condicionais dependentes de um select, utilizar a class 'conditional-type' em [attr][class] do select e 
+ * as classes em [attr][elem_class] nos campos dependentes:
+ *   'conditional-row'
+ *   'row-{SELECT-FIELD-VALUE}'
+ * Assim no onchange do select, será exibido todos os campos com a class com o mesmo valor do select
+ * 
+ * Exemplo de configuração de elemento, com opção de visibilidade condicional. Neste exemplo, quando o select 'type' é 
+ * modificado, será exibido/escondido os campos dependentes de cada um. No modo compacto, os campos 'title' e 'question'
+ * sempre serão exibidos, mas respeitando a visibilidade defeinida pelo select:
+ * <code>
+ * array(
+ *     'name'   => 'jlpt_faq',
+ *     'type'   => 'duplicate_group',
+ *     'label'  => 'Peguntas',
+ *     'layout' => 'block',
+ *     'attr'   => array(
+ *         'elem_class' => 'duplicate-conditional'
+ *     ),
+ *     'options' => array(
+ *         'compact_button' => true,
+ *     ),
+ *     'group_itens' => array(
+ *         array(
+ *             'name'  => 'type',
+ *             'type'  => 'select',
+ *             'label' => 'Tipo',
+ *             'std'   => 'content',
+ *             'attr'  => array('class' => 'conditional-type'),
+ *             'options' => array(
+ *                 'values' => array(
+ *                     'faq-question' => 'Pergunta',
+ *                     'faq-title'    => 'Titulo',
+ *                 ),
+ *             ),
+ *         ),
+ *         array(
+ *             'name'  => 'title',
+ *             'type'  => 'text',
+ *             'label' => 'Título do setor',
+ *             'size'  => 'full',
+ *             'attr'  => array('elem_class' => 'conditional-row row-faq-title compact-show'),
+ *         ),
+ *         array(
+ *             'name'  => 'question',
+ *             'type'  => 'text',
+ *             'label' => 'Pergunta',
+ *             'size'  => 'full',
+ *             'attr'  => array('elem_class' => 'conditional-row row-faq-question compact-show'),
+ *         ),
+ *         array(
+ *             'name'  => 'slug',
+ *             'type'  => 'text',
+ *             'label' => 'Âncora',
+ *             'size'  => 'small',
+ *             'attr'  => array('elem_class' => 'conditional-row row-faq-question'),
+ *         ),
+ *         array(
+ *             'name'  => 'answer',
+ *             'type'  => 'textarea_editor',
+ *             'label' => 'Resposta',
+ *             'attr'  => array('elem_class' => 'conditional-row row-faq-question'),
+ *             'options' => array(
+ *                 'editor' => 'full'
+ *             ),
+ *         ),
+ *     ),
+ * ),
+ * </code>
+ * 
  * 
  */
 
 class BFE_duplicate_group extends BorosFormElement {
+
 	var $valid_attrs = array(
 		'name' => '',
 		'value' => '',
 		'id' => '',
 		'class' => '',
 	);
+
+    var $first_element_index = '';
 
     function add_defaults(){
         $this->defaults['options']['compact_button'] = true;
@@ -42,6 +121,10 @@ class BFE_duplicate_group extends BorosFormElement {
             $this->label = "<div class='duplicate_group_header'>{$this->compact_buttom}</div>";
         }
     }
+
+    function element_class( $element ){
+
+    }
 	
 	function set_input( $value = null ){
 		/**
@@ -49,7 +132,33 @@ class BFE_duplicate_group extends BorosFormElement {
 		 * 
 		 */
 		$this->context['parent'] = $this->data['name'];
-		
+
+        /**
+         * Aplicar class padrão .compact-show ao primeiro elemento, caso nenhum outro possua essa class, para
+         * que pelo menos 1 item fique visível no modo compacto
+         * 
+         */
+        $compact_elem = false;
+        $u = 1;
+        foreach( $this->data['group_itens'] as $index => $item ){
+            if( $u == 1 ){
+                $this->first_element_index = $index;
+            }
+
+            if( isset($item['attr']['elem_class']) ){
+                $classes = explode(' ', $item['attr']['elem_class']);
+                if( in_array('compact-show', $classes) ){
+                    $compact_elem = true;
+                    break;
+                }
+            }
+            $u++;
+        }
+        if( $compact_elem == false ){
+            $classes = $this->data['group_itens'][ $this->first_element_index ]['attr']['elem_class'] ?? '';
+            $this->data['group_itens'][ $this->first_element_index ]['attr']['elem_class'] = "{$classes} compact-show";
+        }
+
 		// começar a guardar o html do input em buffer
 		ob_start();
 		
