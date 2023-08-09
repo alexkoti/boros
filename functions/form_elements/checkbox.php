@@ -3,6 +3,15 @@
  * CHECKBOX
  * 
  * 
+ * Modelo de configuração
+ * <code>
+ * array(
+ *      'type'          => 'checkbox'
+ *      'label'        => 'Deixar texto vísivel?', // este label é o texto da coluna esquerda em layout table
+ *      'input_helper' => 'Visível', // este é o label que fica junto do input checkbox
+ * )
+ * </code>
+ * 
  * 
  */
 
