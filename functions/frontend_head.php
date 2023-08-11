@@ -36,6 +36,7 @@ class BorosJs {
         'in_footer'  => true,
         'priority'   => 10,
         'vendor_dir' => '/vendors/',
+        'revv'       => false,
     );
 
     var $queue = array();
