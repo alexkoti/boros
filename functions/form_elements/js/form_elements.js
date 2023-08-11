@@ -34,8 +34,8 @@ jQuery(document).ready(function($){
      * Bloco duplicáveis com linhas condicionais, baseado no 'type' definido no primeiro select do bloco
      * 
      */
-    function boros_duplicate_element_opt_options( select_type, val ){
-        var obj = select_type.closest('.duplicate_element');
+    function boros_element_opt_options( select_type, val ){
+        var obj = select_type.closest('.form-table');
         obj.find('.conditional-row').hide();
         obj.find('.row-' + val).show();
     }
@@ -43,13 +43,18 @@ jQuery(document).ready(function($){
     // update onload/ on duplicate
     $('.duplicate_group').bind('duplicate_group_complete sortcreate', function(event, ui) {
         $(this).find('.conditional-type').each(function(){
-            boros_duplicate_element_opt_options( $(this), $(this).val() );
+            boros_element_opt_options( $(this), $(this).val() );
         });
     });
 
     // update onchange do select
-    $('.duplicate-conditional').delegate('.conditional-type', 'change', function(){
-        boros_duplicate_element_opt_options( $(this), $(this).val() );
+    $('.boros_form_block').delegate('.conditional-type', 'change', function(){
+        boros_element_opt_options( $(this), $(this).val() );
     });
+
+    // onload
+    if( $('.conditional-type').length ){
+        $('.conditional-type').trigger('change');
+    }
     
 });
