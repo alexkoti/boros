@@ -1,7 +1,7 @@
 <?php
 /**
  * ==================================================
- * OBETER CÓDIGO MINIFICADO =========================
+ * OBTER CÓDIGO MINIFICADO ==========================
  * ==================================================
  * 
  * Na linha de comando, na pasta deste arquivo, executar:
