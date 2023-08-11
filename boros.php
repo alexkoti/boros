@@ -3,7 +3,7 @@
  * Plugin Name: Boros Elements
  * Plugin URI:  https://github.com/alexkoti/boros
  * Description: Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets, form_elements e frontend forms
- * Version:     1.6.1
+ * Version:     1.6.2
  * Author:      Alex Koti
  * Author URI:  http://alexkoti.com
  * License:     GPL2
@@ -30,7 +30,7 @@ define( 'BOROS_URL',        plugins_url( '/', __FILE__ ) );
 define( 'BOROS_CSS',        plugins_url( 'functions/form_elements/css/', __FILE__ ) );
 define( 'BOROS_IMG',        plugins_url( 'functions/form_elements/css/img/', __FILE__ ) );
 define( 'BOROS_JS',         plugins_url( 'functions/form_elements/js/', __FILE__ ) );
-define( 'BOROS_VERSION',    '2023.08.09.1' );
+define( 'BOROS_VERSION',    '2023.08.11.1' );
 
 // debug geral
 include_once( BOROS_FUNCTIONS . DIRECTORY_SEPARATOR . 'debug.php' );
