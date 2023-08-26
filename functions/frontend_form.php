@@ -106,6 +106,7 @@ class BorosFrontendForm {
 		'numeric_username'      => false,       // criar um username numérico automaticamente, baseado no autoincrement da tabela
 		
 		'class'                 => '',          // class html para formatação
+        'fieldset_parent_class' => 'row',
 		'page_name'             => 'any',       // apenas aceitar caso is_page('page_name')
 		'redirect_on_sucess'    => false,
 		'login_required'        => 'É preciso estar logado para usar este formulário',
@@ -2195,7 +2196,6 @@ class BorosFrontendForm {
 			<div class="<?php echo $class; ?>" id="<?php echo $form_name; ?>_box">
 				<?php $this->show_messages(); ?>
 				<?php echo $this->show_errors(); ?>
-				<div class="user_info"><?php $this->user_info(); ?></div>
 				
 				<form action="<?php $this->create_form_action(); ?>" method="post" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
 					<input type="hidden" name="form_name" value="<?php echo $this->config['form_name']; ?>" />
@@ -2212,14 +2212,14 @@ class BorosFrontendForm {
 						$parent = $box['id'];
 						$itens  = $box['itens'];
 						
-						echo "<div class='boros_form_block boros_frontend_block' id='{$parent}'>";
+						echo "<div class='boros-form-block id='{$parent}'>";
 						
 							// descrição
 							if( isset($box['desc']) and !empty($box['desc']) ){
 								?>
-								<div class="boros_form_desc">
+								<div class="boros-form-desc">
 									<h2><?php echo $box['title']; ?></h2>
-									<div><?php echo $box['desc']; ?></div>
+									<div class="boros-form-desc-text"><?php echo $box['desc']; ?></div>
 								</div>
 								<?php
 							}
@@ -2243,7 +2243,7 @@ class BorosFrontendForm {
 							// info help de rodapé
 							if( isset($box['help']) ){
 								?>
-								<div class="boros_form_extra_info">
+								<div class="boros-form-extra-info">
 									<div>
 										<span class="ico"></span> 
 										<?php echo $box['help']; ?>
@@ -2459,7 +2459,7 @@ class BorosFrontendForm {
 					echo "<input type='hidden' name='{$k}' value='{$v}' />\n";
 				}
 				
-				echo '<div class="row">';
+				echo "<div class='{$this->config['fieldset_parent_class']}'>";
 				foreach( $this->elements as $box ){
 					$parent    = $box['id'];
 					$itens     = $box['itens'];

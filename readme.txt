@@ -3,7 +3,7 @@ Contributors: alexkoti
 Tags: admin, library
 Requires at least: 4.0.0
 Tested up to: 4.4.1
-Stable tag: 1.6.21
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,9 @@ Biblioteca de classes e funções para auxiliar a criação de painéis, control
 Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets e form_elements
 
 == Changelog ==
+
+= 1.6.3
+* Melhoria para output de form bootstrap
 
 = 1.6.0 (2023.08.05)
 * opção revv na declaração de enqueues em BorosJs e BorosCss
