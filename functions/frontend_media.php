@@ -122,12 +122,60 @@ function custom_oembed( $post_id = false, $post_meta = false ){
  * - Issuu
  * - Demais embeds
  * 
+ * @link https://gist.github.com/loilo/9cffb1af3fa554976d2d884d761250f0 obter informações do iframe
+ * @link https://stackoverflow.com/a/71546342 pegar proporção mais próxima
+ * 
  */
 add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
 function tdd_oembed_filter($html, $url, $attr, $post_ID){
 	// Videos: youtube e vimeo. Adicionar mais serviços se necessário
 	if( strpos($html, 'youtube') !== false or strpos($html, 'vimeo') !== false ){
-		return "<div class='cleaner'></div><div class='videoWrapper embed-responsive embed-responsive-16by9'>{$html}</div>";
+
+        /**
+         * Obter altura x largura do iframe
+         * 
+         */
+        $dom = new DOMDocument();
+        // Don't spread warnings when encountering malformed HTML
+        $previousXmlErrorBehavior = libxml_use_internal_errors(true);
+        // Use XML processing instruction to properly interpret document as UTF-8
+        @$dom->loadHTML(
+            '<?xml encoding="utf-8" ?>' . $html,
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+        foreach ($dom->childNodes as $item) {
+            if ($item->nodeType === XML_PI_NODE) {
+                $dom->removeChild($item);
+            }
+        }
+        $dom->encoding = 'UTF-8';
+        $width  = $dom->getElementsByTagName('iframe')[0]->getAttribute('width');
+        $height = $dom->getElementsByTagName('iframe')[0]->getAttribute('height');
+
+        $fx = $width / $height;
+
+        /**
+         * Obter a proporção mais próxima e definir class
+         * 
+         */
+        $video_ratio = '16x9';
+        $ratio = array(
+            '1'                 => '1x1',
+            '1.333333333333333' => '4x3',
+            '1.777777777777778' => '16x9',
+      
+        );
+        $min = [];
+        foreach( $ratio as $calc => $label ){
+            $diff = abs($calc - $fx);
+            $min["".$diff] = $label;
+        }
+        ksort($min);
+        if( !empty($min) ){
+            $video_ratio = reset($min);
+        }
+
+		return "<div class='cleaner'></div><div class='videoWrapper embed-responsive embed-responsive-16by9 ratio ratio-{$video_ratio}'>{$html}</div>";
 	}
 	
 	return "<div class='cleaner'></div><div class='responsiveWrapper'>{$html}</div>";
