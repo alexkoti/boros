@@ -38,6 +38,10 @@ function boros_authenticate_approved_user( $userdata ){
 	return $userdata;
 }
 
+/**
+ * Verificar pelo user_meta se o usário foi aprovado
+ * 
+ */
 function boros_verify_approved_user( $user_id ){
 	// verificar usuário caso a opção de login para usuários aprovados esteja ligada
 	if( get_option('verify_approved_user') == true ){
@@ -46,7 +50,7 @@ function boros_verify_approved_user( $user_id ){
 		
 		// status não definido - sempre verifica se já não é um wp_error
 		if( empty($user_status) ){
-			$message = apply_filters( 'verify_approved_user_message_default', '<strong>ERRO</strong>: Sua conta precisa ser aprovada antes poder fazer o login no site' );
+			$message = apply_filters( 'verify_approved_user_message_default', '<strong>ERRO</strong>: Sua conta precisa ser aprovada antes de poder fazer o login no site' );
 			return new WP_Error( 'verify_approved_user_default', $message );
 		}
 		elseif( $user_status == 'disapproved' ){
