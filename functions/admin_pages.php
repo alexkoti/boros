@@ -51,6 +51,12 @@ class BorosAdminPages {
 	 * 
 	 */
 	var $url_base;
+
+    /**
+     * Diretório com os arquivos das admin-pages
+     * 
+     */
+    var $config_dir;
 	
 	/**
 	 * Guarda o slug das páginas no formato $page_action => $page_slug
