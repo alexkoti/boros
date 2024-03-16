@@ -2494,7 +2494,7 @@ class BorosFrontendForm {
 							// o parent é a ID do box
 							$this->context['group'] = $box['id'];
 							if( empty($item['layout']) ){
-								$item['layout'] = 'bootstrap3';
+								$item['layout'] = 'bootstrap4';
 							}
 							create_form_elements( $this->context, $item, $data_value, $this->context['group'] );
 						}
