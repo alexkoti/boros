@@ -56,7 +56,7 @@ class BFE_post_thumbnail_drop extends BorosFormElement {
         //pre( $this->context['object_id'] );
         $p = get_post($this->context['object_id']);
         ob_start();
-        boros_drop_upload_box( $p, $image_size, $labels );
+        boros_drop_upload_box( $p, $image_size, $labels, $this->data['name'], 'post' );
         echo "<div>{$this->input_helper}</div>";
         $input = ob_get_contents();
         ob_end_clean();
