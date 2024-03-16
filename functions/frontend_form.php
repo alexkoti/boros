@@ -86,6 +86,8 @@ class BorosFrontendForm {
 	var $elements_plain;
 	
 	var $self_url;
+
+    var $editing_user = false;
 	
 	var $config = array(
 		'form_name'             => 'test',      // identificador para o hook
@@ -761,6 +763,7 @@ class BorosFrontendForm {
 	 * Criar usuário
 	 * 
 	 * @todo adicionar 'save_as_user_meta'
+     * @todo trocar wp_create_user() por wp_insert_user(), para que seja possíve definri outras informações como role e user_metas
 	 */
 	function create_user(){
 		//pre($this->posted_data, 'posted_data');
@@ -1157,6 +1160,7 @@ class BorosFrontendForm {
 				}
 			}
 			else{
+                $this->form_callback( $this->config['callbacks']['error'] );
 				$this->errors = array_merge( $this->errors, $this->validation->data_errors );
 			}
 		}
@@ -1914,9 +1918,10 @@ class BorosFrontendForm {
 		//pre($callback);
 		
 		$args = array(
-			'name' => $k,
-			'value' => $v,
-			'args' => isset( $callback['args'] ) ? $callback['args'] : false,
+			'name'    => $k,
+			'value'   => $v,
+			'args'    => isset( $callback['args'] ) ? $callback['args'] : false,
+            'context' => $this->context,
 		);
 		
 		if( method_exists( $this, $callback['function'] ) ){
