@@ -86,6 +86,7 @@ abstract class Boros_Ajax_Query_Loop {
 	
 	protected $ajax_args = array(
 		'action'         => 'boros_ajax_query_loop',
+		'interval'       => 0,
 		'initial_offset' => 0,
 	);
 	
@@ -160,7 +161,8 @@ abstract class Boros_Ajax_Query_Loop {
 		if( $hook_suffix == "toplevel_page_{$this->page_args['menu_slug']}" ){
 			?>
 			<script type="text/javascript">
-			var boros_ajax_query_loop_offset = <?php echo $this->ajax_args['initial_offset']; ?>;
+			var boros_ajax_query_loop_offset  = <?php echo $this->ajax_args['initial_offset']; ?>;
+			var boros_ajax_query_loop_timeout = <?php echo $this->ajax_args['interval']; ?>;
 			jQuery(document).ready(function($){
 				var boros_ajax_query_loop = {
 					btn : false,
@@ -210,7 +212,7 @@ abstract class Boros_Ajax_Query_Loop {
 									// continuar o loop
 									if( resp.offset > 0 ){
 										boros_ajax_query_loop_offset = resp.offset;
-										boros_ajax_query_loop.proccess_item();
+                                        setTimeout(function(){boros_ajax_query_loop.proccess_item()}, boros_ajax_query_loop_timeout);
 									}
 									// reabilitar o botão
 									else if( resp.post_id == 0 ){
