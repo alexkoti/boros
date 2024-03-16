@@ -303,6 +303,7 @@ class BorosMetaBoxes {
 				 * Caso seja definido um callback, este deverá obrigatoriamente retornar um valor, ou então retornar false.
 				 * 
 				 * IMPORTANTE: DEVE ENVIAR $post completo como parâmetro. Isso evita uma possível chamda de get_post na função de callbak
+                 * IMPORTANTE: DEVE RETORNAR O $value caso contrário o meta será apagado
 				 */
 				if( isset( $element['callback']) ){
 					$value = call_user_func( $element['callback'], $post, $element, $value );
