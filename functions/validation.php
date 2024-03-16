@@ -162,13 +162,15 @@ class BorosValidation {
 			//pre($this->validations, 'VALIDATIONS');
 			$this->current_element = $element;
 			foreach( $this->validations[$element['name']]['rules'] as $rule => $validation ){
-				if( !isset($validation['args']) ){
-					$validation['args'] = false;
-				}
-				if( !isset($validation['message']) ){
-					$validation['message'] = false;
-				}
-				$validation['args']['options'] = issetor($element['options'], false);
+                if( !isset($validation['args']) || !isset($validation['args']['options']) ){
+                    $validation['args'] = [
+                        'options' => []
+                    ];
+                }
+                if( !isset($validation['message']) ){
+                    $validation['message'] = false;
+                }
+                $validation['args']['options'] = isset($element['options']) ? $element['options'] : [];
 				
 				/**
 				 * Gambiarra para enviar argumentos sem interferir nos callbacks. Como as functions de verificação já possuem numero de argumentos fixos e estão sendo usados por 'option' e
