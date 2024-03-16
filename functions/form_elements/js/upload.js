@@ -43,6 +43,8 @@ jQuery(document).ready(function($){
 				var id1            = $this.attr("id");
 				var imgId          = id1.replace("plupload-upload-ui", "");
 				var post_parent    = $this.find('[name="post_parent"]');
+				var meta_key       = $this.find('[name="meta_key"]');
+				var object_type    = $this.find('[name="object_type"]');
 				var thumbnail_size = $this.find('[name="thumbnail_size"]');
                 var submits        = $this.closest('form').find('[type=submit]');
 
@@ -59,6 +61,8 @@ jQuery(document).ready(function($){
 				pconfig["file_data_name"]                  = imgId + pconfig["file_data_name"];
 				pconfig["multipart_params"]["imgid"]       = imgId;
 				pconfig["multipart_params"]["post_parent"] = post_parent.val();
+				pconfig["multipart_params"]["meta_key"]    = meta_key.val();
+				pconfig["multipart_params"]["object_type"] = object_type.val();
 				pconfig["multipart_params"]["size"]        = thumbnail_size.val();
                 pconfig["multipart_params"]["_ajax_nonce"] = $this.find(".ajaxnonceplu").attr("id").replace("ajaxnonceplu", "");
                 pconfig['filters']['mime_types']           = [{ title : "Image files", extensions : "jpg,JPG,jpeg,JPEG,gif,png,PNG" }];
@@ -189,6 +193,8 @@ jQuery(document).ready(function($){
 					var data = {
 						action: 'boros_drop_upload_remove',
 						post_id: post_parent.val(),
+						meta_key: meta_key.val(),
+						object_type: object_type.val(),
 					};
 					
 					//console.log(data);

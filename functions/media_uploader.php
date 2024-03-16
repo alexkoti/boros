@@ -107,6 +107,8 @@ function boros_drop_upload_add_ajax() {
     $imgid       = $_POST["imgid"];
     $size        = $_POST["size"];
     $post_parent = (int)$_POST['post_parent'];
+    $object_type = $_POST['object_type'];
+    $meta_key    = $_POST['meta_key'];
     check_ajax_referer($imgid . 'pluploadan');
 
     /**
@@ -137,13 +139,22 @@ function boros_drop_upload_add_ajax() {
         ));
     }
 
+    /**
+     * Somente object_type do tipo 'post' poderá ter post_parent
+     * 
+     */
+    $attach_parent = ($object_type == 'post') ? $post_parent : 0;
+
     // salvar imagem
     $tmp        = new MediaUpload;
-    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $post_parent, null, $elem_options );
+    $attachment = $tmp->saveUpload( $field_name = "{$imgid}quick_upload", $attach_parent, null, $elem_options );
     //error_log(print_r($attachment, true));
 
-    // atualizar meta _thumbnail_id
-    update_post_meta( $post_parent, '_thumbnail_id', $attachment['attachment_id'] );
+    /**
+     * Atualizar meta
+     * 
+     */
+    update_metadata( $object_type, $post_parent, $meta_key, $attachment['attachment_id'] );
 
     /**
      * hook callback da ação
@@ -160,7 +171,7 @@ function boros_drop_upload_add_ajax() {
      * )
      * 
      */
-    do_action( 'boros_drop_upload_update_image', $post_parent, '_thumbnail_id', $attachment );
+    do_action( 'boros_drop_upload_update_image', $post_parent, $meta_key, $attachment );
 
     // HTML do retorno
     $img  = wp_get_attachment_image_src( $attachment['attachment_id'], $size );
@@ -194,6 +205,7 @@ function boros_drop_upload_remove_ajax() {
  * 
  * 
  * @todo o loop para exibir multiplos arquivos com botão de remoção não está feito!!!
+ * @todo renderização para outros objects: user, term
  */
 add_action( 'manage_posts_custom_column', 'boros_post_media_column_render' );
 add_action( 'manage_pages_custom_column', 'boros_post_media_column_render' );
@@ -215,10 +227,12 @@ function boros_post_media_column_render( $column_name ){
  * ==================================================
  * Usado pela coluna e demais controles meta_box e admin_page
  * 
+ * $object_type: post, user
+ * 
  */
-function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
+function boros_drop_upload_box( $object, $size = 'thumbnail', $labels = array(), $meta_key = '_thumbnail_id', $object_type = 'post' ){
     // adjust values here
-    $id       = "img{$post->ID}"; // this will be the name of form field. Image url(s) will be submitted in $_POST using this key. So if $id == “img1” then $_POST[“img1”] will have all the image urls
+    $id       = "img{$object->ID}"; // this will be the name of form field. Image url(s) will be submitted in $_POST using this key. So if $id == “img1” then $_POST[“img1”] will have all the image urls
     $svalue   = '';               // this will be initial value of the above form field. Image urls.
     $multiple = false;            // allow multiple files upload
     $width    = null;             // If you want to automatically resize all uploaded images then provide width here (in pixels)
@@ -231,9 +245,10 @@ function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
     );
     $label = wp_parse_args( $labels, $default_labels );
 
-    $btn_label = $label['button_send'];
-    $thumbnail = '';
-    $_thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
+    $btn_label     = $label['button_send'];
+    $thumbnail     = '';
+    $_thumbnail_id = get_metadata( $object_type, $object->ID, $meta_key, true );
+
     if( !empty($_thumbnail_id) ){
         $btn_label = $label['button_new'];
         $scr       = wp_get_attachment_image_src( $_thumbnail_id, $size );
@@ -245,7 +260,9 @@ function boros_drop_upload_box( $post, $size = 'thumbnail', $labels = array() ){
     ?>
     <div class="plupload-upload-uic hide-if-no-js <?php if ($multiple): ?>plupload-upload-uic-multiple<?php endif; ?>" id="<?php echo $id; ?>plupload-upload-ui">
 
-        <input type="hidden" name="post_parent" value="<?php echo $post->ID; ?>" disabled="disabled" />
+        <input type="hidden" name="post_parent"    value="<?php echo $object->ID; ?>" disabled="disabled" />
+        <input type="hidden" name="object_type"    value="<?php echo $object_type; ?>" disabled="disabled" />
+        <input type="hidden" name="meta_key"       value="<?php echo $meta_key; ?>" disabled="disabled" />
         <input type="hidden" name="thumbnail_size" value="<?php echo $size; ?>" disabled="disabled" />
 
         <?php if ($width && $height){ ?>
