@@ -2213,11 +2213,11 @@ class BorosFrontendForm {
 						echo "<input type='hidden' name='{$k}' value='{$v}' />\n";
 					}
 					
-					foreach( $this->elements as $box ){
+					foreach( $this->elements as $index => $box ){
 						$parent = $box['id'];
 						$itens  = $box['itens'];
 						
-						echo "<div class='boros-form-block id='{$parent}'>";
+						echo "<div class='boros-form-block' id='{$parent}-{$index}'>";
 						
 							// descrição
 							if( isset($box['desc']) and !empty($box['desc']) ){
