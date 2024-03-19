@@ -67,7 +67,7 @@ function boros_check_empty_var( $var, $index = false ){
 		// verificar vazio //pal("1 check_posted_value: SET");
 		if( empty($var) ){
 			// verificar zero //pal("2 check_posted_value: EMPTY");
-			if( ctype_digit($var) ){
+			if( is_string($var) && ctype_digit($var) ){
 				//pal("3 check_posted_value: NUMERIC ZERO");
 				return true;
 			}
