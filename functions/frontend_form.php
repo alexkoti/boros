@@ -2590,6 +2590,10 @@ class BorosFrontendForm {
 					$parent    = $box['id'];
 					$itens     = $box['itens'];
 					$box_class = isset($box['class']) ? "group_container {$box['class']}" : 'group_container';
+
+                    if( isset($box['before']) && !empty($box['before']) ){
+                        echo $box['before'];
+                    }
 					
 					echo "<fieldset class='{$box_class} fieldset form-fieldset' id='{$parent}-{$index}'><div class='form-row'>";
 					
@@ -2631,6 +2635,10 @@ class BorosFrontendForm {
 						}
 						
 					echo '</div></fieldset>';
+
+                    if( isset($box['after']) && !empty($box['after']) ){
+                        echo $box['after'];
+                    }
 				}
 				echo '</div>';
 			?>
