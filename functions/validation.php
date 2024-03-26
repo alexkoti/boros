@@ -162,15 +162,13 @@ class BorosValidation {
 			//pre($this->validations, 'VALIDATIONS');
 			$this->current_element = $element;
 			foreach( $this->validations[$element['name']]['rules'] as $rule => $validation ){
-                if( !isset($validation['args']) || !isset($validation['args']['options']) ){
-                    $validation['args'] = [
-                        'options' => []
-                    ];
-                }
-                if( !isset($validation['message']) ){
-                    $validation['message'] = false;
-                }
-                $validation['args']['options'] = isset($element['options']) ? $element['options'] : [];
+				if( !isset($validation['args']) || $validation['args'] == false ){
+					$validation['args'] = [];
+				}
+				if( !isset($validation['message']) ){
+					$validation['message'] = false;
+				}
+				$validation['args']['options'] = issetor($element['options'], []);
 				
 				/**
 				 * Gambiarra para enviar argumentos sem interferir nos callbacks. Como as functions de verificação já possuem numero de argumentos fixos e estão sendo usados por 'option' e
@@ -1050,6 +1048,10 @@ class BorosValidation {
             $value = wp_strip_all_tags($value);
         }
         return $value;
+    }
+
+    function sanitize_url( $name, $value, $args, $message ){
+        return sanitize_url($value);
     }
 
     function akismet( $name, $value, $args, $message ){
