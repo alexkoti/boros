@@ -116,10 +116,10 @@ class BorosValidation {
 		//pre($value, "input nam:{$option} PRE validation");
 		if( isset($this->validations[$option]['rules']) ){
 			foreach( $this->validations[ $option ]['rules'] as $validation ){
-				if( !isset($validation['args']) ){
-					$validation['args'] = false;
+				if( !isset($validation['args']) || $validation['args'] == false ){
+					$validation['args'] = [];
 				}
-				$validation['args']['options'] = issetor($element['options'], false);
+				$validation['args']['options'] = issetor($element['options'], []);
 				if( isset($this->validations[ $option ]['element']['duplicable']) and $this->validations[ $option ]['element']['duplicable'] == true and is_array($value) ){
 					$newval = array();
 					foreach( $value as $subval ){
