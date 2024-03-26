@@ -88,6 +88,7 @@ class BorosAdminPages {
 	var $tabs = array();
 	var $current_tab;
 	var $elements;
+	var $settings_name;
 	
 	/**
 	 * Configurações carregadas pelos callbacks
