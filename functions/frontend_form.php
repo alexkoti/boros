@@ -158,6 +158,7 @@ class BorosFrontendForm {
 	 */
 	var $user_id = 0;
 	var $user;
+    var $new_user;
 	
 	/**
 	 * Post gravado, caso seja uma edição
@@ -1209,8 +1210,10 @@ class BorosFrontendForm {
 		$admin_message = "  <p>Novo usuário registrado no site:</p>
 							<p>Nome de usuário: {$user_login}</p>
 							<p>Email: {$user_email}</p>";
-		$admin_message = apply_filters( 'BFF_new_user_notification_admin', $admin_message, $user, $user_data, $user_meta );
-		wp_mail( get_option('admin_email'), sprintf(__('[%s] New User Registration'), $blogname), $admin_message, $headers );
+		$admin_message       = apply_filters( 'BFF_new_user_notification_admin', $admin_message, $user, $user_data, $user_meta );
+        $admin_message_title = sprintf(__('[%s] New User Registration'), $blogname);
+        $admin_message_title = apply_filters('BFF_new_user_notification_admin_title', $admin_message_title, $user, $user_data, $user_meta);
+		wp_mail( get_option('admin_email'), $admin_message_title, $admin_message, $headers );
 		
 		// Avisar USER
 		$login_url = home_url('/login/');
