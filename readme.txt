@@ -15,6 +15,12 @@ Funções para o admin do WordPress, páginas personalizadas de administração(
 
 == Changelog ==
 
+= 1.6.4
+* Correções para PHP8
+* Novo form element user_thumbnail_drop
+* Em drop upload, permitir escolher o post|user_meta a ser salvo
+* before e after para fieldsets
+
 = 1.6.3
 * Melhoria para output de form bootstrap
 
