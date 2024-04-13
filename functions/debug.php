@@ -243,9 +243,9 @@ if( !function_exists('pel') ){
  * 
  */
 if( !function_exists('pam') ){
-    function pam( $message = '', $type = 'info', $legend = '' ){
+    function pam( $message = '', $legend = '', $type = 'info' ){
         $pre = PRE::init();
-        $pre->pam( $message, $type, $legend );
+        $pre->pam( $message, $legend, $type );
     }
 }
 
