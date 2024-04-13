@@ -277,7 +277,7 @@ class BorosEmail {
 	function retrieve_password_title( $title ){
 		$custom_title = get_option('retrieve_password_title');
 		if( empty($custom_title) ){
-			$title .= get_bloginfo('name');
+			$title .= sprintf(' - %s', get_bloginfo('name'));
 			return $title;
 		}
 		else{
@@ -292,6 +292,11 @@ class BorosEmail {
 	 */
 	function retrieve_password_message( $message, $key, $user_login, $user ){
 		$custom_message = get_option('retrieve_password_message');
+        $login_args = array(
+            'action' => 'rp',
+            'key'    => $key,
+            'login'  => $user->user_login,
+        );
 		
 		// usar mensagem padrão
 		if( empty($custom_message) ){
@@ -316,11 +321,6 @@ class BorosEmail {
 		// usar mensagem personalizada
 		else{
 			// montar a url de recuperação de senha
-			$login_args = array(
-				'action' => 'rp',
-				'key' => $key,
-				'login' => $user->user_login,
-			);
 			$login_url = add_query_arg( $login_args, wp_login_url(home_url()) );
 			
 			$message = apply_filters('the_content', $custom_message);
@@ -329,10 +329,8 @@ class BorosEmail {
 			$message = str_replace( '[CONTATO]', page_permalink_by_name('contato', false), $message );
 		}
 		
-		//die('INTERROMPIDO PARA TESTES');
-		
 		// aplicar o holder definido em boros_email_base
-		$message = apply_filters( 'retrieve_password_message_text', $message );
+		$message = apply_filters( 'retrieve_password_message_text', $message, $user, $login_args );
 		return $message;
 	}
 	
