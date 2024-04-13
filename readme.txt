@@ -3,7 +3,7 @@ Contributors: alexkoti
 Tags: admin, library
 Requires at least: 4.0.0
 Tested up to: 4.4.1
-Stable tag: 1.6.4
+Stable tag: 1.6.41
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Funções para o admin do WordPress, páginas personalizadas de administração(
 
 == Changelog ==
 
-= 1.6.4
+= 1.6.41
 * Correções para PHP8
 * Novo form element user_thumbnail_drop
 * Em drop upload, permitir escolher o post|user_meta a ser salvo
