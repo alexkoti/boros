@@ -527,6 +527,10 @@ class BorosValidation {
 			}
 		}
 	}
+
+    function validate_grecaptcha_invisible( $name, $value, $args, $message ){
+        $this->validate_grecaptcha( $name, $value, $args, $message );
+    }
 	
     /**
      * File

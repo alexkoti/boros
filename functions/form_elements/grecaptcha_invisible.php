@@ -68,7 +68,6 @@ class BFE_grecaptcha_invisible extends BorosFormElement {
             id='grecaptcha-{$id}'
             class='g-recaptcha'
             data-sitekey='{$this->publickey}'
-            data-callback='boros_invisible_recaptcha'
             data-size='invisible'>
         </div>
         ";
