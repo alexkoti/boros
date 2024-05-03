@@ -529,7 +529,38 @@ class BorosValidation {
 	}
 
     function validate_grecaptcha_invisible( $name, $value, $args, $message ){
-        $this->validate_grecaptcha( $name, $value, $args, $message );
+        require_once( BOROS_LIBS . DIRECTORY_SEPARATOR . 'grecaptcha/recaptchalib.php' );
+        $publickey  = apply_filters( 'boros_recaptcha_publickey', get_option('recaptcha_publickey') );
+        $privatekey = apply_filters( 'boros_recaptcha_privatekey', get_option('recaptcha_privatekey') );
+        $resp       = null;
+        $error      = null;
+        
+        if( isset($_POST["g-recaptcha-response"]) ){
+            if( empty($_POST["g-recaptcha-response"]) ){
+                $error = array(
+                    'name'    => $name,
+                    'message' => 'O captcha não foi registrado, por favor tente novamente',
+                    'type'    => 'error',
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+            else{
+                $reCaptcha = new ReCaptcha($privatekey);
+                $resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
+                $message = issetor($args['options']['error_message'], 'O captcha não passou no teste, por favor tente novamente');
+                if($resp != null && $resp->success){
+                    
+                }
+                else{
+                    $error = array(
+                        'name'    => $name,
+                        'message' => $message,
+                        'type'    => 'error',
+                    );
+                    $this->data_errors[$name][$args['rule']] = $error;
+                }
+            }
+        }
     }
 	
     /**
