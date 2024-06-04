@@ -1101,6 +1101,12 @@ class BorosFrontendForm {
 				// tudo ocorreu bem salvar os user metas
 				else{
 					foreach( $this->valid_meta as $meta => $value ){
+                        
+                        $config = array_search_kv( 'name', $meta, $this->elements );
+                        if( isset($config['skip_save']) and $config['skip_save'] == true ){
+                            continue;
+                        }
+
 						// verificar se o meta_value é false, e remover
 						if( $value === false or empty($value) )
 							delete_user_meta( $user->ID, $meta );
