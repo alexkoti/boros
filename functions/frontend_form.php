@@ -288,10 +288,14 @@ class BorosFrontendForm {
 			case 'bootstrap3':
 				add_action( 'boros_frontend_form_output', array($this, 'bootstrap3_output') );
 				break;
-			// usar output fomatado para bootstrap 3
+			// usar output fomatado para bootstrap 4
 			case 'bootstrap4':
 				add_action( 'boros_frontend_form_output', array($this, 'bootstrap4_output') );
 				break;
+            // usar output fomatado para bootstrap 4
+            case 'bootstrap5':
+                add_action( 'boros_frontend_form_output', array($this, 'bootstrap5_output') );
+                break;
 			// não usar nada;
 			case false:
 			   default:
@@ -2087,7 +2091,7 @@ class BorosFrontendForm {
 						$value = 'não';
 					}
 				}
-				$text = str_replace( $tag, $value, $text );
+				$text = str_replace( $tag, esc_html(strip_tags($value)), $text );
 			}
 			else{
 				if( isset($this->elements_plain[$name]) and in_array($this->elements_plain[$name]['type'], $multi) ){
@@ -2098,7 +2102,7 @@ class BorosFrontendForm {
 						}
 					}
 					$value = implode(', ', $v);
-					$text = str_replace( $tag, $value, $text );
+					$text = str_replace( $tag, esc_html(strip_tags($value)), $text );
 				}
 			}
 		}
@@ -2649,6 +2653,145 @@ class BorosFrontendForm {
 			<?php
 		}
 	}
+	
+    /**
+     * output bootstrap5
+     * 
+     */
+    function bootstrap5_output( $form_name ){
+        if( $this->form_name == $form_name ){
+            $this->create_numeric_username();
+            
+            // class css
+            $form_class = ['container'];
+            if( isset($this->config['class']) ){
+                $form_class[] = $this->config['class'];
+            }
+            if( !empty( $this->errors ) ){
+                $form_class[] = 'form_error';
+            }
+            if( isset($this->messages['success'])){
+                $form_class[] = 'form_success';
+            }
+            
+            /**
+             * Mensagem de login requerido
+             * 
+             */
+            if( $this->config['login_required'] == true and !is_user_logged_in() ){
+                ?>
+                <div class="<?php echo $form_class; ?>" id="<?php echo $form_name; ?>">
+                    <?php echo $this->config['messages']['login_required']['message']; ?>
+                </div>
+                <?php
+                return;
+            }
+            
+            /**
+             * Formulário liberado
+             * 
+             */
+            ?>
+            <form action="<?php $this->create_form_action(); ?>" method="post" class="<?php echo implode(' ', $form_class); ?>" id="<?php echo isset($this->config['form_id']) ? $this->config['form_id'] : $form_name; ?>" <?php echo $this->config['enctype']; ?>>
+                <?php $this->show_messages(); ?>
+                <?php
+                /**
+                 * Mensagens de erro gerais. Este bloco pode exibir uma mensagem de erro geral, podendo exibir mensagens com âncoras.
+                 * 
+                 */
+                if( !empty( $this->errors ) ){
+                    echo "<div class='alert alert-error alert-danger'>{$this->config['messages']['error']}</div>";
+                    
+                    if( $this->config['show_errors_index'] == true ){
+                        echo '<div class="alert alert-error alert-danger">';
+                        foreach( $this->errors as $input_name => $errors ){
+                            foreach( $errors as $error ){
+                                echo "<p><a href='#{$input_name}'>{$error['message']}</a></p>";
+                            }
+                        }
+                        echo '</div>';
+                    }
+                    
+                    if( $this->config['debug'] == true ){
+                        pre($this->errors, 'bootstrap5_output errors');
+                    }
+                }
+                ?>
+                <input type="hidden" name="form_name" value="<?php echo $this->config['form_name']; ?>" />
+            <?php
+            /**
+             * Adicionar input:hidden do contexto
+             * 
+             */
+            foreach( $this->context as $k => $v ){
+                echo "<input type='hidden' name='{$k}' value='{$v}' />\n";
+            }
+            
+            foreach( $this->elements as $index => $box ){
+                $parent    = $box['id'];
+                $itens     = $box['itens'];
+                $box_class = isset($box['class']) ? "row {$box['class']}" : 'row';
+
+                if( isset($box['before']) && !empty($box['before']) ){
+                    echo $box['before'];
+                }
+                
+                echo "<div class='{$box_class}' id='{$parent}-{$index}'>";
+                
+                    // descrição
+                    if( isset($box['title']) ){
+                        if( isset($box['title']) and !empty($box['title']) ){
+                            echo "<div class='section-header col-md-12'>";
+                                echo "<div class='section-title'>{$box['title']}</div>";
+                                if( isset($box['desc']) and !empty($box['desc']) ){
+                                    echo "<div class='section-description'>{$box['desc']}</div>";
+                                }
+                            echo "</div>";
+                        }
+                    }
+                    
+                    foreach( $itens as $item ){
+
+                        if( isset($item['skip_output']) && $item['skip_output'] == true ){
+                            continue;
+                        }
+
+                        $data_value = null;
+                        
+                        // adicionar os erros guardados
+                        if( isset($this->errors[$item['name']]) and $this->config['show_errors'] == true ){
+                            $item['errors'] = $this->errors[$item['name']];
+                        }
+                        
+                        // se estiver vazio, usar o valor padrão
+                        //if( empty( $data_value ) and isset( $item['std']) ) $data_value = $item['std'];
+                        
+                        $data_value = $this->reload_input_value( $item );
+                        
+                        // o parent é a ID do box
+                        $this->context['group'] = $box['id'];
+                        if( empty($item['layout']) ){
+                            $item['layout'] = 'bootstrap3';
+                        }
+                        create_form_elements( $this->context, $item, $data_value, $this->context['group'] );
+                    }
+                    
+                    // info help de rodapé
+                    if( isset($box['help']) and !empty($box['help']) ){
+                        echo "<div class='col-md-12'>{$box['help']}</div>";
+                    }
+                    
+                echo '</div>';
+
+                if( isset($box['after']) && !empty($box['after']) ){
+                    echo $box['after'];
+                }
+            }
+            ?>
+            </form>
+            <?php
+        }
+    }
 	
 	/**
 	 * ==================================================
