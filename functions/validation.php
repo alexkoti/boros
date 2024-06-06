@@ -382,7 +382,6 @@ class BorosValidation {
      * 
      */
     function validate_url( $name, $value, $args, $message ){
-        pel( esc_url_raw($value), $value );
         if( esc_url_raw($value) !== $value ){
             $error = array(
                 'name'    => $name,
