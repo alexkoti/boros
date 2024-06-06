@@ -375,6 +375,25 @@ class BorosValidation {
         return $value;
     }
 
+    /**
+     * Validar urls
+     * 
+     * @link https://cmljnelson.blog/2018/08/31/url-validation-in-wordpress/
+     * 
+     */
+    function validate_url( $name, $value, $args, $message ){
+        pel( esc_url_raw($value), $value );
+        if( esc_url_raw($value) !== $value ){
+            $error = array(
+                'name'    => $name,
+                'message' => $message,
+                'type'    => 'error'
+            );
+            $this->data_errors[$name][$args['rule']] = $error;
+        }
+        return $value;
+    }
+
 	/**
 	 * É preciso verificar caso o campo possua a extensão outros
 	 * 
