@@ -16,9 +16,12 @@
  * 
  */
 add_action('admin_body_class', 'custom_admin_body_class');
-function custom_admin_body_class( $a ){
-	global $post_type;
-	return "post-type-{$post_type}";
+function custom_admin_body_class( $classes ){
+	$screen = get_current_screen();
+    if( 'post' == $screen->base ){
+        $classes .= " post-type-{$screen->post_type}";
+    }
+    return $classes;
 }
 
 
