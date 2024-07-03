@@ -1079,6 +1079,12 @@ class BorosFrontendForm {
             
             
 		}
+        
+        /**
+         * Filtrar erros e permitir adicionar/remover
+         * 
+         */
+		$this->validation->data_errors = apply_filters('boros_frontend_form_validation_erros', $this->validation->data_errors, $this->form_name, $this->valid_data, $this->valid_meta, $this->elements, $this->context);
 		
 		//pre($this->validation->data_errors);
 		//pre($this->errors);
