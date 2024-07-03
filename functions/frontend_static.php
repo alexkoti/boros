@@ -76,14 +76,17 @@ function new_post_class( $classes, $class, $post_id ){
 
 add_filter( 'body_class', 'new_body_class' );
 function new_body_class( $classes ){
-	global $post;
-	$classes[] = "type-{$post->post_type}";
-	$classes[] = "post-type-{$post->post_type}";
-	
-	if( isset($post->post_name) ){
-		$classes[] = "item-name-{$post->post_name}";
-	}
-	return $classes;
+    global $post;
+
+    if( isset($post->post_type) ){
+        $classes[] = "type-{$post->post_type}";
+        $classes[] = "post-type-{$post->post_type}";
+    }
+    
+    if( isset($post->post_name) ){
+        $classes[] = "item-name-{$post->post_name}";
+    }
+    return $classes;
 }
 
 
