@@ -236,21 +236,21 @@
 /**
  * CLASSES GLOBAIS
  * 
+ * img.aligncenter			{display:block;margin:0 auto;}
+ * .txt_right 				{text-align:right;}
+ * .txt_left 				{text-align:left;}
+ * .txt_center				{text-align:center;}
+ * .fleft, .alignleft		{float:left;}
+ * .fright, .alignright	{float:right;}
+ * .aligncenter			{display:block;margin:0 auto;}
+ * .cleaner				{clear:both;}
+ * .small_text				{font-size:80%;}
+ * .hide					{display:none;}
+ * .text_error				{color:red;}
+ * .text_success			{color:#11B511;}
+ * .text_alert				{color:#FF8F00;}
+ * .text_info				{color:#00a0d2;}
  */
-img.aligncenter			{display:block;margin:0 auto;}
-.txt_right 				{text-align:right;}
-.txt_left 				{text-align:left;}
-.txt_center				{text-align:center;}
-.fleft, .alignleft		{float:left;}
-.fright, .alignright	{float:right;}
-.aligncenter			{display:block;margin:0 auto;}
-.cleaner				{clear:both;}
-.small_text				{font-size:80%;}
-.hide					{display:none;}
-.text_error				{color:red;}
-.text_success			{color:#11B511;}
-.text_alert				{color:#FF8F00;}
-.text_info				{color:#00a0d2;}
 
 
 
