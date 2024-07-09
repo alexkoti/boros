@@ -64,6 +64,7 @@ class Boros_Share_Tags {
      * Dados de produto
      * 
      */
+    var $product;
     var $product_info = array(
         'product_price'           => false,
         'product_formatted_price' => false,
