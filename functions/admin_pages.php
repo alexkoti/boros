@@ -551,11 +551,12 @@ class BorosAdminPages {
 					 * Renderizar os tipos de bloco: 'header', 'section', e pular em outros casos, evitando possíveis erros.
 					 * 
 					 */
-					foreach( $this->elements as $block ){
+					foreach( $this->elements as $section_id => $block ){
 						if( $block['block'] == 'header' ){
 							$this->output_page_header( $block );
 						}
 						elseif( $block['block'] == 'section' ){
+                            $block['section_id'] = $section_id;
 							$this->output_page_section( $block );
 						}
 						elseif( $block['block'] == 'submit' ){
@@ -661,6 +662,14 @@ class BorosAdminPages {
                 
                 // filtrar o elemento
                 $element = apply_filters( 'boros_filter_element_config', $element, $data_value );
+
+                /**
+                 * Sinalizar em grupos com elemento duplicável que o indice precisa automático para não afetar o ajax
+                 * 
+                 */
+                if( $block['section_id'] != $block['id'] && $element['type'] == 'duplicate_group' ){
+                    pal("Sections que possuem elementos duplicáveis não podem ter indice personalizado: ['{$block['section_id']}']. Manter sem a configuração sem índice.");
+                }
 
 				// renderizar o elemento
 				create_form_elements( $this->context, $element, $data_value );
