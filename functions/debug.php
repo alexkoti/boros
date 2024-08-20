@@ -28,6 +28,8 @@ function boros_hooked_functions( $hook = '' ) {
     global $wp_filter;
     if( empty( $hook ) || !isset( $wp_filter[$hook] ) ) return;
 
+    $closure_count = 0;
+
     $ret = [];
     foreach( $wp_filter[$hook] as $priority => $realhook ){
         foreach( $realhook as $hook_k => $hook_v ){
@@ -49,6 +51,15 @@ function boros_hooked_functions( $hook = '' ) {
                         'class'    => $name,
                     );
                 }
+            }
+            elseif( $hook_v['function'] instanceof \Closure ){
+                $closure_count++;
+                $t = $hook_v['function'];
+                $name = "closure_{$closure_count}";
+                $ret[$priority][$name] = array(
+                    'priority' => $priority,
+                    'function' => $hook_v['function'],
+                );
             }
             else{
                 $name = $hook_v['function'];
