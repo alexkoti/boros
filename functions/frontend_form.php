@@ -2820,7 +2820,7 @@ class BorosFrontendForm {
 	function get_redirect_url( $code = 'success' ){
 		if( $this->config['redirect_on_sucess'] !== false ){
 			$url = $this->config['redirect_on_sucess'];
-			if( isset($this->config['messages'][$code]['name']) and is_array($this->config['messages'][$code]['name']) ){
+			if( isset($this->config['messages'][$code]['name']) and isset($this->config['messages'][$code]['value']) ){
 				$url = add_query_arg( $this->config['messages'][$code]['name'], $this->config['messages'][$code]['value'], $url );
 			}
 		}
