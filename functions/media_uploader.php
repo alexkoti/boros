@@ -140,7 +140,7 @@ function boros_drop_upload_add_ajax() {
     }
 
     /**
-     * Somente object_type do tipo 'post' poderá ter post_parent
+     * Somente object_type do tipo 'post' poderá ter post_parent, que é diferente de post_author
      * 
      */
     $attach_parent = ($object_type == 'post') ? $post_parent : 0;
@@ -192,8 +192,10 @@ function boros_drop_upload_add_ajax() {
 add_action( 'wp_ajax_boros_drop_upload_remove', 'boros_drop_upload_remove_ajax' );
 add_action( 'wp_ajax_nopriv_boros_drop_upload_remove', 'boros_drop_upload_remove_ajax' );
 function boros_drop_upload_remove_ajax() {
-	$post_id = (int)$_POST['post_id'];
-	delete_post_meta( $post_id, '_thumbnail_id' );
+	$post_id     = (int)$_POST['post_id'];
+    $object_type = $_POST['object_type'];
+    $meta_key    = $_POST['meta_key'];
+    delete_metadata( $object_type, $post_id, $meta_key );
 	echo '<p class="drag-drop-info"><small>ou</small><br /> Solte a imagem aqui</p>';
 	exit;
 }
