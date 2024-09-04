@@ -887,6 +887,45 @@ class BorosValidation {
 		}
 		return $value;
 	}
+
+    /**
+     * Validação de comprimento mínimo e máximo.
+     * Primeiro é realizado uma normalização com trim, depois o comprimento da string é realizada desconsiderando as 
+     * quebras de linha, para que o usuário não posso enviar um texto com X quebras de linhas vazias.
+     * 
+     * A mensagem de erro é definida nas configurações do campo como array com índices 'min' e 'max'
+     * 
+     */
+    function string_min_max( $name, $value, $args, $message ){
+
+        $value = trim(str_replace('/\s\s+/', ' ', $value));
+
+        $check_string = preg_replace('/^\s+/m', '', $value);
+
+        if( mb_strlen($check_string) < $args['min'] ){
+            if( $this->context['type'] == 'frontend' ){
+                $error = array(
+                    'name'    => $name,
+                    'message' => $message['min'],
+                    'type'    => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+        }
+
+        if( mb_strlen($check_string) > $args['max'] ){
+            if( $this->context['type'] == 'frontend' ){
+                $error = array(
+                    'name'    => $name,
+                    'message' => $message['max'],
+                    'type'    => 'error'
+                );
+                $this->data_errors[$name][$args['rule']] = $error;
+            }
+        }
+        
+        return $value;
+    }
 	
 	function cep( $name, $value, $args, $message ){
 		$regex = "/^([0-9]{2})\.?([0-9]{3})-?([0-9]{3})$/";
