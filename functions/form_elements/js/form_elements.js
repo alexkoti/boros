@@ -13,7 +13,6 @@ jQuery(document).ready(function($){
      * 
      */
     $('.force_hierachical input[type="checkbox"]').change(function(){
-        console.log('checkbox changed');
         var checkbox = $(this);
 
         // caso seja um child, marcar o parent caso qualquer um dos children esteja ativado
