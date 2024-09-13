@@ -12,19 +12,20 @@ jQuery(document).ready(function($){
      * TAXONOMY CHECKBOX
      * 
      */
-    $('.force_hierachical .input_checkbox').change(function(){
+    $('.force_hierachical input[type="checkbox"]').change(function(){
+        console.log('checkbox changed');
         var checkbox = $(this);
-        // caso seja um child, marcar o parent
-        if( checkbox.is('.force_hierachical .children li .input_checkbox') ){
-            var parent_check = checkbox.closest('.children').parent().find('.input_checkbox:first');
-            if( checkbox.is(':checked') ){
-                parent_check.attr('checked', true);
+
+        // caso seja um child, marcar o parent caso qualquer um dos children esteja ativado
+        if( checkbox.closest('.children').length > 0 ){
+            if( checkbox.closest('.children').find('input[type="checkbox"]:checked').length > 0 ){
+                checkbox.closest('.children').parent().find('input[type="checkbox"]:first').prop('checked', true);
             }
         }
         
-        // caso seja um parent, marcar os childs, se houver
+        // caso seja um parent, desmarcar os childs, caso esteja sendo desativado
         if( checkbox.not(':checked') ){
-            checkbox.closest('li').find('.children .input_checkbox').attr('checked', false);
+            checkbox.closest('li').find('.children:first input[type="checkbox"]').prop('checked', false);
         }
     });
     
