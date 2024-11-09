@@ -273,7 +273,12 @@ abstract class Boros_Ajax_Query_Loop {
 		}
 	}
     
-    final public function ajax_response( $offset, $post_id, $status = 'success', $message ){
+    final public function ajax_response( $offset, $post_id, $status, $message ){
+
+        if( empty($status) ){
+            $status = 'success';
+        }
+        
         echo json_encode(array(
             'offset'  => $offset,
             'post_id' => $post_id,
