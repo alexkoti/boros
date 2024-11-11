@@ -296,7 +296,7 @@ class BorosValidation {
      */
     function validate_radio( $name, $value, $args, $message ){
 
-        if( empty($value) ){
+        if( empty($value) || is_null($value) || !isset($args['options']['values']) ){
             return $value;
         }
 
@@ -319,7 +319,7 @@ class BorosValidation {
      */
     function validate_checkbox_group( $name, $value, $args, $message ){
 
-        if( empty($value) ){
+        if( empty($value) || is_null($value) || !isset($args['options']['values']) ){
             return $value;
         }
 
