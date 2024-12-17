@@ -33,12 +33,12 @@ function init_boros_email(){
  * Sobrescrever a function padrão
  * 
  */
-if( !function_exists('wp_new_user_notification') ){
-	function wp_new_user_notification( $user_id, $plaintext_pass = '' ){
-		$boros_email = BorosEmail::init();
-		$boros_email->wp_new_user_notification( $user_id, $plaintext_pass );
-	}
-}
+// if( !function_exists('wp_new_user_notification') ){
+// 	function wp_new_user_notification( $user_id, $plaintext_pass = '' ){
+// 		$boros_email = BorosEmail::init();
+// 		$boros_email->wp_new_user_notification( $user_id, $plaintext_pass );
+// 	}
+// }
 
 
 
@@ -49,16 +49,16 @@ if( !function_exists('wp_new_user_notification') ){
  * Sobrescrever a function padrão
  * 
  */
-if ( !function_exists('wp_password_change_notification') ) :
-	function wp_password_change_notification($user) {
-		if ( $user->user_email != get_option('admin_email') ) {
-			$name = "{$user->display_name} (username: {$user->user_login})";
-			$message = sprintf(__('Password Lost and Changed for user: %s'), $name) . "\r\n";
-			$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-			wp_mail(get_option('admin_email'), sprintf(__('[%s] Password Lost/Changed'), $blogname), $message);
-		}
-	}
-endif;
+// if ( !function_exists('wp_password_change_notification') ) :
+// 	function wp_password_change_notification($user) {
+// 		if ( $user->user_email != get_option('admin_email') ) {
+// 			$name = "{$user->display_name} (username: {$user->user_login})";
+// 			$message = sprintf(__('Password Lost and Changed for user: %s'), $name) . "\r\n";
+// 			$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+// 			wp_mail(get_option('admin_email'), sprintf(__('[%s] Password Lost/Changed'), $blogname), $message);
+// 		}
+// 	}
+// endif;
 
 
 
