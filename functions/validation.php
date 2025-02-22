@@ -25,6 +25,8 @@ class BorosValidation {
 	 * @TODO doc
 	 */
 	var $context;
+
+    var $current_post;
 	
 	var $validations = array();
 	

@@ -437,6 +437,8 @@ class BorosAdminPages {
 	 * 
 	 * Diferente do contexto dos meta_boxes, os valores já corrigidos só estão acessíveis nesse momento, após o envio para options.php, e portanto os callbacks devem ser realizados aqui. Por isso todos
 	 * os options registrados precisam passar por $this->validation.
+     * 
+     * Os callbacks precisam retornar um valor ou o option será salvo vazio.
 	 * 
 	 * ATENÇÂO: para passar um callback, a config precisa de um name. Caso não seja registrado um name, não será gravado o option nem rodarão os callbacks e validation
 	 */
