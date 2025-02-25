@@ -1596,7 +1596,7 @@ class BorosFrontendForm {
 			}
 		}
 		else{
-			wp_die('Requisição de envio de arquivo inválida!!!', 'Erro no no envio do arquivo');
+			wp_die('Requisição de envio de arquivo inválida!!!', 'Erro no envio do arquivo');
 		}
 	}
 	
@@ -1969,11 +1969,11 @@ class BorosFrontendForm {
 			if( method_exists( $this, $callback['function'] ) ){
 				//pal("Método da class BorosFrontendForm: {$callback['function']}");
 				// não é necessário adicionar o <code>$callback['args']['object'] = $this;</code> porque o método já pode acessar as informações de valid_{meta|data}
-				call_user_func( array($this, $callback['function']), $callback['args'] );
+				return call_user_func( array($this, $callback['function']), $callback['args'] );
 			}
 			elseif( function_exists( $callback['function'] ) ){
 				$callback['args']['object'] = $this;
-				call_user_func( $callback['function'], $callback['args'] );
+				return call_user_func( $callback['function'], $callback['args'] );
 			}
 		}
 	}
