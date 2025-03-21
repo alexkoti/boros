@@ -126,7 +126,7 @@ function custom_oembed( $post_id = false, $post_meta = false ){
  * @link https://stackoverflow.com/a/71546342 pegar proporção mais próxima
  * 
  */
-add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
+//add_filter( 'embed_oembed_html', 'tdd_oembed_filter', 10, 4 ) ;
 function tdd_oembed_filter($html, $url, $attr, $post_ID){
 	// Videos: youtube e vimeo. Adicionar mais serviços se necessário
 	if( strpos($html, 'youtube') !== false or strpos($html, 'vimeo') !== false ){
