@@ -59,13 +59,20 @@ class JLPT_Generate_Subs extends Boros_Ajax_Query_Loop {
         $offset = ($_POST['offset'] < 4 ) ? ($_POST['offset'] + 1) : 0;
         $post_id = 1;
 
-
-        echo json_encode(array(
-            'offset'  => $offset,
-            'post_id' => $post_id,
-            'html'    => '<li>qwe qwe qweqwe</li>',
-        ));
-        die();
+        if( $offset == 0 ){
+            echo json_encode(array(
+                'offset'  => 0,
+                'post_id' => 0,
+                'html'    => "<li class='text_error'>sem mais resultados</li>",
+            ));
+        }
+        else{
+            echo json_encode(array(
+                'offset'  => $offset,
+                'post_id' => $post_id,
+                'html'    => "<li class='text_success'>OFFSET: {$offset}</li>",
+            ));
+        }
     }
 }
 
