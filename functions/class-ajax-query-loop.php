@@ -168,8 +168,8 @@ abstract class Boros_Ajax_Query_Loop {
 		if( $hook_suffix == "toplevel_page_{$this->page_args['menu_slug']}" ){
 			?>
 			<script type="text/javascript">
-			var boros_ajax_query_loop_offset  = <?php echo $this->ajax_args['initial_offset']; ?>;
-			var boros_ajax_query_loop_timeout = <?php echo $this->ajax_args['interval']; ?>;
+			var boros_ajax_query_loop_offset  = '<?php echo $this->ajax_args['initial_offset']; ?>';
+			var boros_ajax_query_loop_timeout = '<?php echo $this->ajax_args['interval']; ?>';
 			jQuery(document).ready(function($){
 				var boros_ajax_query_loop = {
 					btn : false,
@@ -181,14 +181,16 @@ abstract class Boros_Ajax_Query_Loop {
 							results.html('');
 							
 							// verificar se existe algum offset definido por campo de texto
-							if( $('#<?php echo $this->offset_field; ?>').length && $('#<?php echo $this->offset_field; ?>').val() > 0 ){
+							if( $('#<?php echo $this->offset_field; ?>').length && $('#<?php echo $this->offset_field; ?>').val() != 0 ){
 								boros_ajax_query_loop_offset = $('#<?php echo $this->offset_field; ?>').val();
+                                console.log('offset pelo campo');
 								$('#boros-ajax-query-loop-results').attr('start', Number(boros_ajax_query_loop_offset) + 1);
 							}
 							boros_ajax_query_loop.proccess_item();
 						});
 					},
 					proccess_item : function(){
+                        console.log('proccess_item');
 
                         var form_data = $('#boros-ajax-loop-form').serializeArray();
 
@@ -217,7 +219,8 @@ abstract class Boros_Ajax_Query_Loop {
 									// append do resultado independente se irá continuar o loop
 									$('#boros-ajax-query-loop-results').append(resp.html);
 									// continuar o loop
-									if( resp.offset > 0 ){
+									if( resp.offset != 0 ){
+                                        console.log('continue loop');
 										boros_ajax_query_loop_offset = resp.offset;
                                         setTimeout(function(){boros_ajax_query_loop.proccess_item()}, boros_ajax_query_loop_timeout);
 									}
@@ -227,6 +230,7 @@ abstract class Boros_Ajax_Query_Loop {
 										boros_ajax_query_loop.btn.prop('disabled', false);
 									}
 								}
+                                console.log(boros_ajax_query_loop_offset);
 							},
 							error: function(XMLHttpRequest, textStatus, errorThrown) {
 								alert('Ocorreu um erro na requisição, consultar o console.');
