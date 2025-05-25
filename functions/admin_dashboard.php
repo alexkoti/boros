@@ -136,7 +136,8 @@ function boros_dashboard_right_now( $elements ){
 		$text = _n( $taxonomy->labels->singular_name, $taxonomy->labels->name , intval( $num_terms ) );
 		$class = issetor($taxonomy->menu_icon, '');
 		if ( current_user_can( 'manage_categories' ) ) {
-			$elements[] = "<a href='edit-tags.php?taxonomy={$taxonomy->name}&post_type={$taxonomy->object_type[0]}' class='ico-taxonomy-{$taxonomy->name} {$class}'>{$num} {$text}</a>";
+            $post_type = reset($taxonomy->object_type);
+			$elements[] = "<a href='edit-tags.php?taxonomy={$taxonomy->name}&post_type={$post_type}' class='ico-taxonomy-{$taxonomy->name} {$class}'>{$num} {$text}</a>";
 		}
 		else{
 			$elements[] = "<span class='ico-taxonomy-{$taxonomy->name} {$class}'>{$num} {$text}</span>";
