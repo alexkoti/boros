@@ -648,7 +648,7 @@ class BorosFrontendForm {
 					'login_message_user_login_empty' => '<strong>ERRO</strong>: O campo do nome de usuário está vazio.',
 					'login_message_user_pass_empty'  => '<strong>ERRO</strong>: O campo da senha está vazio.',
 					'login_message_invalid_user'     => '<strong>ERRO</strong>: Nome de usuário inválido.',
-					'login_message_invalid_pass'     => '<strong>ERRO</strong>: A senha que você forneceu para o usuário',
+					'login_message_invalid_pass'     => '<strong>Erro:</strong> a senha fornecida para o e-mail',
 					'login_message_user_default'     => '<strong>ERRO</strong>: Sua conta precisa ser aprovada antes poder fazer o login no site',
 					'login_message_user_disapproved' => '<strong>ERRO</strong>: O seu registro não foi aceito!',
 				);
@@ -677,8 +677,9 @@ class BorosFrontendForm {
 				$custom_messages = apply_filters( 'boros_login_messages', boros_parse_args($custom_messages, $custom_default_messages), $creds );
 				
 				// filtrar as mensagens de erro padrão do wp pelos customizados
+                // é feita uma busca pelo conteúdo da string
 				foreach( $default_messages as $msg_k => $msg_v ){
-					$pos = strpos( $msg, $msg_v );
+					$pos = stripos( $msg, $msg_v );
 					// trocar pelo custom message e interomper o loop
 					if( $pos !== false and !empty($custom_messages[$msg_k]) ){
 						$msg = $custom_messages[$msg_k];
