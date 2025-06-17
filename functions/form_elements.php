@@ -1150,6 +1150,25 @@ class BorosFormElement {
 					<?php
 				}
 				break;
+
+            case 'custom':
+                if( !isset($this->data['layout_template']) ){
+                    pal(
+                        'Template com o name "layout_template" no padrão sprintf não definido nas configurações do elemento. 
+                        Elementos requeridos na ordem: $elem_class, $element_id, $label, $final_input, $error_messages'
+                    );
+                }
+                else{
+                    printf(
+                        $this->data['layout_template'],
+                        "{$this->data['attr']['id']}-box",
+                        $elem_class,
+                        $this->label,
+                        $this->final_input,
+                        $this->error_messages
+                    );
+                }
+                break;
 			
 			// admin
 			case 'block':
@@ -1247,6 +1266,7 @@ class BorosFormElement {
 	function error_messages(){
 		if( !empty($this->errors) ){
 			foreach( $this->data['errors'] as $error ){
+                pel($this->errors);
 				if( $this->data['layout'] == 'bootstrap' ){
 					$this->error_messages .= "<span id='{$error['name']}_error_message' class='help-inline message_type_{$error['type']} help-block'>{$error['message']}</span>";
 				}
