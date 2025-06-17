@@ -296,6 +296,10 @@ class BorosFrontendForm {
             case 'bootstrap5':
                 add_action( 'boros_frontend_form_output', array($this, 'bootstrap5_output') );
                 break;
+            // usar output fomatado para bootstrap 4
+            case 'custom':
+                add_action( 'boros_frontend_form_output', array($this, 'custom_output') );
+                break;
 			// não usar nada;
 			case false:
 			   default:
@@ -1329,6 +1333,9 @@ class BorosFrontendForm {
 			// filtrar título do post com informações extras postadas
 			$this->valid_data['post_title'] =  $this->template_tags( $this->valid_data['post_title'], $this->valid_data );
 			$this->valid_data['post_title'] =  $this->template_tags( $this->valid_data['post_title'], $this->valid_meta );
+            
+			$this->valid_data['post_content'] =  $this->template_tags( $this->valid_data['post_content'], $this->valid_data );
+			$this->valid_data['post_content'] =  $this->template_tags( $this->valid_data['post_content'], $this->valid_meta );
 			
 			// mesclar dados defaults_config
 			//$insert_data = boros_parse_args( $this->config['core_post_fields'], $this->valid_data );
@@ -2179,6 +2186,12 @@ class BorosFrontendForm {
 
         echo apply_filters( 'boros_form_action', $action, $this->form_name, $this->context );
     }
+
+    /**
+     * Output personalizado que deverá ser criado pela class extendida
+     * 
+     */
+    public function custom_output( $form_name ){}
     
 	/**
 	 * @todo verificar o $this->create_numeric_username() nesta function
