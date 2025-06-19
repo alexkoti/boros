@@ -757,6 +757,14 @@ class BorosFrontendForm {
 			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
 		}
 		else{
+
+            /**
+             * Logar o usuário globalmente no WordPress, permitindo acessar o admin
+             * 
+             */
+            wp_set_current_user($user->ID);
+            wp_set_auth_cookie($user->ID, true);
+
 			// caso tenha logado com sucesso, verificar o redirect ou usar referer(retornar à mesma página que enviou os dados)
 			if( $this->config['redirect_on_sucess'] == false ){
 				$url = self_url();
