@@ -103,6 +103,7 @@ add_action('wp_head', function(){
             'fresh'     => array('#333333', '#ffffff'),
             'blue'      => array('#52accc', '#ffffff'),
             'light'     => array('#e5e5e5', '#999999'),
+            'modern'    => array('#3858e9', '#ffffff'),
             'coffee'    => array('#59524c', '#ffffff'),
             'ectoplasm' => array('#523f6d', '#ffffff'),
             'midnight'  => array('#363b3f', '#ffffff'),
@@ -110,7 +111,9 @@ add_action('wp_head', function(){
             'sunrise'   => array('#cf4944', '#ffffff'),
         );
         $color = get_user_meta( wp_get_current_user()->ID, 'admin_color', true);
-        echo "<style>#wpadminbar{background-color:{$colors[$color][0]};color:{$colors[$color][1]}}#wpadminbar *, #wpadminbar *:before{color:{$colors[$color][1]};}</style>";
+        if( array_key_exists( $color, $colors ) ){
+            echo "<style>#wpadminbar{background-color:{$colors[$color][0]};color:{$colors[$color][1]}}#wpadminbar *, #wpadminbar *:before{color:{$colors[$color][1]};}</style>";
+        }
     }
 });
 
