@@ -1266,7 +1266,6 @@ class BorosFormElement {
 	function error_messages(){
 		if( !empty($this->errors) ){
 			foreach( $this->data['errors'] as $error ){
-                pel($this->errors);
 				if( $this->data['layout'] == 'bootstrap' ){
 					$this->error_messages .= "<span id='{$error['name']}_error_message' class='help-inline message_type_{$error['type']} help-block'>{$error['message']}</span>";
 				}
