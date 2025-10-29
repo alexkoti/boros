@@ -42,9 +42,26 @@ class BFE_color_picker extends BorosFormElement {
 	 * Saída final do input
 	 * 
 	 */
-	function set_input( $value = null ){
-		$attrs = make_attributes($this->data['attr']);
-		$input = "{$this->input_helper_pre}<input type='text' value='{$value}'{$attrs} />{$this->input_helper}";
-		return $input;
-	}
+    function set_input( $value = null ){
+
+        $attrs = make_attributes($this->data['attr']);
+
+        $palette = 'data-a=""';
+        if( isset($this->data['options']['palette']) ){
+            $palette = sprintf(
+                'data-palette="%s"',
+                implode(',', $this->data['options']['palette'])
+            );
+        }
+
+        $input = sprintf(
+            '%s<input type="text" value="%s" %s %s />%s',
+            $this->input_helper_pre,
+            $value,
+            $attrs,
+            $palette,
+            $this->input_helper
+        );
+        return $input;
+    }
 }

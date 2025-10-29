@@ -292,11 +292,11 @@ class BorosFrontendForm {
 			case 'bootstrap4':
 				add_action( 'boros_frontend_form_output', array($this, 'bootstrap4_output') );
 				break;
-            // usar output fomatado para bootstrap 4
+            // usar output fomatado para bootstrap 5
             case 'bootstrap5':
                 add_action( 'boros_frontend_form_output', array($this, 'bootstrap5_output') );
                 break;
-            // usar output fomatado para bootstrap 4
+            // usar output customizado
             case 'custom':
                 add_action( 'boros_frontend_form_output', array($this, 'custom_output') );
                 break;
