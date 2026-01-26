@@ -312,7 +312,7 @@ class Boros_Share_Tags {
      * 
      */
     function plain_text( $text ){
-        $text = strip_tags( $text );
+        $text = wp_strip_all_tags( $text );
         $text = preg_replace('/\v(?:[\v\h]+)/', '', $text);
         return $text;
     }
