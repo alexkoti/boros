@@ -433,7 +433,7 @@ class PRE {
      * 
      */
     public function pcm( $var = false, $legend = '', $pad = 0 ){
-        $var = (string)$var;
+        $var = (is_array($var) || is_object($var) ) ? print_r($var, true) : (string)$var;
 
         if( !empty($legend) ){
             if( $pad < 0 ){
