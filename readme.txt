@@ -2,8 +2,8 @@
 Contributors: alexkoti
 Tags: admin, library
 Requires at least: 4.0.0
-Tested up to: 4.4.1
-Stable tag: 1.6.54
+Tested up to: 6.9.0
+Stable tag: 1.6.55
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,9 @@ Biblioteca de classes e funções para auxiliar a criação de painéis, control
 Funções para o admin do WordPress, páginas personalizadas de administração(options) e campos de post_types(meta_boxes), widgets e form_elements
 
 == Changelog ==
+
+= 1.6.55
+* correções
 
 = 1.6.54
 * permitir definir paleta em color_picker
