@@ -743,9 +743,9 @@ class BorosFormElement {
 				$data_value = esc_html($data_value);
 			}
 		}
-		$value = apply_filters( "BFE_{$this->data['type']}_value", $data_value ); // filtro do type
-		$value = apply_filters( "BFE_{$this->data['name']}_value", $data_value ); // filtro do name
-		$this->data_value = $value;
+		$data_value = apply_filters( "BFE_{$this->data['type']}_value", $data_value ); // filtro do type
+		$data_value = apply_filters( "BFE_{$this->data['name']}_value", $data_value ); // filtro do name
+		$this->data_value = $data_value;
 		//pal($this->data_value, "{$this->data['name']} A");
 	}
 	
