@@ -947,7 +947,7 @@ class Boros_Pagination {
 		if( !isset($args['options']) ){
 			$args['options'] = array();
 		}
-		$this->options = boros_parse_args( $this->options, $args['options'] );
+		$this->options = wp_parse_args( $args, $this->options );
 	}
 	
 	function create_items(){
