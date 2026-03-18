@@ -1980,18 +1980,22 @@ class BorosFrontendForm {
 	function form_callback( $callbacks = false ){
 		if( empty($callbacks) )
 			return;
+
+        $error = false;
 		
 		foreach( $callbacks as $callback ){
 			if( method_exists( $this, $callback['function'] ) ){
 				//pal("Método da class BorosFrontendForm: {$callback['function']}");
 				// não é necessário adicionar o <code>$callback['args']['object'] = $this;</code> porque o método já pode acessar as informações de valid_{meta|data}
-				return call_user_func( array($this, $callback['function']), $callback['args'] );
+				$error = call_user_func( array($this, $callback['function']), $callback['args'] );
 			}
 			elseif( function_exists( $callback['function'] ) ){
 				$callback['args']['object'] = $this;
-				return call_user_func( $callback['function'], $callback['args'] );
+				$error = call_user_func( $callback['function'], $callback['args'] );
 			}
 		}
+
+        return $error;
 	}
 	
 	function notify_by_email( $args ){
