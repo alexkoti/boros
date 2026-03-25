@@ -1236,31 +1236,43 @@ class BorosFrontendForm {
 		}
 		
 		// Avisar ADMIN
-		$admin_message = "  <p>Novo usuário registrado no site:</p>
-							<p>Nome de usuário: {$user_login}</p>
-							<p>Email: {$user_email}</p>";
-		$admin_message       = apply_filters( 'BFF_new_user_notification_admin', $admin_message, $user, $user_data, $user_meta );
-        $admin_message_title = sprintf(__('[%s] New User Registration'), $blogname);
-        $admin_message_title = apply_filters('BFF_new_user_notification_admin_title', $admin_message_title, $user, $user_data, $user_meta);
-		wp_mail( get_option('admin_email'), $admin_message_title, $admin_message, $headers );
+        $notify_admin = true;
+        if( isset($this->config['notification_email']['admin']) && $this->config['notification_email']['admin'] == false ){
+            $notify_admin = false;
+        }
+        if( $notify_admin == true ){
+            $admin_message = "  <p>Novo usuário registrado no site:</p>
+                                <p>Nome de usuário: {$user_login}</p>
+                                <p>Email: {$user_email}</p>";
+            $admin_message       = apply_filters( 'BFF_new_user_notification_admin', $admin_message, $user, $user_data, $user_meta );
+            $admin_message_title = sprintf(__('[%s] New User Registration'), $blogname);
+            $admin_message_title = apply_filters('BFF_new_user_notification_admin_title', $admin_message_title, $user, $user_data, $user_meta);
+            wp_mail( get_option('admin_email'), $admin_message_title, $admin_message, $headers );
+        }
 		
 		// Avisar USER
-		$login_url = home_url('/login/');
-		$user_message = "<p>Nome de usuário: <code>{$user_login}</code></p>
-						 <p>Senha: <code>{$user_data['user_pass']}</code></p>
-						 <p>Endereço para login: <code>{$login_url}</code></p>";
-		$user_message = apply_filters( 'the_content', $user_message );
-		// aplicar filtro final, como por exemplo holder em HTML
-		$user_message = apply_filters( 'BFF_new_user_notification_text', $user_message, $user_login, $user_data['user_pass'], $login_url, $user_data, $user_meta );
-        // novo hook com mais informações
-		$user_message = apply_filters( 'BFF_new_user_notification_message', $user_message, $login_url, $user, $user_data, $user_meta );
-		
-		$user_title = sprintf(__('[%s] Your username and password'), $blogname);
-		$user_title = apply_filters( 'BFF_new_user_notification_title', $user_title, $user, $user_data, $user_meta );
-		
-		//pre($user_title);
-		//pre($user_message);
-		wp_mail($user_email, $user_title, $user_message);
+        $notify_user = true;
+        if( isset($this->config['notification_email']['user']) && $this->config['notification_email']['user'] == false ){
+            $notify_user = false;
+        }
+        if( $notify_user == true ){
+            $login_url = home_url('/login/');
+            $user_message = "<p>Nome de usuário: <code>{$user_login}</code></p>
+                            <p>Senha: <code>{$user_data['user_pass']}</code></p>
+                            <p>Endereço para login: <code>{$login_url}</code></p>";
+            $user_message = apply_filters( 'the_content', $user_message );
+            // aplicar filtro final, como por exemplo holder em HTML
+            $user_message = apply_filters( 'BFF_new_user_notification_text', $user_message, $user_login, $user_data['user_pass'], $login_url, $user_data, $user_meta );
+            // novo hook com mais informações
+            $user_message = apply_filters( 'BFF_new_user_notification_message', $user_message, $login_url, $user, $user_data, $user_meta );
+            
+            $user_title = sprintf(__('[%s] Your username and password'), $blogname);
+            $user_title = apply_filters( 'BFF_new_user_notification_title', $user_title, $user, $user_data, $user_meta );
+            
+            //pre($user_title);
+            //pre($user_message);
+            wp_mail($user_email, $user_title, $user_message);
+        }
 		
 		do_action( 'BFF_new_user_notification_pos', $user_id, $user_data, $user_meta, $user_title, $user_message );
 	}
