@@ -132,7 +132,33 @@ class BorosAdminPages {
 		add_action( 'admin_menu', array($this, 'admin'), 9 ); // ver 1*
 		add_action( 'template_redirect', array($this, 'frontend') );
 		add_filter( 'load_element_config', array($this, 'load_element_config'), 10, 2 );
+
+        $this->set_capabilities();
 	}
+
+    /**
+     * Filtrar o capability para ficar de acordo com permissões da config, pois normalmente é 'manage_options', separado
+     * da declaração no registro de página.
+     * 
+     */
+    public function set_capabilities(){
+        foreach( $this->pages as $page_name => $config ){
+            $capability	= isset($config['capability']) ? $config['capability'] : 'manage_options';
+            
+            add_filter("option_page_capability_{$page_name}", function() use ($capability){
+                return $capability;
+            });
+
+            if( isset($config['subpages']) ){
+                foreach( $config['subpages'] as $subpage_name => $subconfig ){
+                    $subcapability = isset($subconfig['capability']) ? $subconfig['capability'] : $capability;
+                    add_filter("option_page_capability_{$subpage_name}", function() use ($subcapability){
+                        return $subcapability;
+                    });
+                }
+            }
+        }
+    }
     
 	/**
 	 * Adicionar as page no admin.
