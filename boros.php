@@ -125,22 +125,24 @@ if( is_admin() ){
  * ==================================================
  * É necessário utilizar no hook de ativação
  * 
+ * @update - aplicar em cada projeto conforme necessário
+ * 
  * @link https://codex.wordpress.org/Function_Reference/wp_schedule_event
  * 
  */
-register_activation_hook( __FILE__, 'force_daily_login_activation' );
-function force_daily_login_activation() {
-    if( !wp_next_scheduled( 'force_daily_login_hook' ) ){
-        wp_schedule_event( time(), 'daily', 'force_daily_login_hook');
-    }
-}
+// register_activation_hook( __FILE__, 'force_daily_login_activation' );
+// function force_daily_login_activation() {
+//     if( !wp_next_scheduled( 'force_daily_login_hook' ) ){
+//         wp_schedule_event( time(), 'daily', 'force_daily_login_hook');
+//     }
+// }
 
-add_action('force_daily_login_hook', 'force_daily_login');
-function force_daily_login(){
-    wp_clear_auth_cookie();
-}
+// add_action('force_daily_login_hook', 'force_daily_login');
+// function force_daily_login(){
+//     wp_clear_auth_cookie();
+// }
 
-register_deactivation_hook(__FILE__, 'force_daily_login_deactivation');
-function force_daily_login_deactivation() {
-    wp_clear_scheduled_hook( 'force_daily_login_hook ');
-}
+// register_deactivation_hook(__FILE__, 'force_daily_login_deactivation');
+// function force_daily_login_deactivation() {
+//     wp_clear_scheduled_hook( 'force_daily_login_hook ');
+// }
