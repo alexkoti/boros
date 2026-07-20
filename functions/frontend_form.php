@@ -1831,6 +1831,29 @@ class BorosFrontendForm {
 				}
 			}
 		}
+
+        /**
+         * Possibilitar validar o array final com todos os campos disponíveis, para que seja possível comparar dados entre campos
+         * Essa validação precisa registrar o erro no terceiro parâmetro em $validation_object->data_errors e retornar o $valids sempre
+         * 
+         * Exemplo
+         * <code>
+         * add_filter('boros_validate_data', function( $valid_data, $context, $validation_object ){
+         *     if( !empty($valid_data) && isset($valid_data['country_area']) && $valid_data['country_area'] == 'BR' ){
+         *         $error = array(
+         *             'name'    => 'country_area',
+         *             'message' => 'Proibido BR',
+         *             'type'    => 'error',
+         *         );
+         *         $validation_object->data_errors['country_area']['nohueallowed'] = $error;
+         *     }
+         *     return $valid_data;
+         * }, 10, 3);
+         * </code>
+         * 
+         */
+        $valids = apply_filters('boros_validate_data', $valids, $context, $this->validation);
+
 		//pre($this->validation->data_errors);
 		return $valids;
 	}
