@@ -497,7 +497,7 @@ class BorosFrontendForm {
         else{
             // acionar callbacks: form->config
             $this->form_callback( $this->config['callbacks']['error'] );
-            $this->errors = array_merge( $this->errors, $this->validation->data_errors );
+            $this->set_errors();
         }
     }
 	
@@ -535,6 +535,22 @@ class BorosFrontendForm {
 			//pre($current_user->data, '$current_user');
 		}
 	}
+
+    /**
+     * Método auxiliar para permitir filtro dos erros
+     * 
+     */
+    function set_errors(){
+        $this->errors = apply_filters(
+            'boros_frontend_form_errors', 
+            array_merge( $this->errors, $this->validation->data_errors ), 
+            $this->form_name, 
+            $this->valid_data, 
+            $this->valid_meta, 
+            $this->elements, 
+            $this->context
+        );
+    }
 	
 	function show_errors(){
 		//pre($this->errors);
@@ -623,7 +639,6 @@ class BorosFrontendForm {
          * Retornar em caso de erro na pré-validação, ex recaptcha
          * 
          */
-        $this->errors = array_merge( $this->errors, $this->validation->data_errors );
         if( !empty( $this->validation->data_errors ) || !empty( $this->errors ) ){
             return;
         }
@@ -754,7 +769,8 @@ class BorosFrontendForm {
 						break;
 				}
 			}
-			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+            
+			$this->set_errors();
 		}
 		else{
 
@@ -906,7 +922,7 @@ class BorosFrontendForm {
 		 * 
 		 */
 		$this->validation->data_errors = apply_filters('boros_frontend_form_validation_erros', $this->validation->data_errors, $this->form_name, $this->valid_data, $this->valid_meta, $this->elements, $this->context);
-		$this->errors = apply_filters('boros_frontend_form_erros', $this->errors, $this->form_name, $this->valid_data, $this->valid_meta, $this->elements, $this->context);
+        $this->set_errors();
 		
 		// verificar se existe algum erro de validação ou erros gerais(WP_Error, password_not_match)
 		if( empty( $this->validation->data_errors ) and empty( $this->errors ) ){
@@ -1015,7 +1031,8 @@ class BorosFrontendForm {
 						exit();
 					}
 				}
-                $this->errors = array_merge( $this->errors, $this->validation->data_errors );
+                
+                $this->set_errors();
 			}
 			// user já existe, adicionar erro
 			else{
@@ -1023,7 +1040,7 @@ class BorosFrontendForm {
 			}
 		}
 		else{
-			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+			$this->set_errors();
 		}
 	}
 	
@@ -1179,7 +1196,7 @@ class BorosFrontendForm {
 					else{
 						// acionar callbacks: form->config
 						$this->form_callback( $this->config['callbacks']['error'] );
-						$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+						$$this->set_errors();
 					}
 					
 					// @todo é possível que este bloco nunca seja usado, rever comparando e testando com o bloco anterior com o 'redirect_on_sucess'
@@ -1191,7 +1208,7 @@ class BorosFrontendForm {
 			}
 			else{
                 $this->form_callback( $this->config['callbacks']['error'] );
-				$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+				$this->set_errors();
 			}
 		}
 		else{
@@ -1452,7 +1469,7 @@ class BorosFrontendForm {
 		}
 		else{
 			// registrar erros
-			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+			$this->set_errors();
 			
 			// acionar callbacks de erro
 			$this->form_callback( $this->config['callbacks']['error'] );
@@ -1807,7 +1824,7 @@ class BorosFrontendForm {
 		}
 		else{
 			// registrar erros
-			$this->errors = array_merge( $this->errors, $this->validation->data_errors );
+			$this->set_errors();
 			
 			// acionar callbacks de erro
 			$this->form_callback( $this->config['callbacks']['error'] );
